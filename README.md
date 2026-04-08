@@ -35,3 +35,4 @@ Open `http://localhost:3000`.
 - Connect Apply page to Tally / Typeform / custom CRM
 - Add CMS or Markdown pipeline for docs
 - Add dashboard later under `/dashboard`
+
