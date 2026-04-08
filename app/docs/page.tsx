@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
+import { getWcnChapters } from "@/lib/wcn-docs";
 
 export default function DocsIndexPage() {
-  redirect(encodeURI("/docs/chapter-01/01-项目介绍-首页"));
+  const chapters = getWcnChapters();
+  const first = chapters[0]?.docs[0];
+  redirect(first ? `/docs/${first.slugParts.join("/")}` : "/");
 }
 

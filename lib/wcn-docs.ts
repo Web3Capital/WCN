@@ -3,6 +3,7 @@ import path from "node:path";
 
 export type WcnDoc = {
   slugParts: string[];
+  id: string;
   title: string;
   description?: string;
   content: string;
@@ -15,6 +16,10 @@ export type WcnDoc = {
 };
 
 const CONTENT_ROOT = path.join(process.cwd(), "content", "wcn");
+
+function toBase64Url(input: string) {
+  return Buffer.from(input, "utf8").toString("base64url");
+}
 
 function decodeHtmlEntities(input: string) {
   return input
@@ -128,11 +133,14 @@ export function getAllWcnDocs(): WcnDoc[] {
     const { title, description } = extractMeta(raw);
 
     const chapter = chapterInfoFromPath(dir);
-    const slugParts = [chapter.id, ...parts.slice(1).map(slugifySegment)];
+    const relNoExt = rel.replace(/\.html$/i, "");
+    const id = toBase64Url(relNoExt);
+    const slugParts = [chapter.id, id];
     const content = htmlToDocContent(raw);
 
     return {
       slugParts,
+      id,
       title: title ?? slugifySegment(file),
       description,
       content,
