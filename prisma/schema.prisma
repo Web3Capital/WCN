@@ -23,6 +23,88 @@ enum ApplicationStatus {
   REJECTED
 }
 
+enum NodeType {
+  GLOBAL
+  REGION
+  CITY
+  INDUSTRY
+  FUNCTIONAL
+  AGENT
+}
+
+enum NodeStatus {
+  DRAFT
+  SUBMITTED
+  ACTIVE
+  SUSPENDED
+  REJECTED
+}
+
+enum ProjectStage {
+  IDEA
+  SEED
+  SERIES_A
+  SERIES_B
+  SERIES_C
+  GROWTH
+  PUBLIC
+  OTHER
+}
+
+enum ProjectStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+  ARCHIVED
+}
+
+enum TaskType {
+  FUNDRAISING
+  GROWTH
+  RESOURCE
+  LIQUIDITY
+  RESEARCH
+  EXECUTION
+  OTHER
+}
+
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_REVIEW
+  DONE
+  CANCELLED
+}
+
+enum AssignmentRole {
+  LEAD
+  COLLABORATOR
+}
+
+enum EvidenceType {
+  CONTRACT
+  TRANSFER
+  REPORT
+  SCREENSHOT
+  LINK
+  ONCHAIN_TX
+  OTHER
+}
+
+enum ReviewTargetType {
+  NODE
+  PROJECT
+  TASK
+  POB
+}
+
+enum ReviewDecision {
+  APPROVE
+  REJECT
+  NEEDS_CHANGES
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -32,12 +114,14 @@ model User {
   passwordHash  String?
   role          Role      @default(USER)
 
-  accounts      Account[]
-  sessions      Session[]
-  applications  Application[]
+  accounts     Account[]
+  sessions     Session[]
+  applications Application[]
+  nodes        Node[]        @relation("NodeOwner")
+  reviews      Review[]
 
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Account {
@@ -77,8 +161,8 @@ model VerificationToken {
 }
 
 model Application {
-  id           String            @id @default(cuid())
-  status       ApplicationStatus @default(PENDING)
+  id     String            @id @default(cuid())
+  status ApplicationStatus @default(PENDING)
 
   // Applicant details
   applicantName String
@@ -92,14 +176,190 @@ model Application {
   whyWcn        String?
 
   // Admin review
-  notes        String?
+  notes String?
 
-  userId       String?
-  user         User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([status, createdAt])
   @@index([userId])
+}
+
+model Node {
+  id          String     @id @default(cuid())
+  type        NodeType
+  status      NodeStatus @default(DRAFT)
+  name        String
+  description String?
+  tags        String[]   @default([])
+
+  region       String?
+  city         String?
+  jurisdiction String?
+
+  level Int @default(1)
+
+  ownerUserId String?
+  owner       User?   @relation("NodeOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects     Project[]
+  tasksAsOwner Task[]           @relation("TaskOwnerNode")
+  assignments  TaskAssignment[]
+  evidences    Evidence[]
+  pobRecords   PoBRecord[]
+
+  @@index([type, status, createdAt])
+  @@index([ownerUserId])
+}
+
+model Project {
+  id       String        @id @default(cuid())
+  status   ProjectStatus @default(DRAFT)
+  name     String
+  stage    ProjectStage  @default(OTHER)
+  sector   String?
+  website  String?
+  pitchUrl String?
+
+  fundraisingNeed String?
+  contactName     String?
+  contactEmail    String?
+  contactTelegram String?
+
+  description String?
+
+  nodeId String?
+  node   Node?   @relation(fields: [nodeId], references: [id], onDelete: SetNull)
+
+  tasks      Task[]
+  pobRecords PoBRecord[]
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  evidence  Evidence[]
+
+  @@index([status, createdAt])
+  @@index([nodeId])
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  type        TaskType
+  status      TaskStatus @default(OPEN)
+  title       String
+  description String?
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  ownerNodeId String?
+  ownerNode   Node?   @relation("TaskOwnerNode", fields: [ownerNodeId], references: [id], onDelete: SetNull)
+
+  dueAt DateTime?
+
+  assignments TaskAssignment[]
+  evidences   Evidence[]
+  pobRecords  PoBRecord[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type, status, createdAt])
+  @@index([projectId])
+  @@index([ownerNodeId])
+}
+
+model TaskAssignment {
+  id   String         @id @default(cuid())
+  role AssignmentRole @default(COLLABORATOR)
+
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  nodeId String
+  node   Node   @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([taskId, nodeId])
+  @@index([nodeId])
+}
+
+model Evidence {
+  id        String       @id @default(cuid())
+  type      EvidenceType @default(OTHER)
+  title     String?
+  summary   String?
+  url       String?
+  onchainTx String?
+
+  taskId String?
+  task   Task?   @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  nodeId String?
+  node   Node?   @relation(fields: [nodeId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([type, createdAt])
+  @@index([taskId])
+  @@index([projectId])
+  @@index([nodeId])
+}
+
+model PoBRecord {
+  id           String @id @default(cuid())
+  businessType String
+
+  baseValue    Float @default(0)
+  weight       Float @default(1)
+  qualityMult  Float @default(1)
+  timeMult     Float @default(1)
+  riskDiscount Float @default(1)
+  score        Float @default(0)
+
+  taskId String?
+  task   Task?   @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  nodeId String?
+  node   Node?   @relation(fields: [nodeId], references: [id], onDelete: SetNull)
+
+  status ApplicationStatus @default(PENDING)
+  notes  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([taskId])
+  @@index([projectId])
+  @@index([nodeId])
+}
+
+model Review {
+  id         String           @id @default(cuid())
+  targetType ReviewTargetType
+  targetId   String
+  decision   ReviewDecision
+  notes      String?
+
+  reviewerId String?
+  reviewer   User?   @relation(fields: [reviewerId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([targetType, targetId, createdAt])
+  @@index([reviewerId])
 }

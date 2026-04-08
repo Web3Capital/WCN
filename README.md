@@ -24,7 +24,13 @@ Open `http://localhost:3000`.
 
 This project includes:
 - Node application form at `/apply` (saves to Postgres)
-- Admin dashboard at `/dashboard/applications` (review + update status)
+- Admin dashboard:
+  - Overview at `/dashboard`
+  - Node applications at `/dashboard/applications`
+  - Node registry at `/dashboard/nodes`
+  - Project pool at `/dashboard/projects`
+  - Task system at `/dashboard/tasks`
+  - PoB verification at `/dashboard/pob`
 - Login at `/login` (email/password)
 
 ### 1) Configure environment variables
@@ -62,6 +68,28 @@ Then sign in at `/login` and open `/dashboard/applications`.
 3. Import the repo
 4. Click Deploy
 5. Bind your custom domain in the Vercel project settings
+
+### Vercel environment variables (required)
+
+Set these in Vercel Project Settings → Environment Variables:
+- `POSTGRES_URL` (direct `postgres://...`, recommended)
+- `DATABASE_URL` (direct `postgres://...`, can match POSTGRES_URL)
+- `NEXTAUTH_URL` (your production URL, e.g. `https://yourdomain.com`)
+- `NEXTAUTH_SECRET` (random 32+ chars)
+
+### Apply migrations for production
+
+If you deploy to a fresh database, apply migrations once:
+
+```bash
+POSTGRES_URL="postgres://..." DATABASE_URL="postgres://..." npx prisma migrate deploy
+```
+
+### Create the first admin (production)
+
+```bash
+POSTGRES_URL="postgres://..." ADMIN_EMAIL="admin@example.com" ADMIN_PASSWORD="your-strong-password" node scripts/create-admin.mjs
+```
 
 ## Suggested next upgrades
 

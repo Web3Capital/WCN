@@ -1,9 +1,10 @@
-const steps = [
-  ["Node", "Real participants with resources, capabilities, and permissions."],
-  ["Deal", "Structured opportunities inside the network."],
-  ["Task", "Actionable units derived from a deal."],
-  ["Proof", "Verification of what was done, by whom, and with what result."],
-  ["Settlement", "Allocation of value based on verified contribution."]
+const loop = [
+  ["Resource intake", "Projects, capital, media, services, and regional connections enter through nodes."],
+  ["Task structuring", "Business needs become tasks with clear owners, collaborators, and milestones."],
+  ["Human + Agent execution", "Humans provide judgment and relationships; agents scale research and operations."],
+  ["Evidence verification", "Contracts, logs, dashboards, and on-chain proofs are attached and reviewed."],
+  ["PoB record", "Only closed loops become PoB, forming an auditable value ledger."],
+  ["Settlement (Phase 2)", "PoB competes for a periodic allocation pool; governance and staking follow."]
 ];
 
 export default function HowItWorksPage() {
@@ -11,9 +12,13 @@ export default function HowItWorksPage() {
     <main className="section">
       <div className="container">
         <span className="eyebrow">How It Works</span>
-        <h1>Intent becomes outcome through a structured business loop.</h1>
+        <h1>From resources to verified outcomes.</h1>
+        <p className="muted" style={{ maxWidth: 900 }}>
+          WCN is not “activity rewards.” It is a business loop: structure work, execute with humans + agents, verify with
+          evidence, and record PoB as the basis for future settlement.
+        </p>
         <div className="grid-3">
-          {steps.map(([title, description]) => (
+          {loop.map(([title, description]) => (
             <div className="card" key={title}>
               <h3>{title}</h3>
               <p>{description}</p>
@@ -21,11 +26,16 @@ export default function HowItWorksPage() {
           ))}
         </div>
         <div className="card" style={{ marginTop: 20 }}>
-          <h3>System logic</h3>
-          <p>Resource → Execution → Proof → Value</p>
+          <h3>5-layer architecture</h3>
+          <ul className="list-clean">
+            <li>Human nodes layer (resources, trust, accountability)</li>
+            <li>Agent execution layer (research, matching, operations)</li>
+            <li>PoB verification layer (evidence, review, risk checks)</li>
+            <li>Settlement layer (Phase 2: allocation, staking, governance)</li>
+            <li>Asset layer (Phase 3: on-chain identity, issuance, liquidity)</li>
+          </ul>
           <p>
-            Traditional systems allocate by status or negotiation. WCN allocates by verified
-            contribution.
+            Traditional systems allocate by status or negotiation. WCN allocates by verified contribution.
           </p>
         </div>
       </div>
