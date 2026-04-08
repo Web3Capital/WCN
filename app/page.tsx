@@ -35,7 +35,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section section-alt">
         <div className="container">
           <div className="section-head">
             <h2>Designed for real coordination.</h2>
