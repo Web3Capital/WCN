@@ -1,0 +1,34 @@
+import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
+
+const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
+
+function getDatasourceUrl() {
+  // Prisma 7 + driver adapters require a direct Postgres URL.
+  // In Vercel Postgres, POSTGRES_URL is the direct connection string.
+  return process.env.POSTGRES_URL || process.env.DATABASE_URL;
+}
+
+export function getPrisma() {
+  if (globalForPrisma.prisma) return globalForPrisma.prisma;
+
+  const url = getDatasourceUrl();
+  if (!url) {
+    throw new Error("Missing database URL. Set POSTGRES_URL or DATABASE_URL.");
+  }
+  if (url.startsWith("prisma://") || url.startsWith("prisma+postgres://")) {
+    throw new Error("POSTGRES_URL must be a direct postgres:// connection string (not prisma+postgres).");
+  }
+
+  const pool = new Pool({ connectionString: url });
+  const adapter = new PrismaPg(pool);
+
+  globalForPrisma.prisma = new PrismaClient({
+    adapter,
+    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"]
+  });
+
+  return globalForPrisma.prisma;
+}
+

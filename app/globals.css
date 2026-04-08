@@ -372,6 +372,65 @@ p, li { color: var(--muted); line-height: 1.7; font-size: 16px; }
 .list-clean { list-style: none; padding: 0; margin: 0; }
 .list-clean li { padding: 12px 0; border-bottom: 1px solid rgba(159,179,217,0.12); }
 .list-clean li:last-child { border-bottom: none; }
+
+.form { display: grid; gap: 14px; }
+.field { display: grid; gap: 8px; }
+.label { font-size: 13px; font-weight: 700; color: var(--muted); letter-spacing: 0.02em; }
+input, textarea, select {
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--bg) 92%, transparent);
+  color: var(--text);
+  font: inherit;
+  transition: border-color var(--dur-2) var(--ease-out), background var(--dur-2) var(--ease-out);
+}
+textarea { min-height: 120px; resize: vertical; }
+input:focus, textarea:focus, select:focus { border-color: color-mix(in oklab, var(--accent) 55%, var(--line)); }
+.form-error { margin: 0; color: #ef4444; font-size: 14px; }
+
+.apps-layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 14px;
+}
+.apps-list {
+  display: grid;
+  gap: 8px;
+}
+.apps-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--bg) 90%, transparent);
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out);
+}
+.apps-row:hover {
+  background: color-mix(in oklab, var(--text) 5%, transparent);
+  border-color: color-mix(in oklab, var(--accent) 18%, var(--line));
+}
+.apps-row[data-active="true"] {
+  background: color-mix(in oklab, var(--accent) 10%, transparent);
+  border-color: color-mix(in oklab, var(--accent) 22%, var(--line));
+}
+.apps-detail { padding: 6px; }
+.apps-detail-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+@media (max-width: 960px) {
+  .apps-layout { grid-template-columns: 1fr; }
+}
 @media (max-width: 960px) {
   .hero-grid, .grid-2, .grid-3, .grid-5, .docs-layout { grid-template-columns: 1fr; }
   .kpis { grid-template-columns: 1fr; }
