@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>1.1 WCN 是什么 · Web3 Capital Network</title>
+  <meta name="description" content="WCN 是什么：定义、核心组成、最小逻辑与为什么 WCN 的起点不是链。"/>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --panel:rgba(255,255,255,.74);
+      --panel-strong:rgba(255,255,255,.9);
+      --line:rgba(15,23,42,.08);
+      --line-strong:rgba(15,23,42,.12);
+      --text:#0f172a;
+      --muted:#5b6475;
+      --soft:#7e8797;
+      --brand:#2563eb;
+      --brand-2:#4f46e5;
+      --brand-3:#0ea5e9;
+      --shadow:0 10px 30px rgba(15,23,42,.06), 0 30px 80px rgba(15,23,42,.08);
+      --radius-xl:32px;
+      --radius-lg:24px;
+      --radius-md:18px;
+      --radius-sm:14px;
+      --max:1320px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 0% -10%, rgba(37,99,235,.12), transparent 55%),
+        radial-gradient(900px 620px at 100% 0%, rgba(79,70,229,.10), transparent 48%),
+        radial-gradient(720px 500px at 50% 100%, rgba(14,165,233,.08), transparent 52%),
+        linear-gradient(180deg,#fbfcfe 0%, #f6f8fc 38%, #f5f7fb 100%);
+      line-height:1.75;
+      letter-spacing:.01em;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+    a{color:inherit;text-decoration:none}
+    .topbar-wrap{
+      position:sticky;top:0;z-index:50;padding:16px 20px 0;
+    }
+    .topbar{
+      max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:14px 18px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.65);
+      backdrop-filter:blur(18px) saturate(1.2);border-radius:999px;box-shadow:0 10px 40px rgba(15,23,42,.06);
+    }
+    .brand{display:flex;align-items:center;gap:14px;min-width:0}
+    .brand-mark{
+      width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;letter-spacing:-.04em;color:#fff;
+      background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 50%, var(--brand-3) 100%);
+      box-shadow:0 12px 30px rgba(37,99,235,.28);flex:0 0 auto;
+    }
+    .brand-copy .eyebrow{
+      font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);margin-bottom:2px;font-weight:700;
+    }
+    .brand-copy .title{
+      font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .nav a{
+      padding:9px 14px;border-radius:999px;color:var(--muted);font-size:13px;font-weight:600;transition:all .18s ease;
+    }
+    .nav a:hover{background:rgba(15,23,42,.04);color:var(--text)}
+    .nav .cta{
+      background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 100%);color:#fff;box-shadow:0 12px 28px rgba(37,99,235,.22);
+    }
+
+    .page{max-width:var(--max);margin:0 auto;padding:26px 24px 80px}
+    .hero{
+      position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.74));
+      border:1px solid rgba(255,255,255,.85);box-shadow:var(--shadow);border-radius:40px;padding:42px 40px 36px;isolation:isolate;
+    }
+    .hero::before,.hero::after{content:"";position:absolute;border-radius:999px;filter:blur(44px);z-index:-1}
+    .hero::before{width:320px;height:320px;right:-40px;top:-70px;background:radial-gradient(circle, rgba(79,70,229,.22), rgba(79,70,229,0) 66%)}
+    .hero::after{width:280px;height:280px;left:-70px;bottom:-90px;background:radial-gradient(circle, rgba(14,165,233,.18), rgba(14,165,233,0) 65%)}
+
+    .badge{
+      display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.72);
+      border:1px solid rgba(15,23,42,.06);color:#2854c5;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px;
+    }
+    .hero-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:26px;align-items:start}
+    .hero h1{
+      margin:0;font-size:clamp(40px,5.8vw,76px);line-height:1.02;letter-spacing:-.056em;font-weight:830;max-width:10.5em;
+    }
+    .hero .lede{
+      margin:18px 0 0;font-size:20px;color:var(--muted);max-width:42em;
+    }
+    .hero .lede strong{color:var(--text)}
+    .hero-meta{
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:26px;
+    }
+    .meta-card{
+      background:rgba(255,255,255,.66);border:1px solid rgba(15,23,42,.06);border-radius:22px;padding:18px 18px 16px;
+    }
+    .meta-card .label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    .meta-card .value{font-size:15px;font-weight:700;line-height:1.45}
+    .hero-side{display:flex;flex-direction:column;gap:14px}
+    .side-panel{
+      background:rgba(255,255,255,.74);border:1px solid rgba(15,23,42,.06);border-radius:28px;padding:22px 22px 18px;
+    }
+    .side-panel h3{margin:0 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft)}
+    .side-panel p{margin:0;color:var(--muted);font-size:15px}
+    .mini-points{display:grid;gap:12px;margin-top:14px}
+    .mini-item{
+      background:rgba(255,255,255,.84);border:1px solid var(--line);border-radius:18px;padding:14px 16px;
+    }
+    .mini-item strong{display:block;font-size:14px;margin-bottom:4px}
+    .mini-item span{display:block;font-size:13px;color:var(--muted)}
+
+    .layout{
+      display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;margin-top:28px;
+    }
+    .article{
+      background:var(--panel);border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow);
+      border-radius:34px;padding:34px;backdrop-filter:blur(18px) saturate(1.15);
+    }
+    .article-section{margin-bottom:34px}
+    .article-section:last-child{margin-bottom:0}
+    .eyebrow{
+      font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px;
+    }
+    h2{
+      margin:0 0 14px;font-size:clamp(28px,3.2vw,40px);line-height:1.08;letter-spacing:-.04em;font-weight:820;
+    }
+    h3{
+      margin:22px 0 10px;font-size:22px;line-height:1.16;letter-spacing:-.03em;font-weight:780;
+    }
+    .article p{
+      margin:0 0 16px;font-size:17px;color:var(--text);
+    }
+    .article strong{font-weight:820}
+    .statement{
+      border-left:4px solid var(--brand);background:linear-gradient(180deg, rgba(37,99,235,.06), rgba(255,255,255,.65));
+      border-radius:0 20px 20px 0;padding:18px 20px;margin:18px 0 20px;color:#243754;font-size:17px;
+    }
+    .checklist{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:16px 0 10px;
+    }
+    .check{
+      background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(249,251,255,.9));
+      border:1px solid var(--line);border-radius:22px;padding:18px;
+    }
+    .check .title{font-size:15px;font-weight:800;margin-bottom:6px}
+    .check .desc{font-size:14px;color:var(--muted)}
+    .logic{
+      display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:16px;
+    }
+    .logic-step{
+      background:rgba(255,255,255,.88);border:1px solid var(--line);border-radius:22px;padding:16px;
+      min-height:140px;
+    }
+    .logic-step .no{
+      width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(79,70,229,.12));
+      color:#2347b8;font-size:13px;font-weight:800;margin-bottom:12px;
+    }
+    .logic-step strong{display:block;font-size:15px;margin-bottom:6px}
+    .logic-step span{display:block;font-size:13px;color:var(--muted)}
+    .aside{display:flex;flex-direction:column;gap:16px;position:sticky;top:92px;height:max-content}
+    .card{
+      background:var(--panel-strong);border:1px solid var(--line);border-radius:28px;padding:22px;box-shadow:0 12px 30px rgba(15,23,42,.05);
+    }
+    .card h4{
+      margin:0 0 12px;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);
+    }
+    .toc a{
+      display:block;padding:8px 0;color:var(--muted);font-size:14px;font-weight:600
+    }
+    .toc a:hover{color:var(--brand)}
+    .next-card{
+      display:block;background:linear-gradient(135deg,#1d4ed8 0%, #4338ca 100%);color:#fff;border-radius:28px;padding:24px;box-shadow:0 18px 40px rgba(37,99,235,.22);
+    }
+    .next-card .tag{font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.8;margin-bottom:10px;font-weight:700}
+    .next-card .name{font-size:24px;font-weight:820;line-height:1.15;letter-spacing:-.03em;margin-bottom:8px}
+    .next-card .desc{font-size:14px;opacity:.9}
+
+    .bottom-nav{
+      display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:34px;
+    }
+    .nav-card{
+      background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(249,251,255,.9));
+      border:1px solid var(--line);border-radius:24px;padding:20px;
+    }
+    .nav-card .small{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    .nav-card .big{font-size:18px;font-weight:800;letter-spacing:-.03em}
+    .footer{padding:28px 4px 0;color:var(--soft);font-size:13px;text-align:center}
+
+    @media (max-width:1150px){
+      .hero-grid,.layout{grid-template-columns:1fr}
+      .hero-meta{grid-template-columns:1fr 1fr}
+      .logic{grid-template-columns:1fr 1fr}
+      .aside{position:relative;top:auto}
+    }
+    @media (max-width:760px){
+      .nav{display:none}
+      .topbar{border-radius:24px;padding:14px}
+      .page{padding:18px 16px 56px}
+      .hero,.article{padding:24px}
+      .hero-meta,.checklist,.logic,.bottom-nav{grid-template-columns:1fr}
+      .hero h1{font-size:38px}
+      .hero .lede{font-size:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar-wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark">W³</div>
+        <div class="brand-copy">
+          <div class="eyebrow">Chapter 01 · 1.1</div>
+          <div class="title">Web3 Capital Network · WCN 是什么</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#definition">定义</a>
+        <a href="#components">组成</a>
+        <a href="#logic">逻辑</a>
+        <a href="#meaning">为什么重要</a>
+        <a class="cta" href="#next">继续阅读</a>
+      </nav>
+    </div>
+  </div>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="badge">1.1 · 项目定义</div>
+          <h1>WCN 不是从“先做链”开始，而是从“先建立业务网络”开始。</h1>
+          <p class="lede">
+            <strong>Web3 Capital Network（WCN）</strong> 是一个由全球节点、AI Agent 与 Proof of Business（PoB）共同驱动的业务网络，
+            用来连接项目、资本、服务、分发与执行，并对真实业务结果进行验证与结算。
+          </p>
+
+          <div class="hero-meta">
+            <div class="meta-card">
+              <div class="label">这页作用</div>
+              <div class="value">建立对 WCN 的第一性定义</div>
+            </div>
+            <div class="meta-card">
+              <div class="label">核心回答</div>
+              <div class="value">WCN 到底是什么系统？</div>
+            </div>
+            <div class="meta-card">
+              <div class="label">阅读重点</div>
+              <div class="value">定义、组成、逻辑与起点</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="side-panel">
+            <h3>这页回答 4 个问题</h3>
+            <div class="mini-points">
+              <div class="mini-item">
+                <strong>WCN 到底是什么？</strong>
+                <span>先定义系统，再展开机制。</span>
+              </div>
+              <div class="mini-item">
+                <strong>核心组成是什么？</strong>
+                <span>节点、Agent 与 PoB 如何共同构成网络。</span>
+              </div>
+              <div class="mini-item">
+                <strong>最小逻辑是什么？</strong>
+                <span>WCN 关注的是结果，而不是表面活跃。</span>
+              </div>
+              <div class="mini-item">
+                <strong>为什么起点不是链？</strong>
+                <span>先组织业务，再谈链上承载，才有真实输入。</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <article class="article">
+        <section class="article-section" id="definition">
+          <div class="eyebrow">Definition</div>
+          <h2>WCN 是一个业务网络，不是一个先验存在的链。</h2>
+          <p>
+            在今天的 Web3 与 AI 世界里，项目、资本、媒体、服务商、地区资源和执行能力并不缺，
+            真正缺的是一个能够把这些资源组织起来、推动它们协作、验证结果并沉淀价值的系统。
+          </p>
+          <p>
+            WCN 的目标，就是建立这样一个系统。
+          </p>
+          <p>
+            它首先是一个<strong>业务网络</strong>，不是单一基金、单一社群，也不是“先发链再找场景”的公链项目。
+            它把不同类型的参与者放进同一条工作流中，让协作围绕真实业务闭环发生，而不是围绕流量、热度或短期叙事运转。
+          </p>
+          <div class="statement">
+            WCN 的起点不是链，而是业务。不是先问“能不能上链”，而是先问：资源能不能被组织、结果能不能被验证、价值能不能被结算。
+          </div>
+        </section>
+
+        <section class="article-section" id="components">
+          <div class="eyebrow">Components</div>
+          <h2>WCN 由三个核心部分共同构成。</h2>
+
+          <div class="checklist">
+            <div class="check">
+              <div class="title">1. 全球节点网络</div>
+              <div class="desc">项目方、资本方、服务商、媒体、地区运营者和行业组织者组成的责任网络。节点不是普通用户，而是能带来资源、推进业务、承担责任的协作单元。</div>
+            </div>
+            <div class="check">
+              <div class="title">2. AI Agent 执行层</div>
+              <div class="desc">Research、筛选、触达、跟进、增长、监控与协作支持等执行能力。AI 在这里不是会聊天，而是能进入任务并提高执行效率。</div>
+            </div>
+            <div class="check">
+              <div class="title">3. Proof of Business（PoB）</div>
+              <div class="desc">WCN 的核心机制。PoB 不是活跃积分，而是对真实业务结果的证明机制。只有形成可验证、可追踪、可复核的业务闭环，才会进入记录与结算资格判断。</div>
+            </div>
+            <div class="check">
+              <div class="title">三者如何协同</div>
+              <div class="desc">节点带来资源，Agent 放大执行，PoB 验证结果。三者组合起来，才构成一个真正可以长期运行的业务网络。</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="article-section" id="logic">
+          <div class="eyebrow">Logic</div>
+          <h2>WCN 的最小逻辑很简单：谁真正推动了结果发生。</h2>
+          <p>
+            WCN 的核心逻辑，不是谁最活跃、谁最会发帖、谁最会拉群，而是谁真正推动了业务结果发生。
+          </p>
+          <p>
+            这意味着，WCN 关注的不是表面参与，而是以下五件事：
+          </p>
+
+          <div class="logic">
+            <div class="logic-step">
+              <div class="no">1</div>
+              <strong>谁引入了机会</strong>
+              <span>项目、资本、服务、媒体或地区资源如何进入系统。</span>
+            </div>
+            <div class="logic-step">
+              <div class="no">2</div>
+              <strong>谁推进了协作</strong>
+              <span>谁真正让机会从联系人关系进入工作流。</span>
+            </div>
+            <div class="logic-step">
+              <div class="no">3</div>
+              <strong>谁完成了执行</strong>
+              <span>人和 Agent 如何把任务推进成可以交付的结果。</span>
+            </div>
+            <div class="logic-step">
+              <div class="no">4</div>
+              <strong>谁留下了证据</strong>
+              <span>没有证据，业务无法被验证；没有验证，就没有长期价值。</span>
+            </div>
+            <div class="logic-step">
+              <div class="no">5</div>
+              <strong>谁让结果成立</strong>
+              <span>最终衡量的不是热闹，而是结果是否真实发生。</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="article-section" id="path">
+          <div class="eyebrow">Path</div>
+          <h2>WCN 正在建设的，是一条从资源进入到结果结算的完整网络路径。</h2>
+          <p>
+            WCN 并不是在制造概念，而是在构建一套可以长期运转的业务操作系统。它的路径可以概括为：
+          </p>
+          <div class="statement">
+            节点引入资源 → 机会进入协作空间 → 人与 Agent 执行 → 结果形成 → 证据提交 → PoB 验证 → 进入结算层
+          </div>
+          <p>
+            这条路径决定了 WCN 与普通社群、普通 CRM 或普通撮合平台的区别：它不是停留在“连接”上，而是进一步走到“执行、验证与沉淀”。
+          </p>
+        </section>
+
+        <section class="article-section" id="meaning">
+          <div class="eyebrow">Meaning</div>
+          <h2>为什么这一定义重要？</h2>
+          <p>
+            如果一个项目从一开始就把自己定义成“链”，它很容易陷入一个常见误区：先做技术外壳，再去寻找真实需求。
+          </p>
+          <p>
+            WCN 反过来做。它的起点不是链，而是业务网络。只有当前面三件事成立，后面的链上身份、链上凭证和链上资产承载才有真实意义：
+          </p>
+
+          <div class="checklist">
+            <div class="check">
+              <div class="title">资源能不能被组织？</div>
+              <div class="desc">如果资源仍然停留在私聊、群聊和个人关系里，就谈不上网络。</div>
+            </div>
+            <div class="check">
+              <div class="title">结果能不能被验证？</div>
+              <div class="desc">如果结果只能靠口头描述，网络就无法形成可信账本。</div>
+            </div>
+            <div class="check">
+              <div class="title">价值能不能被结算？</div>
+              <div class="desc">如果贡献没有记录与归因，长期协作就无法沉淀。</div>
+            </div>
+            <div class="check">
+              <div class="title">链上承载是否有真实输入？</div>
+              <div class="desc">只有业务网络先成立，协议层和资产层才不是空转的技术外壳。</div>
+            </div>
+          </div>
+
+          <p>
+            这也是为什么 WCN 要先被定义成一个业务网络，而不是先被理解成一条链。
+          </p>
+        </section>
+
+        <div class="bottom-nav" id="next">
+          <a class="nav-card" href="01-项目介绍-首页_大师级UI版.html">
+            <div class="small">上一篇</div>
+            <div class="big">返回 · 01 项目介绍首页</div>
+          </a>
+          <a class="nav-card" href="1.2-WCN-不是什么.html">
+            <div class="small">下一篇</div>
+            <div class="big">继续 · 1.2 WCN 不是什么</div>
+          </a>
+        </div>
+      </article>
+
+      <aside class="aside">
+        <div class="card">
+          <h4>本页目录</h4>
+          <div class="toc">
+            <a href="#definition">WCN 的定义</a>
+            <a href="#components">核心组成</a>
+            <a href="#logic">最小逻辑</a>
+            <a href="#path">完整路径</a>
+            <a href="#meaning">为什么重要</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h4>本页关键词</h4>
+          <p style="margin:0;color:var(--muted);font-size:15px">
+            业务网络、全球节点、AI Agent、Proof of Business、结果优先、先业务后链。
+          </p>
+        </div>
+
+        <a class="next-card" href="1.2-WCN-不是什么.html">
+          <div class="tag">Next</div>
+          <div class="name">1.2 WCN 不是什么</div>
+          <div class="desc">澄清最容易出现的误解，建立 WCN 的边界与身份。</div>
+        </a>
+      </aside>
+    </div>
+
+    <div class="footer">
+      1.1 WCN 是什么 · WCN 中文视觉版
+    </div>
+  </main>
+</body>
+</html>

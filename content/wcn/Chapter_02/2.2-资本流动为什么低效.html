@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>2.2 资本流动为什么低效 · Web3 Capital Network</title>
+  <meta name="description" content="WCN 第二章第二节：为什么 Web3 资本流动明明活跃，却依然低效、昂贵且难以形成稳定闭环。" />
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --panel:rgba(255,255,255,.74);
+      --panel-strong:rgba(255,255,255,.9);
+      --line:rgba(15,23,42,.08);
+      --text:#0f172a;
+      --muted:#5b6475;
+      --soft:#7e8797;
+      --brand:#2563eb;
+      --brand-2:#4f46e5;
+      --brand-3:#0ea5e9;
+      --warning:#d97706;
+      --shadow:0 10px 30px rgba(15,23,42,.06), 0 30px 80px rgba(15,23,42,.08);
+      --max:1320px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 0% -10%, rgba(37,99,235,.10), transparent 55%),
+        radial-gradient(900px 620px at 100% 0%, rgba(79,70,229,.10), transparent 48%),
+        radial-gradient(720px 500px at 50% 100%, rgba(14,165,233,.08), transparent 52%),
+        linear-gradient(180deg,#fbfcfe 0%, #f6f8fc 38%, #f5f7fb 100%);
+      line-height:1.78;
+      letter-spacing:.01em;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+    a{color:inherit;text-decoration:none}
+    .topbar-wrap{position:sticky;top:0;z-index:50;padding:16px 20px 0}
+    .topbar{
+      max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:14px 18px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.65);
+      backdrop-filter:blur(18px) saturate(1.2);border-radius:999px;box-shadow:0 10px 40px rgba(15,23,42,.06);
+    }
+    .brand{display:flex;align-items:center;gap:14px;min-width:0}
+    .brand-mark{
+      width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;letter-spacing:-.04em;color:#fff;
+      background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 50%, var(--brand-3) 100%);
+      box-shadow:0 12px 30px rgba(37,99,235,.28);flex:0 0 auto;
+    }
+    .brand-copy .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);margin-bottom:2px;font-weight:700}
+    .brand-copy .title{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .nav a{padding:9px 14px;border-radius:999px;color:var(--muted);font-size:13px;font-weight:600;transition:all .18s ease}
+    .nav a:hover{background:rgba(15,23,42,.04);color:var(--text)}
+    .nav .cta{background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 100%);color:#fff;box-shadow:0 12px 28px rgba(37,99,235,.22)}
+    .page{max-width:var(--max);margin:0 auto;padding:26px 24px 80px}
+    .hero{
+      position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.74));
+      border:1px solid rgba(255,255,255,.85);box-shadow:var(--shadow);border-radius:40px;padding:42px 40px 36px;isolation:isolate;
+    }
+    .hero::before,.hero::after{content:"";position:absolute;border-radius:999px;filter:blur(44px);z-index:-1}
+    .hero::before{width:340px;height:340px;right:-60px;top:-80px;background:radial-gradient(circle, rgba(37,99,235,.15), rgba(37,99,235,0) 66%)}
+    .hero::after{width:280px;height:280px;left:-70px;bottom:-90px;background:radial-gradient(circle, rgba(79,70,229,.12), rgba(79,70,229,0) 65%)}
+    .badge{
+      display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.72);
+      border:1px solid rgba(15,23,42,.06);color:#1d4ed8;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px;
+    }
+    .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:26px;align-items:start}
+    .hero h1{margin:0;font-size:clamp(40px,5.6vw,74px);line-height:1.02;letter-spacing:-.056em;font-weight:830;max-width:11em}
+    .hero .lede{margin:18px 0 0;font-size:20px;color:var(--muted);max-width:42em}
+    .hero .lede strong{color:var(--text)}
+    .hero-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:26px}
+    .meta-card{background:rgba(255,255,255,.66);border:1px solid rgba(15,23,42,.06);border-radius:22px;padding:18px 18px 16px}
+    .meta-card .label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    .meta-card .value{font-size:15px;font-weight:700;line-height:1.45}
+    .hero-side{display:flex;flex-direction:column;gap:14px}
+    .side-panel{background:rgba(255,255,255,.74);border:1px solid rgba(15,23,42,.06);border-radius:28px;padding:22px 22px 18px}
+    .side-panel h3{margin:0 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft)}
+    .side-panel p{margin:0;color:var(--muted);font-size:15px}
+    .mini-points{display:grid;gap:12px;margin-top:14px}
+    .mini-item{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+    .mini-item strong{display:block;font-size:14px;margin-bottom:4px}
+    .mini-item span{display:block;font-size:13px;color:var(--muted)}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;margin-top:28px}
+    .article{
+      background:var(--panel);border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow);
+      border-radius:34px;padding:34px;backdrop-filter:blur(18px) saturate(1.15);
+    }
+    .article-section{margin-bottom:34px}
+    .article-section:last-child{margin-bottom:0}
+    .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    h2{margin:0 0 14px;font-size:clamp(28px,3.2vw,40px);line-height:1.08;letter-spacing:-.04em;font-weight:820}
+    h3{margin:22px 0 10px;font-size:22px;line-height:1.16;letter-spacing:-.03em;font-weight:780}
+    .article p{margin:0 0 16px;font-size:17px;color:var(--text)}
+    .article strong{font-weight:820}
+    .statement{
+      border-left:4px solid var(--warning);
+      background:linear-gradient(180deg, rgba(217,119,6,.06), rgba(255,255,255,.65));
+      border-radius:0 20px 20px 0;padding:18px 20px;color:#5b3410;font-size:17px
+    }
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(249,251,255,.9));border:1px solid var(--line);border-radius:22px;padding:18px}
+    .card .title{font-size:15px;font-weight:800;margin-bottom:6px}
+    .card .desc{font-size:14px;color:var(--muted)}
+    .bullet-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+    .bullet{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:18px;padding:16px}
+    .bullet strong{display:block;font-size:15px;margin-bottom:6px}
+    .bullet span{display:block;font-size:14px;color:var(--muted)}
+    .aside{display:flex;flex-direction:column;gap:16px;position:sticky;top:92px;height:max-content}
+    .aside-card{background:var(--panel-strong);border:1px solid var(--line);border-radius:28px;padding:22px;box-shadow:0 12px 30px rgba(15,23,42,.05)}
+    .aside-card h4{margin:0 0 12px;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft)}
+    .toc a{display:block;padding:8px 0;color:var(--muted);font-size:14px;font-weight:600}
+    .toc a:hover{color:var(--brand)}
+    .next-card{display:block;background:linear-gradient(135deg,#1d4ed8 0%, #4338ca 100%);color:#fff;border-radius:28px;padding:24px;box-shadow:0 18px 40px rgba(37,99,235,.22)}
+    .next-card .tag{font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.8;margin-bottom:10px;font-weight:700}
+    .next-card .name{font-size:24px;font-weight:820;line-height:1.15;letter-spacing:-.03em;margin-bottom:8px}
+    .next-card .desc{font-size:14px;opacity:.9}
+    .bottom-nav{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:34px}
+    .nav-card{background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(249,251,255,.9));border:1px solid var(--line);border-radius:24px;padding:20px}
+    .nav-card .small{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    .nav-card .big{font-size:18px;font-weight:800;letter-spacing:-.03em}
+    .footer{padding:28px 4px 0;color:var(--soft);font-size:13px;text-align:center}
+    @media (max-width:1100px){
+      .hero-grid,.layout{grid-template-columns:1fr}
+      .hero-meta,.cards,.bullet-grid{grid-template-columns:1fr 1fr}
+      .aside{position:relative;top:auto}
+    }
+    @media (max-width:760px){
+      .nav{display:none}
+      .topbar{border-radius:24px;padding:14px}
+      .page{padding:18px 16px 56px}
+      .hero,.article{padding:24px}
+      .hero-meta,.cards,.bullet-grid,.bottom-nav{grid-template-columns:1fr}
+      .hero h1{font-size:38px}
+      .hero .lede{font-size:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar-wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark">W³</div>
+        <div class="brand-copy">
+          <div class="eyebrow">Chapter 02 · 2.2</div>
+          <div class="title">Web3 Capital Network · 资本流动为什么低效</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#surface">表面活跃</a>
+        <a href="#friction">摩擦来源</a>
+        <a href="#cost">低效成本</a>
+        <a href="#why-wcn">为什么必须解决</a>
+        <a class="cta" href="#next">继续阅读</a>
+      </nav>
+    </div>
+  </div>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="badge">2.2 · 资本效率问题</div>
+          <h1>资本很多，交易很多，但有效资本流动依然昂贵、缓慢且不稳定。</h1>
+          <p class="lede">
+            Web3 看起来一直很活跃，但真正高质量的资本流动并不顺畅。
+            问题不只是资金多少，而是资金与项目之间仍然存在大量<strong>筛选成本、信任摩擦、结构化不足与推进断裂</strong>。
+          </p>
+
+          <div class="hero-meta">
+            <div class="meta-card">
+              <div class="label">本页作用</div>
+              <div class="value">解释为什么资本与项目之间长期低效</div>
+            </div>
+            <div class="meta-card">
+              <div class="label">核心判断</div>
+              <div class="value">连接很多，闭环很少</div>
+            </div>
+            <div class="meta-card">
+              <div class="label">阅读重点</div>
+              <div class="value">筛选成本、信任成本与推进断裂</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="side-panel">
+            <h3>这页聚焦 4 个问题</h3>
+            <div class="mini-points">
+              <div class="mini-item">
+                <strong>为什么资本“看起来流动”，但真实效率不高？</strong>
+                <span>活跃不等于高效，交易频繁不等于配置合理。</span>
+              </div>
+              <div class="mini-item">
+                <strong>为什么资金和项目之间摩擦这么大？</strong>
+                <span>缺统一标准、缺可信入口、缺持续推进系统。</span>
+              </div>
+              <div class="mini-item">
+                <strong>为什么很多项目接触了很多投资人却没有结果？</strong>
+                <span>因为 deal 进入了关系层，却没有进入结构化执行层。</span>
+              </div>
+              <div class="mini-item">
+                <strong>为什么这是 WCN 必须解决的问题？</strong>
+                <span>因为没有资本流动效率，就不会有真正稳定的业务闭环。</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <article class="article">
+        <section class="article-section" id="surface">
+          <div class="eyebrow">Surface</div>
+          <h2>表面上，Web3 的资本流动一直很活跃。</h2>
+          <p>从新闻、社交平台和活动现场来看，Web3 似乎一直在发生投资、合作、基金布局、项目路演和市场扩张。</p>
+          <p>但如果真正站在项目、投资人和服务协作的视角去看，就会发现一个更真实的情况：</p>
+          <div class="statement">
+            行业内“资本流动很多”并不等于“资本配置高效”。
+          </div>
+          <p>很多资本流动是高噪音的、短周期的、关系驱动的。真正高质量、可复用、可持续的资本流动，依然稀缺。</p>
+        </section>
+
+        <section class="article-section" id="friction">
+          <div class="eyebrow">Friction</div>
+          <h2>资本与项目之间，长期存在四类核心摩擦。</h2>
+
+          <h3>1. 筛选成本过高</h3>
+          <p>投资人每天会接触到大量项目，项目方也会接触到大量潜在资本。但“看见很多项目”并不等于“看见对的项目”。</p>
+          <p>真正的难点是：项目资料不统一、质量差异大、背景不透明、进度难验证，导致投资人必须花大量时间做初筛。</p>
+
+          <div class="cards">
+            <div class="card"><div class="title">项目难被快速判断</div><div class="desc">材料表达不统一，信息结构混乱，投资人难以形成初步判断。</div></div>
+            <div class="card"><div class="title">资本偏好难被系统映射</div><div class="desc">很多资金方的真实偏好没有进入结构化系统，只能靠经验猜测。</div></div>
+            <div class="card"><div class="title">大量项目不具备准备度</div><div class="desc">创始人往往把“有想法”误认为“可融资”，导致沟通效率极低。</div></div>
+            <div class="card"><div class="title">高价值机会被噪音淹没</div><div class="desc">真正值得看的项目，常常和大量不成熟项目混在一起。</div></div>
+          </div>
+
+          <h3>2. 信任成本过高</h3>
+          <p>在 Web3 里，很多项目和很多资本彼此并不缺一次性认识的机会，缺的是足够的信任与验证基础。</p>
+          <p>投资人关心的不只是项目讲得好不好，而是：</p>
+
+          <div class="bullet-grid">
+            <div class="bullet"><strong>团队是否可信</strong><span>项目方是不是稳定、长期、能执行的团队。</span></div>
+            <div class="bullet"><strong>结构是否清楚</strong><span>项目法律、融资路径、代币或资产边界是否明确。</span></div>
+            <div class="bullet"><strong>进度是否真实</strong><span>里程碑、用户、合作与收入是否真的存在。</span></div>
+            <div class="bullet"><strong>对接方是否可靠</strong><span>中间引荐人与路由者是否具备判断力和责任感。</span></div>
+          </div>
+
+          <p>如果没有可信的中间层、审阅层和推进层，资本就会持续偏保守，项目也会持续感觉“资金很难拿”。</p>
+
+          <h3>3. 推进成本过高</h3>
+          <p>即使一个项目已经接触到潜在投资人，流程也经常在中间阶段断掉。</p>
+          <p>最常见的断裂点包括：</p>
+
+          <div class="cards">
+            <div class="card"><div class="title">第一次会议后没人推进</div><div class="desc">看过、聊过、感觉不错，但缺 owner 持续跟进。</div></div>
+            <div class="card"><div class="title">材料补不齐</div><div class="desc">项目方不知道投资人真正还缺什么，投资人也不愿重复教育。</div></div>
+            <div class="card"><div class="title">没有统一 Deal 空间</div><div class="desc">纪要、材料、状态、下一步动作分散在不同渠道中。</div></div>
+            <div class="card"><div class="title">责任无法锁定</div><div class="desc">谁来继续跟、谁催、谁整理、谁对结果负责，往往不清晰。</div></div>
+          </div>
+
+          <h3>4. 结果难以沉淀</h3>
+          <p>即使融资或战略合作真的做成了，很多时候结果仍然只停留在一次性交易上。</p>
+          <p>这意味着：</p>
+          <div class="bullet-grid">
+            <div class="bullet"><strong>没有统一证据归档</strong><span>合作做成了，但证据没有系统化沉淀。</span></div>
+            <div class="bullet"><strong>没有统一贡献归因</strong><span>很多参与者都“帮过忙”，但没人说得清谁真正推动结果成立。</span></div>
+            <div class="bullet"><strong>没有统一结算入口</strong><span>结果很难被记入长期信用、PoB 或网络价值体系。</span></div>
+            <div class="bullet"><strong>无法形成复用飞轮</strong><span>一次成功没有被沉淀成下次更高效的标准流程。</span></div>
+          </div>
+        </section>
+
+        <section class="article-section" id="cost">
+          <div class="eyebrow">Cost</div>
+          <h2>资本流动低效，真正抬高的是整个行业的系统成本。</h2>
+
+          <h3>1. 项目方被迫花大量时间融资，而不是建设</h3>
+          <p>创始团队往往需要重复做大量低效率动作：改 deck、找人、解释、补资料、再约会、再跟进。</p>
+          <p>这些动作本身不是没有必要，但如果没有系统辅助，它们会持续消耗团队最宝贵的执行时间。</p>
+
+          <h3>2. 资本方被迫做重复筛选，而不是高质量配置</h3>
+          <p>投资人本来应该把时间花在真正高价值的判断和配置上，但现实中，大量时间被消耗在初筛、确认、重复问答和低信任沟通里。</p>
+
+          <h3>3. 服务方和协作方无法稳定接入</h3>
+          <p>当融资流程和协作流程都不稳定时，法务、安全、研究、品牌、增长这些本来应该帮助 deal 成立的角色，也很难更早进入工作流。</p>
+
+          <h3>4. 整个行业更依赖人情，而不是系统</h3>
+          <p>当没有统一路由层，资本配置就更依赖“谁认识谁”“谁更靠近核心圈层”，而不是依赖更透明、更高效、更可复制的网络结构。</p>
+        </section>
+
+        <section class="article-section" id="why-wcn">
+          <div class="eyebrow">Why WCN Must Solve This</div>
+          <h2>为什么 WCN 必须把资本效率问题放在核心位置？</h2>
+          <p>因为如果资本流动不能被结构化，很多更高层的设计都无法成立。</p>
+
+          <div class="cards">
+            <div class="card"><div class="title">节点网络会失去实质价值</div><div class="desc">如果节点不能持续带来并推进真实 deal，网络就只剩联系人堆积。</div></div>
+            <div class="card"><div class="title">Agent 难以真正进入执行层</div><div class="desc">没有结构化 deal 流，Agent 就无法参与筛选、推进、材料整理和跟进。</div></div>
+            <div class="card"><div class="title">PoB 会缺少最强闭环来源</div><div class="desc">融资和战略合作本来就是最清晰、最可验证的业务闭环之一。</div></div>
+            <div class="card"><div class="title">商业模式会被削弱</div><div class="desc">如果 capital flow 不成立，seat fee、service fee、success fee 的飞轮都很难转起来。</div></div>
+          </div>
+
+          <p>WCN 的核心价值之一，就是把“关系层的资本接触”升级为“系统层的资本流动”。</p>
+          <div class="statement">
+            不是让项目接触更多投资人，而是让更合适的资本，通过更清晰的结构、更低的摩擦和更强的执行系统，更快进入高质量闭环。
+          </div>
+        </section>
+
+        <section class="article-section" id="conclusion">
+          <div class="eyebrow">Conclusion</div>
+          <h2>这一页的核心结论</h2>
+          <p>资本流动低效不是单点问题，而是由四种结构性摩擦共同造成的：</p>
+
+          <div class="bullet-grid">
+            <div class="bullet"><strong>筛选成本高</strong><span>项目与资本之间缺少统一结构化接口。</span></div>
+            <div class="bullet"><strong>信任成本高</strong><span>很多机会缺少可信中间层与验证基础。</span></div>
+            <div class="bullet"><strong>推进成本高</strong><span>很多机会进入了会面阶段，却没有被持续推进成结果。</span></div>
+            <div class="bullet"><strong>沉淀成本高</strong><span>结果做成了，也很难进入长期 PoB 与结算系统。</span></div>
+          </div>
+
+          <p>这也是为什么 WCN 不只是一个“撮合平台”，而是一个试图把 capital flow 组织成网络基础设施的系统。</p>
+        </section>
+
+        <div class="bottom-nav" id="next">
+          <a class="nav-card" href="2.1-Web3-的结构性割裂.html">
+            <div class="small">上一篇</div>
+            <div class="big">返回 · 2.1 Web3 的结构性割裂</div>
+          </a>
+          <a class="nav-card" href="2.3-为什么贡献难以结算.html">
+            <div class="small">下一篇</div>
+            <div class="big">继续 · 2.3 为什么贡献难以结算</div>
+          </a>
+        </div>
+      </article>
+
+      <aside class="aside">
+        <div class="aside-card">
+          <h4>本页目录</h4>
+          <div class="toc">
+            <a href="#surface">表面上很活跃</a>
+            <a href="#friction">四类核心摩擦</a>
+            <a href="#cost">低效成本</a>
+            <a href="#why-wcn">为什么 WCN 必须解决</a>
+            <a href="#conclusion">核心结论</a>
+          </div>
+        </div>
+
+        <div class="aside-card">
+          <h4>本页关键词</h4>
+          <p style="margin:0;color:var(--muted);font-size:15px">
+            资本配置、筛选成本、信任成本、推进断裂、Deal Room、结果沉淀。
+          </p>
+        </div>
+
+        <a class="next-card" href="2.3-为什么贡献难以结算.html">
+          <div class="tag">Next</div>
+          <div class="name">2.3 为什么贡献难以结算</div>
+          <div class="desc">进一步进入引荐、执行、增长与协作贡献为什么长期难以被清晰记录和结算。</div>
+        </a>
+      </aside>
+    </div>
+
+    <div class="footer">2.2 资本流动为什么低效 · WCN 中文视觉版</div>
+  </main>
+</body>
+</html>

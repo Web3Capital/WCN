@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --panel:rgba(255,255,255,.74);
+      --panel-strong:rgba(255,255,255,.9);
+      --line:rgba(15,23,42,.08);
+      --text:#0f172a;
+      --muted:#5b6475;
+      --soft:#7e8797;
+      --brand:#2563eb;
+      --brand-2:#4f46e5;
+      --brand-3:#0ea5e9;
+      --success:#059669;
+      --warning:#d97706;
+      --shadow:0 10px 30px rgba(15,23,42,.06), 0 30px 80px rgba(15,23,42,.08);
+      --max:1320px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 0% -10%, rgba(37,99,235,.12), transparent 55%),
+        radial-gradient(900px 620px at 100% 0%, rgba(79,70,229,.10), transparent 48%),
+        radial-gradient(720px 500px at 50% 100%, rgba(16,185,129,.08), transparent 52%),
+        linear-gradient(180deg,#fbfcfe 0%, #f6f8fc 38%, #f5f7fb 100%);
+      line-height:1.75;
+      letter-spacing:.01em;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+    a{color:inherit;text-decoration:none}
+    .topbar-wrap{position:sticky;top:0;z-index:50;padding:16px 20px 0}
+    .topbar{
+      max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:14px 18px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.65);
+      backdrop-filter:blur(18px) saturate(1.2);border-radius:999px;box-shadow:0 10px 40px rgba(15,23,42,.06);
+    }
+    .brand{display:flex;align-items:center;gap:14px;min-width:0}
+    .brand-mark{
+      width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;letter-spacing:-.04em;color:#fff;
+      background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 50%, var(--brand-3) 100%);
+      box-shadow:0 12px 30px rgba(37,99,235,.28);flex:0 0 auto;
+    }
+    .brand-copy .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);margin-bottom:2px;font-weight:700}
+    .brand-copy .title{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .nav a{padding:9px 14px;border-radius:999px;color:var(--muted);font-size:13px;font-weight:600}
+    .nav a:hover{background:rgba(15,23,42,.04);color:var(--text)}
+    .nav .cta{background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 100%);color:#fff;box-shadow:0 12px 28px rgba(37,99,235,.22)}
+    .page{max-width:var(--max);margin:0 auto;padding:26px 24px 80px}
+    .hero{
+      position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.74));
+      border:1px solid rgba(255,255,255,.85);box-shadow:var(--shadow);border-radius:40px;padding:42px 40px 36px;isolation:isolate;
+    }
+    .hero::before,.hero::after{content:"";position:absolute;border-radius:999px;filter:blur(44px);z-index:-1}
+    .hero::before{width:340px;height:340px;right:-60px;top:-80px;background:radial-gradient(circle, rgba(16,185,129,.15), rgba(16,185,129,0) 66%)}
+    .hero::after{width:280px;height:280px;left:-70px;bottom:-90px;background:radial-gradient(circle, rgba(37,99,235,.12), rgba(37,99,235,0) 65%)}
+    .badge{
+      display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.72);
+      border:1px solid rgba(15,23,42,.06);color:var(--success);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px;
+    }
+    .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:26px;align-items:start}
+    .hero h1{margin:0;font-size:clamp(40px,5.6vw,74px);line-height:1.02;letter-spacing:-.056em;font-weight:830;max-width:11em}
+    .hero .lede{margin:18px 0 0;font-size:20px;color:var(--muted);max-width:42em}
+    .hero .lede strong{color:var(--text)}
+    .hero-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:26px}
+    .meta-card{background:rgba(255,255,255,.66);border:1px solid rgba(15,23,42,.06);border-radius:22px;padding:18px 18px 16px}
+    .meta-card .label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    .meta-card .value{font-size:15px;font-weight:700;line-height:1.45}
+    .hero-side{display:flex;flex-direction:column;gap:14px}
+    .side-panel{background:rgba(255,255,255,.74);border:1px solid rgba(15,23,42,.06);border-radius:28px;padding:22px 22px 18px}
+    .side-panel h3{margin:0 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft)}
+    .side-panel p{margin:0;color:var(--muted);font-size:15px}
+    .mini-points{display:grid;gap:12px;margin-top:14px}
+    .mini-item{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+    .mini-item strong{display:block;font-size:14px;margin-bottom:4px}
+    .mini-item span{display:block;font-size:13px;color:var(--muted)}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;margin-top:28px}
+    .article{
+      background:var(--panel);border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow);
+      border-radius:34px;padding:34px;backdrop-filter:blur(18px) saturate(1.15);
+    }
+    .article-section{margin-bottom:34px}
+    .article-section:last-child{margin-bottom:0}
+    .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    h2{margin:0 0 14px;font-size:clamp(28px,3.2vw,40px);line-height:1.08;letter-spacing:-.04em;font-weight:820}
+    h3{margin:22px 0 10px;font-size:22px;line-height:1.16;letter-spacing:-.03em;font-weight:780}
+    .article p{margin:0 0 16px;font-size:17px;color:var(--text)}
+    .article strong{font-weight:820}
+    .statement{
+      border-left:4px solid var(--warning);
+      background:linear-gradient(180deg, rgba(217,119,6,.06), rgba(255,255,255,.65));
+      border-radius:0 20px 20px 0;padding:18px 20px;color:#5b3410;font-size:17px
+    }
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(249,251,255,.9));border:1px solid var(--line);border-radius:22px;padding:18px}
+    .card .title{font-size:15px;font-weight:800;margin-bottom:6px}
+    .card .desc{font-size:14px;color:var(--muted)}
+    .bullet-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+    .bullet{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:18px;padding:16px}
+    .bullet strong{display:block;font-size:15px;margin-bottom:6px}
+    .bullet span{display:block;font-size:14px;color:var(--muted)}
+    .aside{display:flex;flex-direction:column;gap:16px;position:sticky;top:92px;height:max-content}
+    .aside-card{background:var(--panel-strong);border:1px solid var(--line);border-radius:28px;padding:22px;box-shadow:0 12px 30px rgba(15,23,42,.05)}
+    .aside-card h4{margin:0 0 12px;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft)}
+    .toc a{display:block;padding:8px 0;color:var(--muted);font-size:14px;font-weight:600}
+    .toc a:hover{color:var(--brand)}
+    .next-card{display:block;background:linear-gradient(135deg,#1d4ed8 0%, #4338ca 100%);color:#fff;border-radius:28px;padding:24px;box-shadow:0 18px 40px rgba(37,99,235,.22)}
+    .next-card .tag{font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.8;margin-bottom:10px;font-weight:700}
+    .next-card .name{font-size:24px;font-weight:820;line-height:1.15;letter-spacing:-.03em;margin-bottom:8px}
+    .next-card .desc{font-size:14px;opacity:.9}
+    .bottom-nav{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:34px}
+    .nav-card{background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(249,251,255,.9));border:1px solid var(--line);border-radius:24px;padding:20px}
+    .nav-card .small{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    .nav-card .big{font-size:18px;font-weight:800;letter-spacing:-.03em}
+    .footer{padding:28px 4px 0;color:var(--soft);font-size:13px;text-align:center}
+    @media (max-width:1100px){.hero-grid,.layout{grid-template-columns:1fr}.hero-meta,.cards,.bullet-grid{grid-template-columns:1fr 1fr}.aside{position:relative;top:auto}}
+    @media (max-width:760px){.nav{display:none}.topbar{border-radius:24px;padding:14px}.page{padding:18px 16px 56px}.hero,.article{padding:24px}.hero-meta,.cards,.bullet-grid,.bottom-nav{grid-template-columns:1fr}.hero h1{font-size:38px}}
+  </style>
+<title>6.9 节点生命周期 · Web3 Capital Network</title></head><body>
+<div class="topbar-wrap"><div class="topbar"><div class="brand"><div class="brand-mark">W³</div><div class="brand-copy"><div class="eyebrow">Chapter 06 · 6.9</div><div class="title">Web3 Capital Network · 节点生命周期</div></div></div><nav class="nav"><a href="#states">状态</a><a href="#flow">阶段</a><a href="#why">为什么重要</a><a class="cta" href="#next">继续阅读</a></nav></div></div>
+<main class="page"><section class="hero"><div class="hero-grid"><div><div class="badge">6.9 · 节点生命周期</div><h1>节点不是一旦加入就永久成立，而是一个持续被验证、续期、升级或淘汰的位置。</h1><p class="lede">如果节点不能被动态管理，系统很快就会积累大量低质量位置。因此，WCN 的节点必须有完整生命周期：从申请、审核、上线，到复核、续期、降级和退出。</p><div class="hero-meta"><div class="meta-card"><div class="label">本页作用</div><div class="value">定义节点状态机</div></div><div class="meta-card"><div class="label">核心主题</div><div class="value">节点位置必须持续被验证</div></div><div class="meta-card"><div class="label">阅读重点</div><div class="value">申请、上线、复核、续期、退出</div></div></div></div><div class="hero-side"><div class="side-panel"><h3>关键状态</h3><div class="mini-points"><div class="mini-item"><strong>Applied</strong><span>已申请，待审查。</span></div><div class="mini-item"><strong>Approved / Active</strong><span>已通过并上线。</span></div><div class="mini-item"><strong>Probation / Suspended</strong><span>进入观察或暂停状态。</span></div><div class="mini-item"><strong>Renewed / Revoked</strong><span>续期成功或被撤销。</span></div></div></div></div></div></section>
+<div class="layout"><article class="article"><section class="article-section" id="states"><div class="eyebrow">States</div><h2>节点状态机</h2><div class="cards"><div class="card"><div class="title">Applied</div><div class="desc">节点提交申请，进入审核与资料验证阶段。</div></div><div class="card"><div class="title">Approved</div><div class="desc">通过资格审核，但尚未完成合同与上线动作。</div></div><div class="card"><div class="title">Active</div><div class="desc">已经正式进入网络，具备推进 deal 和提交 PoB 的资格。</div></div><div class="card"><div class="title">Probation</div><div class="desc">进入观察期，通常因为输出不足、边界问题或低活跃。</div></div><div class="card"><div class="title">Suspended</div><div class="desc">节点被临时暂停权限，需等待复核或纠正。</div></div><div class="card"><div class="title">Renewed / Revoked</div><div class="desc">通过续期继续存在，或因失职 / 违规 / 长期无价值而退出。</div></div></div></section>
+<section class="article-section" id="flow"><div class="eyebrow">Flow</div><h2>生命周期的典型路径</h2><div class="statement">申请 → 审核 → 签约 / 授权 → 上线 → 输出与复核 → 续期 / 升级 / 降级 / 退出</div><p>节点不是靠一次性“买入”定义，而是靠持续输出和系统验证定义。</p><div class="bullet-grid"><div class="bullet"><strong>申请阶段看潜力</strong><span>是否具备资源、角色和价值。</span></div><div class="bullet"><strong>上线阶段看规则接受度</strong><span>是否愿意进入系统边界与流程。</span></div><div class="bullet"><strong>运行阶段看真实输出</strong><span>是否带来资源、推进 deal、提交证据。</span></div><div class="bullet"><strong>续期阶段看长期质量</strong><span>是否值得继续占据网络位置。</span></div></div></section>
+<section class="article-section" id="why"><div class="eyebrow">Why It Matters</div><h2>为什么生命周期必须严格？</h2><p>因为节点系统一旦只进不出，就会迅速失去质量。</p><div class="statement">高质量网络不是靠不断加节点，而是靠不断筛出、验证和保留真正有价值的节点。</div><p>生命周期管理能保证：节点不是头衔，而是持续被证明的责任位置。</p></section><div class="bottom-nav" id="next"><a class="nav-card" href="6.8-节点责任.html"><div class="small">上一篇</div><div class="big">返回 · 6.8 节点责任</div></a><a class="nav-card" href="07-Agent系统-首页.html"><div class="small">下一章</div><div class="big">进入 · 第七章 AI Agent 系统</div></a></div></article><aside class="aside"><div class="aside-card"><h4>本页目录</h4><div class="toc"><a href="#states">状态</a><a href="#flow">路径</a><a href="#why">为什么重要</a></div></div><div class="aside-card"><h4>本页关键词</h4><p style="margin:0;color:var(--muted);font-size:15px">节点生命周期、审核、上线、复核、续期、退出。</p></div><a class="next-card" href="07-Agent系统-首页.html"><div class="tag">Next Chapter</div><div class="name">第七章 · AI Agent 系统</div><div class="desc">进入 WCN 最关键的差异化之一：Agent 如何进入正式业务闭环。</div></a></aside></div><div class="footer">6.9 节点生命周期 · WCN 中文视觉版</div></main>
+</body></html>

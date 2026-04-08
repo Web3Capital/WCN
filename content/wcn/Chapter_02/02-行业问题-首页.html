@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>02 行业问题 · Web3 Capital Network</title>
+  <meta name="description" content="Web3 Capital Network（WCN）第二章首页：行业问题、结构性割裂、资本低效、贡献难结算与 AI 未进入商业闭环。" />
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --panel:rgba(255,255,255,.74);
+      --panel-strong:rgba(255,255,255,.9);
+      --line:rgba(15,23,42,.08);
+      --line-strong:rgba(15,23,42,.12);
+      --text:#0f172a;
+      --muted:#5b6475;
+      --soft:#7e8797;
+      --brand:#2563eb;
+      --brand-2:#4f46e5;
+      --brand-3:#0ea5e9;
+      --danger:#dc2626;
+      --warning:#d97706;
+      --shadow:0 10px 30px rgba(15,23,42,.06), 0 30px 80px rgba(15,23,42,.08);
+      --max:1320px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 0% -10%, rgba(37,99,235,.10), transparent 55%),
+        radial-gradient(900px 620px at 100% 0%, rgba(79,70,229,.10), transparent 48%),
+        radial-gradient(720px 500px at 50% 100%, rgba(14,165,233,.08), transparent 52%),
+        linear-gradient(180deg,#fbfcfe 0%, #f6f8fc 38%, #f5f7fb 100%);
+      line-height:1.75;
+      letter-spacing:.01em;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+    a{color:inherit;text-decoration:none}
+    .topbar-wrap{position:sticky;top:0;z-index:50;padding:16px 20px 0}
+    .topbar{
+      max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:14px 18px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.65);
+      backdrop-filter:blur(18px) saturate(1.2);border-radius:999px;box-shadow:0 10px 40px rgba(15,23,42,.06);
+    }
+    .brand{display:flex;align-items:center;gap:14px;min-width:0}
+    .brand-mark{
+      width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;letter-spacing:-.04em;color:#fff;
+      background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 50%, var(--brand-3) 100%);
+      box-shadow:0 12px 30px rgba(37,99,235,.28);flex:0 0 auto;
+    }
+    .brand-copy .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);margin-bottom:2px;font-weight:700}
+    .brand-copy .title{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .nav a{padding:9px 14px;border-radius:999px;color:var(--muted);font-size:13px;font-weight:600;transition:all .18s ease}
+    .nav a:hover{background:rgba(15,23,42,.04);color:var(--text)}
+    .nav .cta{background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 100%);color:#fff;box-shadow:0 12px 28px rgba(37,99,235,.22)}
+
+    .page{max-width:var(--max);margin:0 auto;padding:26px 24px 80px}
+    .hero{
+      position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.74));
+      border:1px solid rgba(255,255,255,.85);box-shadow:var(--shadow);border-radius:40px;padding:42px 40px 36px;isolation:isolate;
+    }
+    .hero::before,.hero::after{content:"";position:absolute;border-radius:999px;filter:blur(44px);z-index:-1}
+    .hero::before{width:320px;height:320px;right:-40px;top:-70px;background:radial-gradient(circle, rgba(220,38,38,.14), rgba(220,38,38,0) 66%)}
+    .hero::after{width:280px;height:280px;left:-70px;bottom:-90px;background:radial-gradient(circle, rgba(217,119,6,.12), rgba(217,119,6,0) 65%)}
+    .badge{
+      display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.72);
+      border:1px solid rgba(15,23,42,.06);color:#9a3412;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px;
+    }
+    .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:26px;align-items:start}
+    .hero h1{margin:0;font-size:clamp(40px,5.8vw,76px);line-height:1.02;letter-spacing:-.056em;font-weight:830;max-width:10.5em}
+    .hero .lede{margin:18px 0 0;font-size:20px;color:var(--muted);max-width:42em}
+    .hero .lede strong{color:var(--text)}
+    .hero-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:26px}
+    .meta-card{background:rgba(255,255,255,.66);border:1px solid rgba(15,23,42,.06);border-radius:22px;padding:18px 18px 16px}
+    .meta-card .label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    .meta-card .value{font-size:15px;font-weight:700;line-height:1.45}
+    .hero-side{display:flex;flex-direction:column;gap:14px}
+    .side-panel{background:rgba(255,255,255,.74);border:1px solid rgba(15,23,42,.06);border-radius:28px;padding:22px 22px 18px}
+    .side-panel h3{margin:0 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft)}
+    .side-panel p{margin:0;color:var(--muted);font-size:15px}
+    .problem-stream{display:grid;gap:12px;margin-top:14px}
+    .stream-item{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+    .stream-item strong{display:block;font-size:14px;margin-bottom:4px}
+    .stream-item span{display:block;font-size:13px;color:var(--muted)}
+
+    .section{margin-top:28px;background:var(--panel);border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow);border-radius:34px;padding:34px}
+    .section-header{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:22px}
+    .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    h2{margin:0;font-size:clamp(28px,3.2vw,40px);line-height:1.08;letter-spacing:-.04em;font-weight:820}
+    .section-header p{margin:0;max-width:46em;color:var(--muted);font-size:16px}
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .card{
+      position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(250,252,255,.85));
+      border:1px solid var(--line);border-radius:28px;padding:24px;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+      box-shadow:0 8px 24px rgba(15,23,42,.04);
+    }
+    .card:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(15,23,42,.08);border-color:rgba(37,99,235,.16)}
+    .card .icon{
+      width:48px;height:48px;border-radius:16px;display:grid;place-items:center;font-size:22px;
+      background:linear-gradient(135deg,rgba(220,38,38,.08),rgba(217,119,6,.10));margin-bottom:18px
+    }
+    .card h3{margin:0 0 10px;font-size:22px;line-height:1.18;letter-spacing:-.03em}
+    .card p{margin:0;color:var(--muted);font-size:15px}
+    .card .link{display:inline-flex;align-items:center;gap:8px;margin-top:18px;color:#1d4ed8;font-size:14px;font-weight:700}
+
+    .diagnosis{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
+    .statement{
+      border-left:4px solid var(--warning);
+      background:linear-gradient(180deg, rgba(217,119,6,.06), rgba(255,255,255,.65));
+      border-radius:0 20px 20px 0;padding:18px 20px;color:#5b3410;font-size:17px
+    }
+    .list{display:grid;gap:12px}
+    .list-item{background:rgba(255,255,255,.84);border:1px solid var(--line);border-radius:20px;padding:16px 18px}
+    .list-item strong{display:block;font-size:15px;margin-bottom:4px}
+    .list-item span{display:block;font-size:14px;color:var(--muted)}
+
+    .chapter-nav{margin-top:18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .mini-link{
+      background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(249,251,255,.9));border:1px solid var(--line);border-radius:24px;padding:22px;transition:all .18s ease;
+    }
+    .mini-link:hover{transform:translateY(-2px);border-color:rgba(37,99,235,.18);box-shadow:0 12px 28px rgba(15,23,42,.06)}
+    .mini-link .tag{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:10px}
+    .mini-link .name{font-size:19px;font-weight:800;letter-spacing:-.03em;line-height:1.2;margin-bottom:8px}
+    .mini-link .desc{font-size:14px;color:var(--muted)}
+
+    .footer{padding:28px 4px 0;color:var(--soft);font-size:13px;text-align:center}
+    @media (max-width:1100px){
+      .hero-grid,.diagnosis{grid-template-columns:1fr}
+      .cards,.chapter-nav,.hero-meta{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:760px){
+      .nav{display:none}
+      .topbar{border-radius:24px;padding:14px}
+      .page{padding:18px 16px 56px}
+      .hero,.section{padding:24px}
+      .cards,.chapter-nav,.hero-meta{grid-template-columns:1fr}
+      .hero h1{font-size:38px}
+      .hero .lede{font-size:18px}
+      .section-header{flex-direction:column;align-items:flex-start}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar-wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark">W³</div>
+        <div class="brand-copy">
+          <div class="eyebrow">Chapter 02</div>
+          <div class="title">Web3 Capital Network · 行业问题</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#problem-map">问题地图</a>
+        <a href="#diagnosis">核心诊断</a>
+        <a href="#pages">章节导航</a>
+        <a class="cta" href="#next">开始阅读</a>
+      </nav>
+    </div>
+  </div>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="badge">第二章 · 行业问题总览</div>
+          <h1>WCN 不是在创造需求，而是在回应已经存在的系统性断裂。</h1>
+          <p class="lede">
+            第二章不先讲 WCN 自己，而是先讲<strong>行业为什么需要一个可验证、可结算的业务网络</strong>。
+            只有问题被讲清楚，解法才有可信度。
+          </p>
+
+          <div class="hero-meta">
+            <div class="meta-card">
+              <div class="label">核心任务</div>
+              <div class="value">把行业痛点从“感觉”变成结构问题</div>
+            </div>
+            <div class="meta-card">
+              <div class="label">核心问题</div>
+              <div class="value">为什么现有 Web3 与 AI 协作方式低效</div>
+            </div>
+            <div class="meta-card">
+              <div class="label">阅读重点</div>
+              <div class="value">割裂、低效、失真与未结算的 AI</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="side-panel">
+            <h3>本章聚焦的 4 个问题</h3>
+            <div class="problem-stream">
+              <div class="stream-item">
+                <strong>结构性割裂</strong>
+                <span>项目、资本、服务、媒体和流动性资源仍高度分散。</span>
+              </div>
+              <div class="stream-item">
+                <strong>资本流动低效</strong>
+                <span>大量机会停在“介绍”，没有进入持续推进与闭环。</span>
+              </div>
+              <div class="stream-item">
+                <strong>贡献难以结算</strong>
+                <span>很多真正推动结果的人，无法被系统性记录。</span>
+              </div>
+              <div class="stream-item">
+                <strong>AI 尚未进入商业闭环</strong>
+                <span>Agent 已经能做事，却还没有进入“任务—结果—证明—结算”的网络。</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="problem-map">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">Problem Map</div>
+          <h2>第二章不是讲抱怨，而是讲结构问题。</h2>
+        </div>
+        <p>
+          WCN 要成立，必须先证明它面对的是已经存在且越来越严重的问题，而不是凭空创造一个看起来宏大的叙事。
+        </p>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <div class="icon">◫</div>
+          <h3>资源仍处于碎片化状态</h3>
+          <p>项目、资本、服务、媒体与地区资源都存在，但它们不在同一套责任链和协同链里，因此效率极低。</p>
+        </div>
+
+        <div class="card">
+          <div class="icon">↔</div>
+          <h3>大量协作止步于“连接”</h3>
+          <p>行业里不缺 introductions，缺的是把介绍推进成 Deal、把 Deal 推进成结果、再把结果验证并沉淀下来。</p>
+        </div>
+
+        <div class="card">
+          <div class="icon">◎</div>
+          <h3>贡献难以被准确记录</h3>
+          <p>谁引入了机会、谁推动了协作、谁完成了执行，往往只能靠主观判断，而不是靠可追溯证据。</p>
+        </div>
+
+        <div class="card">
+          <div class="icon">✦</div>
+          <h3>AI 很少进入真实结算层</h3>
+          <p>AI 已经足够有用，但目前更多停留在工具层，很少被放进商业任务、证据系统和结算逻辑中。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="diagnosis">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">Diagnosis</div>
+          <h2>真正的问题，不是“没有资源”，而是“没有系统”。</h2>
+        </div>
+        <p>
+          这一章要建立的不是情绪判断，而是一套结构性诊断：资源明明存在，为什么依然低效、失真且难以沉淀。
+        </p>
+      </div>
+
+      <div class="diagnosis">
+        <div class="statement">
+          今天 Web3 最大的问题，不是缺项目，不是缺资本，也不是缺内容。真正缺的是一个能够把资源放进同一条协作、验证与结算链里的系统。
+        </div>
+
+        <div class="list">
+          <div class="list-item">
+            <strong>没有统一路由层</strong>
+            <span>资源之间仍主要靠个人关系临时连接，而不是通过结构化工作流协同。</span>
+          </div>
+          <div class="list-item">
+            <strong>没有统一责任链</strong>
+            <span>很多人都“参与过”，但很难判断谁真正对结果负责。</span>
+          </div>
+          <div class="list-item">
+            <strong>没有统一证据标准</strong>
+            <span>结果是否成立、贡献是否真实、归因如何分配，往往缺少一致判断依据。</span>
+          </div>
+          <div class="list-item">
+            <strong>没有统一结算入口</strong>
+            <span>即使闭环真的发生了，也很难把结果沉淀为长期的网络价值。</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pages">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">Pages</div>
+          <h2>本章包含 4 个核心页面。</h2>
+        </div>
+        <p>
+          建议从结构性割裂开始读，再进入资本效率、贡献结算和 AI 的现实处境。
+        </p>
+      </div>
+
+      <div class="chapter-nav">
+        <a class="mini-link" href="2.1-Web3-的结构性割裂.html">
+          <div class="tag">2.1</div>
+          <div class="name">Web3 的结构性割裂</div>
+          <div class="desc">解释为什么项目、资本、服务与媒体虽然都存在，却很少在同一套系统中协同。</div>
+        </a>
+
+        <a class="mini-link" href="2.2-资本流动为什么低效.html">
+          <div class="tag">2.2</div>
+          <div class="name">资本流动为什么低效</div>
+          <div class="desc">说明为什么资金与项目之间存在大量摩擦，很多机会停在介绍而不是闭环。</div>
+        </a>
+
+        <a class="mini-link" href="2.3-为什么贡献难以结算.html">
+          <div class="tag">2.3</div>
+          <div class="name">为什么贡献难以结算</div>
+          <div class="desc">解释为什么行业里的真实推动者经常无法被清晰记录、归因与结算。</div>
+        </a>
+
+        <a class="mini-link" href="2.4-为什么-AI-还没有进入商业闭环.html">
+          <div class="tag">2.4</div>
+          <div class="name">为什么 AI 还没有进入商业闭环</div>
+          <div class="desc">说明 AI 已经足够有用，却仍然缺少进入任务、证明与结算层的商业网络。</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="section" id="next">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">Next</div>
+          <h2>如果你只看一页，先从 2.1 开始。</h2>
+        </div>
+        <p>
+          2.1 会先把“资源明明存在，却没有形成网络”的问题讲清楚。后面三页会在这个基础上展开。
+        </p>
+      </div>
+
+      <div class="cards">
+        <a class="card" href="2.1-Web3-的结构性割裂.html">
+          <div class="icon">→</div>
+          <h3>开始阅读：2.1 Web3 的结构性割裂</h3>
+          <p>从行业最根本的问题开始：不是缺资源，而是资源没有被组织成一个系统。</p>
+          <div class="link">进入页面 →</div>
+        </a>
+
+        <a class="card" href="2.4-为什么-AI-还没有进入商业闭环.html">
+          <div class="icon">↗</div>
+          <h3>快速看重点：AI 为什么还没进入闭环</h3>
+          <p>如果你更关心 AI 与 WCN 的关系，可以先看 2.4，再回到前面三页。</p>
+          <div class="link">查看 2.4 →</div>
+        </a>
+      </div>
+    </section>
+
+    <div class="footer">
+      02 行业问题 · WCN 中文视觉版首页
+    </div>
+  </main>
+</body>
+</html>

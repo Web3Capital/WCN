@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --panel:rgba(255,255,255,.74);
+      --panel-strong:rgba(255,255,255,.9);
+      --line:rgba(15,23,42,.08);
+      --text:#0f172a;
+      --muted:#5b6475;
+      --soft:#7e8797;
+      --brand:#2563eb;
+      --brand-2:#4f46e5;
+      --brand-3:#0ea5e9;
+      --success:#059669;
+      --warning:#d97706;
+      --shadow:0 10px 30px rgba(15,23,42,.06), 0 30px 80px rgba(15,23,42,.08);
+      --max:1320px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 0% -10%, rgba(37,99,235,.12), transparent 55%),
+        radial-gradient(900px 620px at 100% 0%, rgba(79,70,229,.10), transparent 48%),
+        radial-gradient(720px 500px at 50% 100%, rgba(16,185,129,.08), transparent 52%),
+        linear-gradient(180deg,#fbfcfe 0%, #f6f8fc 38%, #f5f7fb 100%);
+      line-height:1.75;
+      letter-spacing:.01em;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+    a{color:inherit;text-decoration:none}
+    .topbar-wrap{position:sticky;top:0;z-index:50;padding:16px 20px 0}
+    .topbar{
+      max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:14px 18px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.65);
+      backdrop-filter:blur(18px) saturate(1.2);border-radius:999px;box-shadow:0 10px 40px rgba(15,23,42,.06);
+    }
+    .brand{display:flex;align-items:center;gap:14px;min-width:0}
+    .brand-mark{
+      width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;letter-spacing:-.04em;color:#fff;
+      background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 50%, var(--brand-3) 100%);
+      box-shadow:0 12px 30px rgba(37,99,235,.28);flex:0 0 auto;
+    }
+    .brand-copy .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);margin-bottom:2px;font-weight:700}
+    .brand-copy .title{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .nav a{padding:9px 14px;border-radius:999px;color:var(--muted);font-size:13px;font-weight:600;transition:all .18s ease}
+    .nav a:hover{background:rgba(15,23,42,.04);color:var(--text)}
+    .nav .cta{background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 100%);color:#fff;box-shadow:0 12px 28px rgba(37,99,235,.22)}
+    .page{max-width:var(--max);margin:0 auto;padding:26px 24px 80px}
+    .hero{
+      position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.74));
+      border:1px solid rgba(255,255,255,.85);box-shadow:var(--shadow);border-radius:40px;padding:42px 40px 36px;isolation:isolate;
+    }
+    .hero::before,.hero::after{content:"";position:absolute;border-radius:999px;filter:blur(44px);z-index:-1}
+    .hero::before{width:340px;height:340px;right:-60px;top:-80px;background:radial-gradient(circle, rgba(16,185,129,.15), rgba(16,185,129,0) 66%)}
+    .hero::after{width:280px;height:280px;left:-70px;bottom:-90px;background:radial-gradient(circle, rgba(37,99,235,.12), rgba(37,99,235,0) 65%)}
+    .badge{
+      display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.72);
+      border:1px solid rgba(15,23,42,.06);color:var(--success);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px;
+    }
+    .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:26px;align-items:start}
+    .hero h1{margin:0;font-size:clamp(40px,5.6vw,74px);line-height:1.02;letter-spacing:-.056em;font-weight:830;max-width:11em}
+    .hero .lede{margin:18px 0 0;font-size:20px;color:var(--muted);max-width:42em}
+    .hero .lede strong{color:var(--text)}
+    .hero-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:26px}
+    .meta-card{background:rgba(255,255,255,.66);border:1px solid rgba(15,23,42,.06);border-radius:22px;padding:18px 18px 16px}
+    .meta-card .label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    .meta-card .value{font-size:15px;font-weight:700;line-height:1.45}
+    .hero-side{display:flex;flex-direction:column;gap:14px}
+    .side-panel{background:rgba(255,255,255,.74);border:1px solid rgba(15,23,42,.06);border-radius:28px;padding:22px 22px 18px}
+    .side-panel h3{margin:0 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft)}
+    .side-panel p{margin:0;color:var(--muted);font-size:15px}
+    .mini-points{display:grid;gap:12px;margin-top:14px}
+    .mini-item{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+    .mini-item strong{display:block;font-size:14px;margin-bottom:4px}
+    .mini-item span{display:block;font-size:13px;color:var(--muted)}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;margin-top:28px}
+    .article{
+      background:var(--panel);border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow);
+      border-radius:34px;padding:34px;backdrop-filter:blur(18px) saturate(1.15);
+    }
+    .article-section{margin-bottom:34px}
+    .article-section:last-child{margin-bottom:0}
+    .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    h2{margin:0 0 14px;font-size:clamp(28px,3.2vw,40px);line-height:1.08;letter-spacing:-.04em;font-weight:820}
+    h3{margin:22px 0 10px;font-size:22px;line-height:1.16;letter-spacing:-.03em;font-weight:780}
+    .article p{margin:0 0 16px;font-size:17px;color:var(--text)}
+    .article strong{font-weight:820}
+    .statement{
+      border-left:4px solid var(--warning);
+      background:linear-gradient(180deg, rgba(217,119,6,.06), rgba(255,255,255,.65));
+      border-radius:0 20px 20px 0;padding:18px 20px;color:#5b3410;font-size:17px
+    }
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(249,251,255,.9));border:1px solid var(--line);border-radius:22px;padding:18px}
+    .card .title{font-size:15px;font-weight:800;margin-bottom:6px}
+    .card .desc{font-size:14px;color:var(--muted)}
+    .bullet-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+    .bullet{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:18px;padding:16px}
+    .bullet strong{display:block;font-size:15px;margin-bottom:6px}
+    .bullet span{display:block;font-size:14px;color:var(--muted)}
+    .aside{display:flex;flex-direction:column;gap:16px;position:sticky;top:92px;height:max-content}
+    .aside-card{background:var(--panel-strong);border:1px solid var(--line);border-radius:28px;padding:22px;box-shadow:0 12px 30px rgba(15,23,42,.05)}
+    .aside-card h4{margin:0 0 12px;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft)}
+    .toc a{display:block;padding:8px 0;color:var(--muted);font-size:14px;font-weight:600}
+    .toc a:hover{color:var(--brand)}
+    .next-card{display:block;background:linear-gradient(135deg,#1d4ed8 0%, #4338ca 100%);color:#fff;border-radius:28px;padding:24px;box-shadow:0 18px 40px rgba(37,99,235,.22)}
+    .next-card .tag{font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.8;margin-bottom:10px;font-weight:700}
+    .next-card .name{font-size:24px;font-weight:820;line-height:1.15;letter-spacing:-.03em;margin-bottom:8px}
+    .next-card .desc{font-size:14px;opacity:.9}
+    .bottom-nav{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:34px}
+    .nav-card{background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(249,251,255,.9));border:1px solid var(--line);border-radius:24px;padding:20px}
+    .nav-card .small{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    .nav-card .big{font-size:18px;font-weight:800;letter-spacing:-.03em}
+    .footer{padding:28px 4px 0;color:var(--soft);font-size:13px;text-align:center}
+    @media (max-width:1100px){.hero-grid,.layout{grid-template-columns:1fr}.hero-meta,.cards,.bullet-grid{grid-template-columns:1fr 1fr}.aside{position:relative;top:auto}}
+    @media (max-width:760px){.nav{display:none}.topbar{border-radius:24px;padding:14px}.page{padding:18px 16px 56px}.hero,.article{padding:24px}.hero-meta,.cards,.bullet-grid,.bottom-nav{grid-template-columns:1fr}.hero h1{font-size:38px}}
+  </style>
+<title>5.6 验证与结算层 · Web3 Capital Network</title></head><body>
+<div class="topbar-wrap"><div class="topbar"><div class="brand"><div class="brand-mark">W³</div><div class="brand-copy"><div class="eyebrow">Chapter 05 · 5.6</div><div class="title">Web3 Capital Network · 验证与结算层</div></div></div><nav class="nav"><a href="#role">这层是什么</a><a href="#components">核心组件</a><a href="#why">为什么重要</a><a class="cta" href="#next">继续阅读</a></nav></div></div>
+<main class="page"><section class="hero"><div class="hero-grid"><div><div class="badge">5.6 · 验证与结算层</div><h1>这一层负责把“做成了什么”变成“被证明了什么”，再进入长期价值层。</h1><p class="lede">验证与结算层是整个 WCN 架构的收口层。前四层解决的是资源、资本、执行和分发，这一层解决的是：结果如何被确认、记账并沉淀为长期网络价值。</p><div class="hero-meta"><div class="meta-card"><div class="label">本页作用</div><div class="value">定义 WCN 的最终收口层</div></div><div class="meta-card"><div class="label">核心主题</div><div class="value">Proof、PoB、归因与结算</div></div><div class="meta-card"><div class="label">阅读重点</div><div class="value">证据、审核、PoB、Settlement</div></div></div></div><div class="hero-side"><div class="side-panel"><h3>核心组件</h3><div class="mini-points"><div class="mini-item"><strong>Proof Desk</strong><span>证据进入、审核与争议处理。</span></div><div class="mini-item"><strong>PoB 账本</strong><span>把结果变成可归因、可计算的记录。</span></div><div class="mini-item"><strong>Settlement</strong><span>把通过审核的结果变成长期价值输入。</span></div></div></div></div></div></section>
+<div class="layout"><article class="article"><section class="article-section" id="role"><div class="eyebrow">Role</div><h2>验证与结算层回答的是：结果如何被系统相信？</h2><p>前四层再强，如果没有这一层，整个系统依然可能回到主观判断、口头 claim 和拍脑袋分配。</p><div class="statement">这一层的存在，是为了把“结果发生了”升级成“结果被证明了、被归因了、被记账了”。</div></section>
+<section class="article-section" id="components"><div class="eyebrow">Components</div><h2>核心组件</h2><div class="cards"><div class="card"><div class="title">Evidence Packet</div><div class="desc">合同、报表、纪要、链上哈希、回执、交付文件等证据被结构化收集。</div></div><div class="card"><div class="title">Reviewer Queue</div><div class="desc">审核人检查材料完整度、真实性、风险标记和归因边界。</div></div><div class="card"><div class="title">PoB Event</div><div class="desc">通过审核的业务结果进入 PoB 账本，成为系统认可的价值对象。</div></div><div class="card"><div class="title">Settlement Run</div><div class="desc">PoB 在周期性结算中被汇总、分配并进入长期价值层。</div></div></div></section>
+<section class="article-section" id="why"><div class="eyebrow">Why It Matters</div><h2>为什么这一层是 WCN 的灵魂层？</h2><div class="bullet-grid"><div class="bullet"><strong>没有验证层</strong><span>结果就会停留在主观叙事和口头 claim。</span></div><div class="bullet"><strong>没有归因层</strong><span>很难区分主导节点、协作节点和 Agent 贡献。</span></div><div class="bullet"><strong>没有 PoB 层</strong><span>系统无法建立结果账本，也无法形成长期信用。</span></div><div class="bullet"><strong>没有结算层</strong><span>结果无法沉淀为网络长期价值，只剩一次性合作。</span></div></div><p>所以，验证与结算层不是 WCN 的“最后一步补丁”，而是整个系统存在的理由之一。</p></section><div class="bottom-nav" id="next"><a class="nav-card" href="5.5-分发与流动性层.html"><div class="small">上一篇</div><div class="big">返回 · 5.5 分发与流动性层</div></a><a class="nav-card" href="06-节点系统-首页.html"><div class="small">下一章</div><div class="big">进入 · 第六章 节点系统</div></a></div></article><aside class="aside"><div class="aside-card"><h4>本页目录</h4><div class="toc"><a href="#role">角色</a><a href="#components">核心组件</a><a href="#why">为什么重要</a></div></div><div class="aside-card"><h4>本页关键词</h4><p style="margin:0;color:var(--muted);font-size:15px">Proof Desk、证据包、Reviewer Queue、PoB、结算层、长期价值。</p></div><a class="next-card" href="06-节点系统-首页.html"><div class="tag">Next Chapter</div><div class="name">第六章 · 节点系统</div><div class="desc">从系统骨架进入核心参与者：节点到底是什么，为什么它是 WCN 的核心单元。</div></a></aside></div><div class="footer">5.6 验证与结算层 · WCN 中文视觉版</div></main>
+</body></html>

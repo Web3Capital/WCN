@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>为什么是现在 · WCN</title>
+  <style>
+:root{
+  --bg:#f6f8fc;
+  --panel:#ffffff;
+  --panel-2:#fbfcff;
+  --line:#e5eaf3;
+  --text:#142033;
+  --muted:#5f6f87;
+  --soft:#8fa1ba;
+  --brand:#315efb;
+  --brand-2:#6b8cff;
+  --accent:#101828;
+  --shadow:0 20px 60px rgba(19,33,68,.08);
+  --radius:24px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:
+  radial-gradient(circle at top left, #eef3ff 0, rgba(238,243,255,0) 28%),
+  radial-gradient(circle at top right, #effdf5 0, rgba(239,253,245,0) 22%),
+  var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Source Han Sans SC","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.7;
+}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+.page{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+}
+.sidebar{
+  position:sticky; top:0; height:100vh;
+  padding:28px 20px;
+  border-right:1px solid var(--line);
+  background:rgba(255,255,255,.72);
+  backdrop-filter:saturate(140%) blur(12px);
+}
+.brand{
+  display:flex; align-items:center; gap:14px; margin-bottom:26px;
+}
+.brand-mark{
+  width:42px;height:42px;border-radius:14px;
+  background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  color:white;display:grid;place-items:center;font-weight:800;
+  box-shadow:0 10px 30px rgba(49,94,251,.28);
+}
+.brand-title{font-size:18px;font-weight:800;letter-spacing:.01em}
+.brand-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.side-section{margin-top:22px}
+.side-label{
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:11px;
+  color:var(--soft);
+  margin:0 0 10px 12px;
+}
+.nav{
+  display:flex; flex-direction:column; gap:8px;
+}
+.nav a{
+  display:block; padding:12px 14px; border-radius:16px;
+  color:var(--text); text-decoration:none; font-size:14px; font-weight:600;
+  border:1px solid transparent;
+}
+.nav a:hover{
+  background:#f7f9ff; border-color:#ebf0fb;
+}
+.nav a.active{
+  background:linear-gradient(180deg,#eef3ff,#f8faff);
+  border-color:#dce6ff;
+  color:#173486;
+}
+.nav .chapter{
+  font-size:13px; color:var(--muted); font-weight:700; padding:8px 12px 0;
+}
+.content{
+  padding:34px 42px 72px;
+}
+.hero{
+  background:linear-gradient(135deg, rgba(49,94,251,.08), rgba(107,140,255,.05) 45%, rgba(255,255,255,.85));
+  border:1px solid #dfe7fb;
+  box-shadow:var(--shadow);
+  border-radius:32px;
+  padding:34px 34px 26px;
+  position:relative;
+  overflow:hidden;
+}
+.hero:before{
+  content:"";
+  position:absolute; right:-60px; top:-60px;
+  width:240px;height:240px;border-radius:50%;
+  background:radial-gradient(circle, rgba(49,94,251,.12), rgba(49,94,251,0) 70%);
+}
+.hero-top{
+  display:flex; flex-wrap:wrap; justify-content:space-between; gap:18px;
+}
+.kicker{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:12px; font-weight:700; color:#2c4ccf;
+  background:#eef3ff; border:1px solid #dfe7ff;
+  border-radius:999px; padding:7px 12px;
+}
+.title{
+  font-size:clamp(34px, 5vw, 54px);
+  line-height:1.08;
+  letter-spacing:-.03em;
+  margin:14px 0 12px;
+  font-weight:850;
+}
+.subtitle{
+  max-width:920px;
+  color:var(--muted);
+  font-size:18px;
+  line-height:1.75;
+  margin:0 0 18px;
+}
+.hero-grid{
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:16px;
+}
+.mini-card{
+  background:rgba(255,255,255,.88);
+  border:1px solid var(--line);
+  border-radius:20px; padding:16px 18px;
+}
+.mini-card .mini-title{font-size:12px;color:var(--soft);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.mini-card .mini-value{font-size:15px;font-weight:700;color:var(--accent)}
+.main{
+  display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:24px; margin-top:24px;
+}
+.article{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:34px;
+}
+.article h1{display:none}
+.article h2{
+  font-size:28px; line-height:1.2; letter-spacing:-.02em;
+  margin:38px 0 14px;
+}
+.article h3{
+  font-size:21px; line-height:1.3; margin:26px 0 10px;
+}
+.article p{font-size:17px; color:var(--text); margin:0 0 16px}
+.article strong{font-weight:800}
+.article blockquote{
+  margin:18px 0 24px; padding:18px 20px;
+  border-left:4px solid var(--brand);
+  background:#f7faff; border-radius:16px;
+  color:#243754; font-size:17px;
+}
+.article ul, .article ol{
+  margin:8px 0 20px 0; padding-left:24px;
+}
+.article li{margin:8px 0; font-size:17px}
+.article hr{
+  border:none; height:1px; background:linear-gradient(90deg,transparent,var(--line),transparent);
+  margin:30px 0;
+}
+.article a{
+  font-weight:700;
+}
+.aside{
+  align-self:start;
+  position:sticky; top:28px;
+  display:flex; flex-direction:column; gap:16px;
+}
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  padding:20px;
+}
+.card h4{
+  margin:0 0 12px; font-size:14px; text-transform:uppercase; letter-spacing:.08em; color:var(--soft);
+}
+.toc a{
+  display:block; padding:8px 0; color:var(--muted); font-size:14px; text-decoration:none;
+}
+.toc a:hover{color:var(--brand)}
+.toc .depth-3{padding-left:12px}
+.chapter-nav{
+  display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:28px;
+}
+.chapter-link{
+  display:block; padding:18px 20px; background:var(--panel-2);
+  border:1px solid var(--line); border-radius:22px; text-decoration:none;
+}
+.chapter-link .k{display:block; font-size:12px; color:var(--soft); text-transform:uppercase; letter-spacing:.08em}
+.chapter-link .v{display:block; margin-top:6px; font-size:16px; font-weight:800; color:var(--text)}
+.footer-note{
+  margin-top:22px; font-size:13px; color:var(--soft);
+}
+@media (max-width: 1100px){
+  .page{grid-template-columns:1fr}
+  .sidebar{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--line)}
+  .main{grid-template-columns:1fr}
+  .aside{position:relative;top:auto}
+}
+@media (max-width: 760px){
+  .content{padding:20px}
+  .hero{padding:24px}
+  .article{padding:24px}
+  .hero-grid{grid-template-columns:1fr}
+  .chapter-nav{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">W³</div>
+        <div>
+          <div class="brand-title">Web3 Capital Network</div>
+          <div class="brand-sub">Chapter 01 · 中文视觉版</div>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <div class="side-label">第一章</div>
+        <div class="nav">
+          <a class="" href="01-项目介绍-首页.html">01 项目介绍</a>
+<a class="" href="1.1-WCN-是什么.html">1.1 WCN 是什么</a>
+<a class="" href="1.2-WCN-不是什么.html">1.2 WCN 不是什么</a>
+<a class="" href="1.3-愿景与使命.html">1.3 愿景与使命</a>
+<a class="active" href="1.4-为什么是现在.html">1.4 为什么是现在</a>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <div class="side-label">说明</div>
+        <div class="card" style="box-shadow:none">
+          <h4>阅读建议</h4>
+          <p style="margin:0;font-size:14px;color:var(--muted)">建议从章节首页开始阅读，再按顺序进入 1.1、1.2、1.3、1.4 四个页面。整个视觉系统已做响应式适配，适合网页阅读与展示。</p>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section class="hero">
+        <div class="hero-top">
+          <div>
+            <div class="kicker">时代窗口</div>
+            <h1 class="title">为什么是现在</h1>
+            <p class="subtitle">说明为什么 WCN 不是太早，也不是太晚，而是恰好出现在正确阶段。</p>
+          </div>
+        </div>
+        <div class="hero-grid">
+          <div class="mini-card">
+            <div class="mini-title">文档类型</div>
+            <div class="mini-value">WCN GitBook 章节页</div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-title">使用场景</div>
+            <div class="mini-value">官网 / GitBook / 对外阅读</div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-title">视觉风格</div>
+            <div class="mini-value">世界级产品说明文档 UI</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="main">
+        <article class="article">
+          <h1>为什么是现在</h1>
+<blockquote><strong>一句话总结：WCN 之所以值得现在做，不是因为概念新，而是因为行业条件第一次开始同时成熟。</strong></blockquote>
+<hr>
+<h2 id="这页回答什么问题">这页回答什么问题</h2>
+<ul><li>为什么 WCN 不是太早的项目？</li><li>为什么 WCN 也不是已经太晚的项目？</li><li>为什么现在是做“业务网络”的窗口期？</li><li>为什么 AI 与 Web3 的结合现在开始具备现实基础？</li></ul>
+<hr>
+<h2 id="为什么时机很重要">为什么“时机”很重要</h2>
+<p>一个项目是否值得做，不只取决于方向是否正确，<br>还取决于它是不是出现在正确的时间。</p>
+<p>太早，行业没有基础。<br>太晚，窗口已经被别人占据。<br>只有当问题足够明显、资源足够成熟、执行手段足够可用时，一个系统型项目才有真正落地的可能。</p>
+<p>WCN 正处在这样一个时间窗口。</p>
+<hr>
+<h2 id="窗口一Web3-从技术竞赛进入资源组织竞赛">窗口一：Web3 从“技术竞赛”进入“资源组织竞赛”</h2>
+<p>过去一段时间，Web3 行业大量注意力放在：</p>
+<ul><li>新链</li><li>新协议</li><li>新模型</li><li>新叙事</li></ul>
+<p>但今天，越来越明显的一件事是：</p>
+<p>单纯的技术存在，已经不再自动带来成功。<br>项目是否能活下来，越来越取决于：</p>
+<ul><li>能不能拿到资本</li><li>能不能形成市场</li><li>能不能获得分发</li><li>能不能获得合规和执行支持</li><li>能不能进入长期协作网络</li></ul>
+<p>这意味着，行业竞争正在从“技术有没有”转向“资源怎么组织”。</p>
+<p>而 WCN 正是面向这个问题。</p>
+<hr>
+<h2 id="窗口二AI-Agent-已经具备执行力但还没有商业结算层">窗口二：AI Agent 已经具备执行力，但还没有商业结算层</h2>
+<p>过去 AI 更多被理解为效率工具。<br>今天，AI Agent 已经开始具备承担真实执行任务的能力，例如：</p>
+<ul><li>研究与尽调</li><li>信息筛选</li><li>会议纪要</li><li>触达与跟进</li><li>数据整理</li><li>运营协作</li><li>监控与预警</li></ul>
+<p>问题在于，AI 虽然越来越能做事，<br>但它们很少真正进入“任务—结果—证明—结算”的商业闭环。</p>
+<p>大多数情况下，AI 只停留在工具层。<br>它没有权限结构、没有责任边界、没有日志要求、没有结算资格。</p>
+<p>WCN 正好补的，就是这个层。</p>
+<hr>
+<h2 id="窗口三市场开始重新重视结果而不是热闹">窗口三：市场开始重新重视“结果”，而不是“热闹”</h2>
+<p>行业经历过多轮靠空投、活跃、流量、故事驱动的增长模式。<br>这些模式曾经有效，但也带来了严重的问题：</p>
+<ul><li>空转</li><li>伪活跃</li><li>伪贡献</li><li>伪增长</li><li>激励错配</li></ul>
+<p>今天，市场越来越难被“只有概念、没有结果”的模式说服。<br>投资人、合作方、节点与服务商越来越看重：</p>
+<ul><li>是否有真实业务</li><li>是否有真实收入</li><li>是否有真实客户</li><li>是否有真实协作</li><li>是否有真实复用闭环</li></ul>
+<p>这对 WCN 是有利的。<br>因为 WCN 的核心逻辑，本来就不是奖励热闹，而是奖励结果。</p>
+<hr>
+<h2 id="窗口四RWA稳定币机构化趋势让资产网络第一次变得现实">窗口四：RWA、稳定币、机构化趋势让“资产网络”第一次变得现实</h2>
+<p>如果 Web3 只是一套交易和投机系统，<br>那么“业务网络”看起来并没有那么迫切。</p>
+<p>但今天，随着以下趋势越来越明显：</p>
+<ul><li>RWA 加速</li><li>稳定币基础设施增强</li><li>机构进入</li><li>支付与结算升级</li><li>资产数字化与链上化推进</li></ul>
+<p>行业对“资产如何被组织、分发、服务、承载”的需求在迅速上升。</p>
+<p>这意味着，未来真正重要的，不只是链本身，<br>而是链之前和链之上的业务组织能力。</p>
+<p>WCN 不是直接从资产发行层切入，<br>而是先从业务协同网络切入，<br>这恰恰是更现实的路径。</p>
+<hr>
+<h2 id="窗口五现在可以先做网络而不是被迫先做重协议">窗口五：现在可以先做“网络”，而不是被迫先做“重协议”</h2>
+<p>过去很多项目不得不先从重技术或重协议开始，<br>因为缺少足够好的工具、数据系统和自动化能力。</p>
+<p>今天不一样了。</p>
+<p>今天已经有足够多的现实条件，让一个项目可以先把网络跑起来：</p>
+<ul><li>更好的 CRM 与工作流工具</li><li>更成熟的节点协作方式</li><li>更容易结构化的 Deal Flow</li><li>更可用的 AI 执行能力</li><li>更强的内容与跨区域传播基础设施</li></ul>
+<p>这意味着，WCN 可以采取一个更聪明的路径：</p>
+<p><strong>先网络、后规则、再链上。</strong></p>
+<p>而这正是它最重要的战略优势之一。</p>
+<hr>
+<h2 id="结论为什么是现在">结论：为什么是现在</h2>
+<p>WCN 不是因为“概念新”而成立，<br>而是因为这几个条件第一次开始同时成立：</p>
+<ul><li>行业结构性问题足够明显</li><li>资源组织的重要性正在上升</li><li>AI 执行能力已经成熟到可用</li><li>市场开始重新尊重真实结果</li><li>资产网络化窗口正在打开</li><li>工具与协作基础设施已经足够支持先做网络</li></ul>
+<p>这就是为什么，WCN 不是一个太早的项目，<br>也不是一个已经太晚的项目。<br>它是一个在“资源、执行、验证、结算”重新成为核心问题时，刚好出现的项目。</p>
+<hr>
+<h2 id="为什么重要">为什么重要</h2>
+<p>“为什么是现在”这一页的作用，不是制造 urgency，而是证明：</p>
+<p>WCN 的出现不是拍脑袋的灵感，<br>而是对行业阶段变化的结构性回应。</p>
+<hr>
+<h2 id="下一页">下一页</h2>
+<p>继续阅读：<a href="../02-行业问题/2.1-Web3-的结构性割裂.html">行业问题：Web3 的结构性割裂</a></p>
+
+          <div class="chapter-nav">
+            <a class="chapter-link" href="1.3-愿景与使命.html"><span class="k">上一篇</span><span class="v">1.3 愿景与使命</span></a><div></div>
+          </div>
+
+          <div class="footer-note">WCN · Chapter 01 HTML Visual Edition</div>
+        </article>
+
+        <aside class="aside">
+          <div class="card">
+            <h4>本页目录</h4>
+            <div class="toc">
+              <a class="" href="#这页回答什么问题">这页回答什么问题</a>
+<a class="" href="#为什么时机很重要">为什么“时机”很重要</a>
+<a class="" href="#窗口一Web3-从技术竞赛进入资源组织竞赛">窗口一：Web3 从“技术竞赛”进入“资源组织竞赛”</a>
+<a class="" href="#窗口二AI-Agent-已经具备执行力但还没有商业结算层">窗口二：AI Agent 已经具备执行力，但还没有商业结算层</a>
+<a class="" href="#窗口三市场开始重新重视结果而不是热闹">窗口三：市场开始重新重视“结果”，而不是“热闹”</a>
+<a class="" href="#窗口四RWA稳定币机构化趋势让资产网络第一次变得现实">窗口四：RWA、稳定币、机构化趋势让“资产网络”第一次变得现实</a>
+<a class="" href="#窗口五现在可以先做网络而不是被迫先做重协议">窗口五：现在可以先做“网络”，而不是被迫先做“重协议”</a>
+<a class="" href="#结论为什么是现在">结论：为什么是现在</a>
+<a class="" href="#为什么重要">为什么重要</a>
+<a class="" href="#下一页">下一页</a>
+            </div>
+          </div>
+          <div class="card">
+            <h4>章节定位</h4>
+            <p style="margin:0;font-size:15px;color:var(--muted)">第一章负责建立对 WCN 的第一印象：定义、边界、愿景与时间窗口。后续章节会进入问题、解法、节点系统、PoB 与商业模式。</p>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

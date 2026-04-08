@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12.3 第三阶段：结算与资产层</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#ffffffcc;--line:#e5e7eb;--text:#0f172a;--muted:#5b6475;--soft:#7e8797;--brand:#2563eb;--brand2:#4f46e5;--accent:#059669;--warn:#d97706;--max:1180px}
+*{box-sizing:border-box} html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:linear-gradient(180deg,#fbfcfe,#f5f7fb);line-height:1.78}
+a{text-decoration:none;color:inherit}
+.top{position:sticky;top:0;padding:16px 20px 0;z-index:20}
+.bar{max-width:var(--max);margin:0 auto;background:#ffffffcc;border:1px solid #fff;border-radius:999px;padding:14px 18px;backdrop-filter:blur(14px);display:flex;justify-content:space-between;align-items:center;gap:16px;box-shadow:0 10px 30px rgba(15,23,42,.06)}
+.brand{display:flex;gap:12px;align-items:center}.mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:800;background:linear-gradient(135deg,var(--brand),var(--brand2))}
+.ey{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);font-weight:700}.bt{font-size:14px;font-weight:700}
+.wrap{max-width:var(--max);margin:0 auto;padding:26px 24px 80px}
+.hero,.article,.asideCard{background:var(--panel);border:1px solid #fff;box-shadow:0 10px 30px rgba(15,23,42,.06);border-radius:32px}
+.hero{padding:40px}.article{padding:32px}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:24px}
+.badge{display:inline-block;padding:8px 12px;border-radius:999px;background:#eefbf3;color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
+h1{margin:0;font-size:clamp(38px,5.4vw,72px);line-height:1.02;letter-spacing:-.05em}.lead{font-size:20px;color:var(--muted);margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px}.meta>div,.mini>div,.card,.bullet{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}
+.label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);font-weight:700;margin-bottom:8px}.value{font-size:15px;font-weight:700}
+.mini{display:grid;gap:12px}.mini strong{display:block;font-size:14px;margin-bottom:4px}.mini span{display:block;color:var(--muted);font-size:13px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;margin-top:28px}.sec{margin-bottom:32px}.sec:last-child{margin-bottom:0}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);font-weight:700;margin-bottom:8px}
+h2{margin:0 0 14px;font-size:clamp(28px,3vw,38px);line-height:1.08;letter-spacing:-.04em}
+h3{margin:20px 0 10px;font-size:22px;line-height:1.16;letter-spacing:-.03em}
+p{margin:0 0 16px;font-size:17px}
+.cards,.bullets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.card .t,.bullet strong{font-size:15px;font-weight:800;margin-bottom:6px;display:block}.card .d,.bullet span{font-size:14px;color:var(--muted)}
+.statement{border-left:4px solid var(--warn);background:#fff7ed;padding:18px 20px;border-radius:0 18px 18px 0;color:#5b3410}
+.aside{display:grid;gap:16px;position:sticky;top:92px;height:max-content}.asideCard{padding:22px}.asideCard h4{margin:0 0 12px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft)} .toc a{display:block;padding:8px 0;color:var(--muted);font-size:14px;font-weight:600}
+.next{display:block;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-radius:28px;padding:24px;box-shadow:0 18px 40px rgba(37,99,235,.22)} .next .tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.8;font-weight:700;margin-bottom:10px}.next .name{font-size:24px;font-weight:820;line-height:1.15;margin-bottom:8px}.next .desc{font-size:14px;opacity:.9}
+.bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}.navCard{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px}.small{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);font-weight:700;margin-bottom:8px}.big{font-size:18px;font-weight:800}
+.foot{text-align:center;color:var(--soft);font-size:13px;padding-top:26px}
+@media(max-width:980px){.grid,.layout{grid-template-columns:1fr}.meta,.cards,.bullets{grid-template-columns:1fr 1fr}.aside{position:relative;top:auto}}
+@media(max-width:720px){.meta,.cards,.bullets,.bottom{grid-template-columns:1fr}h1{font-size:38px}.lead{font-size:18px}}
+</style>
+</head><body>
+<div class="top"><div class="bar"><div class="brand"><div class="mark">W³</div><div><div class="ey">Chapter 12 · 12.3</div><div class="bt">Web3 Capital Network</div></div></div><div></div></div></div>
+<main class="wrap">
+<section class="hero"><div class="grid"><div><div class="badge">Chapter 12 · 12.3</div><h1>结算与资产层不是起点，而是前两阶段成立后的自然延伸。</h1><p class="lead">只有当节点网络稳定、Deal 足够多、PoB 足够成熟、Agent 足够可控时，WCN 才有资格进入结算与更长期的资产承载层。</p><div class="meta"><div><div class="label">本页作用</div><div class="value">定义阶段目标与切换条件</div></div><div><div class="label">核心主题</div><div class="value">阶段推进、信号判断、系统演进</div></div><div><div class="label">阅读重点</div><div class="value">不是时间表，而是成熟度路径</div></div></div></div><div><div class="mini"><div><strong>系统目标</strong><span>让 WCN 的推进顺序被看见，而不是停留在模糊未来。</span></div><div><strong>阅读方式</strong><span>先看阶段，再看每一阶段要达到什么、靠什么判断是否切换。</span></div><div><strong>结果</strong><span>把“愿景”拆成有节奏的路线图。</span></div></div></div></div></section>
+<div class="layout"><article class="article"><section class="sec" id="s1"><div class="eyebrow">Section 1</div><h2>第三阶段要解决什么</h2><p>让通过 PoB 的结果进入更成熟的结算系统。</p><p>让身份、位置、长期记录和价值开始逐步数字化承载。</p><div class="cards"><div class="card"><div class="t">Settlement 正式化</div><div class="d">从 PoB 到更稳定的价值分配。</div></div><div class="card"><div class="t">身份数字化</div><div class="d">节点位置与权限开始进入更标准化承载。</div></div><div class="card"><div class="t">长期价值层形成</div><div class="d">系统不再只有短期收入，而有长期账本。</div></div><div class="card"><div class="t">部分链上化开始成立</div><div class="d">适合上链的摘要、证明和结果开始被迁移。</div></div></div></section><section class="sec" id="s2"><div class="eyebrow">Section 2</div><h2>为什么必须后置</h2><p>因为如果前两阶段没有成立，结算层就没有真实输入，资产层也只会成为提前出现的外壳。</p><div class="statement">结算与资产层不是“更高级的第一步”，而是“前面都做对之后的结果”。</div></section><section class="sec" id="s3"><div class="eyebrow">Section 3</div><h2>第三阶段的意义</h2><p>这一步标志着 WCN 不再只是一个业务网络，而开始成为一个有长期记忆和更强承载能力的系统。</p></section>
+<div class="bottom"><a class="navCard" href="12.2-第二阶段-PoB与Agent协同.html"><div class="small">上一篇</div><div class="big">返回 · 12.2 第二阶段：PoB 与 Agent 协同</div></a><a class="navCard" href="12.4-里程碑与阶段切换信号.html"><div class="small">下一篇</div><div class="big">继续 · 12.4 里程碑与阶段切换信号</div></a></div>
+</article><aside class="aside"><div class="asideCard"><h4>本页目录</h4><div class="toc"><a href="#s1">第三阶段要解决什么</a><a href="#s2">为什么必须后置</a><a href="#s3">第三阶段的意义</a></div></div><a class="next" href="12.4-里程碑与阶段切换信号.html"><div class="tag">Next</div><div class="name">继续 · 12.4 里程碑与阶段切换信号</div><div class="desc">继续阅读下一节内容。</div></a></aside></div>
+<div class="foot">12.3 第三阶段：结算与资产层 · WCN 中文视觉版</div></main></body></html>

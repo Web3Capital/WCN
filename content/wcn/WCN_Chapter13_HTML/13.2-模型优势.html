@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>13.2 模型优势</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#ffffffcc;--line:#e5e7eb;--text:#0f172a;--muted:#5b6475;--soft:#7e8797;--brand:#2563eb;--brand2:#4f46e5;--accent:#059669;--warn:#d97706;--max:1180px}
+*{box-sizing:border-box} html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:linear-gradient(180deg,#fbfcfe,#f5f7fb);line-height:1.78}
+a{text-decoration:none;color:inherit}
+.top{position:sticky;top:0;padding:16px 20px 0;z-index:20}
+.bar{max-width:var(--max);margin:0 auto;background:#ffffffcc;border:1px solid #fff;border-radius:999px;padding:14px 18px;backdrop-filter:blur(14px);display:flex;justify-content:space-between;align-items:center;gap:16px;box-shadow:0 10px 30px rgba(15,23,42,.06)}
+.brand{display:flex;gap:12px;align-items:center}.mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:800;background:linear-gradient(135deg,var(--brand),var(--brand2))}
+.ey{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);font-weight:700}.bt{font-size:14px;font-weight:700}
+.wrap{max-width:var(--max);margin:0 auto;padding:26px 24px 80px}
+.hero,.article,.asideCard{background:var(--panel);border:1px solid #fff;box-shadow:0 10px 30px rgba(15,23,42,.06);border-radius:32px}
+.hero{padding:40px}.article{padding:32px}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:24px}
+.badge{display:inline-block;padding:8px 12px;border-radius:999px;background:#eefbf3;color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
+h1{margin:0;font-size:clamp(38px,5.4vw,72px);line-height:1.02;letter-spacing:-.05em}.lead{font-size:20px;color:var(--muted);margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px}.meta>div,.mini>div,.card,.bullet{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}
+.label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);font-weight:700;margin-bottom:8px}.value{font-size:15px;font-weight:700}
+.mini{display:grid;gap:12px}.mini strong{display:block;font-size:14px;margin-bottom:4px}.mini span{display:block;color:var(--muted);font-size:13px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;margin-top:28px}.sec{margin-bottom:32px}.sec:last-child{margin-bottom:0}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);font-weight:700;margin-bottom:8px}
+h2{margin:0 0 14px;font-size:clamp(28px,3vw,38px);line-height:1.08;letter-spacing:-.04em}
+h3{margin:20px 0 10px;font-size:22px;line-height:1.16;letter-spacing:-.03em}
+p{margin:0 0 16px;font-size:17px}
+.cards,.bullets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.card .t,.bullet strong{font-size:15px;font-weight:800;margin-bottom:6px;display:block}.card .d,.bullet span{font-size:14px;color:var(--muted)}
+.statement{border-left:4px solid var(--warn);background:#fff7ed;padding:18px 20px;border-radius:0 18px 18px 0;color:#5b3410}
+.aside{display:grid;gap:16px;position:sticky;top:92px;height:max-content}.asideCard{padding:22px}.asideCard h4{margin:0 0 12px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft)} .toc a{display:block;padding:8px 0;color:var(--muted);font-size:14px;font-weight:600}
+.next{display:block;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-radius:28px;padding:24px;box-shadow:0 18px 40px rgba(37,99,235,.22)} .next .tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.8;font-weight:700;margin-bottom:10px}.next .name{font-size:24px;font-weight:820;line-height:1.15;margin-bottom:8px}.next .desc{font-size:14px;opacity:.9}
+.bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}.navCard{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px}.small{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);font-weight:700;margin-bottom:8px}.big{font-size:18px;font-weight:800}
+.foot{text-align:center;color:var(--soft);font-size:13px;padding-top:26px}
+@media(max-width:980px){.grid,.layout{grid-template-columns:1fr}.meta,.cards,.bullets{grid-template-columns:1fr 1fr}.aside{position:relative;top:auto}}
+@media(max-width:720px){.meta,.cards,.bullets,.bottom{grid-template-columns:1fr}h1{font-size:38px}.lead{font-size:18px}}
+</style>
+</head><body>
+<div class="top"><div class="bar"><div class="brand"><div class="mark">W³</div><div><div class="ey">Chapter 13 · 13.2</div><div class="bt">Web3 Capital Network</div></div></div><div></div></div></div>
+<main class="wrap">
+<section class="hero"><div class="grid"><div><div class="badge">Chapter 13 · 13.2</div><h1>WCN 的强项，不只是资源多，而是它的模型让资源能被组织、被验证、被结算。</h1><p class="lead">很多项目也能喊出“资源整合”“AI”“节点”“生态”这些词，但 WCN 的优势在于：它把这些词放进了同一条闭环和责任链里。</p><div class="meta"><div><div class="label">本页作用</div><div class="value">解释为什么 WCN 值得被加入、被信任、被放大</div></div><div><div class="label">核心主题</div><div class="value">人、模型、节奏与差异化</div></div><div><div class="label">阅读重点</div><div class="value">为什么不是别人，而是 WCN</div></div></div></div><div><div class="mini"><div><strong>系统目标</strong><span>把“为什么是 WCN”从宣传，变成结构性论证。</span></div><div><strong>阅读方式</strong><span>先看人，再看模型，再看节奏和差异化。</span></div><div><strong>结果</strong><span>让外部清楚：WCN 不只是想做大，而是做对了方向。</span></div></div></div></div></section>
+<div class="layout"><article class="article"><section class="sec" id="s1"><div class="eyebrow">Section 1</div><h2>WCN 模型的核心优势</h2><p>不是单点能力强，而是系统结构完整。</p><p>节点、Agent、PoB、结算、区域扩张和商业模式之间是互相支撑的。</p><div class="cards"><div class="card"><div class="t">节点网络优势</div><div class="d">资源不是名单，而是责任单元。</div></div><div class="card"><div class="t">Agent 执行优势</div><div class="d">高价值方法可以被复制和放大。</div></div><div class="card"><div class="t">PoB 优势</div><div class="d">价值只在结果成立后进入系统。</div></div><div class="card"><div class="t">商业模型优势</div><div class="d">网络、服务、deal 和 Agent 可以共同形成收入。</div></div></div></section><section class="sec" id="s2"><div class="eyebrow">Section 2</div><h2>为什么这种模型更强</h2><p>因为它既能承接资源，又能推进执行，还能沉淀长期价值。</p><p>普通平台往往只能解决其中一部分。</p><div class="statement">WCN 的真正优势，不是某个点比别人更强，而是整个结构更闭环。</div></section><section class="sec" id="s3"><div class="eyebrow">Section 3</div><h2>模型优势的外部意义</h2><p>这意味着 WCN 不是短期叙事，而更接近下一代全球业务网络的雏形。</p></section>
+<div class="bottom"><a class="navCard" href="13.1-创始人优势.html"><div class="small">上一篇</div><div class="big">返回 · 13.1 创始人优势</div></a><a class="navCard" href="13.3-为什么现在能赢.html"><div class="small">下一篇</div><div class="big">继续 · 13.3 为什么现在能赢</div></a></div>
+</article><aside class="aside"><div class="asideCard"><h4>本页目录</h4><div class="toc"><a href="#s1">WCN 模型的核心优势</a><a href="#s2">为什么这种模型更强</a><a href="#s3">模型优势的外部意义</a></div></div><a class="next" href="13.3-为什么现在能赢.html"><div class="tag">Next</div><div class="name">继续 · 13.3 为什么现在能赢</div><div class="desc">继续阅读下一节内容。</div></a></aside></div>
+<div class="foot">13.2 模型优势 · WCN 中文视觉版</div></main></body></html>

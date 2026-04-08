@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11.6 当前边界与限制</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#ffffffcc;--line:#e5e7eb;--text:#0f172a;--muted:#5b6475;--soft:#7e8797;--brand:#2563eb;--brand2:#4f46e5;--accent:#059669;--warn:#d97706;--max:1180px}
+*{box-sizing:border-box} html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:linear-gradient(180deg,#fbfcfe,#f5f7fb);line-height:1.78}
+a{text-decoration:none;color:inherit}
+.top{position:sticky;top:0;padding:16px 20px 0;z-index:20}
+.bar{max-width:var(--max);margin:0 auto;background:#ffffffcc;border:1px solid #fff;border-radius:999px;padding:14px 18px;backdrop-filter:blur(14px);display:flex;justify-content:space-between;align-items:center;gap:16px;box-shadow:0 10px 30px rgba(15,23,42,.06)}
+.brand{display:flex;gap:12px;align-items:center}.mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:800;background:linear-gradient(135deg,var(--brand),var(--brand2))}
+.ey{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);font-weight:700}.bt{font-size:14px;font-weight:700}
+.wrap{max-width:var(--max);margin:0 auto;padding:26px 24px 80px}
+.hero,.article,.asideCard{background:var(--panel);border:1px solid #fff;box-shadow:0 10px 30px rgba(15,23,42,.06);border-radius:32px}
+.hero{padding:40px}.article{padding:32px}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:24px}
+.badge{display:inline-block;padding:8px 12px;border-radius:999px;background:#eefbf3;color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
+h1{margin:0;font-size:clamp(38px,5.4vw,72px);line-height:1.02;letter-spacing:-.05em}.lead{font-size:20px;color:var(--muted);margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px}.meta>div,.mini>div,.card,.bullet{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}
+.label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);font-weight:700;margin-bottom:8px}.value{font-size:15px;font-weight:700}
+.mini{display:grid;gap:12px}.mini strong{display:block;font-size:14px;margin-bottom:4px}.mini span{display:block;color:var(--muted);font-size:13px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;margin-top:28px}.sec{margin-bottom:32px}.sec:last-child{margin-bottom:0}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);font-weight:700;margin-bottom:8px}
+h2{margin:0 0 14px;font-size:clamp(28px,3vw,38px);line-height:1.08;letter-spacing:-.04em}
+h3{margin:20px 0 10px;font-size:22px;line-height:1.16;letter-spacing:-.03em}
+p{margin:0 0 16px;font-size:17px}
+.cards,.bullets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.card .t,.bullet strong{font-size:15px;font-weight:800;margin-bottom:6px;display:block}.card .d,.bullet span{font-size:14px;color:var(--muted)}
+.statement{border-left:4px solid var(--warn);background:#fff7ed;padding:18px 20px;border-radius:0 18px 18px 0;color:#5b3410}
+.aside{display:grid;gap:16px;position:sticky;top:92px;height:max-content}.asideCard{padding:22px}.asideCard h4{margin:0 0 12px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft)} .toc a{display:block;padding:8px 0;color:var(--muted);font-size:14px;font-weight:600}
+.next{display:block;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-radius:28px;padding:24px;box-shadow:0 18px 40px rgba(37,99,235,.22)} .next .tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.8;font-weight:700;margin-bottom:10px}.next .name{font-size:24px;font-weight:820;line-height:1.15;margin-bottom:8px}.next .desc{font-size:14px;opacity:.9}
+.bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}.navCard{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px}.small{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);font-weight:700;margin-bottom:8px}.big{font-size:18px;font-weight:800}
+.foot{text-align:center;color:var(--soft);font-size:13px;padding-top:26px}
+@media(max-width:980px){.grid,.layout{grid-template-columns:1fr}.meta,.cards,.bullets{grid-template-columns:1fr 1fr}.aside{position:relative;top:auto}}
+@media(max-width:720px){.meta,.cards,.bullets,.bottom{grid-template-columns:1fr}h1{font-size:38px}.lead{font-size:18px}}
+</style>
+</head><body>
+<div class="top"><div class="bar"><div class="brand"><div class="mark">W³</div><div><div class="ey">Chapter 11 · 11.6</div><div class="bt">Web3 Capital Network</div></div></div><div></div></div></div>
+<main class="wrap">
+<section class="hero"><div class="grid"><div><div class="badge">Chapter 11 · 11.6</div><h1>WCN 必须清楚告诉外部：当前阶段能做什么，不能做什么。</h1><p class="lead">这页的作用，是让系统保持诚实。未来可以很大，但当前阶段的边界必须写清楚，否则整个项目会被叙事提前拖走。</p><div class="meta"><div><div class="label">本页作用</div><div class="value">解释治理或合规在系统中的位置</div></div><div><div class="label">核心主题</div><div class="value">边界、权限、规则与风险控制</div></div><div><div class="label">阅读重点</div><div class="value">为什么系统必须被治理，为什么边界必须被写清</div></div></div></div><div><div class="mini"><div><strong>系统目标</strong><span>让 WCN 成为可持续、可扩张、可约束的网络，而不是无边界扩张。</span></div><div><strong>阅读方式</strong><span>先看治理模型，再看边界、不可投票事项与合规原则。</span></div><div><strong>结果</strong><span>把“系统能做什么”和“系统不能做什么”一起写清。</span></div></div></div></div></section>
+<div class="layout"><article class="article"><section class="sec" id="s1"><div class="eyebrow">Section 1</div><h2>当前阶段能做什么</h2><p>建立节点网络、推动 Deal 和服务闭环、记录 Proof、运行 PoB、形成早期收入、逐步引入 Agent 执行能力。</p><div class="cards"><div class="card"><div class="t">节点加入与席位管理</div><div class="d">可以做。</div></div><div class="card"><div class="t">项目 / 资本 / 服务撮合</div><div class="d">可以做。</div></div><div class="card"><div class="t">Proof Desk 与 PoB 运行</div><div class="d">可以做。</div></div><div class="card"><div class="t">服务和成交收入</div><div class="d">可以做。</div></div></div></section><section class="sec" id="s2"><div class="eyebrow">Section 2</div><h2>当前阶段不能做什么</h2><p>不能把所有未来功能都提前承诺为当前已实现。</p><p>不能把 Node NFT 写成收益型金融产品。</p><p>不能把未来的协议层和资产层当成现在已经成熟存在。</p><div class="statement">边界写清，不会削弱 WCN，反而会让它更可信。</div><div class="cards"><div class="card"><div class="t">不能夸大系统成熟度</div><div class="d">当前是网络冷启动和系统形成期。</div></div><div class="card"><div class="t">不能模糊销售边界</div><div class="d">尤其是对外关于回报的表达。</div></div><div class="card"><div class="t">不能过早链上化一切</div><div class="d">当前更重要的是业务和结果。</div></div><div class="card"><div class="t">不能无条件开放加入</div><div class="d">系统必须保持节点质量。</div></div></div></section><section class="sec" id="s3"><div class="eyebrow">Section 3</div><h2>为什么要公开限制</h2><p>因为真正长期的系统，必须敢于承认当前阶段的边界，而不是只讲未来图景。</p></section>
+<div class="bottom"><a class="navCard" href="11.5-合规原则.html"><div class="small">上一篇</div><div class="big">返回 · 11.5 合规原则</div></a><a class="navCard" href="12-路线图-首页.html"><div class="small">下一篇</div><div class="big">进入 · 第十二章 路线图</div></a></div>
+</article><aside class="aside"><div class="asideCard"><h4>本页目录</h4><div class="toc"><a href="#s1">当前阶段能做什么</a><a href="#s2">当前阶段不能做什么</a><a href="#s3">为什么要公开限制</a></div></div><a class="next" href="12-路线图-首页.html"><div class="tag">Next</div><div class="name">进入 · 第十二章 路线图</div><div class="desc">继续阅读下一节内容。</div></a></aside></div>
+<div class="foot">11.6 当前边界与限制 · WCN 中文视觉版</div></main></body></html>

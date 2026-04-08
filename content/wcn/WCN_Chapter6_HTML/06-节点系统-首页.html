@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --panel:rgba(255,255,255,.74);
+      --panel-strong:rgba(255,255,255,.9);
+      --line:rgba(15,23,42,.08);
+      --text:#0f172a;
+      --muted:#5b6475;
+      --soft:#7e8797;
+      --brand:#2563eb;
+      --brand-2:#4f46e5;
+      --brand-3:#0ea5e9;
+      --success:#059669;
+      --warning:#d97706;
+      --shadow:0 10px 30px rgba(15,23,42,.06), 0 30px 80px rgba(15,23,42,.08);
+      --max:1320px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 0% -10%, rgba(37,99,235,.12), transparent 55%),
+        radial-gradient(900px 620px at 100% 0%, rgba(79,70,229,.10), transparent 48%),
+        radial-gradient(720px 500px at 50% 100%, rgba(16,185,129,.08), transparent 52%),
+        linear-gradient(180deg,#fbfcfe 0%, #f6f8fc 38%, #f5f7fb 100%);
+      line-height:1.75;
+      letter-spacing:.01em;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+    a{color:inherit;text-decoration:none}
+    .topbar-wrap{position:sticky;top:0;z-index:50;padding:16px 20px 0}
+    .topbar{
+      max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:14px 18px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.65);
+      backdrop-filter:blur(18px) saturate(1.2);border-radius:999px;box-shadow:0 10px 40px rgba(15,23,42,.06);
+    }
+    .brand{display:flex;align-items:center;gap:14px;min-width:0}
+    .brand-mark{
+      width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;letter-spacing:-.04em;color:#fff;
+      background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 50%, var(--brand-3) 100%);
+      box-shadow:0 12px 30px rgba(37,99,235,.28);flex:0 0 auto;
+    }
+    .brand-copy .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);margin-bottom:2px;font-weight:700}
+    .brand-copy .title{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .nav a{padding:9px 14px;border-radius:999px;color:var(--muted);font-size:13px;font-weight:600}
+    .nav a:hover{background:rgba(15,23,42,.04);color:var(--text)}
+    .nav .cta{background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 100%);color:#fff;box-shadow:0 12px 28px rgba(37,99,235,.22)}
+    .page{max-width:var(--max);margin:0 auto;padding:26px 24px 80px}
+    .hero{
+      position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.74));
+      border:1px solid rgba(255,255,255,.85);box-shadow:var(--shadow);border-radius:40px;padding:42px 40px 36px;isolation:isolate;
+    }
+    .hero::before,.hero::after{content:"";position:absolute;border-radius:999px;filter:blur(44px);z-index:-1}
+    .hero::before{width:340px;height:340px;right:-60px;top:-80px;background:radial-gradient(circle, rgba(16,185,129,.15), rgba(16,185,129,0) 66%)}
+    .hero::after{width:280px;height:280px;left:-70px;bottom:-90px;background:radial-gradient(circle, rgba(37,99,235,.12), rgba(37,99,235,0) 65%)}
+    .badge{
+      display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.72);
+      border:1px solid rgba(15,23,42,.06);color:var(--success);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px;
+    }
+    .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:26px;align-items:start}
+    .hero h1{margin:0;font-size:clamp(40px,5.6vw,74px);line-height:1.02;letter-spacing:-.056em;font-weight:830;max-width:11em}
+    .hero .lede{margin:18px 0 0;font-size:20px;color:var(--muted);max-width:42em}
+    .hero .lede strong{color:var(--text)}
+    .hero-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:26px}
+    .meta-card{background:rgba(255,255,255,.66);border:1px solid rgba(15,23,42,.06);border-radius:22px;padding:18px 18px 16px}
+    .meta-card .label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    .meta-card .value{font-size:15px;font-weight:700;line-height:1.45}
+    .hero-side{display:flex;flex-direction:column;gap:14px}
+    .side-panel{background:rgba(255,255,255,.74);border:1px solid rgba(15,23,42,.06);border-radius:28px;padding:22px 22px 18px}
+    .side-panel h3{margin:0 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft)}
+    .side-panel p{margin:0;color:var(--muted);font-size:15px}
+    .mini-points{display:grid;gap:12px;margin-top:14px}
+    .mini-item{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+    .mini-item strong{display:block;font-size:14px;margin-bottom:4px}
+    .mini-item span{display:block;font-size:13px;color:var(--muted)}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;margin-top:28px}
+    .article{
+      background:var(--panel);border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow);
+      border-radius:34px;padding:34px;backdrop-filter:blur(18px) saturate(1.15);
+    }
+    .article-section{margin-bottom:34px}
+    .article-section:last-child{margin-bottom:0}
+    .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    h2{margin:0 0 14px;font-size:clamp(28px,3.2vw,40px);line-height:1.08;letter-spacing:-.04em;font-weight:820}
+    h3{margin:22px 0 10px;font-size:22px;line-height:1.16;letter-spacing:-.03em;font-weight:780}
+    .article p{margin:0 0 16px;font-size:17px;color:var(--text)}
+    .article strong{font-weight:820}
+    .statement{
+      border-left:4px solid var(--warning);
+      background:linear-gradient(180deg, rgba(217,119,6,.06), rgba(255,255,255,.65));
+      border-radius:0 20px 20px 0;padding:18px 20px;color:#5b3410;font-size:17px
+    }
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(249,251,255,.9));border:1px solid var(--line);border-radius:22px;padding:18px}
+    .card .title{font-size:15px;font-weight:800;margin-bottom:6px}
+    .card .desc{font-size:14px;color:var(--muted)}
+    .bullet-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+    .bullet{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:18px;padding:16px}
+    .bullet strong{display:block;font-size:15px;margin-bottom:6px}
+    .bullet span{display:block;font-size:14px;color:var(--muted)}
+    .aside{display:flex;flex-direction:column;gap:16px;position:sticky;top:92px;height:max-content}
+    .aside-card{background:var(--panel-strong);border:1px solid var(--line);border-radius:28px;padding:22px;box-shadow:0 12px 30px rgba(15,23,42,.05)}
+    .aside-card h4{margin:0 0 12px;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft)}
+    .toc a{display:block;padding:8px 0;color:var(--muted);font-size:14px;font-weight:600}
+    .toc a:hover{color:var(--brand)}
+    .next-card{display:block;background:linear-gradient(135deg,#1d4ed8 0%, #4338ca 100%);color:#fff;border-radius:28px;padding:24px;box-shadow:0 18px 40px rgba(37,99,235,.22)}
+    .next-card .tag{font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.8;margin-bottom:10px;font-weight:700}
+    .next-card .name{font-size:24px;font-weight:820;line-height:1.15;letter-spacing:-.03em;margin-bottom:8px}
+    .next-card .desc{font-size:14px;opacity:.9}
+    .bottom-nav{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:34px}
+    .nav-card{background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(249,251,255,.9));border:1px solid var(--line);border-radius:24px;padding:20px}
+    .nav-card .small{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    .nav-card .big{font-size:18px;font-weight:800;letter-spacing:-.03em}
+    .footer{padding:28px 4px 0;color:var(--soft);font-size:13px;text-align:center}
+    @media (max-width:1100px){.hero-grid,.layout{grid-template-columns:1fr}.hero-meta,.cards,.bullet-grid{grid-template-columns:1fr 1fr}.aside{position:relative;top:auto}}
+    @media (max-width:760px){.nav{display:none}.topbar{border-radius:24px;padding:14px}.page{padding:18px 16px 56px}.hero,.article{padding:24px}.hero-meta,.cards,.bullet-grid,.bottom-nav{grid-template-columns:1fr}.hero h1{font-size:38px}}
+  </style>
+<title>06 节点系统 · Web3 Capital Network</title></head><body>
+<div class="topbar-wrap"><div class="topbar"><div class="brand"><div class="brand-mark">W³</div><div class="brand-copy"><div class="eyebrow">Chapter 06</div><div class="title">Web3 Capital Network · 节点系统</div></div></div><nav class="nav"><a href="#overview">总览</a><a href="#logic">核心逻辑</a><a href="#pages">章节导航</a><a class="cta" href="#next">开始阅读</a></nav></div></div>
+<main class="page">
+<section class="hero"><div class="hero-grid"><div><div class="badge">第六章 · 节点系统</div><h1>WCN 的核心单元不是用户，而是节点。</h1><p class="lede">节点系统是 WCN 的骨架层之一。节点不是普通会员、不是地图上的名字、也不是随意加入的身份，而是承担资源引入、业务推进、证据提交、责任约束与结算资格的协作单元。</p><div class="hero-meta"><div class="meta-card"><div class="label">本章作用</div><div class="value">定义 WCN 的核心参与单元</div></div><div class="meta-card"><div class="label">核心主题</div><div class="value">节点不是用户，而是责任位置</div></div><div class="meta-card"><div class="label">阅读重点</div><div class="value">分类、层级、责任、生命周期</div></div></div></div><div class="hero-side"><div class="side-panel"><h3>本章聚焦的 9 个问题</h3><div class="mini-points"><div class="mini-item"><strong>节点到底是什么？</strong><span>先给出严格定义。</span></div><div class="mini-item"><strong>为什么节点重要？</strong><span>节点决定网络质量，而不是人数。</span></div><div class="mini-item"><strong>节点如何分类？</strong><span>从功能、层级、区域和行业拆开。</span></div><div class="mini-item"><strong>节点如何进入与退出？</strong><span>通过生命周期和规则管理。</span></div></div></div></div></div></section>
+<section class="section" id="overview"><div class="section-header"><div><div class="eyebrow">Overview</div><h2>这一章回答的是：WCN 里的“人和组织”，到底以什么方式存在。</h2></div><p>如果没有节点系统，WCN 就只是一个联系人网络；有了节点系统，它才成为一个责任网络、执行网络和结算网络。</p></div><div class="cards"><div class="card"><div class="title">节点是什么</div><div class="desc">不是会员，而是责任单元。</div></div><div class="card"><div class="title">节点为什么重要</div><div class="desc">节点质量决定网络质量。</div></div><div class="card"><div class="title">节点怎么分类</div><div class="desc">按功能、层级、行业和区域拆开。</div></div><div class="card"><div class="title">节点如何管理</div><div class="desc">通过生命周期、KPI、复核与权限边界。</div></div></div></section>
+<section class="section" id="logic"><div class="section-header"><div><div class="eyebrow">Logic</div><h2>节点系统的核心逻辑</h2></div><p>节点只有在三个条件下才有意义：能带来资源、能推动业务、能接受规则。</p></div><div class="statement">节点不是“名字”，而是“位置”；不是“加入者”，而是“责任承担者”。</div></section>
+<section class="section" id="pages"><div class="section-header"><div><div class="eyebrow">Pages</div><h2>本章包含 9 个核心页面。</h2></div><p>建议先看定义和重要性，再进入分类、层级、责任与生命周期。</p></div><div class="cards">
+<a class="card" href="6.1-节点是什么.html"><div class="title">6.1 节点是什么</div><div class="desc">给出节点的正式定义与边界。</div></a>
+<a class="card" href="6.2-为什么节点重要.html"><div class="title">6.2 为什么节点重要</div><div class="desc">解释为什么 WCN 不靠普通用户起盘，而靠节点起盘。</div></a>
+<a class="card" href="6.3-节点分类总览.html"><div class="title">6.3 节点分类总览</div><div class="desc">从功能上总览节点世界。</div></a>
+<a class="card" href="6.4-功能节点.html"><div class="title">6.4 功能节点</div><div class="desc">看项目、资本、服务、分发等功能节点。</div></a>
+<a class="card" href="6.5-国家主节点.html"><div class="title">6.5 国家主节点</div><div class="desc">看国家层的资源协调与代表性位置。</div></a>
+<a class="card" href="6.6-地区-城市节点.html"><div class="title">6.6 地区 / 城市节点</div><div class="desc">看地域扩张与本地资源组织单元。</div></a>
+<a class="card" href="6.7-行业节点.html"><div class="title">6.7 行业节点</div><div class="desc">看 AI、RWA、DePIN 等赛道型节点。</div></a>
+<a class="card" href="6.8-节点责任.html"><div class="title">6.8 节点责任</div><div class="desc">看节点的责任、边界与输出要求。</div></a>
+<a class="card" href="6.9-节点生命周期.html"><div class="title">6.9 节点生命周期</div><div class="desc">看从申请到上线、复核、续期与退出。</div></a>
+</div></section>
+<div class="footer">06 节点系统 · WCN 中文视觉版首页</div></main>
+</body></html>

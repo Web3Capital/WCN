@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>2.3 为什么贡献难以结算 · Web3 Capital Network</title>
+  <meta name="description" content="WCN 第二章第三节：为什么引荐、执行、增长、服务与协作贡献长期难以被清晰记录、归因与结算。" />
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --panel:rgba(255,255,255,.74);
+      --panel-strong:rgba(255,255,255,.9);
+      --line:rgba(15,23,42,.08);
+      --text:#0f172a;
+      --muted:#5b6475;
+      --soft:#7e8797;
+      --brand:#2563eb;
+      --brand-2:#4f46e5;
+      --brand-3:#0ea5e9;
+      --warning:#d97706;
+      --shadow:0 10px 30px rgba(15,23,42,.06), 0 30px 80px rgba(15,23,42,.08);
+      --max:1320px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 0% -10%, rgba(37,99,235,.10), transparent 55%),
+        radial-gradient(900px 620px at 100% 0%, rgba(79,70,229,.10), transparent 48%),
+        radial-gradient(720px 500px at 50% 100%, rgba(14,165,233,.08), transparent 52%),
+        linear-gradient(180deg,#fbfcfe 0%, #f6f8fc 38%, #f5f7fb 100%);
+      line-height:1.78;
+      letter-spacing:.01em;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+    a{color:inherit;text-decoration:none}
+    .topbar-wrap{position:sticky;top:0;z-index:50;padding:16px 20px 0}
+    .topbar{
+      max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:14px 18px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.65);
+      backdrop-filter:blur(18px) saturate(1.2);border-radius:999px;box-shadow:0 10px 40px rgba(15,23,42,.06);
+    }
+    .brand{display:flex;align-items:center;gap:14px;min-width:0}
+    .brand-mark{
+      width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;letter-spacing:-.04em;color:#fff;
+      background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 50%, var(--brand-3) 100%);
+      box-shadow:0 12px 30px rgba(37,99,235,.28);flex:0 0 auto;
+    }
+    .brand-copy .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);margin-bottom:2px;font-weight:700}
+    .brand-copy .title{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .nav a{padding:9px 14px;border-radius:999px;color:var(--muted);font-size:13px;font-weight:600;transition:all .18s ease}
+    .nav a:hover{background:rgba(15,23,42,.04);color:var(--text)}
+    .nav .cta{background:linear-gradient(135deg,var(--brand) 0%, var(--brand-2) 100%);color:#fff;box-shadow:0 12px 28px rgba(37,99,235,.22)}
+    .page{max-width:var(--max);margin:0 auto;padding:26px 24px 80px}
+    .hero{
+      position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.74));
+      border:1px solid rgba(255,255,255,.85);box-shadow:var(--shadow);border-radius:40px;padding:42px 40px 36px;isolation:isolate;
+    }
+    .hero::before,.hero::after{content:"";position:absolute;border-radius:999px;filter:blur(44px);z-index:-1}
+    .hero::before{width:340px;height:340px;right:-60px;top:-80px;background:radial-gradient(circle, rgba(79,70,229,.14), rgba(79,70,229,0) 66%)}
+    .hero::after{width:280px;height:280px;left:-70px;bottom:-90px;background:radial-gradient(circle, rgba(14,165,233,.12), rgba(14,165,233,0) 65%)}
+    .badge{
+      display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.72);
+      border:1px solid rgba(15,23,42,.06);color:#4338ca;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px;
+    }
+    .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:26px;align-items:start}
+    .hero h1{margin:0;font-size:clamp(40px,5.6vw,74px);line-height:1.02;letter-spacing:-.056em;font-weight:830;max-width:11em}
+    .hero .lede{margin:18px 0 0;font-size:20px;color:var(--muted);max-width:42em}
+    .hero .lede strong{color:var(--text)}
+    .hero-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:26px}
+    .meta-card{background:rgba(255,255,255,.66);border:1px solid rgba(15,23,42,.06);border-radius:22px;padding:18px 18px 16px}
+    .meta-card .label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    .meta-card .value{font-size:15px;font-weight:700;line-height:1.45}
+    .hero-side{display:flex;flex-direction:column;gap:14px}
+    .side-panel{background:rgba(255,255,255,.74);border:1px solid rgba(15,23,42,.06);border-radius:28px;padding:22px 22px 18px}
+    .side-panel h3{margin:0 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft)}
+    .side-panel p{margin:0;color:var(--muted);font-size:15px}
+    .mini-points{display:grid;gap:12px;margin-top:14px}
+    .mini-item{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+    .mini-item strong{display:block;font-size:14px;margin-bottom:4px}
+    .mini-item span{display:block;font-size:13px;color:var(--muted)}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;margin-top:28px}
+    .article{
+      background:var(--panel);border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow);
+      border-radius:34px;padding:34px;backdrop-filter:blur(18px) saturate(1.15);
+    }
+    .article-section{margin-bottom:34px}
+    .article-section:last-child{margin-bottom:0}
+    .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    h2{margin:0 0 14px;font-size:clamp(28px,3.2vw,40px);line-height:1.08;letter-spacing:-.04em;font-weight:820}
+    h3{margin:22px 0 10px;font-size:22px;line-height:1.16;letter-spacing:-.03em;font-weight:780}
+    .article p{margin:0 0 16px;font-size:17px;color:var(--text)}
+    .article strong{font-weight:820}
+    .statement{
+      border-left:4px solid var(--warning);
+      background:linear-gradient(180deg, rgba(217,119,6,.06), rgba(255,255,255,.65));
+      border-radius:0 20px 20px 0;padding:18px 20px;color:#5b3410;font-size:17px
+    }
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(249,251,255,.9));border:1px solid var(--line);border-radius:22px;padding:18px}
+    .card .title{font-size:15px;font-weight:800;margin-bottom:6px}
+    .card .desc{font-size:14px;color:var(--muted)}
+    .bullet-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+    .bullet{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:18px;padding:16px}
+    .bullet strong{display:block;font-size:15px;margin-bottom:6px}
+    .bullet span{display:block;font-size:14px;color:var(--muted)}
+    .aside{display:flex;flex-direction:column;gap:16px;position:sticky;top:92px;height:max-content}
+    .aside-card{background:var(--panel-strong);border:1px solid var(--line);border-radius:28px;padding:22px;box-shadow:0 12px 30px rgba(15,23,42,.05)}
+    .aside-card h4{margin:0 0 12px;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft)}
+    .toc a{display:block;padding:8px 0;color:var(--muted);font-size:14px;font-weight:600}
+    .toc a:hover{color:var(--brand)}
+    .next-card{display:block;background:linear-gradient(135deg,#1d4ed8 0%, #4338ca 100%);color:#fff;border-radius:28px;padding:24px;box-shadow:0 18px 40px rgba(37,99,235,.22)}
+    .next-card .tag{font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.8;margin-bottom:10px;font-weight:700}
+    .next-card .name{font-size:24px;font-weight:820;line-height:1.15;letter-spacing:-.03em;margin-bottom:8px}
+    .next-card .desc{font-size:14px;opacity:.9}
+    .bottom-nav{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:34px}
+    .nav-card{background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(249,251,255,.9));border:1px solid var(--line);border-radius:24px;padding:20px}
+    .nav-card .small{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:700;margin-bottom:8px}
+    .nav-card .big{font-size:18px;font-weight:800;letter-spacing:-.03em}
+    .footer{padding:28px 4px 0;color:var(--soft);font-size:13px;text-align:center}
+    @media (max-width:1100px){
+      .hero-grid,.layout{grid-template-columns:1fr}
+      .hero-meta,.cards,.bullet-grid{grid-template-columns:1fr 1fr}
+      .aside{position:relative;top:auto}
+    }
+    @media (max-width:760px){
+      .nav{display:none}
+      .topbar{border-radius:24px;padding:14px}
+      .page{padding:18px 16px 56px}
+      .hero,.article{padding:24px}
+      .hero-meta,.cards,.bullet-grid,.bottom-nav{grid-template-columns:1fr}
+      .hero h1{font-size:38px}
+      .hero .lede{font-size:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar-wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark">W³</div>
+        <div class="brand-copy">
+          <div class="eyebrow">Chapter 02 · 2.3</div>
+          <div class="title">Web3 Capital Network · 为什么贡献难以结算</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#problem">问题本质</a>
+        <a href="#causes">为什么难</a>
+        <a href="#consequence">后果</a>
+        <a href="#why-wcn">为什么必须解决</a>
+        <a class="cta" href="#next">继续阅读</a>
+      </nav>
+    </div>
+  </div>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="badge">2.3 · 结算问题</div>
+          <h1>很多人都“参与过”，但很少有人能被系统性地证明“真正做成了事”。</h1>
+          <p class="lede">
+            Web3 并不缺贡献，缺的是对贡献的<strong>统一记录、可信验证、清晰归因与可持续结算</strong>。
+            当一个行业奖励的是热闹而不是结果，真正推动闭环的人反而最容易被忽略。
+          </p>
+
+          <div class="hero-meta">
+            <div class="meta-card">
+              <div class="label">本页作用</div>
+              <div class="value">解释为什么贡献长期难以结算</div>
+            </div>
+            <div class="meta-card">
+              <div class="label">核心判断</div>
+              <div class="value">贡献存在，但证明体系缺失</div>
+            </div>
+            <div class="meta-card">
+              <div class="label">阅读重点</div>
+              <div class="value">证据、归因、责任与结算入口</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="side-panel">
+            <h3>这页聚焦 4 个问题</h3>
+            <div class="mini-points">
+              <div class="mini-item">
+                <strong>为什么很多真实贡献最后没有被记录？</strong>
+                <span>因为行业更擅长形成关系，不擅长形成证据链。</span>
+              </div>
+              <div class="mini-item">
+                <strong>为什么“谁有贡献”总是说不清？</strong>
+                <span>因为引荐、推进、执行、协作经常混在一起，缺少统一归因规则。</span>
+              </div>
+              <div class="mini-item">
+                <strong>为什么热闹更容易被奖励？</strong>
+                <span>因为热闹更容易被看见，结果却更难被结构化证明。</span>
+              </div>
+              <div class="mini-item">
+                <strong>为什么这是 WCN 的核心问题？</strong>
+                <span>因为没有贡献证明，PoB、结算与长期网络价值都无法成立。</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <article class="article">
+        <section class="article-section" id="problem">
+          <div class="eyebrow">Problem</div>
+          <h2>行业里不缺贡献，缺的是“可被证明的贡献”。</h2>
+          <p>在 Web3 里，很多事情并不是没人做，而是做了之后很难被准确记录。</p>
+          <p>一个项目能够拿到资金，往往不是单一角色推动的；一个合作能够落地，也经常不是单一节点完成的。</p>
+          <p>引荐、研究、材料整理、增长执行、关系推进、风险把关、服务交付，都会对结果产生影响。</p>
+          <div class="statement">
+            问题在于：这些影响大多停留在“大家都知道有人做过”，而不是进入“系统能够证明谁真正推动了结果成立”。
+          </div>
+        </section>
+
+        <section class="article-section" id="causes">
+          <div class="eyebrow">Why It Is Hard</div>
+          <h2>为什么贡献会长期难以结算？</h2>
+
+          <h3>1. 很多贡献发生在结果之前</h3>
+          <p>在业务闭环真正成立之前，大量关键动作发生在前面：引荐、筛选、组局、准备材料、推动对话、协同资源。</p>
+          <p>这些动作对结果非常重要，但因为它们不是“最后签字那一刻”，所以经常被系统忽略。</p>
+
+          <h3>2. 很多贡献没有留下结构化证据</h3>
+          <p>行业里大量关键协作仍然发生在私聊、电话、线下会面、群聊和临时文档中。</p>
+          <p>这意味着，结果即使真的发生了，过程中很多真正重要的推动行为也无法被重建。</p>
+
+          <div class="cards">
+            <div class="card"><div class="title">没有统一事件编号</div><div class="desc">很多 deal 没有从一开始就被定义成一个可跟踪的业务事件。</div></div>
+            <div class="card"><div class="title">没有统一证据包</div><div class="desc">纪要、消息、文档、回执、报表散落在不同位置，无法形成完整链路。</div></div>
+            <div class="card"><div class="title">没有统一角色声明</div><div class="desc">主导方、协作方、受益方和审核方经常没有在开始时就锁定。</div></div>
+            <div class="card"><div class="title">没有统一状态机</div><div class="desc">事件从机会、推进、验证到结算，缺少标准状态流。</div></div>
+          </div>
+
+          <h3>3. “谁最响”经常替代“谁真正有贡献”</h3>
+          <p>在没有清晰记录与审核机制的环境里，贡献很容易被以下因素扭曲：</p>
+
+          <div class="bullet-grid">
+            <div class="bullet"><strong>谁声量更大</strong><span>更会表达的人，更容易被看见。</span></div>
+            <div class="bullet"><strong>谁更靠近中心</strong><span>位置更显眼的人，更容易被默认拥有贡献。</span></div>
+            <div class="bullet"><strong>谁更晚出现但站在最后一环</strong><span>最后签字的人，可能覆盖前面多方协作的价值。</span></div>
+            <div class="bullet"><strong>谁更会讲故事</strong><span>叙事能力替代了证据能力。</span></div>
+          </div>
+
+          <h3>4. 行业长期缺少统一的归因规则</h3>
+          <p>大多数协作场景里，并没有明确规则去判断：</p>
+
+          <div class="cards">
+            <div class="card"><div class="title">谁是主导方</div><div class="desc">是最早引荐的人，还是推进到结果成立的人？</div></div>
+            <div class="card"><div class="title">谁是协作方</div><div class="desc">哪些角色提供了关键辅助，但不构成主导？</div></div>
+            <div class="card"><div class="title">Agent 算不算贡献者</div><div class="desc">如果 Agent 做了关键工作，它的价值如何被记录？</div></div>
+            <div class="card"><div class="title">什么不该被算进去</div><div class="desc">口头帮忙、重复 claim、无结果动作应如何排除？</div></div>
+          </div>
+
+          <p>没有归因规则，结算就只能靠关系与情绪，无法进入制度化阶段。</p>
+        </section>
+
+        <section class="article-section" id="consequence">
+          <div class="eyebrow">Consequence</div>
+          <h2>贡献难以结算，会直接破坏整个网络的激励结构。</h2>
+
+          <h3>1. 真正有价值的人会流失</h3>
+          <p>如果长期无法证明与结算真实贡献，最先失望的不是表面参与者，而是那些真正推动闭环成立的人。</p>
+
+          <h3>2. 热闹会压过结果</h3>
+          <p>当系统缺乏结果证明能力，行业最容易被奖励的就会变成高频发声、拉群、转发和曝光，而不是闭环、交付与长期推进。</p>
+
+          <h3>3. 协作会越来越短期化</h3>
+          <p>没有清晰结算预期，大家更倾向于只做眼前能看见的动作，而不是投入长期协作与复杂推动。</p>
+
+          <h3>4. 网络无法沉淀为长期信用</h3>
+          <p>如果每一次结果都只停留在“这次做成了”，而没有进入结构化账本，那么整个网络就很难形成长期的信誉、等级和位置体系。</p>
+
+          <div class="statement">
+            没有贡献证明，就没有稳定激励；没有稳定激励，就没有高质量网络。
+          </div>
+        </section>
+
+        <section class="article-section" id="why-wcn">
+          <div class="eyebrow">Why WCN Must Solve This</div>
+          <h2>为什么“贡献证明”是 WCN 的核心，而不是附属功能？</h2>
+          <p>因为 WCN 不是单纯要做一个联系人网络，而是要做一个能够长期运转的业务网络。</p>
+
+          <div class="cards">
+            <div class="card"><div class="title">没有贡献证明，节点系统无法成立</div><div class="desc">节点就会退化成“谁认识谁”，而不是“谁创造了真实价值”。</div></div>
+            <div class="card"><div class="title">没有贡献证明，Agent 无法结算</div><div class="desc">AI 再会做事，如果成果没有进入证明层，也无法形成长期价值。</div></div>
+            <div class="card"><div class="title">没有贡献证明，商业分润会失真</div><div class="desc">success fee、协作分润和长期权益都会回到拍脑袋与扯皮状态。</div></div>
+            <div class="card"><div class="title">没有贡献证明，网络无法扩张</div><div class="desc">因为没有可复制的规则，就无法让新节点相信系统会公平运作。</div></div>
+          </div>
+
+          <p>这也是为什么 WCN 不是从“发奖励”开始，而是从“先定义什么算结果、什么算证据、什么算有效贡献”开始。</p>
+          <div class="statement">
+            WCN 要解决的，不是“怎么多发一点激励”，而是“怎么把真正创造价值的行为变成可验证、可归因、可结算的对象”。
+          </div>
+        </section>
+
+        <section class="article-section" id="conclusion">
+          <div class="eyebrow">Conclusion</div>
+          <h2>这一页的核心结论</h2>
+          <p>贡献难以结算，不是因为没有贡献，而是因为缺少四样东西：</p>
+
+          <div class="bullet-grid">
+            <div class="bullet"><strong>缺少统一事件结构</strong><span>协作没有从一开始就被定义成可跟踪业务事件。</span></div>
+            <div class="bullet"><strong>缺少统一证据链</strong><span>关键推动行为没有留下可重建的记录。</span></div>
+            <div class="bullet"><strong>缺少统一归因规则</strong><span>主导、协作、受益与审核之间没有清晰边界。</span></div>
+            <div class="bullet"><strong>缺少统一结算入口</strong><span>结果成立后，无法进入长期的信用、PoB 与价值系统。</span></div>
+          </div>
+
+          <p>因此，WCN 的 PoB 不是一个附加模块，而是整个网络最关键的制度基础之一。</p>
+        </section>
+
+        <div class="bottom-nav" id="next">
+          <a class="nav-card" href="2.2-资本流动为什么低效.html">
+            <div class="small">上一篇</div>
+            <div class="big">返回 · 2.2 资本流动为什么低效</div>
+          </a>
+          <a class="nav-card" href="2.4-为什么-AI-还没有进入商业闭环.html">
+            <div class="small">下一篇</div>
+            <div class="big">继续 · 2.4 为什么 AI 还没有进入商业闭环</div>
+          </a>
+        </div>
+      </article>
+
+      <aside class="aside">
+        <div class="aside-card">
+          <h4>本页目录</h4>
+          <div class="toc">
+            <a href="#problem">问题本质</a>
+            <a href="#causes">为什么难</a>
+            <a href="#consequence">后果</a>
+            <a href="#why-wcn">为什么 WCN 必须解决</a>
+            <a href="#conclusion">核心结论</a>
+          </div>
+        </div>
+
+        <div class="aside-card">
+          <h4>本页关键词</h4>
+          <p style="margin:0;color:var(--muted);font-size:15px">
+            贡献证明、证据链、归因规则、PoB、协作结算、长期激励。
+          </p>
+        </div>
+
+        <a class="next-card" href="2.4-为什么-AI-还没有进入商业闭环.html">
+          <div class="tag">Next</div>
+          <div class="name">2.4 为什么 AI 还没有进入商业闭环</div>
+          <div class="desc">从贡献证明问题进一步进入 AI 为什么仍停留在工具层，而没有进入真正商业结算网络。</div>
+        </a>
+      </aside>
+    </div>
+
+    <div class="footer">2.3 为什么贡献难以结算 · WCN 中文视觉版</div>
+  </main>
+</body>
+</html>
