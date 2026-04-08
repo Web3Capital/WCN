@@ -8,7 +8,7 @@ const links = [
   { href: "/about", label: "About" },
   { href: "/how-it-works", label: "How It Works" },
   { href: "/nodes", label: "Node Network" },
-  { href: "/docs/chapter-01/01-项目介绍-首页", label: "Docs" },
+  { href: "/docs", label: "Docs" },
   { href: "/apply", label: "Apply" }
 ];
 
