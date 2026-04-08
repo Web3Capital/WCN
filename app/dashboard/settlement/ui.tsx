@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { getApiErrorMessageFromJson } from "@/lib/api-error";
 
 type CycleRow = {
   id: string;
@@ -29,7 +30,7 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
   async function refresh() {
     const res = await fetch("/api/settlement/cycles", { cache: "no-store" });
     const data = await res.json();
-    if (!data?.ok) throw new Error(data?.error ?? "Failed to load cycles.");
+    if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
     setRows(data.cycles);
     if (!selectedId && data.cycles?.[0]?.id) setSelectedId(data.cycles[0].id);
   }
@@ -49,7 +50,7 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
         })
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Create failed.");
+      if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
       await refresh();
     } catch (e: any) {
       setError(e?.message ?? "Create failed.");
@@ -65,7 +66,7 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
     try {
       const res = await fetch(`/api/settlement/cycles/${selected.id}/lock`, { method: "POST" });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Lock failed.");
+      if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
       await refresh();
     } catch (e: any) {
       setError(e?.message ?? "Lock failed.");
@@ -81,7 +82,7 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
     try {
       const res = await fetch(`/api/settlement/cycles/${selected.id}/generate`, { method: "POST" });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Generate failed.");
+      if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
       setLines(data.lines ?? null);
       await refresh();
     } catch (e: any) {

@@ -20,7 +20,7 @@ export default async function ApplicationsPage() {
   });
 
   return (
-    <main className="section">
+    <div className="dashboard-page section">
       <div className="container">
         <span className="eyebrow">Dashboard</span>
         <h1>Node applications</h1>
@@ -46,7 +46,7 @@ export default async function ApplicationsPage() {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }
 

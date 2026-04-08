@@ -1,18 +1,31 @@
 import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { getOwnedNodeIds, memberAgentsWhere } from "@/lib/member-data-scope";
+import { redactAgentForMember } from "@/lib/member-redact";
+import { AuditAction, writeAudit } from "@/lib/audit";
 
 export async function GET() {
   const auth = await requireSignedIn();
   if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
   const prisma = getPrisma();
+  const isAdmin = auth.session.user?.role === "ADMIN";
+  const userId = auth.session.user!.id;
+
+  const where = isAdmin ? {} : memberAgentsWhere(await getOwnedNodeIds(prisma, userId));
+
   const agents = await prisma.agent.findMany({
+    where,
     orderBy: { createdAt: "desc" },
     take: 200,
     include: { ownerNode: true, permissions: true }
   });
-  return NextResponse.json({ ok: true, agents });
+
+  return NextResponse.json({
+    ok: true,
+    agents: isAdmin ? agents : agents.map(redactAgentForMember)
+  });
 }
 
 export async function POST(req: Request) {
@@ -42,6 +55,14 @@ export async function POST(req: Request) {
       ownerNodeId
     },
     include: { ownerNode: true, permissions: true }
+  });
+
+  await writeAudit({
+    actorUserId: admin.session.user?.id ?? null,
+    action: AuditAction.AGENT_CREATE,
+    targetType: "AGENT",
+    targetId: agent.id,
+    metadata: { name, type, ownerNodeId }
   });
 
   return NextResponse.json({ ok: true, agent });

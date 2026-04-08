@@ -97,6 +97,7 @@ enum ReviewTargetType {
   PROJECT
   TASK
   POB
+  APPLICATION
 }
 
 enum ReviewDecision {
@@ -203,9 +204,26 @@ model User {
   nodes         Node[]         @relation("NodeOwner")
   reviews       Review[]
   confirmations Confirmation[]
+  auditLogs     AuditLog[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  actorUserId String?
+  actor       User?    @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+  action      String
+  targetType  String
+  targetId    String
+  metadata    Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([targetType, targetId, createdAt])
+  @@index([actorUserId, createdAt])
+  @@index([action, createdAt])
 }
 
 model Account {

@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { getApiErrorMessageFromJson } from "@/lib/api-error";
 
 type TinyRow = { id: string; name?: string; title?: string };
 type EvidenceRow = { id: string; title: string | null; type: string; url: string | null; onchainTx: string | null; taskId: string | null; projectId: string | null; nodeId: string | null };
 type AttributionRow = { id: string; nodeId: string; role: string; shareBps: number; node?: { name?: string } };
 type ConfirmationRow = { id: string; decision: string; partyType: string; partyUserId: string | null; partyNodeId: string | null; notes: string | null; createdAt: string | Date };
+type DisputeRow = { id: string; status: string; reason: string; resolution: string | null; targetType: string; targetId: string; createdAt: string | Date; resolvedAt: string | Date | null };
 type PobRow = {
   id: string;
   businessType: string;
@@ -22,6 +24,7 @@ type PobRow = {
   nodeId: string | null;
   attributions?: AttributionRow[];
   confirmations?: ConfirmationRow[];
+  disputes?: DisputeRow[];
 };
 
 const POB_STATUS = ["PENDING", "REVIEWING", "APPROVED", "REJECTED"] as const;
@@ -62,11 +65,21 @@ export function PobConsole({
   const [error, setError] = useState<string | null>(null);
   const [attrText, setAttrText] = useState("");
   const [confirm, setConfirm] = useState({ decision: "CONFIRM", partyType: "NODE", partyNodeId: "", partyUserId: "", notes: "" });
+  const [disputeReason, setDisputeReason] = useState("");
+  const [pobReviews, setPobReviews] = useState<{ id: string; decision: string; notes: string | null; createdAt: string | Date; reviewer: { name: string | null; email: string | null } | null }[]>([]);
+
+  useEffect(() => {
+    if (!selectedId || readOnly) { setPobReviews([]); return; }
+    fetch(`/api/reviews?targetType=POB&targetId=${selectedId}`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => { if (d?.ok) setPobReviews(d.reviews); })
+      .catch(() => {});
+  }, [selectedId, readOnly]);
 
   async function refresh() {
     const res = await fetch("/api/pob", { cache: "no-store" });
     const data = await res.json();
-    if (!data?.ok) throw new Error(data?.error ?? "Failed to load PoB.");
+    if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
     setRows(data.pob);
     if (!selectedId && data.pob?.[0]?.id) setSelectedId(data.pob[0].id);
   }
@@ -106,7 +119,7 @@ export function PobConsole({
         body: JSON.stringify(patch)
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Save failed.");
+      if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
       await refresh();
     } catch (e: any) {
       setError(e?.message ?? "Save failed.");
@@ -135,7 +148,7 @@ export function PobConsole({
         body: JSON.stringify({ pobId: selected.id, items })
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Attribution save failed.");
+      if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
       await refresh();
     } catch (e: any) {
       setError(e?.message ?? "Attribution save failed.");
@@ -162,10 +175,50 @@ export function PobConsole({
         })
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Confirmation failed.");
+      if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
       await refresh();
     } catch (e: any) {
       setError(e?.message ?? "Confirmation failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function openDispute() {
+    if (!selected || !disputeReason.trim()) return;
+    setError(null);
+    setBusy(true);
+    try {
+      const res = await fetch("/api/disputes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pobId: selected.id, targetType: "POB", targetId: selected.id, reason: disputeReason })
+      });
+      const data = await res.json();
+      if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
+      setDisputeReason("");
+      await refresh();
+    } catch (e: any) {
+      setError(e?.message ?? "Dispute creation failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function resolveDispute(disputeId: string, status: "RESOLVED" | "REJECTED", resolution?: string) {
+    setError(null);
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/disputes/${disputeId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status, resolution: resolution || null })
+      });
+      const data = await res.json();
+      if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
+      await refresh();
+    } catch (e: any) {
+      setError(e?.message ?? "Dispute update failed.");
     } finally {
       setBusy(false);
     }
@@ -496,6 +549,79 @@ export function PobConsole({
                 ))}
               </div>
             </div>
+
+            <div className="card" style={{ padding: 14 }}>
+              <div className="pill" style={{ marginBottom: 10 }}>Disputes</div>
+              {!readOnly ? (
+                <>
+                  <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+                    <input
+                      value={disputeReason}
+                      onChange={(e) => setDisputeReason(e.target.value)}
+                      placeholder="Reason for dispute..."
+                      style={{ flex: 1 }}
+                    />
+                    <button
+                      className="button-secondary"
+                      type="button"
+                      disabled={busy || !disputeReason.trim()}
+                      onClick={openDispute}
+                    >
+                      Open dispute
+                    </button>
+                  </div>
+                </>
+              ) : null}
+              <div className="apps-list">
+                {(selected.disputes ?? []).map((d) => (
+                  <div key={d.id} className="apps-row" style={{ cursor: "default", flexDirection: "column", alignItems: "stretch", gap: 6 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div>
+                        <div style={{ fontWeight: 800, color: "var(--text)" }}>{d.status}</div>
+                        <div className="muted" style={{ fontSize: 13 }}>{d.reason}</div>
+                        {d.resolution ? <div className="muted" style={{ fontSize: 12 }}>Resolution: {d.resolution}</div> : null}
+                      </div>
+                      <span className="muted" style={{ fontSize: 12, whiteSpace: "nowrap" }}>
+                        {new Date(d.createdAt as any).toLocaleDateString()}
+                      </span>
+                    </div>
+                    {!readOnly && d.status === "OPEN" ? (
+                      <div style={{ display: "flex", gap: 6 }}>
+                        <button className="button-secondary" type="button" disabled={busy} onClick={() => resolveDispute(d.id, "RESOLVED", prompt("Resolution note:") || undefined)} style={{ fontSize: 12 }}>
+                          Resolve
+                        </button>
+                        <button className="button-secondary" type="button" disabled={busy} onClick={() => resolveDispute(d.id, "REJECTED")} style={{ fontSize: 12 }}>
+                          Reject
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                ))}
+                {(selected.disputes ?? []).length === 0 ? <p className="muted" style={{ margin: 0 }}>No disputes.</p> : null}
+              </div>
+            </div>
+
+            {!readOnly && pobReviews.length > 0 ? (
+              <div className="card" style={{ padding: 14 }}>
+                <div className="pill" style={{ marginBottom: 10 }}>Review history</div>
+                <div className="apps-list">
+                  {pobReviews.map((r) => (
+                    <div key={r.id} className="apps-row" style={{ cursor: "default" }}>
+                      <div style={{ display: "grid", gap: 2 }}>
+                        <div style={{ fontWeight: 800, color: "var(--text)" }}>{r.decision}</div>
+                        <div className="muted" style={{ fontSize: 13 }}>
+                          {r.reviewer?.name || r.reviewer?.email || "system"}
+                          {r.notes ? ` — ${r.notes}` : ""}
+                        </div>
+                      </div>
+                      <span className="muted" style={{ fontSize: 12, whiteSpace: "nowrap" }}>
+                        {new Date(r.createdAt as any).toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
             <button className="button-secondary" type="button" disabled={busy} onClick={() => refresh()}>
               {busy ? "Working..." : "Refresh"}

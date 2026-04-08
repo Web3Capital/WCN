@@ -1,14 +1,44 @@
 import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
+import { ApiCode, apiError } from "@/lib/api-error";
+import { AuditAction, writeAudit } from "@/lib/audit";
 
 export async function POST(_req: Request, { params }: { params: { id: string } }) {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) {
+    return apiError(ApiCode.UNAUTHORIZED, "Unauthorized.", 401);
+  }
   const prisma = getPrisma();
 
   const cycle = await prisma.settlementCycle.findUnique({ where: { id: params.id } });
-  if (!cycle) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!cycle) {
+    return apiError(ApiCode.NOT_FOUND, "Settlement cycle not found.", 404);
+  }
+
+  const existingCount = await prisma.settlementLine.count({ where: { cycleId: cycle.id } });
+  if (existingCount > 0 && (cycle.status === "LOCKED" || cycle.status === "FINALIZED")) {
+    const lines = await prisma.settlementLine.findMany({
+      where: { cycleId: cycle.id },
+      orderBy: { allocation: "desc" },
+      include: { node: true }
+    });
+    const networkScore = lines.reduce((s, l) => s + l.scoreTotal, 0);
+    await writeAudit({
+      actorUserId: admin.session.user?.id ?? null,
+      action: AuditAction.SETTLEMENT_LINES_GENERATE,
+      targetType: "SETTLEMENT_CYCLE",
+      targetId: cycle.id,
+      metadata: { idempotent: true, lineCount: lines.length, cycleStatus: cycle.status }
+    });
+    return NextResponse.json({
+      ok: true,
+      idempotent: true,
+      cycle,
+      networkScore,
+      lines
+    });
+  }
 
   const approved = await prisma.poBRecord.findMany({
     where: {
@@ -32,7 +62,7 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
   const networkScore = Array.from(totals.values()).reduce((s, v) => s + v.scoreTotal, 0);
   await prisma.settlementLine.deleteMany({ where: { cycleId: cycle.id } });
 
-  const data = Array.from(totals.entries()).map(([nodeId, v]) => ({
+  const rows = Array.from(totals.entries()).map(([nodeId, v]) => ({
     cycleId: cycle.id,
     nodeId,
     scoreTotal: v.scoreTotal,
@@ -40,8 +70,8 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
     allocation: networkScore > 0 ? (v.scoreTotal / networkScore) * cycle.pool : 0
   }));
 
-  if (data.length) {
-    await prisma.settlementLine.createMany({ data });
+  if (rows.length) {
+    await prisma.settlementLine.createMany({ data: rows });
   }
 
   const lines = await prisma.settlementLine.findMany({
@@ -50,6 +80,18 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
     include: { node: true }
   });
 
-  return NextResponse.json({ ok: true, cycle, networkScore, lines });
-}
+  await writeAudit({
+    actorUserId: admin.session.user?.id ?? null,
+    action: AuditAction.SETTLEMENT_LINES_GENERATE,
+    targetType: "SETTLEMENT_CYCLE",
+    targetId: cycle.id,
+    metadata: {
+      idempotent: false,
+      lineCount: lines.length,
+      networkScore,
+      cycleStatus: cycle.status
+    }
+  });
 
+  return NextResponse.json({ ok: true, idempotent: false, cycle, networkScore, lines });
+}

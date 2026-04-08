@@ -1,13 +1,21 @@
 import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { redactSettlementCycleForMember } from "@/lib/member-redact";
 
 export async function GET() {
   const auth = await requireSignedIn();
   if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+
   const prisma = getPrisma();
+  const isAdmin = auth.session.user?.role === "ADMIN";
+
   const cycles = await prisma.settlementCycle.findMany({ orderBy: { startAt: "desc" }, take: 50 });
-  return NextResponse.json({ ok: true, cycles });
+
+  return NextResponse.json({
+    ok: true,
+    cycles: isAdmin ? cycles : cycles.map(redactSettlementCycleForMember)
+  });
 }
 
 export async function POST(req: Request) {

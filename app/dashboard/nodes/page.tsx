@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { ReadOnlyBanner } from "@/app/dashboard/_components/read-only-banner";
 import { NodesConsole } from "./ui";
+import { redactNodeForMember } from "@/lib/member-redact";
 
 export const dynamic = "force-dynamic";
 
@@ -14,19 +15,20 @@ export default async function NodesPage() {
 
   const prisma = getPrisma();
   const nodes = await prisma.node.findMany({ orderBy: { createdAt: "desc" }, take: 200 });
+  const safeNodes = isAdmin ? nodes : nodes.map(redactNodeForMember);
 
   return (
-    <main className="section">
+    <div className="dashboard-page section">
       <div className="container">
         <span className="eyebrow">Dashboard</span>
         <h1>Node registry</h1>
         <p className="muted">Create, review, and manage nodes.</p>
         {!isAdmin ? <ReadOnlyBanner /> : null}
         <div className="card" style={{ marginTop: 18 }}>
-          <NodesConsole initial={nodes} readOnly={!isAdmin} />
+          <NodesConsole initial={safeNodes} readOnly={!isAdmin} />
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 

@@ -1,16 +1,10 @@
 import Link from "next/link";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
-export default async function AssetsPhase3Page() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) redirect("/login");
-
+export default function AssetsPhase3Page() {
   return (
-    <main className="section">
+    <div className="dashboard-page section">
       <div className="container">
         <span className="eyebrow">Dashboard · Phase 3</span>
         <h1>Assets &amp; on-chain proofs</h1>
@@ -55,6 +49,6 @@ export default async function AssetsPhase3Page() {
           </p>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

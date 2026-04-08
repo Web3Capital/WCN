@@ -1,0 +1,43 @@
+import { NextResponse } from "next/server";
+import { getPrisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/admin";
+import type { Prisma } from "@prisma/client";
+
+export async function GET(req: Request) {
+  const admin = await requireAdmin();
+  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+
+  const url = new URL(req.url);
+  const action = url.searchParams.get("action");
+  const targetType = url.searchParams.get("targetType");
+  const targetId = url.searchParams.get("targetId");
+  const since = url.searchParams.get("since");
+  const until = url.searchParams.get("until");
+  const cursor = url.searchParams.get("cursor");
+  const limit = Math.min(Number(url.searchParams.get("limit") ?? 50), 200);
+
+  const where: Prisma.AuditLogWhereInput = {};
+  if (action) where.action = action;
+  if (targetType) where.targetType = targetType;
+  if (targetId) where.targetId = targetId;
+  if (since || until) {
+    where.createdAt = {};
+    if (since) where.createdAt.gte = new Date(since);
+    if (until) where.createdAt.lte = new Date(until);
+  }
+
+  const prisma = getPrisma();
+  const logs = await prisma.auditLog.findMany({
+    where,
+    orderBy: { createdAt: "desc" },
+    take: limit + 1,
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+    include: { actor: { select: { id: true, name: true, email: true } } }
+  });
+
+  const hasMore = logs.length > limit;
+  if (hasMore) logs.pop();
+  const nextCursor = hasMore ? logs[logs.length - 1]?.id : null;
+
+  return NextResponse.json({ ok: true, logs, nextCursor });
+}

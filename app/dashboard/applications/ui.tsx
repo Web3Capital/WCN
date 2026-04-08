@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Application = {
   id: string;
@@ -16,6 +16,14 @@ type Application = {
   whyWcn: string | null;
   notes: string | null;
   createdAt: string | Date;
+};
+
+type ReviewRow = {
+  id: string;
+  decision: string;
+  notes: string | null;
+  createdAt: string | Date;
+  reviewer: { name: string | null; email: string | null } | null;
 };
 
 function formatDate(v: string | Date) {
@@ -35,6 +43,15 @@ export function ApplicationsTable({
   const active = useMemo(() => items.find((i) => i.id === activeId) ?? null, [items, activeId]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [reviews, setReviews] = useState<ReviewRow[]>([]);
+
+  useEffect(() => {
+    if (!activeId || readOnly) { setReviews([]); return; }
+    fetch(`/api/reviews?targetType=APPLICATION&targetId=${activeId}`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => { if (d?.ok) setReviews(d.reviews); })
+      .catch(() => {});
+  }, [activeId, readOnly]);
 
   async function updateApplication(id: string, patch: Partial<Pick<Application, "status" | "notes">>) {
     setSaving(true);
@@ -151,6 +168,28 @@ export function ApplicationsTable({
                   Notes auto-save on blur.
                 </p>
                 {error ? <p className="form-error" style={{ marginTop: 10 }}>{error}</p> : null}
+              </div>
+            ) : null}
+
+            {!readOnly && reviews.length > 0 ? (
+              <div style={{ marginTop: 14 }}>
+                <div className="label">Review history</div>
+                <div className="apps-list" style={{ marginTop: 6 }}>
+                  {reviews.map((r) => (
+                    <div key={r.id} className="apps-row" style={{ cursor: "default" }}>
+                      <div style={{ display: "grid", gap: 2 }}>
+                        <div style={{ fontWeight: 800, color: "var(--text)" }}>{r.decision}</div>
+                        <div className="muted" style={{ fontSize: 13 }}>
+                          {r.reviewer?.name || r.reviewer?.email || "system"}
+                          {r.notes ? ` — ${r.notes}` : ""}
+                        </div>
+                      </div>
+                      <span className="muted" style={{ fontSize: 12, whiteSpace: "nowrap" }}>
+                        {formatDate(r.createdAt)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             ) : null}
           </>

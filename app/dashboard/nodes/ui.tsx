@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 
 type NodeRow = {
   id: string;
@@ -180,7 +181,9 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
                 onClick={() => setSelectedId(r.id)}
               >
                 <div>
-                  <div style={{ fontWeight: 800 }}>{r.name}</div>
+                  <Link href={`/dashboard/nodes/${r.id}`} style={{ fontWeight: 800, color: "var(--accent)" }} onClick={(e) => e.stopPropagation()}>
+                    {r.name}
+                  </Link>
                   <div className="muted" style={{ fontSize: 13 }}>
                     {r.type} · {r.status} · L{r.level}
                   </div>

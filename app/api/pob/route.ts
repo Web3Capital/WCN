@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { ApplicationStatus } from "@prisma/client";
+import { ApiCode, apiError } from "@/lib/api-error";
+import { getOwnedNodeIds, memberPoBWhere } from "@/lib/member-data-scope";
 
 function computeScore(input: {
   baseValue: number;
@@ -23,7 +25,13 @@ export async function GET() {
   if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
   const prisma = getPrisma();
+  const isAdmin = auth.session.user?.role === "ADMIN";
+  const userId = auth.session.user!.id;
+
+  const where = isAdmin ? {} : memberPoBWhere(await getOwnedNodeIds(prisma, userId));
+
   const pob = await prisma.poBRecord.findMany({
+    where,
     orderBy: { createdAt: "desc" },
     take: 200,
     include: {
@@ -31,7 +39,8 @@ export async function GET() {
       project: true,
       node: true,
       attributions: { include: { node: true } },
-      confirmations: true
+      confirmations: true,
+      disputes: true
     }
   });
 
@@ -58,6 +67,15 @@ export async function POST(req: Request) {
 
   const score = computeScore({ baseValue, weight, qualityMult, timeMult, riskDiscount });
 
+  let initialStatus: ApplicationStatus | undefined;
+  if (body?.status !== undefined && body?.status !== null && String(body.status).trim() !== "") {
+    const s = String(body.status).trim();
+    if (s !== "PENDING" && s !== "REVIEWING") {
+      return apiError(ApiCode.VALIDATION_ERROR, "New PoB may only start as PENDING or REVIEWING.", 400);
+    }
+    initialStatus = s as ApplicationStatus;
+  }
+
   const record = await prisma.poBRecord.create({
     data: {
       businessType,
@@ -67,7 +85,7 @@ export async function POST(req: Request) {
       timeMult,
       riskDiscount,
       score,
-      status: body?.status ? (String(body.status) as ApplicationStatus) : undefined,
+      status: initialStatus,
       notes: body?.notes ? String(body.notes) : null,
       taskId: body?.taskId ? String(body.taskId) : null,
       projectId: body?.projectId ? String(body.projectId) : null,

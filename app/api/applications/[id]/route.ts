@@ -2,6 +2,13 @@ import { getPrisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { AuditAction, writeAudit } from "@/lib/audit";
+
+function statusToDecision(s: string) {
+  if (s === "APPROVED") return "APPROVE" as const;
+  if (s === "REJECTED") return "REJECT" as const;
+  return "NEEDS_CHANGES" as const;
+}
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const prisma = getPrisma();
@@ -9,6 +16,9 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (session?.user?.role !== "ADMIN") {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
+
+  const existing = await prisma.application.findUnique({ where: { id: params.id }, select: { id: true, status: true } });
+  if (!existing) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
 
   const body = await req.json().catch(() => ({}));
   const status = body?.status;
@@ -22,6 +32,29 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   const updated = await prisma.application.update({
     where: { id: params.id },
     data
+  });
+
+  const statusChanged = data.status && data.status !== existing.status;
+
+  if (statusChanged) {
+    await prisma.review.create({
+      data: {
+        targetType: "APPLICATION",
+        targetId: params.id,
+        decision: statusToDecision(data.status),
+        notes: notes !== undefined ? (notes ? String(notes) : null) : null,
+        status: "RESOLVED",
+        reviewerId: session.user?.id ?? null
+      }
+    });
+  }
+
+  await writeAudit({
+    actorUserId: session.user?.id ?? null,
+    action: AuditAction.APPLICATION_STATUS_CHANGE,
+    targetType: "APPLICATION",
+    targetId: params.id,
+    metadata: { previousStatus: existing.status, newStatus: updated.status, notes: data.notes }
   });
 
   return NextResponse.json({ ok: true, application: updated });

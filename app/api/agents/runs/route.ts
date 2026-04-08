@@ -2,17 +2,30 @@ import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { AgentRunStatus } from "@prisma/client";
+import { getOwnedNodeIds, memberAgentRunsWhere } from "@/lib/member-data-scope";
+import { redactAgentForMember } from "@/lib/member-redact";
 
 export async function GET() {
   const auth = await requireSignedIn();
   if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+
   const prisma = getPrisma();
+  const isAdmin = auth.session.user?.role === "ADMIN";
+  const userId = auth.session.user!.id;
+
+  const where = isAdmin ? {} : memberAgentRunsWhere(await getOwnedNodeIds(prisma, userId));
+
   const runs = await prisma.agentRun.findMany({
+    where,
     orderBy: { startedAt: "desc" },
     take: 200,
     include: { agent: true, task: true }
   });
-  return NextResponse.json({ ok: true, runs });
+
+  return NextResponse.json({
+    ok: true,
+    runs: isAdmin ? runs : runs.map((r) => ({ ...r, agent: r.agent ? redactAgentForMember(r.agent) : r.agent }))
+  });
 }
 
 export async function POST(req: Request) {

@@ -2,22 +2,35 @@ import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { TaskStatus } from "@prisma/client";
+import { getOwnedNodeIds, memberTasksWhere } from "@/lib/member-data-scope";
+import { redactTaskForMember } from "@/lib/member-redact";
+import { AuditAction, writeAudit } from "@/lib/audit";
 
 export async function GET() {
   const auth = await requireSignedIn();
   if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
   const prisma = getPrisma();
+  const isAdmin = auth.session.user?.role === "ADMIN";
+  const userId = auth.session.user!.id;
+
+  const where = isAdmin ? {} : memberTasksWhere(await getOwnedNodeIds(prisma, userId));
+
   const tasks = await prisma.task.findMany({
+    where,
     orderBy: { createdAt: "desc" },
     take: 200,
     include: {
-      project: true,
+      project: { include: { node: true } },
       ownerNode: true,
       assignments: { include: { node: true } }
     }
   });
-  return NextResponse.json({ ok: true, tasks });
+
+  return NextResponse.json({
+    ok: true,
+    tasks: isAdmin ? tasks : tasks.map((t) => redactTaskForMember(t, userId))
+  });
 }
 
 export async function POST(req: Request) {
@@ -59,6 +72,14 @@ export async function POST(req: Request) {
       skipDuplicates: true
     });
   }
+
+  await writeAudit({
+    actorUserId: admin.session.user?.id ?? null,
+    action: AuditAction.TASK_CREATE,
+    targetType: "TASK",
+    targetId: task.id,
+    metadata: { title, type }
+  });
 
   return NextResponse.json({ ok: true, taskId: task.id });
 }

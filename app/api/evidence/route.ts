@@ -1,18 +1,30 @@
 import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { getOwnedNodeIds, memberEvidenceWhere } from "@/lib/member-data-scope";
+import { redactEvidenceForMember } from "@/lib/member-redact";
 
 export async function GET() {
   const auth = await requireSignedIn();
   if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
   const prisma = getPrisma();
+  const isAdmin = auth.session.user?.role === "ADMIN";
+  const userId = auth.session.user!.id;
+
+  const ownedNodeIds = isAdmin ? [] : await getOwnedNodeIds(prisma, userId);
+  const where = isAdmin ? {} : memberEvidenceWhere(ownedNodeIds);
+
   const evidences = await prisma.evidence.findMany({
+    where,
     orderBy: { createdAt: "desc" },
     take: 200
   });
 
-  return NextResponse.json({ ok: true, evidences });
+  return NextResponse.json({
+    ok: true,
+    evidences: isAdmin ? evidences : evidences.map((e) => redactEvidenceForMember(e, ownedNodeIds))
+  });
 }
 
 export async function POST(req: Request) {
