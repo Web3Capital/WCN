@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Fragment } from "react";
 
 export default function HomePage() {
   return (
@@ -73,10 +74,10 @@ export default function HomePage() {
             </div>
             <div className="flow" style={{ marginTop: 18 }}>
               {["Node", "Deal", "Task", "Proof", "Settlement"].map((item, index) => (
-                <>
-                  <div className="step" key={item}>{item}</div>
-                  {index < 4 && <span className="arrow" key={`${item}-arrow`}>→</span>}
-                </>
+                <Fragment key={item}>
+                  <div className="step">{item}</div>
+                  {index < 4 && <span className="arrow">→</span>}
+                </Fragment>
               ))}
             </div>
             <div className="cta-row" style={{ marginTop: 22 }}>
