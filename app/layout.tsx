@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { cookies } from "next/headers";
+import { Providers } from "@/components/providers";
 
 export const metadata: Metadata = {
   title: "WCN — Global Institutional Orchestrator",
@@ -16,9 +17,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang={lang} data-theme={dataTheme}>
       <body>
-        <Nav />
-        {children}
-        <Footer />
+        <Providers>
+          <Nav />
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

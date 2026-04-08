@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import { Menu, Moon, Sun, X } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 
 const links = [
   { href: "/", label: "Home" },
@@ -21,6 +22,9 @@ export function Nav() {
   const [lang, setLang] = useState<"en" | "zh">("en");
   const [theme, setTheme] = useState<"light" | "dark" | "system">("system");
   const navId = useId();
+  const { data: session, status } = useSession();
+  const authed = status === "authenticated";
+  const isAdmin = authed && session?.user?.role === "ADMIN";
 
   function isActive(href: string) {
     const normalizedHref = href.replace(/\/$/, "") || "/";
@@ -89,6 +93,11 @@ export function Nav() {
               {link.label}
             </Link>
           ))}
+          {isAdmin ? (
+            <Link href="/dashboard" aria-current={isActive("/dashboard") ? "page" : undefined}>
+              Admin
+            </Link>
+          ) : null}
           <button
             type="button"
             className="theme-toggle"
@@ -118,6 +127,20 @@ export function Nav() {
           <Link className="button-secondary" href="/apply">
             Apply as a Node
           </Link>
+          {authed ? (
+            <>
+              <span className="muted" style={{ fontSize: 13 }}>
+                {session?.user?.name || session?.user?.email || "Account"}
+              </span>
+              <button className="button-secondary" type="button" onClick={() => signOut({ callbackUrl: "/" })}>
+                Sign out
+              </button>
+            </>
+          ) : (
+            <Link className="button-secondary" href="/login">
+              Sign in
+            </Link>
+          )}
         </nav>
       </div>
     </header>
