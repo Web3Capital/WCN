@@ -3,6 +3,9 @@
 import { useMemo, useState } from "react";
 
 type TinyRow = { id: string; name?: string; title?: string };
+type EvidenceRow = { id: string; title: string | null; type: string; url: string | null; onchainTx: string | null; taskId: string | null; projectId: string | null; nodeId: string | null };
+type AttributionRow = { id: string; nodeId: string; role: string; shareBps: number; node?: { name?: string } };
+type ConfirmationRow = { id: string; decision: string; partyType: string; partyUserId: string | null; partyNodeId: string | null; notes: string | null; createdAt: string | Date };
 type PobRow = {
   id: string;
   businessType: string;
@@ -17,6 +20,8 @@ type PobRow = {
   taskId: string | null;
   projectId: string | null;
   nodeId: string | null;
+  attributions?: AttributionRow[];
+  confirmations?: ConfirmationRow[];
 };
 
 const POB_STATUS = ["PENDING", "REVIEWING", "APPROVED", "REJECTED"] as const;
@@ -25,12 +30,14 @@ export function PobConsole({
   initial,
   tasks,
   projects,
-  nodes
+  nodes,
+  evidences
 }: {
   initial: PobRow[];
   tasks: TinyRow[];
   projects: TinyRow[];
   nodes: TinyRow[];
+  evidences: EvidenceRow[];
 }) {
   const [rows, setRows] = useState<PobRow[]>(initial);
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
@@ -51,6 +58,8 @@ export function PobConsole({
 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [attrText, setAttrText] = useState("");
+  const [confirm, setConfirm] = useState({ decision: "CONFIRM", partyType: "NODE", partyNodeId: "", partyUserId: "", notes: "" });
 
   async function refresh() {
     const res = await fetch("/api/pob", { cache: "no-store" });
@@ -99,6 +108,62 @@ export function PobConsole({
       await refresh();
     } catch (e: any) {
       setError(e?.message ?? "Save failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function saveAttribution() {
+    if (!selected) return;
+    setError(null);
+    setBusy(true);
+    try {
+      const items = attrText
+        .split("\n")
+        .map((l) => l.trim())
+        .filter(Boolean)
+        .map((l) => {
+          const [nodeId, shareBpsRaw, roleRaw] = l.split(",").map((x) => x.trim());
+          return { nodeId, shareBps: Number(shareBpsRaw), role: roleRaw || "COLLAB" };
+        });
+
+      const res = await fetch("/api/pob/attribution", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pobId: selected.id, items })
+      });
+      const data = await res.json();
+      if (!data?.ok) throw new Error(data?.error ?? "Attribution save failed.");
+      await refresh();
+    } catch (e: any) {
+      setError(e?.message ?? "Attribution save failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function addConfirmation() {
+    if (!selected) return;
+    setError(null);
+    setBusy(true);
+    try {
+      const res = await fetch("/api/pob/confirmations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          pobId: selected.id,
+          decision: confirm.decision,
+          partyType: confirm.partyType,
+          partyNodeId: confirm.partyType === "NODE" ? (confirm.partyNodeId || null) : null,
+          partyUserId: confirm.partyType === "USER" ? (confirm.partyUserId || null) : null,
+          notes: confirm.notes || null
+        })
+      });
+      const data = await res.json();
+      if (!data?.ok) throw new Error(data?.error ?? "Confirmation failed.");
+      await refresh();
+    } catch (e: any) {
+      setError(e?.message ?? "Confirmation failed.");
     } finally {
       setBusy(false);
     }
@@ -266,6 +331,127 @@ export function PobConsole({
               <span className="label">Notes</span>
               <textarea defaultValue={selected.notes ?? ""} onBlur={(e) => onSave({ notes: e.target.value })} />
             </label>
+
+            <div className="card" style={{ padding: 14 }}>
+              <div className="pill" style={{ marginBottom: 10 }}>
+                Evidence (linked)
+              </div>
+              <div className="apps-list">
+                {evidences
+                  .filter((ev) => ev.taskId === selected.taskId || ev.projectId === selected.projectId || ev.nodeId === selected.nodeId)
+                  .slice(0, 10)
+                  .map((ev) => (
+                    <div key={ev.id} className="apps-row" style={{ cursor: "default" }}>
+                      <div>
+                        <div style={{ fontWeight: 800 }}>{ev.title || ev.type}</div>
+                        <div className="muted" style={{ fontSize: 13 }}>
+                          {ev.url ? ev.url : ev.onchainTx ? ev.onchainTx : "—"}
+                        </div>
+                      </div>
+                      <div className="pill">{ev.type}</div>
+                    </div>
+                  ))}
+              </div>
+              <p className="muted" style={{ marginTop: 10 }}>
+                For uploads, use the Evidence module/API and link by task/project/node.
+              </p>
+            </div>
+
+            <div className="card" style={{ padding: 14 }}>
+              <div className="pill" style={{ marginBottom: 10 }}>
+                Attribution (shareBps total = 10000)
+              </div>
+              <p className="muted" style={{ marginTop: 0 }}>
+                Enter one per line: nodeId,shareBps,role(LEAD|COLLAB)
+              </p>
+              <textarea
+                value={attrText}
+                onChange={(e) => setAttrText(e.target.value)}
+                placeholder={"nodeId1,7000,LEAD\nnodeId2,3000,COLLAB"}
+              />
+              <button className="button-secondary" type="button" disabled={busy || !attrText.trim()} onClick={saveAttribution}>
+                Save attribution
+              </button>
+              <div className="apps-list" style={{ marginTop: 10 }}>
+                {(selected.attributions ?? []).map((a) => (
+                  <div key={a.id} className="apps-row" style={{ cursor: "default" }}>
+                    <div>
+                      <div style={{ fontWeight: 800 }}>{a.node?.name ?? a.nodeId}</div>
+                      <div className="muted" style={{ fontSize: 13 }}>
+                        {a.role} · {a.shareBps} bps
+                      </div>
+                    </div>
+                    <div className="pill">{Math.round((a.shareBps / 10000) * 1000) / 10}%</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="card" style={{ padding: 14 }}>
+              <div className="pill" style={{ marginBottom: 10 }}>
+                Confirmations
+              </div>
+              <div className="grid-2" style={{ gap: 12 }}>
+                <label className="field">
+                  <span className="label">Decision</span>
+                  <select value={confirm.decision} onChange={(e) => setConfirm((s) => ({ ...s, decision: e.target.value }))}>
+                    <option value="CONFIRM">CONFIRM</option>
+                    <option value="REJECT">REJECT</option>
+                  </select>
+                </label>
+                <label className="field">
+                  <span className="label">Party type</span>
+                  <select value={confirm.partyType} onChange={(e) => setConfirm((s) => ({ ...s, partyType: e.target.value }))}>
+                    <option value="NODE">NODE</option>
+                    <option value="USER">USER</option>
+                  </select>
+                </label>
+              </div>
+              {confirm.partyType === "NODE" ? (
+                <label className="field">
+                  <span className="label">Party node</span>
+                  <select value={confirm.partyNodeId} onChange={(e) => setConfirm((s) => ({ ...s, partyNodeId: e.target.value }))}>
+                    <option value="">—</option>
+                    {nodes.map((n) => (
+                      <option key={n.id} value={n.id}>
+                        {n.name ?? n.id}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ) : (
+                <label className="field">
+                  <span className="label">Party userId</span>
+                  <input value={confirm.partyUserId} onChange={(e) => setConfirm((s) => ({ ...s, partyUserId: e.target.value }))} />
+                </label>
+              )}
+              <label className="field">
+                <span className="label">Notes</span>
+                <input value={confirm.notes} onChange={(e) => setConfirm((s) => ({ ...s, notes: e.target.value }))} />
+              </label>
+              <button
+                className="button-secondary"
+                type="button"
+                disabled={busy || (confirm.partyType === "NODE" ? !confirm.partyNodeId : !confirm.partyUserId)}
+                onClick={addConfirmation}
+              >
+                Add confirmation
+              </button>
+              <div className="apps-list" style={{ marginTop: 10 }}>
+                {(selected.confirmations ?? []).map((c) => (
+                  <div key={c.id} className="apps-row" style={{ cursor: "default" }}>
+                    <div>
+                      <div style={{ fontWeight: 800 }}>{c.decision}</div>
+                      <div className="muted" style={{ fontSize: 13 }}>
+                        {c.partyType} · {c.partyNodeId ?? c.partyUserId ?? "—"}
+                      </div>
+                    </div>
+                    <div className="pill">{new Date(c.createdAt as any).toISOString().slice(0, 10)}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <button className="button-secondary" type="button" disabled={busy} onClick={() => refresh()}>
               {busy ? "Working..." : "Refresh"}
             </button>

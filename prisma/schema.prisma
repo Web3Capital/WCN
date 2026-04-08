@@ -105,6 +105,89 @@ enum ReviewDecision {
   NEEDS_CHANGES
 }
 
+enum ReviewStatus {
+  OPEN
+  RESOLVED
+}
+
+enum ActorType {
+  USER
+  NODE
+  AGENT
+  SYSTEM
+}
+
+enum ConfirmationTargetType {
+  POB
+  TASK
+  PROJECT
+}
+
+enum ConfirmationPartyType {
+  USER
+  NODE
+}
+
+enum ConfirmationDecision {
+  CONFIRM
+  REJECT
+}
+
+enum AttributionRole {
+  LEAD
+  COLLAB
+}
+
+enum DisputeStatus {
+  OPEN
+  RESOLVED
+  REJECTED
+}
+
+enum AgentType {
+  DEAL
+  RESEARCH
+  GROWTH
+  EXECUTION
+  LIQUIDITY
+}
+
+enum AgentStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum AgentRunStatus {
+  SUCCESS
+  FAILED
+  CANCELLED
+}
+
+enum SettlementCycleKind {
+  WEEK
+  MONTH
+}
+
+enum SettlementCycleStatus {
+  DRAFT
+  LOCKED
+  FINALIZED
+}
+
+enum StakeAction {
+  DEPOSIT
+  WITHDRAW
+  FREEZE
+  UNFREEZE
+  SLASH
+}
+
+enum PenaltyType {
+  FREEZE
+  SLASH
+  DOWNGRADE
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -114,11 +197,12 @@ model User {
   passwordHash  String?
   role          Role      @default(USER)
 
-  accounts     Account[]
-  sessions     Session[]
-  applications Application[]
-  nodes        Node[]        @relation("NodeOwner")
-  reviews      Review[]
+  accounts      Account[]
+  sessions      Session[]
+  applications  Application[]
+  nodes         Node[]         @relation("NodeOwner")
+  reviews       Review[]
+  confirmations Confirmation[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -208,11 +292,18 @@ model Node {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  projects     Project[]
-  tasksAsOwner Task[]           @relation("TaskOwnerNode")
-  assignments  TaskAssignment[]
-  evidences    Evidence[]
-  pobRecords   PoBRecord[]
+  projects        Project[]
+  tasksAsOwner    Task[]           @relation("TaskOwnerNode")
+  assignments     TaskAssignment[]
+  evidences       Evidence[]
+  pobRecords      PoBRecord[]
+  ownedAgents     Agent[]
+  seats           NodeSeat[]
+  stakeLedger     StakeLedger[]
+  penalties       Penalty[]
+  confirmations   Confirmation[]
+  attributions    Attribution[]
+  settlementLines SettlementLine[]
 
   @@index([type, status, createdAt])
   @@index([ownerUserId])
@@ -266,6 +357,7 @@ model Task {
   assignments TaskAssignment[]
   evidences   Evidence[]
   pobRecords  PoBRecord[]
+  agentRuns   AgentRun[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -339,6 +431,10 @@ model PoBRecord {
   status ApplicationStatus @default(PENDING)
   notes  String?
 
+  attributions  Attribution[]
+  confirmations Confirmation[]
+  disputes      Dispute[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -355,6 +451,12 @@ model Review {
   decision   ReviewDecision
   notes      String?
 
+  status    ReviewStatus @default(OPEN)
+  actorType ActorType    @default(USER)
+  actorId   String?
+  version   Int          @default(1)
+  metadata  Json?
+
   reviewerId String?
   reviewer   User?   @relation(fields: [reviewerId], references: [id], onDelete: SetNull)
 
@@ -362,4 +464,186 @@ model Review {
 
   @@index([targetType, targetId, createdAt])
   @@index([reviewerId])
+}
+
+model Confirmation {
+  id         String                 @id @default(cuid())
+  targetType ConfirmationTargetType
+  targetId   String
+  decision   ConfirmationDecision
+  notes      String?
+
+  partyType   ConfirmationPartyType
+  partyUserId String?
+  partyNodeId String?
+  partyUser   User?                 @relation(fields: [partyUserId], references: [id], onDelete: SetNull)
+  partyNode   Node?                 @relation(fields: [partyNodeId], references: [id], onDelete: SetNull)
+
+  pobId String?
+  pob   PoBRecord? @relation(fields: [pobId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([targetType, targetId, createdAt])
+  @@index([partyType, createdAt])
+  @@index([pobId])
+}
+
+model Attribution {
+  id    String    @id @default(cuid())
+  pobId String
+  pob   PoBRecord @relation(fields: [pobId], references: [id], onDelete: Cascade)
+
+  nodeId String
+  node   Node   @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+
+  role         AttributionRole @default(COLLAB)
+  shareBps     Int
+  evidenceRefs String[]        @default([])
+
+  createdAt DateTime @default(now())
+
+  @@unique([pobId, nodeId])
+  @@index([nodeId])
+}
+
+model Dispute {
+  id         String           @id @default(cuid())
+  pobId      String?
+  pob        PoBRecord?       @relation(fields: [pobId], references: [id], onDelete: Cascade)
+  targetType ReviewTargetType
+  targetId   String
+  reason     String
+  status     DisputeStatus    @default(OPEN)
+  resolution String?
+
+  createdAt  DateTime  @default(now())
+  resolvedAt DateTime?
+
+  @@index([targetType, targetId, status, createdAt])
+  @@index([pobId])
+}
+
+model Agent {
+  id       String      @id @default(cuid())
+  name     String
+  type     AgentType
+  status   AgentStatus @default(ACTIVE)
+  version  Int         @default(1)
+  endpoint String?
+
+  ownerNodeId String
+  ownerNode   Node   @relation(fields: [ownerNodeId], references: [id], onDelete: Cascade)
+
+  permissions AgentPermission[]
+  runs        AgentRun[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerNodeId, type, status])
+}
+
+model AgentPermission {
+  id         String   @id @default(cuid())
+  agentId    String
+  agent      Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  scope      String
+  canWrite   Boolean  @default(false)
+  auditLevel Int      @default(1)
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([agentId, scope])
+}
+
+model AgentRun {
+  id         String         @id @default(cuid())
+  agentId    String
+  agent      Agent          @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  taskId     String?
+  task       Task?          @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  status     AgentRunStatus @default(SUCCESS)
+  inputs     Json?
+  outputs    Json?
+  cost       Float?
+  startedAt  DateTime       @default(now())
+  finishedAt DateTime?
+
+  @@index([agentId, startedAt])
+  @@index([taskId])
+}
+
+model SettlementCycle {
+  id            String                @id @default(cuid())
+  kind          SettlementCycleKind
+  status        SettlementCycleStatus @default(DRAFT)
+  startAt       DateTime
+  endAt         DateTime
+  pool          Float                 @default(0)
+  policyVersion Int                   @default(1)
+  metadata      Json?
+
+  lines SettlementLine[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([kind, startAt, endAt])
+  @@index([status, startAt])
+}
+
+model SettlementLine {
+  id      String          @id @default(cuid())
+  cycleId String
+  cycle   SettlementCycle @relation(fields: [cycleId], references: [id], onDelete: Cascade)
+
+  nodeId String
+  node   Node   @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+
+  scoreTotal Float @default(0)
+  allocation Float @default(0)
+  pobCount   Int   @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@unique([cycleId, nodeId])
+  @@index([nodeId])
+}
+
+model NodeSeat {
+  id        String   @id @default(cuid())
+  nodeId    String
+  node      Node     @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  level     Int      @default(1)
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now())
+
+  @@index([nodeId, level])
+}
+
+model StakeLedger {
+  id        String      @id @default(cuid())
+  nodeId    String
+  node      Node        @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  action    StakeAction
+  amount    Float       @default(0)
+  notes     String?
+  metadata  Json?
+  createdAt DateTime    @default(now())
+
+  @@index([nodeId, createdAt])
+}
+
+model Penalty {
+  id        String      @id @default(cuid())
+  nodeId    String
+  node      Node        @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  type      PenaltyType
+  amount    Float?
+  reason    String
+  metadata  Json?
+  createdAt DateTime    @default(now())
+
+  @@index([nodeId, createdAt])
 }

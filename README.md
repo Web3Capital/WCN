@@ -31,7 +31,10 @@ This project includes:
   - Project pool at `/dashboard/projects`
   - Task system at `/dashboard/tasks`
   - PoB verification at `/dashboard/pob`
+  - Agents at `/dashboard/agents`
+  - Settlement at `/dashboard/settlement`
 - Login at `/login` (email/password)
+  - Signup at `/signup` (creates USER accounts)
 
 ### 1) Configure environment variables
 

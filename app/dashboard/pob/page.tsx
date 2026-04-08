@@ -12,15 +12,16 @@ export default async function PobPage() {
   if (session.user.role !== "ADMIN") redirect("/");
 
   const prisma = getPrisma();
-  const [pob, tasks, projects, nodes] = await Promise.all([
+  const [pob, tasks, projects, nodes, evidences] = await Promise.all([
     prisma.poBRecord.findMany({
       orderBy: { createdAt: "desc" },
       take: 200,
-      include: { task: true, project: true, node: true }
+      include: { task: true, project: true, node: true, attributions: { include: { node: true } }, confirmations: true }
     }),
     prisma.task.findMany({ orderBy: { createdAt: "desc" }, take: 200 }),
     prisma.project.findMany({ orderBy: { createdAt: "desc" }, take: 200 }),
-    prisma.node.findMany({ orderBy: { createdAt: "desc" }, take: 200 })
+    prisma.node.findMany({ orderBy: { createdAt: "desc" }, take: 200 }),
+    prisma.evidence.findMany({ orderBy: { createdAt: "desc" }, take: 200 })
   ]);
 
   return (
@@ -30,7 +31,13 @@ export default async function PobPage() {
         <h1>PoB verification</h1>
         <p className="muted">Record and review proof-of-business outcomes.</p>
         <div className="card" style={{ marginTop: 18 }}>
-          <PobConsole initial={pob as any} tasks={tasks as any} projects={projects as any} nodes={nodes as any} />
+          <PobConsole
+            initial={pob as any}
+            tasks={tasks as any}
+            projects={projects as any}
+            nodes={nodes as any}
+            evidences={evidences as any}
+          />
         </div>
       </div>
     </main>

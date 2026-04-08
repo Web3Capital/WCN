@@ -67,6 +67,12 @@ export default async function DashboardIndex() {
                 <Link href="/dashboard/pob">PoB verification</Link>
               </p>
               <p style={{ margin: 0, marginTop: 10 }}>
+                <Link href="/dashboard/agents">Agents</Link>
+              </p>
+              <p style={{ margin: 0, marginTop: 10 }}>
+                <Link href="/dashboard/settlement">Settlement</Link>
+              </p>
+              <p style={{ margin: 0, marginTop: 10 }}>
                 <Link href="/dashboard/applications">Node applications</Link>
               </p>
             </div>
