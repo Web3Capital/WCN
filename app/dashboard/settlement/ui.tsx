@@ -11,7 +11,7 @@ type CycleRow = {
   pool: number;
 };
 
-export function SettlementConsole({ initial }: { initial: CycleRow[] }) {
+export function SettlementConsole({ initial, readOnly = false }: { initial: CycleRow[]; readOnly?: boolean }) {
   const [rows, setRows] = useState<CycleRow[]>(initial);
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
   const selected = useMemo(() => rows.find((r) => r.id === selectedId) ?? null, [rows, selectedId]);
@@ -110,40 +110,44 @@ export function SettlementConsole({ initial }: { initial: CycleRow[] }) {
   return (
     <div className="apps-layout">
       <div>
-        <div className="pill" style={{ marginBottom: 10 }}>
-          Create cycle
-        </div>
-        <div className="form" style={{ marginBottom: 14 }}>
-          <div className="grid-3" style={{ gap: 12 }}>
-            <label className="field">
-              <span className="label">Kind</span>
-              <select value={create.kind} onChange={(e) => setCreate((s) => ({ ...s, kind: e.target.value }))}>
-                <option value="WEEK">WEEK</option>
-                <option value="MONTH">MONTH</option>
-              </select>
-            </label>
-            <label className="field">
-              <span className="label">Pool</span>
-              <input
-                type="number"
-                value={create.pool}
-                onChange={(e) => setCreate((s) => ({ ...s, pool: Number(e.target.value) }))}
-              />
-            </label>
-            <label className="field">
-              <span className="label">Start (ISO)</span>
-              <input value={create.startAt} onChange={(e) => setCreate((s) => ({ ...s, startAt: e.target.value }))} />
-            </label>
-          </div>
-          <label className="field">
-            <span className="label">End (ISO)</span>
-            <input value={create.endAt} onChange={(e) => setCreate((s) => ({ ...s, endAt: e.target.value }))} />
-          </label>
-          <button className="button" type="button" disabled={busy || !create.startAt || !create.endAt} onClick={onCreate}>
-            {busy ? "Working..." : "Create"}
-          </button>
-          {error ? <p className="form-error">{error}</p> : null}
-        </div>
+        {!readOnly ? (
+          <>
+            <div className="pill" style={{ marginBottom: 10 }}>
+              Create cycle
+            </div>
+            <div className="form" style={{ marginBottom: 14 }}>
+              <div className="grid-3" style={{ gap: 12 }}>
+                <label className="field">
+                  <span className="label">Kind</span>
+                  <select value={create.kind} onChange={(e) => setCreate((s) => ({ ...s, kind: e.target.value }))}>
+                    <option value="WEEK">WEEK</option>
+                    <option value="MONTH">MONTH</option>
+                  </select>
+                </label>
+                <label className="field">
+                  <span className="label">Pool</span>
+                  <input
+                    type="number"
+                    value={create.pool}
+                    onChange={(e) => setCreate((s) => ({ ...s, pool: Number(e.target.value) }))}
+                  />
+                </label>
+                <label className="field">
+                  <span className="label">Start (ISO)</span>
+                  <input value={create.startAt} onChange={(e) => setCreate((s) => ({ ...s, startAt: e.target.value }))} />
+                </label>
+              </div>
+              <label className="field">
+                <span className="label">End (ISO)</span>
+                <input value={create.endAt} onChange={(e) => setCreate((s) => ({ ...s, endAt: e.target.value }))} />
+              </label>
+              <button className="button" type="button" disabled={busy || !create.startAt || !create.endAt} onClick={onCreate}>
+                {busy ? "Working..." : "Create"}
+              </button>
+              {error ? <p className="form-error">{error}</p> : null}
+            </div>
+          </>
+        ) : null}
 
         <div className="pill" style={{ marginBottom: 10 }}>
           Cycles ({rows.length})
@@ -184,15 +188,19 @@ export function SettlementConsole({ initial }: { initial: CycleRow[] }) {
             <p className="muted" style={{ margin: 0 }}>
               {selected.startAt} → {selected.endAt}
             </p>
-            <button className="button-secondary" type="button" disabled={busy} onClick={lockCycle}>
-              Lock
-            </button>
-            <button className="button" type="button" disabled={busy} onClick={generateLines}>
-              Generate lines
-            </button>
-            <button className="button-secondary" type="button" disabled={!lines?.length} onClick={exportCsv}>
-              Export CSV
-            </button>
+            {!readOnly ? (
+              <>
+                <button className="button-secondary" type="button" disabled={busy} onClick={lockCycle}>
+                  Lock
+                </button>
+                <button className="button" type="button" disabled={busy} onClick={generateLines}>
+                  Generate lines
+                </button>
+                <button className="button-secondary" type="button" disabled={!lines?.length} onClick={exportCsv}>
+                  Export CSV
+                </button>
+              </>
+            ) : null}
             {lines?.length ? (
               <div className="card" style={{ marginTop: 12 }}>
                 <h3 style={{ marginTop: 0 }}>Lines</h3>

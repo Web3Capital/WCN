@@ -23,7 +23,13 @@ function formatDate(v: string | Date) {
   return Number.isNaN(d.getTime()) ? "" : d.toLocaleString();
 }
 
-export function ApplicationsTable({ initial }: { initial: Application[] }) {
+export function ApplicationsTable({
+  initial,
+  readOnly = false
+}: {
+  initial: Application[];
+  readOnly?: boolean;
+}) {
   const [items, setItems] = useState<Application[]>(initial);
   const [activeId, setActiveId] = useState<string | null>(initial[0]?.id ?? null);
   const active = useMemo(() => items.find((i) => i.id === activeId) ?? null, [items, activeId]);
@@ -79,19 +85,23 @@ export function ApplicationsTable({ initial }: { initial: Application[] }) {
                   Submitted: {formatDate(active.createdAt)}
                 </p>
               </div>
-              <div className="cta-row" style={{ marginTop: 0 }}>
-                <select
-                  value={active.status}
-                  onChange={(e) => updateApplication(active.id, { status: e.target.value as any })}
-                  disabled={saving}
-                  style={{ width: 180 }}
-                >
-                  <option value="PENDING">PENDING</option>
-                  <option value="REVIEWING">REVIEWING</option>
-                  <option value="APPROVED">APPROVED</option>
-                  <option value="REJECTED">REJECTED</option>
-                </select>
-              </div>
+              {readOnly ? (
+                <span className="pill">{active.status}</span>
+              ) : (
+                <div className="cta-row" style={{ marginTop: 0 }}>
+                  <select
+                    value={active.status}
+                    onChange={(e) => updateApplication(active.id, { status: e.target.value as any })}
+                    disabled={saving}
+                    style={{ width: 180 }}
+                  >
+                    <option value="PENDING">PENDING</option>
+                    <option value="REVIEWING">REVIEWING</option>
+                    <option value="APPROVED">APPROVED</option>
+                    <option value="REJECTED">REJECTED</option>
+                  </select>
+                </div>
+              )}
             </div>
 
             <div className="grid-2" style={{ marginTop: 14 }}>
@@ -128,19 +138,21 @@ export function ApplicationsTable({ initial }: { initial: Application[] }) {
               </div>
             </div>
 
-            <div style={{ marginTop: 14 }}>
-              <div className="label">Internal notes</div>
-              <textarea
-                defaultValue={active.notes ?? ""}
-                onBlur={(e) => updateApplication(active.id, { notes: e.target.value })}
-                placeholder="Add review notes here…"
-                disabled={saving}
-              />
-              <p className="muted" style={{ marginTop: 10, marginBottom: 0, fontSize: 13 }}>
-                Notes auto-save on blur.
-              </p>
-              {error ? <p className="form-error" style={{ marginTop: 10 }}>{error}</p> : null}
-            </div>
+            {!readOnly ? (
+              <div style={{ marginTop: 14 }}>
+                <div className="label">Internal notes</div>
+                <textarea
+                  defaultValue={active.notes ?? ""}
+                  onBlur={(e) => updateApplication(active.id, { notes: e.target.value })}
+                  placeholder="Add review notes here…"
+                  disabled={saving}
+                />
+                <p className="muted" style={{ marginTop: 10, marginBottom: 0, fontSize: 13 }}>
+                  Notes auto-save on blur.
+                </p>
+                {error ? <p className="form-error" style={{ marginTop: 10 }}>{error}</p> : null}
+              </div>
+            ) : null}
           </>
         ) : (
           <p className="muted" style={{ margin: 0 }}>No applications.</p>

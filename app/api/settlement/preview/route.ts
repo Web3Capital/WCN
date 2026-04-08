@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/admin";
+import { requireSignedIn } from "@/lib/admin";
 
 export async function POST(req: Request) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  const auth = await requireSignedIn();
+  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 

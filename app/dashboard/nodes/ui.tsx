@@ -20,7 +20,7 @@ type NodeRow = {
 const NODE_TYPES = ["GLOBAL", "REGION", "CITY", "INDUSTRY", "FUNCTIONAL", "AGENT"] as const;
 const NODE_STATUS = ["DRAFT", "SUBMITTED", "ACTIVE", "SUSPENDED", "REJECTED"] as const;
 
-export function NodesConsole({ initial }: { initial: NodeRow[] }) {
+export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]; readOnly?: boolean }) {
   const [rows, setRows] = useState<NodeRow[]>(initial);
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
   const selected = useMemo(() => rows.find((r) => r.id === selectedId) ?? null, [rows, selectedId]);
@@ -102,62 +102,66 @@ export function NodesConsole({ initial }: { initial: NodeRow[] }) {
   return (
     <div className="apps-layout">
       <div>
-        <div className="pill" style={{ marginBottom: 10 }}>
-          Create node
-        </div>
-        <div className="form" style={{ marginBottom: 14 }}>
-          <label className="field">
-            <span className="label">Name</span>
-            <input value={create.name} onChange={(e) => setCreate((s) => ({ ...s, name: e.target.value }))} />
-          </label>
-          <div className="grid-2" style={{ gap: 12 }}>
-            <label className="field">
-              <span className="label">Type</span>
-              <select value={create.type} onChange={(e) => setCreate((s) => ({ ...s, type: e.target.value }))}>
-                {NODE_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="field">
-              <span className="label">Status</span>
-              <select value={create.status} onChange={(e) => setCreate((s) => ({ ...s, status: e.target.value }))}>
-                {NODE_STATUS.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <label className="field">
-            <span className="label">Tags (comma separated)</span>
-            <input value={create.tags} onChange={(e) => setCreate((s) => ({ ...s, tags: e.target.value }))} />
-          </label>
-          <div className="grid-3" style={{ gap: 12 }}>
-            <label className="field">
-              <span className="label">Region</span>
-              <input value={create.region} onChange={(e) => setCreate((s) => ({ ...s, region: e.target.value }))} />
-            </label>
-            <label className="field">
-              <span className="label">City</span>
-              <input value={create.city} onChange={(e) => setCreate((s) => ({ ...s, city: e.target.value }))} />
-            </label>
-            <label className="field">
-              <span className="label">Jurisdiction</span>
-              <input
-                value={create.jurisdiction}
-                onChange={(e) => setCreate((s) => ({ ...s, jurisdiction: e.target.value }))}
-              />
-            </label>
-          </div>
-          <button className="button" type="button" disabled={creating || !create.name.trim()} onClick={onCreate}>
-            {creating ? "Creating..." : "Create"}
-          </button>
-          {error ? <p className="form-error">{error}</p> : null}
-        </div>
+        {!readOnly ? (
+          <>
+            <div className="pill" style={{ marginBottom: 10 }}>
+              Create node
+            </div>
+            <div className="form" style={{ marginBottom: 14 }}>
+              <label className="field">
+                <span className="label">Name</span>
+                <input value={create.name} onChange={(e) => setCreate((s) => ({ ...s, name: e.target.value }))} />
+              </label>
+              <div className="grid-2" style={{ gap: 12 }}>
+                <label className="field">
+                  <span className="label">Type</span>
+                  <select value={create.type} onChange={(e) => setCreate((s) => ({ ...s, type: e.target.value }))}>
+                    {NODE_TYPES.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="field">
+                  <span className="label">Status</span>
+                  <select value={create.status} onChange={(e) => setCreate((s) => ({ ...s, status: e.target.value }))}>
+                    {NODE_STATUS.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <label className="field">
+                <span className="label">Tags (comma separated)</span>
+                <input value={create.tags} onChange={(e) => setCreate((s) => ({ ...s, tags: e.target.value }))} />
+              </label>
+              <div className="grid-3" style={{ gap: 12 }}>
+                <label className="field">
+                  <span className="label">Region</span>
+                  <input value={create.region} onChange={(e) => setCreate((s) => ({ ...s, region: e.target.value }))} />
+                </label>
+                <label className="field">
+                  <span className="label">City</span>
+                  <input value={create.city} onChange={(e) => setCreate((s) => ({ ...s, city: e.target.value }))} />
+                </label>
+                <label className="field">
+                  <span className="label">Jurisdiction</span>
+                  <input
+                    value={create.jurisdiction}
+                    onChange={(e) => setCreate((s) => ({ ...s, jurisdiction: e.target.value }))}
+                  />
+                </label>
+              </div>
+              <button className="button" type="button" disabled={creating || !create.name.trim()} onClick={onCreate}>
+                {creating ? "Creating..." : "Create"}
+              </button>
+              {error ? <p className="form-error">{error}</p> : null}
+            </div>
+          </>
+        ) : null}
 
         <div className="pill" style={{ marginBottom: 10 }}>
           Nodes ({rows.length})
@@ -196,12 +200,23 @@ export function NodesConsole({ initial }: { initial: NodeRow[] }) {
           <div className="form">
             <label className="field">
               <span className="label">Name</span>
-              <input defaultValue={selected.name} onBlur={(e) => onSave({ name: e.target.value })} />
+              <input
+                key={selected.id + selected.name}
+                defaultValue={selected.name}
+                readOnly={readOnly}
+                disabled={readOnly}
+                onBlur={readOnly ? undefined : (e) => onSave({ name: e.target.value })}
+              />
             </label>
             <div className="grid-2" style={{ gap: 12 }}>
               <label className="field">
                 <span className="label">Type</span>
-                <select defaultValue={selected.type} onChange={(e) => onSave({ type: e.target.value })}>
+                <select
+                  key={selected.id + "t"}
+                  defaultValue={selected.type}
+                  disabled={readOnly}
+                  onChange={readOnly ? undefined : (e) => onSave({ type: e.target.value })}
+                >
                   {NODE_TYPES.map((t) => (
                     <option key={t} value={t}>
                       {t}
@@ -211,7 +226,12 @@ export function NodesConsole({ initial }: { initial: NodeRow[] }) {
               </label>
               <label className="field">
                 <span className="label">Status</span>
-                <select defaultValue={selected.status} onChange={(e) => onSave({ status: e.target.value })}>
+                <select
+                  key={selected.id + "s"}
+                  defaultValue={selected.status}
+                  disabled={readOnly}
+                  onChange={readOnly ? undefined : (e) => onSave({ status: e.target.value })}
+                >
                   {NODE_STATUS.map((t) => (
                     <option key={t} value={t}>
                       {t}
@@ -223,33 +243,54 @@ export function NodesConsole({ initial }: { initial: NodeRow[] }) {
             <label className="field">
               <span className="label">Description</span>
               <textarea
+                key={selected.id + "d"}
                 defaultValue={selected.description ?? ""}
-                onBlur={(e) => onSave({ description: e.target.value })}
+                readOnly={readOnly}
+                disabled={readOnly}
+                onBlur={readOnly ? undefined : (e) => onSave({ description: e.target.value })}
               />
             </label>
             <div className="grid-3" style={{ gap: 12 }}>
               <label className="field">
                 <span className="label">Region</span>
-                <input defaultValue={selected.region ?? ""} onBlur={(e) => onSave({ region: e.target.value })} />
+                <input
+                  key={selected.id + "r"}
+                  defaultValue={selected.region ?? ""}
+                  readOnly={readOnly}
+                  disabled={readOnly}
+                  onBlur={readOnly ? undefined : (e) => onSave({ region: e.target.value })}
+                />
               </label>
               <label className="field">
                 <span className="label">City</span>
-                <input defaultValue={selected.city ?? ""} onBlur={(e) => onSave({ city: e.target.value })} />
+                <input
+                  key={selected.id + "c"}
+                  defaultValue={selected.city ?? ""}
+                  readOnly={readOnly}
+                  disabled={readOnly}
+                  onBlur={readOnly ? undefined : (e) => onSave({ city: e.target.value })}
+                />
               </label>
               <label className="field">
                 <span className="label">Jurisdiction</span>
                 <input
+                  key={selected.id + "j"}
                   defaultValue={selected.jurisdiction ?? ""}
-                  onBlur={(e) => onSave({ jurisdiction: e.target.value })}
+                  readOnly={readOnly}
+                  disabled={readOnly}
+                  onBlur={readOnly ? undefined : (e) => onSave({ jurisdiction: e.target.value })}
                 />
               </label>
             </div>
             <label className="field">
               <span className="label">Level</span>
               <input
+                key={selected.id + "l"}
                 type="number"
                 defaultValue={selected.level}
-                onBlur={(e) => onSave({ level: Number(e.target.value) })}
+                readOnly={readOnly}
+                disabled={readOnly}
+                onBlur={readOnly ? undefined : (e) => onSave({ level: Number(e.target.value) })}
               />
             </label>
             <button className="button-secondary" type="button" disabled={saving} onClick={() => refresh()}>

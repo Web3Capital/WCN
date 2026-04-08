@@ -93,9 +93,12 @@ export function Nav() {
               {link.label}
             </Link>
           ))}
-          {isAdmin ? (
-            <Link href="/dashboard" aria-current={isActive("/dashboard") ? "page" : undefined}>
-              Admin
+          {authed ? (
+            <Link
+              href="/dashboard"
+              aria-current={normalizedPath.startsWith("/dashboard") ? "page" : undefined}
+            >
+              {isAdmin ? "Admin" : "Console"}
             </Link>
           ) : null}
           <button

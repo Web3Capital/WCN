@@ -2,6 +2,7 @@ import { getPrisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { ReadOnlyBanner } from "@/app/dashboard/_components/read-only-banner";
 import { PobConsole } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -9,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function PobPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
-  if (session.user.role !== "ADMIN") redirect("/");
+  const isAdmin = session.user.role === "ADMIN";
 
   const prisma = getPrisma();
   const [pob, tasks, projects, nodes, evidences] = await Promise.all([
@@ -30,6 +31,7 @@ export default async function PobPage() {
         <span className="eyebrow">Dashboard</span>
         <h1>PoB verification</h1>
         <p className="muted">Record and review proof-of-business outcomes.</p>
+        {!isAdmin ? <ReadOnlyBanner /> : null}
         <div className="card" style={{ marginTop: 18 }}>
           <PobConsole
             initial={pob as any}
@@ -37,6 +39,7 @@ export default async function PobPage() {
             projects={projects as any}
             nodes={nodes as any}
             evidences={evidences as any}
+            readOnly={!isAdmin}
           />
         </div>
       </div>

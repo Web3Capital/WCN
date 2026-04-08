@@ -22,11 +22,13 @@ const TASK_STATUS = ["OPEN", "IN_PROGRESS", "WAITING_REVIEW", "DONE", "CANCELLED
 export function TasksConsole({
   initial,
   projects,
-  nodes
+  nodes,
+  readOnly = false
 }: {
   initial: TaskRow[];
   projects: ProjectRow[];
   nodes: NodeRow[];
+  readOnly?: boolean;
 }) {
   const [rows, setRows] = useState<TaskRow[]>(initial);
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
@@ -106,83 +108,93 @@ export function TasksConsole({
   return (
     <div className="apps-layout">
       <div>
-        <div className="pill" style={{ marginBottom: 10 }}>
-          Create task
-        </div>
-        <div className="form" style={{ marginBottom: 14 }}>
-          <label className="field">
-            <span className="label">Title</span>
-            <input value={create.title} onChange={(e) => setCreate((s) => ({ ...s, title: e.target.value }))} />
-          </label>
-          <div className="grid-3" style={{ gap: 12 }}>
-            <label className="field">
-              <span className="label">Type</span>
-              <select value={create.type} onChange={(e) => setCreate((s) => ({ ...s, type: e.target.value }))}>
-                {TASK_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="field">
-              <span className="label">Status</span>
-              <select value={create.status} onChange={(e) => setCreate((s) => ({ ...s, status: e.target.value }))}>
-                {TASK_STATUS.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="field">
-              <span className="label">Owner node</span>
-              <select value={create.ownerNodeId} onChange={(e) => setCreate((s) => ({ ...s, ownerNodeId: e.target.value }))}>
-                <option value="">—</option>
-                {nodes.map((n) => (
-                  <option key={n.id} value={n.id}>
-                    {n.name} ({n.type})
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <label className="field">
-            <span className="label">Project</span>
-            <select value={create.projectId} onChange={(e) => setCreate((s) => ({ ...s, projectId: e.target.value }))}>
-              <option value="">—</option>
-              {projects.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="field">
-            <span className="label">Assign nodes (collaborators)</span>
-            <select
-              multiple
-              value={create.assignNodeIds}
-              onChange={(e) =>
-                setCreate((s) => ({
-                  ...s,
-                  assignNodeIds: Array.from(e.target.selectedOptions).map((o) => o.value)
-                }))
-              }
-              style={{ minHeight: 120 }}
-            >
-              {nodes.map((n) => (
-                <option key={n.id} value={n.id}>
-                  {n.name} ({n.type})
-                </option>
-              ))}
-            </select>
-          </label>
-          <button className="button" type="button" disabled={busy || !create.title.trim()} onClick={onCreate}>
-            {busy ? "Working..." : "Create"}
-          </button>
-          {error ? <p className="form-error">{error}</p> : null}
-        </div>
+        {!readOnly ? (
+          <>
+            <div className="pill" style={{ marginBottom: 10 }}>
+              Create task
+            </div>
+            <div className="form" style={{ marginBottom: 14 }}>
+              <label className="field">
+                <span className="label">Title</span>
+                <input value={create.title} onChange={(e) => setCreate((s) => ({ ...s, title: e.target.value }))} />
+              </label>
+              <div className="grid-3" style={{ gap: 12 }}>
+                <label className="field">
+                  <span className="label">Type</span>
+                  <select value={create.type} onChange={(e) => setCreate((s) => ({ ...s, type: e.target.value }))}>
+                    {TASK_TYPES.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="field">
+                  <span className="label">Status</span>
+                  <select value={create.status} onChange={(e) => setCreate((s) => ({ ...s, status: e.target.value }))}>
+                    {TASK_STATUS.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="field">
+                  <span className="label">Owner node</span>
+                  <select
+                    value={create.ownerNodeId}
+                    onChange={(e) => setCreate((s) => ({ ...s, ownerNodeId: e.target.value }))}
+                  >
+                    <option value="">—</option>
+                    {nodes.map((n) => (
+                      <option key={n.id} value={n.id}>
+                        {n.name} ({n.type})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <label className="field">
+                <span className="label">Project</span>
+                <select
+                  value={create.projectId}
+                  onChange={(e) => setCreate((s) => ({ ...s, projectId: e.target.value }))}
+                >
+                  <option value="">—</option>
+                  {projects.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="field">
+                <span className="label">Assign nodes (collaborators)</span>
+                <select
+                  multiple
+                  value={create.assignNodeIds}
+                  onChange={(e) =>
+                    setCreate((s) => ({
+                      ...s,
+                      assignNodeIds: Array.from(e.target.selectedOptions).map((o) => o.value)
+                    }))
+                  }
+                  style={{ minHeight: 120 }}
+                >
+                  {nodes.map((n) => (
+                    <option key={n.id} value={n.id}>
+                      {n.name} ({n.type})
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button className="button" type="button" disabled={busy || !create.title.trim()} onClick={onCreate}>
+                {busy ? "Working..." : "Create"}
+              </button>
+              {error ? <p className="form-error">{error}</p> : null}
+            </div>
+          </>
+        ) : null}
 
         <div className="pill" style={{ marginBottom: 10 }}>
           Tasks ({rows.length})
@@ -221,12 +233,23 @@ export function TasksConsole({
           <div className="form">
             <label className="field">
               <span className="label">Title</span>
-              <input defaultValue={selected.title} onBlur={(e) => onSave({ title: e.target.value })} />
+              <input
+                key={selected.id + "t"}
+                defaultValue={selected.title}
+                readOnly={readOnly}
+                disabled={readOnly}
+                onBlur={readOnly ? undefined : (e) => onSave({ title: e.target.value })}
+              />
             </label>
             <div className="grid-2" style={{ gap: 12 }}>
               <label className="field">
                 <span className="label">Type</span>
-                <select defaultValue={selected.type} onChange={(e) => onSave({ type: e.target.value })}>
+                <select
+                  key={selected.id + "ty"}
+                  defaultValue={selected.type}
+                  disabled={readOnly}
+                  onChange={readOnly ? undefined : (e) => onSave({ type: e.target.value })}
+                >
                   {TASK_TYPES.map((t) => (
                     <option key={t} value={t}>
                       {t}
@@ -236,7 +259,12 @@ export function TasksConsole({
               </label>
               <label className="field">
                 <span className="label">Status</span>
-                <select defaultValue={selected.status} onChange={(e) => onSave({ status: e.target.value })}>
+                <select
+                  key={selected.id + "st"}
+                  defaultValue={selected.status}
+                  disabled={readOnly}
+                  onChange={readOnly ? undefined : (e) => onSave({ status: e.target.value })}
+                >
                   {TASK_STATUS.map((t) => (
                     <option key={t} value={t}>
                       {t}
@@ -247,11 +275,22 @@ export function TasksConsole({
             </div>
             <label className="field">
               <span className="label">Description</span>
-              <textarea defaultValue={selected.description ?? ""} onBlur={(e) => onSave({ description: e.target.value })} />
+              <textarea
+                key={selected.id + "d"}
+                defaultValue={selected.description ?? ""}
+                readOnly={readOnly}
+                disabled={readOnly}
+                onBlur={readOnly ? undefined : (e) => onSave({ description: e.target.value })}
+              />
             </label>
             <label className="field">
               <span className="label">Project</span>
-              <select defaultValue={selected.projectId ?? ""} onChange={(e) => onSave({ projectId: e.target.value || null })}>
+              <select
+                key={selected.id + "p"}
+                defaultValue={selected.projectId ?? ""}
+                disabled={readOnly}
+                onChange={readOnly ? undefined : (e) => onSave({ projectId: e.target.value || null })}
+              >
                 <option value="">—</option>
                 {projects.map((p) => (
                   <option key={p.id} value={p.id}>
@@ -262,7 +301,12 @@ export function TasksConsole({
             </label>
             <label className="field">
               <span className="label">Owner node</span>
-              <select defaultValue={selected.ownerNodeId ?? ""} onChange={(e) => onSave({ ownerNodeId: e.target.value || null })}>
+              <select
+                key={selected.id + "o"}
+                defaultValue={selected.ownerNodeId ?? ""}
+                disabled={readOnly}
+                onChange={readOnly ? undefined : (e) => onSave({ ownerNodeId: e.target.value || null })}
+              >
                 <option value="">—</option>
                 {nodes.map((n) => (
                   <option key={n.id} value={n.id}>
@@ -274,12 +318,17 @@ export function TasksConsole({
             <label className="field">
               <span className="label">Assign nodes</span>
               <select
+                key={selected.id + "a"}
                 multiple
                 defaultValue={Array.from(selectedAssignments())}
-                onChange={(e) =>
-                  onSave({
-                    assignNodeIds: Array.from(e.target.selectedOptions).map((o) => o.value)
-                  })
+                disabled={readOnly}
+                onChange={
+                  readOnly
+                    ? undefined
+                    : (e) =>
+                        onSave({
+                          assignNodeIds: Array.from(e.target.selectedOptions).map((o) => o.value)
+                        })
                 }
                 style={{ minHeight: 140 }}
               >

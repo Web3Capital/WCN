@@ -8,3 +8,4 @@ yarn-error.log*
 .env
 .env.*
 /lib/generated/prisma
+*.tsbuildinfo

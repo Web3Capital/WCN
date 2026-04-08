@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/admin";
+import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { ProjectStatus } from "@prisma/client";
 
 export async function GET() {
-  const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  const auth = await requireSignedIn();
+  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
   const prisma = getPrisma();
   const projects = await prisma.project.findMany({

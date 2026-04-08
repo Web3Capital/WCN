@@ -22,7 +22,15 @@ type ProjectRow = {
 const PROJECT_STATUS = ["DRAFT", "SUBMITTED", "APPROVED", "REJECTED", "ARCHIVED"] as const;
 const PROJECT_STAGE = ["IDEA", "SEED", "SERIES_A", "SERIES_B", "SERIES_C", "GROWTH", "PUBLIC", "OTHER"] as const;
 
-export function ProjectsConsole({ initial, nodes }: { initial: ProjectRow[]; nodes: NodeRow[] }) {
+export function ProjectsConsole({
+  initial,
+  nodes,
+  readOnly = false
+}: {
+  initial: ProjectRow[];
+  nodes: NodeRow[];
+  readOnly?: boolean;
+}) {
   const [rows, setRows] = useState<ProjectRow[]>(initial);
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
   const selected = useMemo(() => rows.find((r) => r.id === selectedId) ?? null, [rows, selectedId]);
@@ -92,52 +100,56 @@ export function ProjectsConsole({ initial, nodes }: { initial: ProjectRow[]; nod
   return (
     <div className="apps-layout">
       <div>
-        <div className="pill" style={{ marginBottom: 10 }}>
-          Create project
-        </div>
-        <div className="form" style={{ marginBottom: 14 }}>
-          <label className="field">
-            <span className="label">Name</span>
-            <input value={create.name} onChange={(e) => setCreate((s) => ({ ...s, name: e.target.value }))} />
-          </label>
-          <div className="grid-3" style={{ gap: 12 }}>
-            <label className="field">
-              <span className="label">Status</span>
-              <select value={create.status} onChange={(e) => setCreate((s) => ({ ...s, status: e.target.value }))}>
-                {PROJECT_STATUS.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="field">
-              <span className="label">Stage</span>
-              <select value={create.stage} onChange={(e) => setCreate((s) => ({ ...s, stage: e.target.value }))}>
-                {PROJECT_STAGE.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="field">
-              <span className="label">Node</span>
-              <select value={create.nodeId} onChange={(e) => setCreate((s) => ({ ...s, nodeId: e.target.value }))}>
-                <option value="">—</option>
-                {nodes.map((n) => (
-                  <option key={n.id} value={n.id}>
-                    {n.name} ({n.type})
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <button className="button" type="button" disabled={busy || !create.name.trim()} onClick={onCreate}>
-            {busy ? "Working..." : "Create"}
-          </button>
-          {error ? <p className="form-error">{error}</p> : null}
-        </div>
+        {!readOnly ? (
+          <>
+            <div className="pill" style={{ marginBottom: 10 }}>
+              Create project
+            </div>
+            <div className="form" style={{ marginBottom: 14 }}>
+              <label className="field">
+                <span className="label">Name</span>
+                <input value={create.name} onChange={(e) => setCreate((s) => ({ ...s, name: e.target.value }))} />
+              </label>
+              <div className="grid-3" style={{ gap: 12 }}>
+                <label className="field">
+                  <span className="label">Status</span>
+                  <select value={create.status} onChange={(e) => setCreate((s) => ({ ...s, status: e.target.value }))}>
+                    {PROJECT_STATUS.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="field">
+                  <span className="label">Stage</span>
+                  <select value={create.stage} onChange={(e) => setCreate((s) => ({ ...s, stage: e.target.value }))}>
+                    {PROJECT_STAGE.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="field">
+                  <span className="label">Node</span>
+                  <select value={create.nodeId} onChange={(e) => setCreate((s) => ({ ...s, nodeId: e.target.value }))}>
+                    <option value="">—</option>
+                    {nodes.map((n) => (
+                      <option key={n.id} value={n.id}>
+                        {n.name} ({n.type})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <button className="button" type="button" disabled={busy || !create.name.trim()} onClick={onCreate}>
+                {busy ? "Working..." : "Create"}
+              </button>
+              {error ? <p className="form-error">{error}</p> : null}
+            </div>
+          </>
+        ) : null}
 
         <div className="pill" style={{ marginBottom: 10 }}>
           Projects ({rows.length})
@@ -176,12 +188,23 @@ export function ProjectsConsole({ initial, nodes }: { initial: ProjectRow[]; nod
           <div className="form">
             <label className="field">
               <span className="label">Name</span>
-              <input defaultValue={selected.name} onBlur={(e) => onSave({ name: e.target.value })} />
+              <input
+                key={selected.id + "n"}
+                defaultValue={selected.name}
+                readOnly={readOnly}
+                disabled={readOnly}
+                onBlur={readOnly ? undefined : (e) => onSave({ name: e.target.value })}
+              />
             </label>
             <div className="grid-2" style={{ gap: 12 }}>
               <label className="field">
                 <span className="label">Status</span>
-                <select defaultValue={selected.status} onChange={(e) => onSave({ status: e.target.value })}>
+                <select
+                  key={selected.id + "st"}
+                  defaultValue={selected.status}
+                  disabled={readOnly}
+                  onChange={readOnly ? undefined : (e) => onSave({ status: e.target.value })}
+                >
                   {PROJECT_STATUS.map((t) => (
                     <option key={t} value={t}>
                       {t}
@@ -191,7 +214,12 @@ export function ProjectsConsole({ initial, nodes }: { initial: ProjectRow[]; nod
               </label>
               <label className="field">
                 <span className="label">Stage</span>
-                <select defaultValue={selected.stage} onChange={(e) => onSave({ stage: e.target.value })}>
+                <select
+                  key={selected.id + "sg"}
+                  defaultValue={selected.stage}
+                  disabled={readOnly}
+                  onChange={readOnly ? undefined : (e) => onSave({ stage: e.target.value })}
+                >
                   {PROJECT_STAGE.map((t) => (
                     <option key={t} value={t}>
                       {t}
@@ -202,46 +230,84 @@ export function ProjectsConsole({ initial, nodes }: { initial: ProjectRow[]; nod
             </div>
             <label className="field">
               <span className="label">Sector</span>
-              <input defaultValue={selected.sector ?? ""} onBlur={(e) => onSave({ sector: e.target.value })} />
+              <input
+                key={selected.id + "sc"}
+                defaultValue={selected.sector ?? ""}
+                readOnly={readOnly}
+                disabled={readOnly}
+                onBlur={readOnly ? undefined : (e) => onSave({ sector: e.target.value })}
+              />
             </label>
             <label className="field">
               <span className="label">Website</span>
-              <input defaultValue={selected.website ?? ""} onBlur={(e) => onSave({ website: e.target.value })} />
+              <input
+                key={selected.id + "w"}
+                defaultValue={selected.website ?? ""}
+                readOnly={readOnly}
+                disabled={readOnly}
+                onBlur={readOnly ? undefined : (e) => onSave({ website: e.target.value })}
+              />
             </label>
             <label className="field">
               <span className="label">Pitch URL</span>
-              <input defaultValue={selected.pitchUrl ?? ""} onBlur={(e) => onSave({ pitchUrl: e.target.value })} />
+              <input
+                key={selected.id + "p"}
+                defaultValue={selected.pitchUrl ?? ""}
+                readOnly={readOnly}
+                disabled={readOnly}
+                onBlur={readOnly ? undefined : (e) => onSave({ pitchUrl: e.target.value })}
+              />
             </label>
             <label className="field">
               <span className="label">Fundraising need</span>
               <textarea
+                key={selected.id + "f"}
                 defaultValue={selected.fundraisingNeed ?? ""}
-                onBlur={(e) => onSave({ fundraisingNeed: e.target.value })}
+                readOnly={readOnly}
+                disabled={readOnly}
+                onBlur={readOnly ? undefined : (e) => onSave({ fundraisingNeed: e.target.value })}
               />
             </label>
             <div className="grid-3" style={{ gap: 12 }}>
               <label className="field">
                 <span className="label">Contact name</span>
-                <input defaultValue={selected.contactName ?? ""} onBlur={(e) => onSave({ contactName: e.target.value })} />
+                <input
+                  key={selected.id + "cn"}
+                  defaultValue={selected.contactName ?? ""}
+                  readOnly={readOnly}
+                  disabled={readOnly}
+                  onBlur={readOnly ? undefined : (e) => onSave({ contactName: e.target.value })}
+                />
               </label>
               <label className="field">
                 <span className="label">Email</span>
                 <input
+                  key={selected.id + "ce"}
                   defaultValue={selected.contactEmail ?? ""}
-                  onBlur={(e) => onSave({ contactEmail: e.target.value })}
+                  readOnly={readOnly}
+                  disabled={readOnly}
+                  onBlur={readOnly ? undefined : (e) => onSave({ contactEmail: e.target.value })}
                 />
               </label>
               <label className="field">
                 <span className="label">Telegram</span>
                 <input
+                  key={selected.id + "ct"}
                   defaultValue={selected.contactTelegram ?? ""}
-                  onBlur={(e) => onSave({ contactTelegram: e.target.value })}
+                  readOnly={readOnly}
+                  disabled={readOnly}
+                  onBlur={readOnly ? undefined : (e) => onSave({ contactTelegram: e.target.value })}
                 />
               </label>
             </div>
             <label className="field">
               <span className="label">Node</span>
-              <select defaultValue={selected.nodeId ?? ""} onChange={(e) => onSave({ nodeId: e.target.value || null })}>
+              <select
+                key={selected.id + "nd"}
+                defaultValue={selected.nodeId ?? ""}
+                disabled={readOnly}
+                onChange={readOnly ? undefined : (e) => onSave({ nodeId: e.target.value || null })}
+              >
                 <option value="">—</option>
                 {nodes.map((n) => (
                   <option key={n.id} value={n.id}>
@@ -253,8 +319,11 @@ export function ProjectsConsole({ initial, nodes }: { initial: ProjectRow[]; nod
             <label className="field">
               <span className="label">Description</span>
               <textarea
+                key={selected.id + "ds"}
                 defaultValue={selected.description ?? ""}
-                onBlur={(e) => onSave({ description: e.target.value })}
+                readOnly={readOnly}
+                disabled={readOnly}
+                onBlur={readOnly ? undefined : (e) => onSave({ description: e.target.value })}
               />
             </label>
             <button className="button-secondary" type="button" disabled={busy} onClick={() => refresh()}>

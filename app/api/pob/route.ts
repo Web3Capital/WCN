@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/admin";
+import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { ApplicationStatus } from "@prisma/client";
 
 function computeScore(input: {
@@ -19,14 +19,20 @@ function computeScore(input: {
 }
 
 export async function GET() {
-  const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  const auth = await requireSignedIn();
+  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
   const prisma = getPrisma();
   const pob = await prisma.poBRecord.findMany({
     orderBy: { createdAt: "desc" },
     take: 200,
-    include: { task: true, project: true, node: true }
+    include: {
+      task: true,
+      project: true,
+      node: true,
+      attributions: { include: { node: true } },
+      confirmations: true
+    }
   });
 
   return NextResponse.json({ ok: true, pob });

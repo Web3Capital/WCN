@@ -31,13 +31,15 @@ export function PobConsole({
   tasks,
   projects,
   nodes,
-  evidences
+  evidences,
+  readOnly = false
 }: {
   initial: PobRow[];
   tasks: TinyRow[];
   projects: TinyRow[];
   nodes: TinyRow[];
   evidences: EvidenceRow[];
+  readOnly?: boolean;
 }) {
   const [rows, setRows] = useState<PobRow[]>(initial);
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
@@ -172,109 +174,116 @@ export function PobConsole({
   return (
     <div className="apps-layout">
       <div>
-        <div className="pill" style={{ marginBottom: 10 }}>
-          Create PoB record
-        </div>
-        <div className="form" style={{ marginBottom: 14 }}>
-          <label className="field">
-            <span className="label">Business type</span>
-            <input
-              value={create.businessType}
-              onChange={(e) => setCreate((s) => ({ ...s, businessType: e.target.value }))}
-            />
-          </label>
-          <div className="grid-3" style={{ gap: 12 }}>
-            <label className="field">
-              <span className="label">Base value</span>
-              <input
-                type="number"
-                value={create.baseValue}
-                onChange={(e) => setCreate((s) => ({ ...s, baseValue: Number(e.target.value) }))}
-              />
-            </label>
-            <label className="field">
-              <span className="label">Weight</span>
-              <input
-                type="number"
-                value={create.weight}
-                onChange={(e) => setCreate((s) => ({ ...s, weight: Number(e.target.value) }))}
-              />
-            </label>
-            <label className="field">
-              <span className="label">Status</span>
-              <select value={create.status} onChange={(e) => setCreate((s) => ({ ...s, status: e.target.value }))}>
-                {POB_STATUS.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <div className="grid-3" style={{ gap: 12 }}>
-            <label className="field">
-              <span className="label">Quality</span>
-              <input
-                type="number"
-                value={create.qualityMult}
-                onChange={(e) => setCreate((s) => ({ ...s, qualityMult: Number(e.target.value) }))}
-              />
-            </label>
-            <label className="field">
-              <span className="label">Time</span>
-              <input
-                type="number"
-                value={create.timeMult}
-                onChange={(e) => setCreate((s) => ({ ...s, timeMult: Number(e.target.value) }))}
-              />
-            </label>
-            <label className="field">
-              <span className="label">Risk discount</span>
-              <input
-                type="number"
-                value={create.riskDiscount}
-                onChange={(e) => setCreate((s) => ({ ...s, riskDiscount: Number(e.target.value) }))}
-              />
-            </label>
-          </div>
-          <label className="field">
-            <span className="label">Task</span>
-            <select value={create.taskId} onChange={(e) => setCreate((s) => ({ ...s, taskId: e.target.value }))}>
-              <option value="">—</option>
-              {tasks.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.title ?? t.id}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="field">
-            <span className="label">Project</span>
-            <select value={create.projectId} onChange={(e) => setCreate((s) => ({ ...s, projectId: e.target.value }))}>
-              <option value="">—</option>
-              {projects.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name ?? p.id}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="field">
-            <span className="label">Node</span>
-            <select value={create.nodeId} onChange={(e) => setCreate((s) => ({ ...s, nodeId: e.target.value }))}>
-              <option value="">—</option>
-              {nodes.map((n) => (
-                <option key={n.id} value={n.id}>
-                  {n.name ?? n.id}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button className="button" type="button" disabled={busy || !create.businessType.trim()} onClick={onCreate}>
-            {busy ? "Working..." : "Create"}
-          </button>
-          {error ? <p className="form-error">{error}</p> : null}
-        </div>
+        {!readOnly ? (
+          <>
+            <div className="pill" style={{ marginBottom: 10 }}>
+              Create PoB record
+            </div>
+            <div className="form" style={{ marginBottom: 14 }}>
+              <label className="field">
+                <span className="label">Business type</span>
+                <input
+                  value={create.businessType}
+                  onChange={(e) => setCreate((s) => ({ ...s, businessType: e.target.value }))}
+                />
+              </label>
+              <div className="grid-3" style={{ gap: 12 }}>
+                <label className="field">
+                  <span className="label">Base value</span>
+                  <input
+                    type="number"
+                    value={create.baseValue}
+                    onChange={(e) => setCreate((s) => ({ ...s, baseValue: Number(e.target.value) }))}
+                  />
+                </label>
+                <label className="field">
+                  <span className="label">Weight</span>
+                  <input
+                    type="number"
+                    value={create.weight}
+                    onChange={(e) => setCreate((s) => ({ ...s, weight: Number(e.target.value) }))}
+                  />
+                </label>
+                <label className="field">
+                  <span className="label">Status</span>
+                  <select value={create.status} onChange={(e) => setCreate((s) => ({ ...s, status: e.target.value }))}>
+                    {POB_STATUS.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <div className="grid-3" style={{ gap: 12 }}>
+                <label className="field">
+                  <span className="label">Quality</span>
+                  <input
+                    type="number"
+                    value={create.qualityMult}
+                    onChange={(e) => setCreate((s) => ({ ...s, qualityMult: Number(e.target.value) }))}
+                  />
+                </label>
+                <label className="field">
+                  <span className="label">Time</span>
+                  <input
+                    type="number"
+                    value={create.timeMult}
+                    onChange={(e) => setCreate((s) => ({ ...s, timeMult: Number(e.target.value) }))}
+                  />
+                </label>
+                <label className="field">
+                  <span className="label">Risk discount</span>
+                  <input
+                    type="number"
+                    value={create.riskDiscount}
+                    onChange={(e) => setCreate((s) => ({ ...s, riskDiscount: Number(e.target.value) }))}
+                  />
+                </label>
+              </div>
+              <label className="field">
+                <span className="label">Task</span>
+                <select value={create.taskId} onChange={(e) => setCreate((s) => ({ ...s, taskId: e.target.value }))}>
+                  <option value="">—</option>
+                  {tasks.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.title ?? t.id}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="field">
+                <span className="label">Project</span>
+                <select
+                  value={create.projectId}
+                  onChange={(e) => setCreate((s) => ({ ...s, projectId: e.target.value }))}
+                >
+                  <option value="">—</option>
+                  {projects.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name ?? p.id}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="field">
+                <span className="label">Node</span>
+                <select value={create.nodeId} onChange={(e) => setCreate((s) => ({ ...s, nodeId: e.target.value }))}>
+                  <option value="">—</option>
+                  {nodes.map((n) => (
+                    <option key={n.id} value={n.id}>
+                      {n.name ?? n.id}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button className="button" type="button" disabled={busy || !create.businessType.trim()} onClick={onCreate}>
+                {busy ? "Working..." : "Create"}
+              </button>
+              {error ? <p className="form-error">{error}</p> : null}
+            </div>
+          </>
+        ) : null}
 
         <div className="pill" style={{ marginBottom: 10 }}>
           Records ({rows.length})
@@ -307,14 +316,19 @@ export function PobConsole({
 
       <div>
         <div className="pill" style={{ marginBottom: 10 }}>
-          Review / update
+          {readOnly ? "Record details" : "Review / update"}
         </div>
         {selected ? (
           <div className="form">
             <div className="grid-2" style={{ gap: 12 }}>
               <label className="field">
                 <span className="label">Status</span>
-                <select defaultValue={selected.status} onChange={(e) => onSave({ status: e.target.value })}>
+                <select
+                  key={selected.id + "st"}
+                  defaultValue={selected.status}
+                  disabled={readOnly}
+                  onChange={readOnly ? undefined : (e) => onSave({ status: e.target.value })}
+                >
                   {POB_STATUS.map((s) => (
                     <option key={s} value={s}>
                       {s}
@@ -329,7 +343,13 @@ export function PobConsole({
             </div>
             <label className="field">
               <span className="label">Notes</span>
-              <textarea defaultValue={selected.notes ?? ""} onBlur={(e) => onSave({ notes: e.target.value })} />
+              <textarea
+                key={selected.id + "n"}
+                defaultValue={selected.notes ?? ""}
+                readOnly={readOnly}
+                disabled={readOnly}
+                onBlur={readOnly ? undefined : (e) => onSave({ notes: e.target.value })}
+              />
             </label>
 
             <div className="card" style={{ padding: 14 }}>
@@ -361,17 +381,26 @@ export function PobConsole({
               <div className="pill" style={{ marginBottom: 10 }}>
                 Attribution (shareBps total = 10000)
               </div>
-              <p className="muted" style={{ marginTop: 0 }}>
-                Enter one per line: nodeId,shareBps,role(LEAD|COLLAB)
-              </p>
-              <textarea
-                value={attrText}
-                onChange={(e) => setAttrText(e.target.value)}
-                placeholder={"nodeId1,7000,LEAD\nnodeId2,3000,COLLAB"}
-              />
-              <button className="button-secondary" type="button" disabled={busy || !attrText.trim()} onClick={saveAttribution}>
-                Save attribution
-              </button>
+              {!readOnly ? (
+                <>
+                  <p className="muted" style={{ marginTop: 0 }}>
+                    Enter one per line: nodeId,shareBps,role(LEAD|COLLAB)
+                  </p>
+                  <textarea
+                    value={attrText}
+                    onChange={(e) => setAttrText(e.target.value)}
+                    placeholder={"nodeId1,7000,LEAD\nnodeId2,3000,COLLAB"}
+                  />
+                  <button
+                    className="button-secondary"
+                    type="button"
+                    disabled={busy || !attrText.trim()}
+                    onClick={saveAttribution}
+                  >
+                    Save attribution
+                  </button>
+                </>
+              ) : null}
               <div className="apps-list" style={{ marginTop: 10 }}>
                 {(selected.attributions ?? []).map((a) => (
                   <div key={a.id} className="apps-row" style={{ cursor: "default" }}>
@@ -391,52 +420,68 @@ export function PobConsole({
               <div className="pill" style={{ marginBottom: 10 }}>
                 Confirmations
               </div>
-              <div className="grid-2" style={{ gap: 12 }}>
-                <label className="field">
-                  <span className="label">Decision</span>
-                  <select value={confirm.decision} onChange={(e) => setConfirm((s) => ({ ...s, decision: e.target.value }))}>
-                    <option value="CONFIRM">CONFIRM</option>
-                    <option value="REJECT">REJECT</option>
-                  </select>
-                </label>
-                <label className="field">
-                  <span className="label">Party type</span>
-                  <select value={confirm.partyType} onChange={(e) => setConfirm((s) => ({ ...s, partyType: e.target.value }))}>
-                    <option value="NODE">NODE</option>
-                    <option value="USER">USER</option>
-                  </select>
-                </label>
-              </div>
-              {confirm.partyType === "NODE" ? (
-                <label className="field">
-                  <span className="label">Party node</span>
-                  <select value={confirm.partyNodeId} onChange={(e) => setConfirm((s) => ({ ...s, partyNodeId: e.target.value }))}>
-                    <option value="">—</option>
-                    {nodes.map((n) => (
-                      <option key={n.id} value={n.id}>
-                        {n.name ?? n.id}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              ) : (
-                <label className="field">
-                  <span className="label">Party userId</span>
-                  <input value={confirm.partyUserId} onChange={(e) => setConfirm((s) => ({ ...s, partyUserId: e.target.value }))} />
-                </label>
-              )}
-              <label className="field">
-                <span className="label">Notes</span>
-                <input value={confirm.notes} onChange={(e) => setConfirm((s) => ({ ...s, notes: e.target.value }))} />
-              </label>
-              <button
-                className="button-secondary"
-                type="button"
-                disabled={busy || (confirm.partyType === "NODE" ? !confirm.partyNodeId : !confirm.partyUserId)}
-                onClick={addConfirmation}
-              >
-                Add confirmation
-              </button>
+              {!readOnly ? (
+                <>
+                  <div className="grid-2" style={{ gap: 12 }}>
+                    <label className="field">
+                      <span className="label">Decision</span>
+                      <select
+                        value={confirm.decision}
+                        onChange={(e) => setConfirm((s) => ({ ...s, decision: e.target.value }))}
+                      >
+                        <option value="CONFIRM">CONFIRM</option>
+                        <option value="REJECT">REJECT</option>
+                      </select>
+                    </label>
+                    <label className="field">
+                      <span className="label">Party type</span>
+                      <select
+                        value={confirm.partyType}
+                        onChange={(e) => setConfirm((s) => ({ ...s, partyType: e.target.value }))}
+                      >
+                        <option value="NODE">NODE</option>
+                        <option value="USER">USER</option>
+                      </select>
+                    </label>
+                  </div>
+                  {confirm.partyType === "NODE" ? (
+                    <label className="field">
+                      <span className="label">Party node</span>
+                      <select
+                        value={confirm.partyNodeId}
+                        onChange={(e) => setConfirm((s) => ({ ...s, partyNodeId: e.target.value }))}
+                      >
+                        <option value="">—</option>
+                        {nodes.map((n) => (
+                          <option key={n.id} value={n.id}>
+                            {n.name ?? n.id}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  ) : (
+                    <label className="field">
+                      <span className="label">Party userId</span>
+                      <input
+                        value={confirm.partyUserId}
+                        onChange={(e) => setConfirm((s) => ({ ...s, partyUserId: e.target.value }))}
+                      />
+                    </label>
+                  )}
+                  <label className="field">
+                    <span className="label">Notes</span>
+                    <input value={confirm.notes} onChange={(e) => setConfirm((s) => ({ ...s, notes: e.target.value }))} />
+                  </label>
+                  <button
+                    className="button-secondary"
+                    type="button"
+                    disabled={busy || (confirm.partyType === "NODE" ? !confirm.partyNodeId : !confirm.partyUserId)}
+                    onClick={addConfirmation}
+                  >
+                    Add confirmation
+                  </button>
+                </>
+              ) : null}
               <div className="apps-list" style={{ marginTop: 10 }}>
                 {(selected.confirmations ?? []).map((c) => (
                   <div key={c.id} className="apps-row" style={{ cursor: "default" }}>
