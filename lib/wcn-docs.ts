@@ -15,7 +15,12 @@ export type WcnDoc = {
   sourcePath: string;
 };
 
-const CONTENT_ROOT = path.join(process.cwd(), "content", "wcn");
+const CONTENT_ROOT_ZH = path.join(process.cwd(), "content", "wcn");
+const CONTENT_ROOT_EN = path.join(process.cwd(), "content", "wcn-en");
+
+function getContentRoot() {
+  return fs.existsSync(CONTENT_ROOT_EN) ? CONTENT_ROOT_EN : CONTENT_ROOT_ZH;
+}
 
 function toBase64Url(input: string) {
   return Buffer.from(input, "utf8").toString("base64url");
@@ -120,11 +125,12 @@ function listHtmlFilesRecursive(dirAbs: string): string[] {
 }
 
 export function getAllWcnDocs(): WcnDoc[] {
-  if (!fs.existsSync(CONTENT_ROOT)) return [];
+  const contentRoot = getContentRoot();
+  if (!fs.existsSync(contentRoot)) return [];
 
-  const files = listHtmlFilesRecursive(CONTENT_ROOT);
+  const files = listHtmlFilesRecursive(contentRoot);
   const docs: WcnDoc[] = files.map((abs) => {
-    const rel = path.relative(CONTENT_ROOT, abs);
+    const rel = path.relative(contentRoot, abs);
     const parts = rel.split(path.sep);
     const dir = parts.length > 1 ? parts[0] : "";
     const file = parts[parts.length - 1];
@@ -142,7 +148,7 @@ export function getAllWcnDocs(): WcnDoc[] {
       slugParts,
       id,
       title: title ?? slugifySegment(file),
-      description,
+      description: description ?? undefined,
       content,
       chapter,
       sourcePath: rel
