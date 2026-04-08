@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "WCN — Global Institutional Orchestrator",
@@ -9,8 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const lang = cookies().get("wcn_lang")?.value === "zh" ? "zh" : "en";
   return (
-    <html lang="en">
+    <html lang={lang}>
       <body>
         <Nav />
         {children}

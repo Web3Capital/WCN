@@ -18,8 +18,11 @@ export type WcnDoc = {
 const CONTENT_ROOT_ZH = path.join(process.cwd(), "content", "wcn");
 const CONTENT_ROOT_EN = path.join(process.cwd(), "content", "wcn-en");
 
-function getContentRoot() {
-  return fs.existsSync(CONTENT_ROOT_EN) ? CONTENT_ROOT_EN : CONTENT_ROOT_ZH;
+export type WcnLang = "en" | "zh";
+
+function getContentRoot(lang: WcnLang) {
+  if (lang === "en" && fs.existsSync(CONTENT_ROOT_EN)) return CONTENT_ROOT_EN;
+  return CONTENT_ROOT_ZH;
 }
 
 function toBase64Url(input: string) {
@@ -124,8 +127,8 @@ function listHtmlFilesRecursive(dirAbs: string): string[] {
   return out;
 }
 
-export function getAllWcnDocs(): WcnDoc[] {
-  const contentRoot = getContentRoot();
+export function getAllWcnDocs(lang: WcnLang): WcnDoc[] {
+  const contentRoot = getContentRoot(lang);
   if (!fs.existsSync(contentRoot)) return [];
 
   const files = listHtmlFilesRecursive(contentRoot);
@@ -163,13 +166,13 @@ export function getAllWcnDocs(): WcnDoc[] {
   return docs;
 }
 
-export function getWcnDocBySlugParts(slugParts: string[]): WcnDoc | undefined {
+export function getWcnDocBySlugParts(lang: WcnLang, slugParts: string[]): WcnDoc | undefined {
   const wanted = slugParts.join("/");
-  return getAllWcnDocs().find((d) => d.slugParts.join("/") === wanted);
+  return getAllWcnDocs(lang).find((d) => d.slugParts.join("/") === wanted);
 }
 
-export function getWcnChapters() {
-  const docs = getAllWcnDocs();
+export function getWcnChapters(lang: WcnLang) {
+  const docs = getAllWcnDocs(lang);
   const map = new Map<string, { id: string; title: string; order: number; docs: WcnDoc[] }>();
   for (const doc of docs) {
     const existing = map.get(doc.chapter.id);

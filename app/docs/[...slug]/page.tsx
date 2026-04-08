@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getWcnChapters, getWcnDocBySlugParts, getAllWcnDocs } from "@/lib/wcn-docs";
+import { cookies } from "next/headers";
 
 export function generateStaticParams() {
-  return getAllWcnDocs().map((doc) => ({ slug: doc.slugParts }));
+  // Pre-render both languages if English content exists.
+  const zh = getAllWcnDocs("zh").map((doc) => ({ slug: doc.slugParts }));
+  const en = getAllWcnDocs("en").map((doc) => ({ slug: doc.slugParts }));
+  return [...zh, ...en];
 }
 
 function renderContent(content: string) {
@@ -23,10 +27,11 @@ function renderContent(content: string) {
 }
 
 export default function DocPage({ params }: { params: { slug: string[] } }) {
-  const doc = getWcnDocBySlugParts(params.slug);
+  const lang = cookies().get("wcn_lang")?.value === "zh" ? "zh" : "en";
+  const doc = getWcnDocBySlugParts(lang, params.slug);
   if (!doc) notFound();
 
-  const chapters = getWcnChapters();
+  const chapters = getWcnChapters(lang);
   const current = doc.slugParts.join("/");
 
   return (

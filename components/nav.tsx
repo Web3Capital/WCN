@@ -17,6 +17,7 @@ export function Nav() {
   const pathname = usePathname() ?? "/";
   const normalizedPath = pathname.replace(/\/$/, "") || "/";
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [lang, setLang] = useState<"en" | "zh">("en");
   const navId = useId();
 
   function isActive(href: string) {
@@ -29,6 +30,22 @@ export function Nav() {
   useEffect(() => {
     setMobileOpen(false);
   }, [normalizedPath]);
+
+  useEffect(() => {
+    const match = document.cookie.match(/(?:^|;\s*)wcn_lang=(en|zh)(?:;|$)/);
+    setLang(match?.[1] === "zh" ? "zh" : "en");
+  }, []);
+
+  async function switchLang(next: "en" | "zh") {
+    if (next === lang) return;
+    setLang(next);
+    await fetch("/api/lang", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lang: next })
+    });
+    window.location.reload();
+  }
 
   return (
     <header className="nav">
@@ -57,6 +74,24 @@ export function Nav() {
               {link.label}
             </Link>
           ))}
+          <div className="lang-toggle" role="group" aria-label="Language">
+            <button
+              type="button"
+              className="lang-chip"
+              aria-pressed={lang === "en"}
+              onClick={() => switchLang("en")}
+            >
+              EN
+            </button>
+            <button
+              type="button"
+              className="lang-chip"
+              aria-pressed={lang === "zh"}
+              onClick={() => switchLang("zh")}
+            >
+              中文
+            </button>
+          </div>
           <Link className="button-secondary" href="/apply">
             Apply as a Node
           </Link>
