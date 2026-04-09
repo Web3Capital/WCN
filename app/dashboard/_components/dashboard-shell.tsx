@@ -33,66 +33,94 @@ import {
 } from "lucide-react";
 import type { Role } from "@prisma/client";
 import { signOut } from "next-auth/react";
+import { DASHBOARD_UI, type DashboardLang, type DashboardStrings } from "@/lib/dashboard-ui-copy";
 
-type NavItem = { href: string; label: string; icon: ReactNode; roles?: string[] };
+type GroupTitleKey = keyof DashboardStrings["groups"];
+type ItemLabelKey = keyof DashboardStrings["items"];
 
-const ADMIN_ROLES = new Set(["FOUNDER", "ADMIN"]);
-const FINANCE_ROLES = new Set(["FOUNDER", "ADMIN", "FINANCE_ADMIN"]);
-const REVIEWER_ROLES = new Set(["FOUNDER", "ADMIN", "REVIEWER"]);
+type NavDef = {
+  titleKey: GroupTitleKey;
+  items: { href: string; labelKey: ItemLabelKey; icon: ReactNode; roles?: Role[] }[];
+};
 
-const GROUPS: { title: string; items: NavItem[] }[] = [
+const GROUP_DEFS: NavDef[] = [
   {
-    title: "Overview",
+    titleKey: "overview",
     items: [
-      { href: "/dashboard", label: "My Workspace", icon: <LayoutDashboard size={18} strokeWidth={2} /> }
-    ]
+      { href: "/dashboard", labelKey: "myWorkspace", icon: <LayoutDashboard size={18} strokeWidth={2} /> },
+    ],
   },
   {
-    title: "Network",
+    titleKey: "network",
     items: [
-      { href: "/dashboard/nodes", label: "Nodes", icon: <Network size={18} strokeWidth={2} /> },
-      { href: "/dashboard/projects", label: "Projects", icon: <FolderKanban size={18} strokeWidth={2} /> },
-      { href: "/dashboard/capital", label: "Capital", icon: <Landmark size={18} strokeWidth={2} /> },
-      { href: "/dashboard/deals", label: "Deal Room", icon: <Handshake size={18} strokeWidth={2} /> }
-    ]
+      { href: "/dashboard/nodes", labelKey: "nodes", icon: <Network size={18} strokeWidth={2} /> },
+      { href: "/dashboard/projects", labelKey: "projects", icon: <FolderKanban size={18} strokeWidth={2} /> },
+      { href: "/dashboard/capital", labelKey: "capital", icon: <Landmark size={18} strokeWidth={2} /> },
+      { href: "/dashboard/deals", labelKey: "dealRoom", icon: <Handshake size={18} strokeWidth={2} /> },
+    ],
   },
   {
-    title: "Work",
+    titleKey: "work",
     items: [
-      { href: "/dashboard/tasks", label: "Tasks", icon: <ListTodo size={18} strokeWidth={2} /> },
-      { href: "/dashboard/agents", label: "Agents", icon: <Bot size={18} strokeWidth={2} /> }
-    ]
+      { href: "/dashboard/tasks", labelKey: "tasks", icon: <ListTodo size={18} strokeWidth={2} /> },
+      { href: "/dashboard/agents", labelKey: "agents", icon: <Bot size={18} strokeWidth={2} /> },
+    ],
   },
   {
-    title: "Verification",
+    titleKey: "verification",
     items: [
-      { href: "/dashboard/proof-desk", label: "Evidence Desk", icon: <ShieldCheck size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK", "NODE_OWNER", "SERVICE_NODE"] },
-      { href: "/dashboard/pob", label: "PoB Records", icon: <ListChecks size={18} strokeWidth={2} /> },
-      { href: "/dashboard/disputes", label: "Disputes", icon: <AlertTriangle size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK"] },
-      { href: "/dashboard/settlement", label: "Settlement", icon: <Scale size={18} strokeWidth={2} /> }
-    ]
+      {
+        href: "/dashboard/proof-desk",
+        labelKey: "evidenceDesk",
+        icon: <ShieldCheck size={18} strokeWidth={2} />,
+        roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK", "NODE_OWNER", "SERVICE_NODE"],
+      },
+      { href: "/dashboard/pob", labelKey: "pobRecords", icon: <ListChecks size={18} strokeWidth={2} /> },
+      {
+        href: "/dashboard/disputes",
+        labelKey: "disputes",
+        icon: <AlertTriangle size={18} strokeWidth={2} />,
+        roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK"],
+      },
+      { href: "/dashboard/settlement", labelKey: "settlement", icon: <Scale size={18} strokeWidth={2} /> },
+    ],
   },
   {
-    title: "Intelligence",
+    titleKey: "intelligence",
     items: [
-      { href: "/dashboard/data", label: "Data Cockpit", icon: <BarChart3 size={18} strokeWidth={2} /> },
-      { href: "/dashboard/risk", label: "Risk Console", icon: <AlertTriangle size={18} strokeWidth={2} /> }
-    ]
+      { href: "/dashboard/data", labelKey: "dataCockpit", icon: <BarChart3 size={18} strokeWidth={2} /> },
+      { href: "/dashboard/risk", labelKey: "riskConsole", icon: <AlertTriangle size={18} strokeWidth={2} /> },
+    ],
   },
   {
-    title: "Governance",
+    titleKey: "governance",
     items: [
-      { href: "/dashboard/approvals", label: "Approvals", icon: <ShieldCheck size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "FINANCE_ADMIN", "REVIEWER", "RISK_DESK"] },
-      { href: "/dashboard/applications", label: "Applications", icon: <Inbox size={18} strokeWidth={2} /> },
-      { href: "/dashboard/users", label: "Users", icon: <Users size={18} strokeWidth={2} /> },
-      { href: "/dashboard/admin/invites", label: "Invites", icon: <Mail size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN"] },
-      { href: "/dashboard/audit", label: "Audit Log", icon: <ClipboardList size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK"] }
-    ]
+      {
+        href: "/dashboard/approvals",
+        labelKey: "approvals",
+        icon: <ShieldCheck size={18} strokeWidth={2} />,
+        roles: ["FOUNDER", "ADMIN", "FINANCE_ADMIN", "REVIEWER", "RISK_DESK"],
+      },
+      { href: "/dashboard/applications", labelKey: "applications", icon: <Inbox size={18} strokeWidth={2} /> },
+      { href: "/dashboard/users", labelKey: "users", icon: <Users size={18} strokeWidth={2} /> },
+      {
+        href: "/dashboard/admin/invites",
+        labelKey: "invites",
+        icon: <Mail size={18} strokeWidth={2} />,
+        roles: ["FOUNDER", "ADMIN"],
+      },
+      {
+        href: "/dashboard/audit",
+        labelKey: "auditLog",
+        icon: <ClipboardList size={18} strokeWidth={2} />,
+        roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK"],
+      },
+    ],
   },
   {
-    title: "Roadmap",
-    items: [{ href: "/dashboard/assets", label: "Phase 3 · Assets", icon: <Rocket size={18} strokeWidth={2} /> }]
-  }
+    titleKey: "roadmap",
+    items: [{ href: "/dashboard/assets", labelKey: "phase3Assets", icon: <Rocket size={18} strokeWidth={2} /> }],
+  },
 ];
 
 function pathMatches(pathname: string, href: string) {
@@ -102,39 +130,36 @@ function pathMatches(pathname: string, href: string) {
   return p === h || p.startsWith(`${h}/`);
 }
 
-function getBreadcrumbs(pathname: string): { label: string; href: string }[] {
+function getBreadcrumbs(
+  pathname: string,
+  segmentMap: DashboardStrings["breadcrumbSegment"]
+): { label: string; href: string }[] {
   const parts = pathname.replace(/^\/dashboard\/?/, "").split("/").filter(Boolean);
   if (parts.length === 0) return [];
   const crumbs: { label: string; href: string }[] = [];
   let href = "/dashboard";
   for (const part of parts) {
     href += `/${part}`;
-    const label = part.charAt(0).toUpperCase() + part.slice(1).replace(/-/g, " ");
+    const mapped = segmentMap[part as keyof typeof segmentMap];
+    const label =
+      mapped ??
+      part.charAt(0).toUpperCase() + part.slice(1).replace(/-/g, " ");
     crumbs.push({ label, href });
   }
   return crumbs;
 }
 
-function roleLabel(role: Role): string {
-  const map: Record<string, string> = {
-    FOUNDER: "Founder",
-    ADMIN: "Admin",
-    FINANCE_ADMIN: "Finance",
-    NODE_OWNER: "Node Owner",
-    PROJECT_OWNER: "Project Owner",
-    CAPITAL_NODE: "Capital",
-    SERVICE_NODE: "Service",
-    REVIEWER: "Reviewer",
-    RISK_DESK: "Risk Desk",
-    AGENT_OWNER: "Agent Owner",
-    OBSERVER: "Observer",
-    SYSTEM: "System",
-    USER: "Member",
-  };
-  return map[role] || role;
+function roleLabel(role: Role, ui: DashboardStrings): string {
+  return ui.roles[role] ?? role;
 }
 
-function GlobalSearch() {
+function readDashboardLangFromCookie(): DashboardLang {
+  if (typeof document === "undefined") return "en";
+  const m = document.cookie.match(/(?:^|;\s*)wcn_lang=(en|zh)(?:;|$)/);
+  return m?.[1] === "zh" ? "zh" : "en";
+}
+
+function GlobalSearch({ ui }: { ui: DashboardStrings }) {
   const router = useRouter();
   const [q, setQ] = useState("");
   const [results, setResults] = useState<{ type: string; id: string; label: string; href: string; badge?: string }[]>([]);
@@ -168,7 +193,7 @@ function GlobalSearch() {
       <div className="search-box">
         <Search size={15} className="search-box-icon" />
         <input
-          placeholder="Search nodes, projects, deals, tasks..."
+          placeholder={ui.search.placeholder}
           value={q}
           onChange={(e) => search(e.target.value)}
           onFocus={() => setOpen(true)}
@@ -194,7 +219,15 @@ function GlobalSearch() {
   );
 }
 
-function AccountMenu({ displayName, email }: { displayName: string; email?: string }) {
+function AccountMenu({
+  displayName,
+  email,
+  ui,
+}: {
+  displayName: string;
+  email?: string;
+  ui: DashboardStrings;
+}) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -226,7 +259,7 @@ function AccountMenu({ displayName, email }: { displayName: string; email?: stri
         className="dashboard-account-trigger"
         aria-expanded={open}
         aria-haspopup="true"
-        aria-label="Account menu"
+        aria-label={ui.account.menuAria}
         onClick={() => setOpen((v) => !v)}
       >
         <span className="user-avatar" style={{ width: 32, height: 32, fontSize: 12 }}>
@@ -240,13 +273,17 @@ function AccountMenu({ displayName, email }: { displayName: string; email?: stri
           {email ? <p className="account-menu-email muted">{email}</p> : null}
         </div>
         <div className="account-menu-actions">
+          <Link href="/dashboard" className="account-menu-link" onClick={() => setOpen(false)}>
+            <LayoutDashboard size={16} strokeWidth={2} aria-hidden />
+            {ui.account.workspace}
+          </Link>
           <Link href="/account" className="account-menu-link" onClick={() => setOpen(false)}>
             <User size={16} strokeWidth={2} aria-hidden />
-            Account settings
+            {ui.account.accountSettings}
           </Link>
           <Link href="/" className="account-menu-link" onClick={() => setOpen(false)}>
             <Home size={16} strokeWidth={2} aria-hidden />
-            Site home
+            {ui.account.siteHome}
           </Link>
           <button
             type="button"
@@ -254,7 +291,7 @@ function AccountMenu({ displayName, email }: { displayName: string; email?: stri
             onClick={() => signOut({ callbackUrl: "/" })}
           >
             <LogOut size={16} strokeWidth={2} aria-hidden />
-            Sign out
+            {ui.account.signOut}
           </button>
         </div>
       </div>
@@ -262,7 +299,7 @@ function AccountMenu({ displayName, email }: { displayName: string; email?: stri
   );
 }
 
-function NotificationBell() {
+function NotificationBell({ ui, lang }: { ui: DashboardStrings; lang: DashboardLang }) {
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState(0);
   const [items, setItems] = useState<{ id: string; title: string; body: string | null; readAt: string | null; createdAt: string }[]>([]);
@@ -304,7 +341,7 @@ function NotificationBell() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="bell-btn"
-        aria-label="Notifications"
+        aria-label={ui.notifications.aria}
       >
         <Bell size={18} />
         {count > 0 && <span className="bell-badge">{count > 9 ? "9+" : count}</span>}
@@ -312,17 +349,22 @@ function NotificationBell() {
       {open && (
         <div className="bell-dropdown">
           <div className="bell-dropdown-header">
-            <span>Notifications</span>
-            {count > 0 && <button onClick={markAllRead}>Mark all read</button>}
+            <span>{ui.notifications.title}</span>
+            {count > 0 && <button type="button" onClick={markAllRead}>{ui.notifications.markAllRead}</button>}
           </div>
           {items.length === 0 ? (
-            <p className="muted" style={{ padding: 16, textAlign: "center", fontSize: 13 }}>No notifications.</p>
+            <p className="muted" style={{ padding: 16, textAlign: "center", fontSize: 13 }}>{ui.notifications.empty}</p>
           ) : (
             items.slice(0, 20).map((n) => (
               <div key={n.id} className={`bell-item ${n.readAt ? "" : "bell-item-unread"}`}>
                 <div className={n.readAt ? "" : "bell-item-title"}>{n.title}</div>
                 {n.body && <div className="bell-item-body">{n.body}</div>}
-                <div className="bell-item-time">{new Date(n.createdAt).toLocaleString()}</div>
+                <div className="bell-item-time">
+                  {new Date(n.createdAt).toLocaleString(lang === "zh" ? "zh-CN" : "en-US", {
+                    dateStyle: "short",
+                    timeStyle: "short",
+                  })}
+                </div>
               </div>
             ))
           )}
@@ -347,8 +389,23 @@ export function DashboardShell({
 }) {
   const pathname = usePathname() ?? "/dashboard";
   const [open, setOpen] = useState(false);
+  const [lang, setLang] = useState<DashboardLang>("en");
   const navId = useId();
-  const crumbs = getBreadcrumbs(pathname);
+
+  useEffect(() => {
+    setLang(readDashboardLangFromCookie());
+  }, []);
+
+  useEffect(() => {
+    function onStorage() {
+      setLang(readDashboardLangFromCookie());
+    }
+    window.addEventListener("focus", onStorage);
+    return () => window.removeEventListener("focus", onStorage);
+  }, []);
+
+  const ui = DASHBOARD_UI[lang];
+  const crumbs = getBreadcrumbs(pathname, ui.breadcrumbSegment);
 
   useEffect(() => {
     setOpen(false);
@@ -359,27 +416,25 @@ export function DashboardShell({
     return () => document.documentElement.removeAttribute("data-dashboard");
   }, []);
 
-  const isRoleAdmin = ADMIN_ROLES.has(role);
-
   return (
     <div className="dashboard-app">
       <button
         type="button"
         className="dashboard-sidebar-toggle"
-        aria-label={open ? "Close console menu" : "Open console menu"}
+        aria-label={open ? ui.shell.closeMenu : ui.shell.openMenu}
         aria-expanded={open}
         aria-controls={navId}
         onClick={() => setOpen((v) => !v)}
       >
         {open ? <X size={20} /> : <Menu size={20} />}
-        <span>Console menu</span>
+        <span>{ui.shell.consoleMenu}</span>
       </button>
 
       {open ? (
         <button
           type="button"
           className="dashboard-sidebar-backdrop"
-          aria-label="Close menu"
+          aria-label={ui.shell.closeMenuBackdrop}
           onClick={() => setOpen(false)}
         />
       ) : null}
@@ -387,9 +442,9 @@ export function DashboardShell({
       <aside id={navId} className="dashboard-sidebar" data-open={open ? "true" : "false"}>
         <div className="dashboard-sidebar-inner">
           <div className="dashboard-sidebar-brand">
-            <span className="dashboard-sidebar-title">WCN Console</span>
+            <span className="dashboard-sidebar-title">{ui.brand}</span>
             <span className={`dashboard-role-pill ${isAdmin ? "dashboard-role-pill-admin" : ""}`}>
-              {roleLabel(role)}
+              {roleLabel(role, ui)}
             </span>
           </div>
           <div className="sidebar-user-row">
@@ -401,16 +456,16 @@ export function DashboardShell({
             </p>
           </div>
 
-          <nav className="dashboard-nav" aria-label="Console">
-            {GROUPS.map((group) => {
+          <nav className="dashboard-nav" aria-label={ui.shell.navAria}>
+            {GROUP_DEFS.map((group) => {
               const visibleItems = group.items.filter((item) => {
                 if (!item.roles) return true;
                 return item.roles.includes(role);
               });
               if (visibleItems.length === 0) return null;
               return (
-                <div key={group.title} className="dashboard-nav-group">
-                  <div className="dashboard-nav-heading">{group.title}</div>
+                <div key={group.titleKey} className="dashboard-nav-group">
+                  <div className="dashboard-nav-heading">{ui.groups[group.titleKey]}</div>
                   <ul className="dashboard-nav-list">
                     {visibleItems.map((item) => {
                       const active = pathMatches(pathname, item.href);
@@ -425,7 +480,7 @@ export function DashboardShell({
                             <span className="dashboard-nav-icon" aria-hidden>
                               {item.icon}
                             </span>
-                            {item.label}
+                            {ui.items[item.labelKey]}
                           </Link>
                         </li>
                       );
@@ -439,7 +494,7 @@ export function DashboardShell({
           <div className="dashboard-sidebar-footer">
             <Link href="/" className="dashboard-nav-link dashboard-nav-link-muted">
               <span className="dashboard-nav-icon" aria-hidden><Home size={16} strokeWidth={2} /></span>
-              Site home
+              {ui.shell.siteHomeFooter}
             </Link>
           </div>
         </div>
@@ -449,9 +504,9 @@ export function DashboardShell({
         <header className="dashboard-topbar">
           <div className="dashboard-topbar-left">
             {crumbs.length > 0 ? (
-              <nav aria-label="Breadcrumb">
+              <nav aria-label={ui.shell.breadcrumbAria}>
                 <ol className="breadcrumb-list">
-                  <li><Link href="/dashboard" className="muted">Console</Link></li>
+                  <li><Link href="/dashboard" className="muted">{ui.shell.breadcrumbRoot}</Link></li>
                   {crumbs.map((c, i) => (
                     <li key={c.href} className="breadcrumb-separator">
                       <span className="breadcrumb-slash">/</span>
@@ -465,13 +520,13 @@ export function DashboardShell({
                 </ol>
               </nav>
             ) : (
-              <span className="dashboard-topbar-title">WCN Console</span>
+              <span className="dashboard-topbar-title">{ui.shell.topTitle}</span>
             )}
           </div>
           <div className="dashboard-topbar-right">
-            <GlobalSearch />
-            <NotificationBell />
-            <AccountMenu displayName={displayName} email={email} />
+            <GlobalSearch ui={ui} />
+            <NotificationBell ui={ui} lang={lang} />
+            <AccountMenu displayName={displayName} email={email} ui={ui} />
           </div>
         </header>
         {children}
