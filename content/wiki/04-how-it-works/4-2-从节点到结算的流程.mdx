@@ -1,65 +1,90 @@
 ---
 title: "4.2 从节点到结算的流程"
-description: "把整个系统跑起来的动作顺序展开——模块按什么逻辑被连接起来。"
+description: "完整工作流：资源录入 → Deal Room → Task 执行 → Proof Desk → PoB → 结算，含时间线和异常处理。"
 chapter: 4
 order: 2
 ---
 
-<Hero badge="4.2 · 完整流程" lead="这一页把整个系统真正跑起来的动作顺序展开。它不只是说明有哪些模块，而是说明它们按什么逻辑被连接起来。">
-# 从节点进入，到 Deal、Task、Proof、PoB 和结算，WCN 的动作顺序必须清楚可追踪。
+<Hero badge="4.2 · 完整流程" lead="这一页不只列模块，而是把模块按真实运作逻辑串起来——从资源进入系统的第一秒，到价值被结算的最后一步。每个阶段有预期时间线、关键输出和异常处理机制。">
+# 从节点进入到结算完成，WCN 的每一步都有 owner、状态和输出。
 </Hero>
 
 <MetaGrid>
-  <Meta label="本页作用" value="定义系统工作流" />
-  <Meta label="核心主题" value="节点 → Deal → Task → Proof → PoB" />
-  <Meta label="阅读重点" value="动作顺序、责任链、结果链" />
+  <Meta label="流程阶段" value="三段：资源录入 → 执行推进 → 验证结算" />
+  <Meta label="典型周期" value="简单闭环 1-2 周，复杂 Deal 4-8 周" />
+  <Meta label="对标参考" value="PE/VC Pipeline Management" />
 </MetaGrid>
 
-## 第一段：资源进入系统
+---
 
-系统运作的起点，不是表单，不是页面，而是资源被带进网络。资源进入后，系统的下一步不是立刻匹配，而是先进入 Deal 或 Task 结构。
+## 第一段：资源进入系统（Day 0-2）
+
+系统运作的起点不是表单或页面，而是**有价值的资源被一个有责任的节点带进网络**。
 
 <CardGrid cols={2}>
-  <Card title="项目节点输入需求" icon="📦">融资、增长、流动性、合作、法务、安全等需求被结构化。</Card>
-  <Card title="资本节点输入配置能力" icon="💰">阶段偏好、赛道偏好、票面与工具偏好进入系统。</Card>
-  <Card title="服务节点输入执行能力" icon="🔧">法务、审计、安全、品牌、开发、研究等能力进入系统。</Card>
-  <Card title="区域节点输入本地资源" icon="🌍">国家、城市、行业与本地网络资源进入系统。</Card>
+  <Card title="项目节点" icon="📦">提交项目资料：产品阶段、融资需求、Token 情况、目标地区、核心团队。资料进入 Project Intake，被结构化录入。</Card>
+  <Card title="资本节点" icon="💰">注册投资偏好：阶段（种子/A/B）、赛道（DeFi/AI/RWA/Infra）、票面范围、地区偏好。偏好进入 Capital Profile，用于后续匹配。</Card>
+  <Card title="服务节点" icon="🔧">录入执行能力：法务、审计、安全、品牌、开发、研究等。能力进入 Service Registry，可被 Deal 调用。</Card>
+  <Card title="区域节点" icon="🌍">录入本地网络：国家/城市覆盖范围、行业关系、监管认知、活动资源。用于跨境 Deal 的本地支撑。</Card>
 </CardGrid>
+
+> **与 TradFi 对比**：这相当于 PE/VC 的 CRM 录入阶段（Pitchbook / DealCloud 的 Pipeline Intake）。区别在于 WCN 从第一步就建立了多方协作结构，而不是单方面的内部管理。
 
 ---
 
-## 第二段：Deal 与 Task 被推进
+## 第二段：Deal 与 Task 推进（Day 2-14+）
 
-一旦资源进入系统，它们必须从「关系」变成「工作流」。
+资源进入系统后，必须从「信息」变成「工作流」。
+
+<CardGrid cols={2}>
+  <Card title="Deal Room 创建" icon="🤝">系统为匹配的机会创建 Deal Room：明确 Deal Owner、参与方、材料清单和里程碑。这不是群聊——每个人有明确角色和职责。</Card>
+  <Card title="Task Dispatch" icon="📋">把具体任务分配给人类节点或 Agent。每个 Task 有 owner、截止日期、输出要求和验收标准。没有「模糊交代」。</Card>
+  <Card title="执行推进" icon="⚡">会议、尽调、材料整理、法务审核、合同起草、增长执行——所有动作在系统内发生或被记录。Agent 辅助 Research、纪要、催办。</Card>
+  <Card title="状态追踪" icon="📊">每个 Deal 和 Task 有实时状态（进行中 / 待回复 / 已阻塞 / 已完成）。Execution Agent 自动检测停滞并发出提醒。</Card>
+</CardGrid>
 
 <Callout type="info">
-机会进入 Deal Room，执行进入 Task Dispatch，人和 Agent 在明确责任下开始推进。
+**时间线参考**：简单的服务对接（如审计需求匹配服务商）可能 3-5 天完成。复杂的融资 Deal（多轮会议、尽调、法务）通常需要 4-8 周。WCN 不缩短业务本身的复杂度，但消除协调摩擦——TradFi 的研究表明，典型 Deal 中 30-40% 的时间花在信息同步和催办上。
 </Callout>
 
+---
+
+## 第三段：验证与结算（Deal 完成后 3-7 天）
+
+结果形成后，系统从执行逻辑切换到证明逻辑。
+
 <CardGrid cols={2}>
-  <Card title="Deal Room" icon="🤝">管理项目、资本、服务之间的协作空间——材料、里程碑和下一步动作。</Card>
-  <Card title="Task Dispatch" icon="📋">把任务分给人类节点或 Agent，并绑定 owner、due date、回执与输出要求。</Card>
-  <Card title="Execution" icon="⚡">会议、跟进、材料整理、研究、增长、服务落地等都发生在这一阶段。</Card>
-  <Card title="Status Tracking" icon="📊">每个事件必须有状态，才能避免「聊过了但没人跟」。</Card>
+  <Card title="证据打包" icon="📎">Deal Owner 把结果证据提交至 Evidence Packet：合同/协议、打款记录、交付件、链上哈希、会议纪要、邮件确认等。证据类型和数量取决于 Deal 类型。</Card>
+  <Card title="审核队列" icon="🔍">证据包进入 Reviewer Queue。审核人检查：材料完整性、真实性、时间线合理性、风险标记。审核人与 Deal 参与方不能重叠（利益回避）。</Card>
+  <Card title="归因分配" icon="🎯">审核通过后，系统对参与方做归因分配：谁引荐（%）、谁推进（%）、谁执行（%）、谁审核（%）。归因基于证据链条，而非主观协商。</Card>
+  <Card title="PoB 生成与结算" icon="⚖️">归因确认后，业务结果进入 PoB 账本，成为结算输入。PoB 在周期性 Settlement Run 中被处理，参与方获得对应的价值分配。</Card>
 </CardGrid>
 
 ---
 
-## 第三段：结果进入 Proof Desk 与 PoB
+## 异常处理：当流程卡住时
 
-一旦结果形成，系统必须从执行逻辑切换到证明逻辑。
-
-<Callout type="warning">
-WCN 的关键不在于「结果做成了」，而在于「结果是否被系统性证明并进入长期价值层」。
-</Callout>
+真实业务不会总是顺利。WCN 为每种异常设计了处理机制：
 
 <CardGrid cols={2}>
-  <Card title="结果进入 Evidence Packet" icon="📎">合同、纪要、报表、链上哈希、打款记录、交付文件等进入证据包。</Card>
-  <Card title="审核进入 Reviewer Queue" icon="🔍">审核人检查材料完整度、真实性、风险标记和归因边界。</Card>
-  <Card title="生成 PoB Event" icon="✅">审核通过后，业务结果进入 PoB 账本，成为结算输入。</Card>
-  <Card title="进入周期结算" icon="⚖️">通过审核的 PoB 最终进入周期性 Settlement Run。</Card>
+  <Card title="Deal 停滞" icon="⏸️">如果一个 Deal 超过设定天数没有状态更新，Execution Agent 自动通知 Deal Owner。连续无响应的 Deal 会被标记为 Stalled，释放相关节点的精力。</Card>
+  <Card title="Task 超时" icon="⏰">Task 超过截止日期未完成，系统自动升级通知。Task Owner 需要给出原因（延期/阻塞/取消）。无响应的 Task 影响节点信誉评分。</Card>
+  <Card title="证据不足" icon="📭">审核人判定证据不完整时，证据包被退回并列出缺失项。Deal Owner 有限定时间补充。三次退回未补的 Deal 进入争议通道。</Card>
+  <Card title="归因争议" icon="⚠️">多方对归因比例有异议时，进入仲裁流程：由独立审核委员会根据证据链条做最终裁定。裁定结果记入系统，形成归因先例。</Card>
 </CardGrid>
 
+<Callout type="warning">
+异常处理不是辅助功能，而是系统可信度的关键。一个不能处理失败和争议的系统，在真实业务中不会被信任。WCN 在设计时就把异常路径作为一等公民。
+</Callout>
+
+---
+
+## 完整流程图
+
+<Callout type="info">
+**资源录入**（Day 0-2）→ **Deal Room 创建 + 匹配**（Day 2-3）→ **Task 分配与执行**（Day 3-14+）→ **结果形成**（Day N）→ **证据提交至 Proof Desk**（Day N+1）→ **审核与归因**（Day N+3-5）→ **PoB 生成**（Day N+5）→ **周期结算**（Settlement Run）
+</Callout>
+
 <Callout type="tip">
-三段流程构成一条完整的价值链：资源进入 → 工作流推进 → 结果证明与结算。每一段都有明确的输入、owner 和输出。
+三段流程构成一条完整的价值链：资源进入 → 工作流推进 → 结果验证与结算。每一段都有明确的输入、owner、时间预期和异常处理。这不是理论框架——它是一个可以被工程化实现、可以被审计追踪的运作系统。
 </Callout>
