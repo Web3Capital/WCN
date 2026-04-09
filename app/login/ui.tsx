@@ -38,6 +38,7 @@ export function LoginForm() {
           type="email"
           autoComplete="email"
           required
+          placeholder="you@company.com"
         />
       </label>
 
@@ -49,15 +50,15 @@ export function LoginForm() {
           type="password"
           autoComplete="current-password"
           required
+          placeholder="Enter your password"
         />
       </label>
 
       {error ? <p className="form-error" role="alert">{error}</p> : null}
 
-      <button className="button" type="submit" disabled={loading}>
+      <button className="button auth-submit" type="submit" disabled={loading}>
         {loading ? "Signing in..." : "Sign in"}
       </button>
     </form>
   );
 }
-

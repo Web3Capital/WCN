@@ -5065,6 +5065,147 @@ html[data-theme="dark"] .pob-formula-specbar {
   to { opacity: 1; transform: translateY(0px); filter: blur(0px); }
 }
 
+/* —— Auth Pages (Login / Signup) —— */
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 88px 20px 64px;
+}
+.auth-container {
+  width: 100%;
+  max-width: 440px;
+}
+.auth-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.auth-header h1 {
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 820;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  margin: 0 0 8px;
+}
+.auth-header p {
+  color: var(--muted);
+  font-size: 15px;
+  margin: 0;
+}
+.auth-card {
+  padding: 32px;
+}
+
+/* OAuth Buttons */
+.oauth-buttons {
+  display: grid;
+  gap: 10px;
+}
+.oauth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--text);
+  background: color-mix(in oklab, var(--bg-soft) 90%, transparent);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition:
+    background var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out),
+    transform var(--dur-2) var(--ease-out);
+  user-select: none;
+}
+.oauth-btn:hover {
+  background: color-mix(in oklab, var(--bg-soft) 70%, transparent);
+  border-color: color-mix(in oklab, var(--text) 18%, var(--line));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+.oauth-btn:active {
+  transform: translateY(0) scale(0.99);
+}
+.oauth-btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Provider-specific hover accents */
+.oauth-btn-google:hover {
+  border-color: #4285F4;
+  background: color-mix(in oklab, #4285F4 5%, var(--bg-soft));
+}
+.oauth-btn-azure-ad:hover {
+  border-color: #00A4EF;
+  background: color-mix(in oklab, #00A4EF 5%, var(--bg-soft));
+}
+.oauth-btn-apple:hover {
+  border-color: var(--text);
+  background: color-mix(in oklab, var(--text) 6%, var(--bg-soft));
+}
+.oauth-btn-github:hover {
+  border-color: #6e5494;
+  background: color-mix(in oklab, #6e5494 5%, var(--bg-soft));
+}
+
+/* Divider */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 22px 0;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+.auth-divider span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+/* Submit */
+.auth-submit {
+  width: 100%;
+  justify-content: center;
+  padding: 12px 24px;
+  font-size: 14px;
+}
+
+/* Footer link */
+.auth-footer-link {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin: 20px 0 0;
+}
+.auth-footer-link a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.auth-footer-link a:hover {
+  text-decoration: underline;
+}
+
 /* —— Apply Page —— */
 .apply-page {
   padding: 88px 0 64px;

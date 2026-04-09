@@ -42,8 +42,13 @@ export function SignupForm() {
   return (
     <form onSubmit={onSubmit} className="form">
       <label className="field">
-        <span className="label">Name (optional)</span>
-        <input value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
+        <span className="label">Name</span>
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          autoComplete="name"
+          placeholder="Your full name (optional)"
+        />
       </label>
 
       <label className="field">
@@ -54,6 +59,7 @@ export function SignupForm() {
           type="email"
           autoComplete="email"
           required
+          placeholder="you@company.com"
         />
       </label>
 
@@ -66,16 +72,16 @@ export function SignupForm() {
           autoComplete="new-password"
           minLength={8}
           required
+          placeholder="Minimum 8 characters"
         />
       </label>
 
       {error ? <p className="form-error" role="alert">{error}</p> : null}
-      {success ? <p className="muted" role="status">Account created. Signing you in…</p> : null}
+      {success ? <p className="muted" role="status">Account created. Signing you in...</p> : null}
 
-      <button className="button" type="submit" disabled={loading}>
+      <button className="button auth-submit" type="submit" disabled={loading}>
         {loading ? "Creating..." : "Create account"}
       </button>
     </form>
   );
 }
-

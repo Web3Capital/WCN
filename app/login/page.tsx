@@ -3,8 +3,14 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { LoginForm } from "./ui";
+import { OAuthButtons } from "./oauth-buttons";
+import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Sign In — WCN",
+};
 
 export default async function LoginPage({
   searchParams,
@@ -15,19 +21,41 @@ export default async function LoginPage({
   const blocked = searchParams.error === "blocked";
   if (session?.user && !blocked) redirect("/dashboard");
 
+  const oauthError = searchParams.error === "OAuthAccountNotLinked"
+    ? "An account with this email already exists. Please sign in with your original method."
+    : searchParams.error && searchParams.error !== "blocked"
+      ? "Authentication failed. Please try again."
+      : null;
+
   return (
-    <main className="section">
-      <div className="container">
-        <span className="eyebrow">Sign in</span>
-        <h1>Welcome back.</h1>
-        <div className="card" style={{ maxWidth: 520, marginTop: 18 }}>
+    <main className="auth-page">
+      <div className="auth-container">
+        <div className="auth-header">
+          <h1>Welcome back</h1>
+          <p>Sign in to your WCN account</p>
+        </div>
+
+        <div className="card auth-card">
+          {oauthError && (
+            <p className="form-error" role="alert" style={{ marginBottom: 16 }}>
+              {oauthError}
+            </p>
+          )}
+
+          <OAuthButtons />
+
+          <div className="auth-divider">
+            <span>or continue with email</span>
+          </div>
+
           <LoginForm />
-          <p className="muted" style={{ marginTop: 16, fontSize: 13, textAlign: "center" }}>
-            Don&apos;t have an account? <Link href="/signup" style={{ color: "var(--accent)", fontWeight: 600 }}>Create one</Link>
+
+          <p className="auth-footer-link">
+            Don&apos;t have an account?{" "}
+            <Link href="/signup">Create one</Link>
           </p>
         </div>
       </div>
     </main>
   );
 }
-
