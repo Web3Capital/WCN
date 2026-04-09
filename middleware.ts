@@ -51,7 +51,9 @@ export async function middleware(request: NextRequest) {
     if (pathname.startsWith("/api/")) {
       return NextResponse.json({ ok: false, error: "Account blocked" }, { status: 403 });
     }
-    return NextResponse.redirect(new URL("/login?error=blocked", request.url));
+    if (pathname !== "/account" && !pathname.startsWith("/account/")) {
+      return NextResponse.redirect(new URL("/login?error=blocked", request.url));
+    }
   }
 
   return NextResponse.next();

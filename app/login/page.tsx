@@ -6,9 +6,14 @@ import { LoginForm } from "./ui";
 
 export const dynamic = "force-dynamic";
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: { callbackUrl?: string; error?: string };
+}) {
   const session = await getServerSession(authOptions);
-  if (session?.user) redirect("/dashboard");
+  const blocked = searchParams.error === "blocked";
+  if (session?.user && !blocked) redirect("/dashboard");
 
   return (
     <main className="section">
