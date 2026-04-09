@@ -3092,6 +3092,401 @@ html[data-dashboard="true"] .footer {
   animation-delay: 400ms;
 }
 
+/* —— Marketing: /pob page —— */
+.pob-page .hero-lede .pob-strong {
+  color: var(--text);
+  font-weight: 600;
+}
+.pob-hero-grid {
+  display: grid;
+  gap: 28px;
+  align-items: stretch;
+  margin-top: 8px;
+  text-align: left;
+}
+@media (min-width: 960px) {
+  .pob-hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 40px;
+  }
+}
+.pob-hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+}
+.pob-hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.pob-pillars-panel {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--bg-soft) 88%, transparent);
+  padding: 22px 20px 18px;
+  box-shadow: var(--shadow-sm);
+}
+.pob-pillars-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.pob-pillars-icon {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.pob-pillars-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.pob-pillar-item {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
+}
+.pob-pillar-item:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.pob-pillar-check {
+  color: var(--green);
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+.pob-pillar-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.pob-pillar-body {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.pob-dual-card {
+  position: relative;
+  padding: 26px 24px 24px;
+  overflow: hidden;
+}
+.pob-dual-card h3 {
+  margin-bottom: 14px;
+}
+.pob-dual-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: var(--green);
+  background: var(--green-bg);
+  border: 1px solid color-mix(in oklab, var(--green) 25%, var(--line));
+}
+.pob-dual-icon-muted {
+  color: var(--red);
+  background: var(--red-bg);
+  border-color: color-mix(in oklab, var(--red) 25%, var(--line));
+}
+.pob-dual-yes::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: linear-gradient(90deg, var(--green), color-mix(in oklab, var(--green) 70%, var(--accent)));
+}
+.pob-dual-no::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: linear-gradient(90deg, color-mix(in oklab, var(--red) 85%, var(--amber)), var(--red));
+}
+.pob-list {
+  margin: 0;
+  padding-left: 1.15em;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.75;
+}
+.pob-list li {
+  margin-bottom: 10px;
+}
+.pob-list li:last-child {
+  margin-bottom: 0;
+}
+.pob-flow {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 1024px) {
+  .pob-flow {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+.pob-flow-card {
+  padding: 20px 16px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--card) 94%, transparent);
+  box-shadow: var(--shadow-sm);
+  min-height: 100%;
+  transition: border-color var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out);
+}
+.pob-flow-card:hover {
+  border-color: color-mix(in oklab, var(--accent) 22%, var(--line));
+  box-shadow: var(--shadow-md);
+}
+.pob-flow-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 10%, transparent);
+  border: 1px solid color-mix(in oklab, var(--accent) 18%, var(--line));
+  margin-bottom: 12px;
+}
+.pob-flow-step {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.pob-flow-title {
+  font-size: 16px;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+.pob-flow-body {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.pob-proof-desk {
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--accent) 20%, var(--line));
+  background: linear-gradient(
+    145deg,
+    color-mix(in oklab, var(--accent) 6%, transparent),
+    color-mix(in oklab, var(--bg-soft) 92%, transparent)
+  );
+}
+.pob-proof-desk-inner {
+  display: grid;
+  gap: 24px;
+  padding: clamp(24px, 4vw, 36px);
+  align-items: start;
+}
+@media (min-width: 880px) {
+  .pob-proof-desk-inner {
+    grid-template-columns: auto 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+}
+.pob-proof-desk-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in oklab, var(--accent) 24%, var(--line));
+}
+.pob-proof-desk-title {
+  font-size: clamp(22px, 2.4vw, 28px);
+  margin: 0 0 12px;
+  letter-spacing: -0.03em;
+}
+.pob-proof-desk-lede {
+  margin: 0 0 20px;
+  font-size: 16px;
+  line-height: 1.65;
+  max-width: 640px;
+}
+.pob-proof-desk-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .pob-proof-desk-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 24px;
+  }
+}
+.pob-proof-desk-grid li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--bg) 88%, transparent);
+}
+.pob-proof-desk-grid .pob-strong {
+  font-size: 14px;
+  color: var(--text);
+}
+.pob-proof-desk-grid .muted {
+  font-size: 13px;
+  line-height: 1.5;
+}
+.pob-formula-card {
+  padding: clamp(22px, 3vw, 28px);
+}
+.pob-formula-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+.pob-formula-factors {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 720px) {
+  .pob-formula-factors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1100px) {
+  .pob-formula-factors {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.pob-formula-factor {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--bg-soft) 80%, transparent);
+}
+.pob-formula-name {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.pob-formula-hint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.pob-formula-foot {
+  margin: 20px 0 0;
+  font-size: 15px;
+  line-height: 1.65;
+}
+.pob-attrib-card {
+  padding: 24px 22px 22px;
+  position: relative;
+  overflow: hidden;
+}
+.pob-attrib-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: linear-gradient(90deg, var(--accent), var(--purple));
+}
+.pob-attrib-muted::before {
+  background: color-mix(in oklab, var(--muted) 40%, var(--line));
+}
+.pob-attrib-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 10%, transparent);
+  border: 1px solid color-mix(in oklab, var(--accent) 18%, var(--line));
+}
+.pob-attrib-muted .pob-attrib-icon {
+  color: var(--muted);
+  background: color-mix(in oklab, var(--text) 5%, transparent);
+  border-color: var(--line);
+}
+.pob-cta-band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: clamp(24px, 4vw, 36px);
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in oklab, var(--purple) 22%, var(--line));
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--purple) 7%, transparent),
+    color-mix(in oklab, var(--bg-soft) 90%, transparent)
+  );
+  box-shadow: var(--shadow-sm);
+}
+.pob-cta-title {
+  font-size: clamp(22px, 2.5vw, 28px);
+  margin: 0 0 8px;
+  letter-spacing: -0.03em;
+}
+.pob-cta-desc {
+  margin: 0;
+  max-width: 520px;
+  font-size: 15px;
+}
+.pob-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.pob-page .card-grid-animated > *:nth-child(5) {
+  animation-delay: 320ms;
+}
+.pob-page .card-grid-animated > *:nth-child(6) {
+  animation-delay: 400ms;
+}
+
 /* —— Marketing: Animated card grid —— */
 .card-grid-animated {
   display: grid;
