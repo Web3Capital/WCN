@@ -912,6 +912,13 @@ p, li { color: var(--muted); line-height: 1.7; font-size: 16px; }
   border-top: 1px solid var(--line);
   scroll-margin-top: 80px;
 }
+.docs-article-body > .docs-hero + h2,
+.docs-article-body > .docs-meta-grid + h2,
+.docs-article-body > .docs-hero + .docs-meta-grid + h2 {
+  border-top: none;
+  margin-top: 24px;
+  padding-top: 0;
+}
 .docs-article-body h3 {
   font-size: 19px;
   font-weight: 700;
@@ -942,15 +949,23 @@ p, li { color: var(--muted); line-height: 1.7; font-size: 16px; }
 .docs-article-body hr {
   border: none;
   border-top: 1px solid var(--line);
-  margin: 32px 0;
+  margin: 36px 0;
+}
+.docs-article-body hr + h2 {
+  border-top: none;
+  margin-top: 0;
+  padding-top: 0;
 }
 .docs-article-body blockquote:not(.docs-statement) {
   border-left: 3px solid var(--accent);
-  padding: 8px 16px;
-  margin: 16px 0;
-  color: var(--muted);
+  padding: 12px 20px;
+  margin: 20px 0;
+  color: var(--text);
   background: color-mix(in oklab, var(--accent) 4%, transparent);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.65;
 }
 .docs-article-body code {
   font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
@@ -1202,8 +1217,9 @@ p, li { color: var(--muted); line-height: 1.7; font-size: 16px; }
 /* —— MDX Components —— */
 
 /* Hero */
+.docs-article:has(.docs-hero) > .docs-article-header { display: none; }
 .docs-hero {
-  margin: -32px -0 32px;
+  margin: -8px 0 32px;
   padding: 32px 0;
   border-bottom: 1px solid var(--line);
 }
@@ -1293,18 +1309,30 @@ p, li { color: var(--muted); line-height: 1.7; font-size: 16px; }
   text-decoration: none;
   color: var(--text);
 }
+a.docs-card { cursor: pointer; }
+a.docs-card::after {
+  content: "→";
+  font-size: 14px;
+  color: var(--accent);
+  margin-top: auto;
+  padding-top: 4px;
+  opacity: 0.6;
+  transition: opacity var(--dur-2) var(--ease-out);
+}
+a.docs-card:hover::after { opacity: 1; }
 .docs-card:hover {
   border-color: color-mix(in oklab, var(--accent) 20%, var(--line));
   transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }
 .docs-card-icon {
-  font-size: 22px;
-  margin-bottom: 4px;
+  font-size: 24px;
+  margin-bottom: 6px;
 }
 .docs-card-title {
   font-size: 15px;
   font-weight: 700;
+  line-height: 1.35;
 }
 .docs-card-desc {
   font-size: 14px;
