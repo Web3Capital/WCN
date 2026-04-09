@@ -165,10 +165,10 @@ export default function AboutPage() {
               <div className="about-hero-ctas">
                 <Link href="/wiki/project-intro/1-1-wcn-是什么" className="button-secondary about-hero-link">
                   <BookOpen size={17} aria-hidden />
-                  WCN 是什么（Wiki）
+                  Wiki · What WCN is
                 </Link>
                 <Link href="/wiki/project-intro/1-2-wcn-不是什么" className="button-secondary about-hero-link">
-                  Boundaries（Wiki）
+                  Wiki · What WCN is not
                 </Link>
                 <Link href="/how-it-works" className="button-secondary about-hero-link">
                   How it works
