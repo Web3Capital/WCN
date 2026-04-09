@@ -1,30 +1,29 @@
 ---
 title: "Ch05 · 网络架构"
-description: "五层架构总览与各层详解。"
+description: "五层分工架构：项目与资产 → 资本配置 → 执行与服务 → 分发与流动性 → 验证与结算，每层有明确职责和上下游关系。"
 chapter: 5
 order: 0
 ---
 
-<Hero badge="第5章 · 网络架构" lead="WCN 不是一堆模块的堆叠，而是一个分层清晰、上下联动的网络架构。五层从项目资产到验证结算，各有明确职责。">
-# WCN 的系统骨架由五层组成，每一层都有明确位置与作用。
+<Hero badge="第5章 · 网络架构" lead="WCN 不是一堆功能的平铺，而是一个分层清晰、上下联动的业务架构。五层从需求入口到价值出口，每层回答一个核心问题，上一层的输出是下一层的输入。这种设计不是理论选择，而是从 TradFi 投行分工和互联网平台架构中提炼出的结构性经验。">
+# 五层架构，让 Web3 的多方协作第一次有了系统骨架。
 </Hero>
 
 <MetaGrid>
-  <Meta label="核心主题" value="五层架构总览与各层详解" />
-  <Meta label="阅读方式" value="先看 5.1 总览，再逐层展开" />
-  <Meta label="适用对象" value="架构师、技术团队、投资人" />
+  <Meta label="架构模式" value="五层分工，顺序推进，结果汇聚" />
+  <Meta label="设计来源" value="TradFi 投行分工 + 互联网平台架构" />
+  <Meta label="适用对象" value="架构师、投资人、节点运营者、合作方" />
 </MetaGrid>
 
-
 <CardGrid cols={2}>
-  <Card title="5.1 五层架构总览" description="五层分别回答五个核心问题，从需求到结算形成完整价值链" href="/wiki/network-arch/5-1-五层架构总览" icon="🏗️" />
-  <Card title="5.2 项目与资产层" description="项目方与资产方进入系统，表达融资、增长与服务需求" href="/wiki/network-arch/5-2-项目与资产层" icon="📦" />
-  <Card title="5.3 资本配置层" description="资本方通过判断和配置能力把资金与项目连接起来" href="/wiki/network-arch/5-3-资本配置层" icon="💰" />
-  <Card title="5.4 执行与服务层" description="法务、审计、开发、增长和 Agent 把连接转化为可交付结果" href="/wiki/network-arch/5-4-执行与服务层" icon="🔧" />
-  <Card title="5.5 分发与流动性层" description="交易所、媒体、KOL 和做市资源把结果送入市场" href="/wiki/network-arch/5-5-分发与流动性层" icon="📡" />
-  <Card title="5.6 验证与结算层" description="PoB 验证结果、归因贡献并进入长期价值结算" href="/wiki/network-arch/5-6-验证与结算层" icon="✅" />
+  <Card title="5.1 五层架构总览" icon="🏗️" href="/wiki/network-arch/5-1-五层架构总览">五层分别回答什么问题、如何串联、与 TradFi 和 Web2 平台架构的对比。</Card>
+  <Card title="5.2 项目与资产层" icon="📦" href="/wiki/network-arch/5-2-项目与资产层">需求入口：什么类型的项目进入、如何结构化表达需求、当前 Web3 Deal Flow 的痛点。</Card>
+  <Card title="5.3 资本配置层" icon="💰" href="/wiki/network-arch/5-3-资本配置层">资本不只是钱，更是判断力和配置能力。与 TradFi GP/LP 模型、Mandate-based Allocation 的对比。</Card>
+  <Card title="5.4 执行与服务层" icon="🔧" href="/wiki/network-arch/5-4-执行与服务层">从连接到交付的关键桥梁。Web3 服务碎片化现状、Agent 如何放大执行力。</Card>
+  <Card title="5.5 分发与流动性层" icon="📡" href="/wiki/network-arch/5-5-分发与流动性层">结果如何进入市场。上所、做市、媒体、KOL 的系统化协同，对比传统 IPO 流程。</Card>
+  <Card title="5.6 验证与结算层" icon="✅" href="/wiki/network-arch/5-6-验证与结算层">架构的收口层：Proof Desk、PoB、归因和 Settlement，让所有协作有可信终点。</Card>
 </CardGrid>
 
 <Callout type="tip">
-五层不是并列模块，而是业务顺序——上一层的输出是下一层的输入，最终所有结果汇入验证与结算层。
+五层不是并列模块，而是业务顺序——项目提出需求 → 资本接住需求 → 服务推进执行 → 分发送入市场 → 验证并结算价值。理解了这个顺序，就理解了 WCN 的系统逻辑。
 </Callout>

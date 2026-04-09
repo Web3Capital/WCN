@@ -1,56 +1,64 @@
 ---
 title: "7.5 Agent 如何进入业务闭环"
-description: "Agent 的输出只有进入任务、被采纳、推动闭环，才能成为可结算价值。"
+description: "任务绑定、采纳、证据链与 PoB：把生成量变成可结算结果；反例与正例工作流。"
 chapter: 7
 order: 5
 ---
 
-<Hero badge="7.5 · Agent 与闭环" lead="Agent 的价值，不在于生成了多少内容，而在于它的输出是否进入了任务、被节点采纳、推动了闭环，并最终进入了 Proof、PoB 和长期价值层。">
-# 只有当 Agent 的输出进入真实结果、被采纳、被证明，它才真正进入 WCN 的价值体系。
+<Hero badge="7.5 · Agent 与闭环" lead="LangChain Agent 跑通 demo 只证明「能生成」；WCN 闭环要求证明「推动了结果」。因此必须记录：哪条输出挂在哪个 task、谁采纳、采纳后触发了什么状态变更、最终证据是否过 Proof。没有这条链，只是又一个聊天窗口。">
+# 采纳与证明是价值的闸门；生成不是。
 </Hero>
 
 <MetaGrid>
-  <Meta label="这页作用" value="定义 Agent 进入闭环的条件" />
-  <Meta label="核心主题" value="输出不等于价值，采纳后才有价值" />
-  <Meta label="阅读重点" value="任务绑定、证据、采纳、PoB 接入" />
+  <Meta label="这页作用" value="闭环条件 + 工作流范例 + 与 PoB 的接口" />
+  <Meta label="核心主题" value="输出 → 采纳 → 结果 → Proof → PoB" />
+  <Meta label="阅读重点" value="task 绑定、人类事件、可追溯" />
 </MetaGrid>
 
-## Agent 进入闭环的路径
-
-Agent 不是天然属于业务闭环，它必须通过正式工作流进入。
+## 进入闭环的主路径
 
 <Callout type="info">
-任务派发 → Agent 执行 → 输出被记录 → 人类节点采纳 → 输出进入结果链 → Proof Desk 审核 → PoB 记账
+任务派发（含类型与验收标准）→ Agent 在授权内执行 → 结构化输出落库 → 节点 owner 采纳/驳回/修订 → 状态机推进 deal 或 task → 结果证据提交 → Proof Desk 审核 → 生成 PoB 记录 → 进入结算与信誉层
 </Callout>
 
-<Statement>Agent 的价值不是抽象的「有帮助」，而是可被系统识别的结果推动力。</Statement>
+<Statement>Agent 的价值是可识别的**结果推动力**：系统能区分「生成了 10 页」与「其中 3 段被采纳并导致会议召开/条款修改/打款条件满足」。</Statement>
 
----
-
-## Agent 输出进入 Proof 的条件
+## Agent 输出进入 Proof 的必要条件
 
 <CardGrid cols={2}>
-  <Card title="任务 ID 绑定" icon="🔗">输出必须属于某个正式任务，而不是无主结果。</Card>
-  <Card title="输入与版本留痕" icon="📋">必须知道 Agent 依据什么输入得出什么输出。</Card>
-  <Card title="人类采纳记录" icon="✅">需要有节点确认这个输出被使用了，并影响了真实结果。</Card>
-  <Card title="结果关联" icon="🔄">输出要能被追溯到某个 deal、task 或闭环事件。</Card>
+  <Card title="任务 ID 绑定" icon="🔗">每条机器输出关联 `task_id`（或等价句柄）；禁止游离在私聊或离线文档里的「幽灵结果」。</Card>
+  <Card title="输入与版本留痕" icon="📋">模型名、版本、温度或等价参数、检索片段 ID、关键附件哈希；便于复现与争议时取证。</Card>
+  <Card title="人类采纳记录" icon="✅">显式事件：`adopted_by`、`timestamp`、可选修改 diff；与 Copilot 隐式「用户复制走了」不同，必须结构化。</Card>
+  <Card title="结果关联" icon="🔄">可追溯到 deal、里程碑或链上/链下业务事件（如合同归档、上所公告）；否则无法做归因结算。</Card>
 </CardGrid>
 
 <Callout type="warning">
-没有这些条件，Agent 的输出只能算「工具生成物」，不能进入系统的长期价值层。
+缺任一条件 → 归类为「工具生成物」，不得计入 PoB；与 TradFi 中「没有交易编号与工作底稿的邮件」无法入账同理。
 </Callout>
 
----
+## 三个具象工作流示例
 
-## 这一步决定了什么
+<Steps>
+  <Step title="融资材料迭代">Task：「A 轮材料 v3 风险章节」。Research Agent 拉取竞品风险披露 → 输出带引用草稿 → 节点删减采纳 → 修订后 PDF 哈希上传 → Proof 关联「定稿用于投资人会议」→ 会议闭环后再记 PoB。</Step>
+  <Step title="资本匹配">Deal Agent 输出排序前 5 项目与匹配理由 → 节点仅采纳其中 2 个并创建 intro Task → 后续邮件由人发送；PoB 只记录被采纳推荐与后续已验证结果，不记录未采纳排序。</Step>
+  <Step title="投后监控">Liquidity Agent 日报异常段落 → Execution Agent 生成内部 Slack/任务文案草稿 → 风控负责人采纳一条并创建「跟进托管行」Task → 回执进入证据包 → Proof 通过后进 PoB。</Step>
+</Steps>
+
+## 反例：看似很忙，零闭环
+
+- AutoGPT 式无界探索产出大量笔记，无 task、无 owner → **噪音**。
+- Copilot 生成漂亮邮件但未从 WCN 任务发送、无采纳标记 → **不可归因**。
+- Agent 建议上所时间线，节点口头转发给项目方但系统无状态 → **无法验证**。
+
+## 这一步决定什么
 
 <CardGrid cols={2}>
-  <Card title="AI 是否只是工具" icon="🤖">只有进入闭环，AI 才会成为正式执行层。</Card>
-  <Card title="Agent 是否可被结算" icon="💰">没有 Proof 就没有 PoB，也就没有长期价值。</Card>
-  <Card title="Agent 是否可治理" icon="🛡️">只有进入正式系统才可能被审核、暂停、升级或淘汰。</Card>
-  <Card title="WCN 的差异化" icon="⚡">这一步正是 WCN 和普通 AI 工具平台最大的区别。</Card>
+  <Card title="AI 是否只是工具" icon="🤖">进入闭环才成为正式执行层；否则与任意 LLM 包装无异。</Card>
+  <Card title="Agent 是否可被结算" icon="💰">无 Proof 链则无 PoB；激励与分润缺少凭据。</Card>
+  <Card title="Agent 是否可治理" icon="🛡️">采纳率、错误采纳回滚、模型 A/B 效果都可度量，才能升级或暂停具体 Agent 配置。</Card>
+  <Card title="WCN 差异化" icon="⚡">不是「接入了 GPT/Claude/Gemini」，而是**多节点业务网络里第一次把机器输出接到统一证据与结算语义上**。</Card>
 </CardGrid>
 
 <Callout type="tip">
-WCN 的关键不是「用了 AI」，而是「让 AI 第一次进入了可验证、可归因、可结算的业务网络」。
+验收标准建议：**能否在争议中用日志在 30 分钟内讲清楚**——谁让 Agent 做了什么、采纳了什么、最终业务结果是什么。能做到，则闭环设计基本合格。
 </Callout>

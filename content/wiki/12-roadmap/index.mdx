@@ -1,25 +1,35 @@
 ---
 title: "Ch12 · 路线图"
-description: "三个阶段：Network MVP → PoB 协同 → 结算资产层。"
+description: "三阶段递进：Network MVP → PoB 与 Agent 协同 → 结算与资产层；成熟度驱动切换，对标主流 Web3 的「先验证、后扩展」路径。"
 chapter: 12
 order: 0
 ---
 
-<Hero badge="第12章 · 路线图" lead="WCN 的路线图分三个阶段：先做网络 MVP，再做 PoB 与 Agent 协同，最后构建结算与资产层。每个阶段有明确的切换信号。">
-# 不是一步到位，而是三步递进——每步都必须验证上一步的结果。
+<Hero badge="第12章 · 路线图" lead="WCN 路线图分三阶段：Network MVP（节点与 Deal 闭环）→ PoB 与 Agent 协同（标准化与自动化）→ 结算与资产层（价值与链上承载）。切换条件由成熟度信号决定，而非日历。">
+# 先证明商业网络成立，再叠加链与资产复杂度——与以太坊分阶段扩容、Uniswap 从 v1 到 v3 的演进逻辑一致。
 </Hero>
 
 <MetaGrid>
   <Meta label="核心主题" value="Network MVP → PoB 协同 → 结算资产层" />
-  <Meta label="阅读方式" value="按阶段顺序阅读，注意切换信号" />
-  <Meta label="适用对象" value="投资人、战略团队、合作方" />
+  <Meta label="方法论" value="业务优先、链后置（business first, chain later）" />
+  <Meta label="适用对象" value="投资人、战略、合作方、核心节点" />
 </MetaGrid>
 
+<Callout type="info">典型「一次性上链 + Token + 全功能」路线图往往在主网前耗尽叙事弹性；分阶段交付把每一阶段的可验证产出（用户、收入、标准、风控）暴露给市场，与 Solana 生态先跑应用再补基础设施节奏、以太坊以 Rollup 为中心的分阶段路线图同属一类可信叙事。</Callout>
+
+<Steps>
+  <Step title="第一阶段 · Network MVP">节点准入、Deal Room 最小流程、Proof Desk 留痕、早期单位经济（席位/服务/成交费）可计量。</Step>
+  <Step title="第二阶段 · PoB + Agent">PoB 规则与审核稳定；Agent 权限、日志、生命周期可控；高价值打法流程化，闭环密度可复盘。</Step>
+  <Step title="第三阶段 · 结算与资产">在 PoB 成为可信输入的前提下，推进结算机制与身份/价值的数字化承载；链上仅承载必要摘要与证明。</Step>
+</Steps>
+
 <CardGrid cols={2}>
-  <Card title="12.1 第一阶段：Network MVP" description="建立最小可验证网络——节点进入、Deal 发生、Proof 收集、PoB 形成。" href="/wiki/roadmap/12-1-第一阶段-network-mvp" icon="🚀" />
-  <Card title="12.2 第二阶段：PoB 与 Agent 协同" description="网络变得更深、更稳、更可复制——Agent 输出稳定进入任务和 PoB。" href="/wiki/roadmap/12-2-第二阶段-pob与agent协同" icon="🤖" />
-  <Card title="12.3 第三阶段：结算与资产层" description="前两阶段成立后的自然延伸——PoB 进入结算，身份和价值逐步数字化。" href="/wiki/roadmap/12-3-第三阶段-结算与资产层" icon="⛓️" />
-  <Card title="12.4 里程碑与切换信号" description="阶段切换靠成熟度信号，不靠时间表。" href="/wiki/roadmap/12-4-里程碑与阶段切换信号" icon="🚦" />
+  <Card title="12.1 第一阶段：Network MVP" description="交付物：可审计的最小网络——节点、Deal、Proof、早期收入与 PoB 雏形。" href="/wiki/roadmap/12-1-第一阶段-network-mvp" icon="🚀" />
+  <Card title="12.2 第二阶段：PoB 与 Agent 协同" description="交付物：标准 PoB、受控 Agent、可复制的节点方法论与更高闭环密度。" href="/wiki/roadmap/12-2-第二阶段-pob与agent协同" icon="🤖" />
+  <Card title="12.3 第三阶段：结算与资产层" description="交付物：结算对象清晰、身份与权限标准化、选择性链上化与长期账本。" href="/wiki/roadmap/12-3-第三阶段-结算与资产层" icon="⛓️" />
+  <Card title="12.4 里程碑与切换信号" description="可量化门槛：何时从 Phase 1→2、2→3；风险与反模式清单。" href="/wiki/roadmap/12-4-里程碑与阶段切换信号" icon="🚦" />
 </CardGrid>
 
-<Callout type="tip">真正有未来感的路线图，不是画得多大，而是知道先后顺序和切换条件。</Callout>
+<Statement>路线图的可信度来自「每阶段有可独立验收的产出」，而不是来自路线图幻灯片的半径。</Statement>
+
+<Callout type="tip">阅读顺序：12.1 → 12.2 → 12.3 → 12.4；12.4 可与各阶段对照，作为 go/no-go 检查表。</Callout>

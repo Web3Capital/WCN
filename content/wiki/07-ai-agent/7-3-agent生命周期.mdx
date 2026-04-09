@@ -1,50 +1,65 @@
 ---
 title: "7.3 Agent 生命周期"
-description: "Agent 必须经历注册、授权、运行、复核、暂停和退出，形成可信执行层。"
+description: "注册、授权、运行、监控、升级、暂停、退出；对齐模型治理、审计与第三方尽调常见问题清单。"
 chapter: 7
 order: 3
 ---
 
-<Hero badge="7.3 · 生命周期" lead="WCN 里的 Agent 不是「永久外挂」。它们必须像节点一样，经历注册、授权、运行、复核、升级、暂停和退出，才能形成可信执行层。">
-# Agent 不是随便接进来就一直运行，它也必须有生命周期。
+<Hero badge="7.3 · 生命周期" lead="Agent 像员工账号与模型版本一样需要生命周期：谁能创建、谁能授权、运行中如何监控、出事故如何暂停、淘汰后数据如何处理。没有状态机就没有可信执行层，也无法向审计方解释「当时系统里到底有什么在跑」。">
+# Agent 必须可识别、可约束、可升级、可吊销。
 </Hero>
 
 <MetaGrid>
-  <Meta label="这页作用" value="定义 Agent 状态机与治理路径" />
-  <Meta label="核心主题" value="Agent 也必须被治理" />
-  <Meta label="阅读重点" value="注册、权限、运行、暂停、淘汰" />
+  <Meta label="这页作用" value="状态机 + 治理动作 + 审计应答" />
+  <Meta label="核心主题" value="从 Registered 到 Retired 的全链路" />
+  <Meta label="阅读重点" value="授权边界、暂停触发、升级管控" />
 </MetaGrid>
 
-## Agent 的关键状态
+## 关键状态
 
 <CardGrid cols={3}>
-  <Card title="Registered" icon="📝">Agent 已被登记，但还没进入正式业务流程。</Card>
-  <Card title="Authorized" icon="🔑">Agent 被赋予明确任务、数据和权限边界。</Card>
-  <Card title="Active" icon="▶️">Agent 正在执行任务并持续写入日志。</Card>
-  <Card title="Paused / Suspended" icon="⏸️">因质量、越权或风险问题暂停。</Card>
-  <Card title="Upgraded" icon="⬆️">Agent 升级模型能力或权限等级。</Card>
-  <Card title="Retired" icon="🏁">Agent 因不再适用或不达标而退出系统。</Card>
+  <Card title="Registered" icon="📝">已在目录登记（名称、类型、默认模型、所有者节点、用途说明）。尚未接业务数据，相当于「账号已建、未开通权限」。</Card>
+  <Card title="Authorized" icon="🔑">完成权限评审：数据域、工具白名单、每日调用上限、是否允许写外部系统。对应企业 IAM 中的 role binding。</Card>
+  <Card title="Active" icon="▶️">在授权范围内执行任务并**持续**写结构化日志（输入摘要、输出哈希、工具调用、审批结果）。</Card>
+  <Card title="Paused / Suspended" icon="⏸️">触发条件示例：异常越权尝试、输出质量抽检连续失败、安全事件、合规禁令。暂停应可一键切断工具与外部回调。</Card>
+  <Card title="Upgraded" icon="⬆️">模型版本、prompt、工具或限额变更；须记录变更单号、审批人、生效时间与回滚包。对标 MLOps 与变更管理（如 ITIL）。</Card>
+  <Card title="Retired" icon="🏁">业务下线或不达标淘汰；保留只读日志留存期，删除或匿名化训练用敏感字段（按政策）。</Card>
 </CardGrid>
 
 ## 生命周期路径
 
 <Callout type="info">
-注册 → 授权 → 上线 → 日志记录 → 审核 / 复核 → 升级 / 暂停 / 淘汰
+注册 → 风险评估与授权 → 上线（Active）→ 持续监控与抽检 → 事件驱动暂停 → 变更升级（带审批）→ 退役与留存策略
 </Callout>
 
-<Statement>生命周期的设计目标不是增加复杂度，而是保证每个 Agent 可被识别、可被约束、可被淘汰。</Statement>
+<Steps>
+  <Step title="准入">明确业务场景、数据分级、是否处理 PII/机密条款；禁止「先接进来再想办法」。</Step>
+  <Step title="授权">最小权限：按 Agent 类型拆 API scope；敏感操作双人规则或人类在环（HITL）。</Step>
+  <Step title="运行">SLA：延迟、错误率、幻觉类客诉标签；与 LangSmith 等可观测性工具同类指标，但结果要进 WCN 任务系统。</Step>
+  <Step title="复核">定期抽检：同一输入多版本模型对比、红队提示样本、工具调用是否越界。</Step>
+  <Step title="退出">退役 Agent 不得再出现在派发列表；历史输出仍可被 Proof 引用但标注模型版本。</Step>
+</Steps>
 
----
+<Statement>生命周期设计目标：**任何时刻都能回答**——哪些 Agent 在跑、用什么模型、能访问什么、上次变更谁批的。</Statement>
 
-## 生命周期保证什么
+## 治理与风险管理框架（浓缩）
 
-<CardGrid cols={2}>
-  <Card title="每个 Agent 都有身份" icon="🪪">知道是谁、做什么、属于谁。</Card>
-  <Card title="每个 Agent 都有边界" icon="🛡️">不能无约束读取和执行。</Card>
-  <Card title="每个 Agent 都有日志" icon="📋">可以回溯与审查。</Card>
-  <Card title="每个 Agent 都能被淘汰" icon="❌">质量差或越权的 Agent 不能无限存在。</Card>
-</CardGrid>
+| 维度 | 要点 |
+| --- | --- |
+| 所有权 | 每个 Agent 有 owning 节点或平台责权人；运行事故先找 owner |
+| 变更 | 生产变更走变更窗口与回滚；重大模型切换可要求并行灰度 |
+| 数据 | 训练/日志留存与跨境传输符合节点所在地与合同 |
+| 安全 | 密钥与工具凭据托管；禁止 Agent 持久持有用户明文密码 |
+| 审计 | 日志保留期 ≥ 业务争议追溯需求；支持导出给第三方尽调 |
 
 <Callout type="warning">
-没有生命周期，Agent 既会失控（无授权与暂停机制），也无法进入 Proof（无身份和日志）。
+没有暂停与退役能力，等于默许「僵尸 Agent」长期持有过期权限——这是数据泄露与合规处罚的常见来源。
+</Callout>
+
+## 与 AutoGPT 式「常开循环」的根本区别
+
+自主循环默认**无明确终点**；WCN 生命周期把每次运行绑在**任务与授权时效**上。任务结束或授权到期 → Agent 调用应拒绝或进入只读，而非在后台继续「思考」。
+
+<Callout type="tip">
+向审计或 LP 解释时一句话：**我们的 Agent 像受控批处理作业，不像不知疲倦的自动员工。**
 </Callout>

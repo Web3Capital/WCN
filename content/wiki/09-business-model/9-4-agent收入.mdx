@@ -1,45 +1,59 @@
 ---
 title: "9.4 Agent 收入"
-description: "把 Agent 从能力层推进到商业层，形成可计价、可配置、可复用的收入。"
+description: "配置、订阅、执行、支持四层计费；类比 SaaS 用量与 Chainlink / Graph 的工作量结算，而非免费聊天机器人。"
 chapter: 9
 order: 4
 ---
 
-<Hero badge="9.4 · Agent 收入" lead="如果 Agent 只是免费工具，那它的价值很难被系统长期看见。WCN 需要把 Agent 从能力层推进到商业层，让它形成可计价、可配置、可复用的收入结构。">
-# Agent 不是只用来提效的，它也必须成为 WCN 可独立商业化的一层。
+<Hero badge="9.4 · Agent 收入" lead="Agent 若永远免费，平台只能把它当成本中心。WCN 将 Agent 商业化：配置费、周期订阅 / 用量、按闭环执行计费、运维与审核支持费——结构上等价于企业 SaaS + API 计量，并与 Chainlink 节点为数据服务收费、The Graph 索引者为查询市场工作同一逻辑：「履约与调用可计价」。">
+# 商业价值来自进入任务、产出被采纳的结果，而不是模型参数榜单排名。
 </Hero>
 
 <MetaGrid>
-  <Meta label="这页作用" value="定义 Agent 商业化的四个维度" />
-  <Meta label="核心主题" value="进入闭环的 Agent 才有商业价值" />
-  <Meta label="阅读重点" value="配置费、使用费、执行费、支持费" />
+  <Meta label="这页作用" value="四类计费、与 Web3 协议类比、与服务 / Deal 的嵌套" />
+  <Meta label="核心主题" value="可计量、可合同化的智能层" />
+  <Meta label="阅读重点" value="独立 SKU vs 服务溢价、单位经济" />
 </MetaGrid>
 
 ## Agent 收入的来源
 
-Agent 收入来自配置、使用、执行和持续支持四个维度。既可以是对节点和项目的直接收入，也可以是嵌入服务和 Deal 中的间接收入。
+收入来自四个可独立开票或打包的维度：既可对节点 / 项目直收，也可嵌在服务费与 success fee 里作为**自动化溢价**。
 
 <CardGrid cols={2}>
-  <Card title="配置费" icon="⚙️">为节点或项目配置特定 Agent 体系。</Card>
-  <Card title="使用费" icon="📊">按周期、权限或额度使用 Agent。</Card>
-  <Card title="执行费" icon="▶️">Agent 参与特定任务和闭环时产生的执行收入。</Card>
-  <Card title="支持费" icon="🔧">围绕 Agent 的运维、调整、优化和审核支持。</Card>
+  <Card title="配置费" icon="⚙️">为节点或项目部署工作流、工具链、权限模板与合规策略的一次性或项目费；对标实施费（implementation fee）。</Card>
+  <Card title="使用费" icon="📊">按席位、按周期、按调用次数或按 token 额度计费；对齐 Snowflake / OpenAI API 类用量模型，便于预测毛利。</Card>
+  <Card title="执行费" icon="▶️">Agent 参与指定里程碑任务（尽调清单、对账、材料生成、多轮评审）且交付物被采纳时计费；与结果弱绑定可降低「只跑不算」纠纷。</Card>
+  <Card title="支持费" icon="🔧">监控、调参、红队、人工复核与版本升级；高信任场景下客户愿为 SLA 付 recurring。</Card>
 </CardGrid>
+
+---
+
+## Web3 类比：为什么不是「又一个 Chatbot」
+
+| 协议 / 模式 | 可比点 | 对 WCN 的启示 |
+| --- | --- | --- |
+| Chainlink 预言机 | 节点为可靠数据交付收费 | Agent 交付的是**可审计工作产物**，应可合同化计费 |
+| The Graph 索引者 | 查询与市场激励对齐工作量 | 高频调用 = 更高基础设施成本 = 应对齐用量费 |
+| Filecoin 存储合约 | 按约履约、按量付费 | 长周期任务可拆里程碑付费，降低单方风险 |
+
+共同点：**链上或链下，客户为持续可用的服务付对价**；不依赖代币二级市场涨价补贴算力。
 
 ---
 
 ## 为什么 Agent 收入成立
 
-<Statement>Agent 的商业价值，不来自「模型有多强」，而来自「它是否进入了真实闭环」。</Statement>
+<Statement>Agent 的商业价值不来自「模型有多强」，而来自「是否进入真实闭环并被采纳」。</Statement>
 
-Agent 不再只是「帮你写点东西」，而是在 WCN 中承担正式执行角色。只要它能进入任务、产出结果并被采纳，它就具备商业化基础。
+在 WCN 中，Agent 承担正式执行角色：接入 Deal Room、服务工单与合规流时，其产出可留痕、可验收，因而具备**独立 SKU** 条件。免费期可用于教育市场，长期必须有价格锚，否则算力与合规成本无法由网络内化。
 
 ---
 
-## Agent 收入和服务收入的关系
+## 与服务收入、成交收入的关系
 
-有些 Agent 收入可以独立存在，例如 Agent Desk 或 Agent Subscription。也有一些 Agent 收入会嵌入到服务包和 Deal 收入中，成为隐藏在服务层中的自动化能力溢价。
+- **独立售卖**：Agent Desk、组织级订阅、按部门配额——现金流直接、产品边界清晰。
+- **嵌入溢价**：同一笔法务 retainer 或 FA 服务中，含「人机协同交付」的套餐可比纯人工报价更高毛利；success fee 不变时，平台可通过降低交付成本改善 take rate。
+- **飞轮**：成交越多 → 模板化工作流越多 → Agent 复用率上升 → 边际成本下降 → 更有空间做价格竞争或提高平台抽成。
 
 <Callout type="tip">
-Agent 收入的独立性和嵌入性并存——既能单独售卖，也能作为服务溢价。
+将 Agent 仅定位为「提效工具」会低估其财务属性：在正确计量下，它是**第三类 recurring**（与席位、部分 retainer 并列），也是在熊市中不依赖 Token 补贴的增长杠杆。
 </Callout>

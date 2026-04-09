@@ -5,44 +5,44 @@ chapter: 6
 order: 3
 ---
 
-<Hero badge="6.3 · 分类总览" lead="WCN 的节点不是单一类型。它们至少要从功能、层级、行业与区域四个角度被拆开，否则整个系统会失去结构感。">
-# 节点世界不先被拆清楚，后面的撮合、PoB、结算和治理都会失控。
+<Hero badge="6.3 · 分类总览" lead="多维分类不是文档洁癖，而是路由与风控的基础设施：没有统一的类型本体，CRM 会重复触达同一 LP，PoB 无法标注主导方与协作方，治理也难以对国家代表权做边界裁剪。">
+# 分类本体 = 运营与结算的 schema；一维标签会让撮合与内控同时失灵。
 </Hero>
 
 <MetaGrid>
-  <Meta label="本页作用" value="给出节点分类总图" />
-  <Meta label="核心主题" value="多维分类是系统运作的基础" />
-  <Meta label="阅读重点" value="功能、层级、区域、行业" />
+  <Meta label="四个正交轴" value="功能（做什么）、层级（覆盖范围）、行业（哪条赛道）、区域（地理锚点）" />
+  <Meta label="TradFi 映射" value="功能≈产品条线与牌照；层级≈总部—区域—行业组；区域≈分支机构覆盖" />
+  <Meta label="系统依赖" value="搜索、权限、冲突检测、PoB 模板与 KPI 集都挂在多维标签上" />
 </MetaGrid>
 
-## 节点总览
+## 功能维度（做什么）
 
 <CardGrid cols={3}>
-  <Card title="项目节点" description="提供需求、资产、产品和业务场景。" icon="📦" />
-  <Card title="资本节点" description="提供资金、配置能力和投资判断。" icon="💰" />
-  <Card title="服务节点" description="提供法务、安全、审计、开发、品牌、研究等执行支持。" icon="🔧" />
-  <Card title="分发节点" description="提供交易所、做市、媒体、KOL、社区、活动等分发承接能力。" icon="📡" />
-  <Card title="区域节点" description="提供国家、城市和本地资源组织能力。" icon="🌍" />
-  <Card title="Agent 节点" description="提供 Research、Deal、Growth、Execution 等执行放大能力。" icon="🤖" />
+  <Card title="项目节点" description="携带代币经济设计、上线路径、合规叙事与融资里程碑；需求侧原点。" icon="📦" />
+  <Card title="资本节点" description="家办、风投、做市商、生态基金；提供 check size、决策节奏与结构偏好。" icon="💰" />
+  <Card title="服务节点" description="律所、审计、安全、开发、品牌、研究；把引荐变成可交付 SOW。" icon="🔧" />
+  <Card title="分发节点" description="交易所、媒体、KOL、会议主理方；承接流动性与市场叙事。" icon="📡" />
+  <Card title="区域节点" description="国家主节点、城市节点；把全球协议落到本地关系与活动。" icon="🌍" />
+  <Card title="Agent 节点" description="绑定工作流的自动化执行方：筛案、触达、监控、报告，需有 SLA 与留痕。" icon="🤖" />
 </CardGrid>
 
 <Callout type="info">
-一个真实节点通常同时具有「功能身份 + 地域位置 + 行业属性 + 当前层级」。例如一个日本 AI 资本节点，就同时具有功能（资本）、地域（日本）、行业（AI）、层级（国家主节点）。
+典型复合画像：一家东京的 AI 风投，在系统中可同时标记为「资本节点 + 日本地理锚点 + AI 行业节点 + 某层级席位」。撮合时按场景选用子集，避免用单一标签描述商业现实。
 </Callout>
 
-<Statement>一个节点不能只用一个标签描述，多维分类是系统撮合、CRM、PoB 和扩张的前提。</Statement>
+<Statement>PoB 与结算需要知道「谁在什么角色上签字背书」；多维分类是把现实商业关系编译成系统可执行结构的最低成本方案。</Statement>
 
 ---
 
-## 没有分类会怎样？
+## 分类缺失时的运营故障模式
 
 <CardGrid cols={2}>
-  <Card title="无法撮合" description="项目、资本和服务很难被准确连接。" icon="⊘" />
-  <Card title="无法做 CRM" description="所有节点会混在一起，无法筛选和跟进。" icon="⊘" />
-  <Card title="无法做 PoB" description="谁属于主导、协作或辅助，会越来越模糊。" icon="⊘" />
-  <Card title="无法扩张" description="区域、赛道与层级体系无法形成标准。" icon="⊘" />
+  <Card title="撮合噪声" description="同一 LP 被三条线同时推销；类似投行缺少客户覆盖矩阵时的撞单。" icon="⊘" />
+  <Card title="CRM 坍缩" description="漏斗阶段无法按功能与区域切片，预测与复盘失去粒度。" icon="⊘" />
+  <Card title="PoB 争议" description="主导引荐方、协作执行方、纯信息方混写，分配规则无法落地。" icon="⊘" />
+  <Card title="扩张不可复制" description="新市场启动时没有标准席位包：国家主节点、城市节点、赛道大使各是什么 KPI。" icon="⊘" />
 </CardGrid>
 
 <Callout type="tip">
-分类是管理的起点——先拆清楚节点世界，才能让撮合、PoB、结算和治理真正落地。
+对齐 TradFi：大型投行的客户数据同样按行业组、地区、产品权限切 cube；WCN 只是把切面暴露给链上协作与 PoB，使外部生态也能读同一套结构。
 </Callout>

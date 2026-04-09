@@ -2,40 +2,45 @@
 title: "14.3 获取访问权限"
 chapter: 14
 order: 3
-description: "访问权限分层——和角色、阶段、关系深度绑定。"
+description: "访问分层与解锁条件：公开认知、申请后资料、节点协作空间与 Deal/Proof 密级。"
 ---
 
-<Hero badge="14.3 · 访问权限" lead="WCN 不能把所有内容、所有页面、所有 Deal 和所有数据都对外敞开。访问权限必须分层，这既是治理要求，也是商业质量要求。">
-# 访问权限不是默认开放，而是和角色、阶段、关系深度绑定。
+<Hero badge="14.3 · 访问权限" lead="WCN 按角色与关系深度分层开放内容与数据；这既满足治理与保密，也保护机构级 Deal 与证据链不被噪音稀释。">
+# 权限与席位绑定：看得到什么，取决于您在网络中的位置。
 </Hero>
 
 <MetaGrid>
-  <Meta label="核心回答" value="WCN 的访问权限如何分层？" />
-  <Meta label="层级数量" value="公开层、申请层、节点层、Deal/Proof 层" />
-  <Meta label="与席位关系" value="席位定义位置，授权定义访问" />
+  <Meta label="设计原则" value="最小必要暴露；密级随关系加深而升高" />
+  <Meta label="典型层级" value="公开 → 申请后 → 节点 → Deal/Proof" />
+  <Meta label="解锁方式" value="申请通过、席位授权、被邀请进入具体 Deal" />
 </MetaGrid>
 
-## 四层访问权限
+## 四层访问模型
 
-WCN 同时包含公开认知层、节点协作层、Deal 层、Proof 层和内部管理层。不同人应该看到不同深度。
+不同参与者应看到不同深度：**公开层**建立共识；**申请后层**支持尽职与对接；**节点层**承载日常协作；**Deal/Proof 层**仅对相关方与指定审核角色开放。
 
 <CardGrid cols={2}>
-  <Card title="公开访问层" icon="🌐">面向所有外部读者的介绍与说明。</Card>
-  <Card title="申请后访问层" icon="📋">初步通过后可看部分节点资料与协作说明。</Card>
-  <Card title="节点访问层" icon="🪪">正式节点才能进入的协作空间。</Card>
-  <Card title="Deal / Proof 访问层" icon="🔒">只对相关参与方和审核角色开放。</Card>
+  <Card title="公开访问层" icon="🌐">官网、Wiki 与对外材料；任何访客可读，用于理解模型与准入规则。</Card>
+  <Card title="申请后访问层" icon="📋">通过初步 intake 后可获得的说明性资料、流程文档或受限目录（以当时政策为准）。</Card>
+  <Card title="节点访问层" icon="🪪">正式席位持有者可进入的协作空间、节点目录与任务界面；权限随席位类型细分。</Card>
+  <Card title="Deal / Proof 层" icon="🔒">具体交易房间、证据包与归因细节；仅 Deal 参与方、服务提供方与授权审核角色可访问。</Card>
 </CardGrid>
 
 ---
 
-## 访问权限和席位的关系
+## 如何获得各层权限
 
-席位决定你是什么位置，授权决定你能看什么、能做什么。
+<Steps>
+  <Step title="公开层">无需账号；直接访问 [wcn.network](https://wcn.network) 与本 Wiki。</Step>
+  <Step title="申请后层">完成 [Apply](https://wcn.network/apply) 并通过资格预审后，由团队按类型开通或寄送下一步资料。</Step>
+  <Step title="节点层">完成 14.1 所述席位确认与授权流程后，由 onboarding 开通系统身份与默认范围。</Step>
+  <Step title="Deal/Proof 层">在被邀请进入特定 Deal 或承担 Proof Desk / 服务交付角色时，按该 Deal 策略单独授权；退出或结案后收缩权限。</Step>
+</Steps>
 
-<Callout type="warning">没有权限分层，节点系统和 Deal 系统都会迅速失控。</Callout>
+<Callout type="warning">不存在「全网数据一账号通览」；若某信息不可见，通常表示当前关系深度或合规要求未满足。强行突破边界会破坏 PoB 与结算的可信基础。</Callout>
 
 ---
 
-## 为什么边界清晰反而更有吸引力
+## 为什么边界清晰对机构参与者有利
 
-<Statement>真正高质量的参与者通常更尊重边界清晰、权限明确的系统——混乱的开放是弱者的标志。</Statement>
+<Statement>专业资本与服务方同样依赖保密与责任可追溯；分层权限降低误用与泄露风险，并使网络内声誉与归因可计算。混乱开放吸引短期流量，清晰边界支撑长期业务密度。</Statement>

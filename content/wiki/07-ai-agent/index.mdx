@@ -1,29 +1,28 @@
 ---
 title: "Ch07 · AI Agent 系统"
-description: "AI Agent 的角色、类型、生命周期与业务闭环。"
+description: "受控、可审计的 Agent 执行层：与通用 Agent 框架的差异、生命周期、边界与业务闭环。"
 chapter: 7
 order: 0
 ---
 
-<Hero badge="第7章 · AI Agent 系统" lead="WCN 不是把 AI 放在旁边当工具，而是让 Agent 进入正式业务闭环——有任务、有权限、有日志、有结算。">
-# Agent 不是营销亮点，而是进入任务体系的正式执行层。
+<Hero badge="第7章 · AI Agent 系统" lead="WCN 的 Agent 不是 AutoGPT 式自主代理，而是嵌入人主导工作流的受控执行层：有任务单、权限域、全链路日志与结算接口。本章说明其产业定位、类型分工、生命周期治理与进入 PoB 的条件。">
+# Agent 是正式任务体系里的执行层，不是营销话术里的「全自动员工」。
 </Hero>
 
 <MetaGrid>
-  <Meta label="核心主题" value="AI Agent 的角色、类型、生命周期与业务闭环" />
-  <Meta label="阅读方式" value="先看为什么重要，再看类型与边界" />
-  <Meta label="适用对象" value="AI 工程师、产品团队、节点运营者" />
+  <Meta label="核心主题" value="受控 Agent、类型与权限、生命周期、边界、闭环与 PoB" />
+  <Meta label="阅读方式" value="先厘清与业界框架差异，再按类型—生命周期—边界—闭环顺序读" />
+  <Meta label="适用对象" value="AI 工程、产品、节点运营、合规与风控" />
 </MetaGrid>
 
-
 <CardGrid cols={2}>
-  <Card title="7.1 为什么 Agent 重要" description="Agent 的意义不在于追热点，而是把高价值执行动作从个体经验变为可复制的系统能力。" href="/wiki/ai-agent/7-1-为什么agent重要" icon="🔑" />
-  <Card title="7.2 Agent 类型" description="五类 Agent 分别承担不同任务身份，让权限、日志和结算精确到类型。" href="/wiki/ai-agent/7-2-agent类型" icon="🧩" />
-  <Card title="7.3 Agent 生命周期" description="Agent 必须经历注册、授权、运行、复核、暂停和退出，形成可信执行层。" href="/wiki/ai-agent/7-3-agent生命周期" icon="🔄" />
-  <Card title="7.4 Agent 的边界" description="越靠近资金、法律、合同与治理，越需要把 Agent 的边界写死。" href="/wiki/ai-agent/7-4-agent的边界" icon="🛡️" />
-  <Card title="7.5 Agent 如何进入业务闭环" description="Agent 的价值不在生成量，而在输出是否进入任务、被采纳、推动闭环。" href="/wiki/ai-agent/7-5-agent如何进入业务闭环" icon="⚡" />
+  <Card title="7.1 为什么 Agent 重要" description="相对 CrewAI / LangChain Agent / Copilot / AutoGPT 的定位；LLM 能力与局限；TradFi 先例与 WCN 的正式执行层。" href="/wiki/ai-agent/7-1-为什么agent重要" icon="🔑" />
+  <Card title="7.2 Agent 类型" description="Research / Deal / Growth / Execution / Liquidity 五类角色与权限、日志、结算的精确映射。" href="/wiki/ai-agent/7-2-agent类型" icon="🧩" />
+  <Card title="7.3 Agent 生命周期" description="注册、授权、运行、复核、升级、暂停、退出；对标模型治理与第三方审计要求。" href="/wiki/ai-agent/7-3-agent生命周期" icon="🔄" />
+  <Card title="7.4 Agent 的边界" description="读写、审批、资金与法律红线；幻觉、数据泄露与越权承诺的风险框架。" href="/wiki/ai-agent/7-4-agent的边界" icon="🛡️" />
+  <Card title="7.5 Agent 如何进入业务闭环" description="从任务派发到人类采纳、Proof、PoB 的具象工作流与验收条件。" href="/wiki/ai-agent/7-5-agent如何进入业务闭环" icon="⚡" />
 </CardGrid>
 
 <Callout type="tip">
-WCN 的 Agent 不是通用 AI 助手，而是受治理、可验证、能结算的正式执行层。
+业界常见误区是把「Agent」等同于「自己上网、自己下单、自己签字的机器人」。WCN 反其道而行：Agent 只做被授权、可回放、可刹车的动作，最终承诺与资金仍落在节点与人的治理链上。
 </Callout>

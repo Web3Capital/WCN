@@ -1,30 +1,29 @@
 ---
 title: "Ch08 · Proof of Business"
-description: "PoB 定义、有效闭环、验证流程与归因逻辑。"
+description: "PoB 与 PoW/PoS 等共识的差异、TradFi 归因对标、有效证据、验证与反作弊、经济飞轮。"
 chapter: 8
 order: 0
 ---
 
-<Hero badge="第8章 · Proof of Business" lead="PoB 不是活跃积分，不是营销分数，而是对真实业务闭环的证明机制。只有被验证的结果，才能进入长期价值层。">
-# PoB 是 WCN 最核心的制度基础——没有证明，就没有结算。
+<Hero badge="第8章 · Proof of Business" lead="PoB 不是算力竞赛、不是资本权重投票、也不是活跃度积分。它把共识锚定在可核验的商业结果上：成交、交付、验收、资金到位——与 PoW 的 nonce、PoS 的 stake、空投的地址列表处于完全不同的价值平面。">
+# PoB 是 WCN 的制度内核：没有可证明的业务结果，就没有系统级承认与结算。
 </Hero>
 
 <MetaGrid>
-  <Meta label="核心主题" value="PoB 定义、有效闭环、验证流程与归因逻辑" />
-  <Meta label="阅读方式" value="先看定义，再看标准，最后看流程" />
-  <Meta label="适用对象" value="节点、审核人员、治理参与者" />
+  <Meta label="核心主题" value="定义、闭环标准、排除规则、验证链、归因、经济与安全" />
+  <Meta label="阅读方式" value="8.1 机制坐标 → 8.2/8.3 边界 → 8.4 流程 → 8.5 归因 → 8.6 战略意义" />
+  <Meta label="适用对象" value="节点、审核与 Proof Desk、治理、产品与风控" />
 </MetaGrid>
 
-
 <CardGrid cols={2}>
-  <Card title="8.1 PoB 是什么" description="把真实业务结果转化为系统可承认、可记账、可结算的证明机制。" href="/wiki/pob/8-1-pob-是什么" icon="📖" />
-  <Card title="8.2 什么算有效闭环" description="只有形成结果并留下证据的业务事件，才算有效闭环。" href="/wiki/pob/8-2-什么算有效闭环" icon="✅" />
-  <Card title="8.3 什么不算" description="排除噪音、重复 claim 和表面动作，保护真正结果的稀缺性。" href="/wiki/pob/8-3-什么不算" icon="🚫" />
-  <Card title="8.4 验证流程" description="从事件提交到归档入账，把已发生的结果升级为系统确认的结果。" href="/wiki/pob/8-4-验证流程" icon="🔍" />
-  <Card title="8.5 归因逻辑" description="在结果和贡献之间建立清晰映射，分清主导、协作与采纳。" href="/wiki/pob/8-5-归因逻辑" icon="🧩" />
-  <Card title="8.6 为什么 PoB 重要" description="PoB 决定系统承认什么、拒绝什么、记录什么、沉淀什么。" href="/wiki/pob/8-6-为什么pob重要" icon="💎" />
+  <Card title="8.1 PoB 是什么" description="与 PoW/PoS/PoA 及 TradFi 业绩归因对照；PoB 在 WCN 验证—结算栈中的位置。" href="/wiki/pob/8-1-pob-是什么" icon="📖" />
+  <Card title="8.2 什么算有效闭环" description="结果门槛、证据类型、可编号事件；六类闭环与 PoB 证据包示例。" href="/wiki/pob/8-2-什么算有效闭环" icon="✅" />
+  <Card title="8.3 什么不算" description="排除噪音、重复 claim、代理指标；与空投/积分/质押奖励的度量缺陷对照。" href="/wiki/pob/8-3-什么不算" icon="🚫" />
+  <Card title="8.4 验证流程" description="从提交到归档的五步链；Proof Desk 与争议处理；审计痕迹。" href="/wiki/pob/8-4-验证流程" icon="🔍" />
+  <Card title="8.5 归因逻辑" description="主导/协作/采纳；与 Brinson 式配置/选择归因的类比与边界。" href="/wiki/pob/8-5-归因逻辑" icon="🧩" />
+  <Card title="8.6 为什么 PoB 重要" description="飞轮经济学、反内卷、长期网络记忆；缺失 PoB 时的系统退化路径。" href="/wiki/pob/8-6-为什么pob重要" icon="💎" />
 </CardGrid>
 
 <Callout type="tip">
-如果没有 PoB，WCN 会退化成一个奖励热闹和声量的系统，而不是可验证、可结算的业务网络。
+若抽掉 PoB，网络奖励会自然收敛到最易观测、最易刷新的代理变量——TVL、粉丝数、签到、持仓——与真实商业产出脱钩。PoB 把激励重新绑回「做成了什么」而非「看起来多忙」。
 </Callout>

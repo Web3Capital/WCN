@@ -2,36 +2,55 @@
 title: "12.2 第二阶段：PoB 与 Agent 协同"
 chapter: 12
 order: 2
-description: "网络变得更深、更稳、更可复制——Agent 输出稳定进入任务和 PoB。"
+description: "对标 Uniswap v2/v3 与以太坊以 Rollup 为中心阶段：标准固化、组合性增强；PoB 可编排，Agent 可审计、可回滚。"
 ---
 
-<Hero badge="12.2 · PoB 与 Agent 协同" lead="第一阶段解决的是网络有没有跑起来，第二阶段解决的是网络能否变得更深、更稳、更可复制。核心是让 Agent 输出稳定进入任务、Proof 和 PoB。">
-# 第二阶段的重点，是让 PoB 不再只是规则，让 Agent 不再只是工具，而是让两者真正协同。
+<Hero badge="12.2 · PoB 与 Agent 协同" lead="第一阶段证明「网络能跑」；本阶段证明「能规模化地跑」——PoB 成为可组合的信任账本，Agent 成为受约束的执行层，而非黑箱自动化。">
+# 从人工拼接走向系统运转：标准、日志、权限与可复制打法在同一阶段对齐。
 </Hero>
 
 <MetaGrid>
-  <Meta label="核心目标" value="PoB 标准化 + Agent 正式化" />
-  <Meta label="关键变化" value="从人工推进到系统稳定运转" />
-  <Meta label="仍不该做什么" value="不过早上链，不让 Agent 越权" />
+  <Meta label="核心目标" value="PoB 标准化 + Agent 工程化治理" />
+  <Meta label="成功判据" value="人机协同 SLA、PoB 版本化、异常可追责" />
+  <Meta label="仍不做" value="把全部价值分配上链；让 Agent 独立做高风险承诺" />
 </MetaGrid>
 
-## 第二阶段的四个关键目标
+## 行业参照
+
+- **Uniswap v2→v3**：从通用池到集中流动性与费用档位，是「规则细化 + 资本效率」双演进；WCN Phase 2 对应 PoB 字段、审核层级、激励与归因规则的版本化。
+- **以太坊 L2 路线**：把执行与结算分层，主网保最终性；WCN 把「人类决策 / Agent 执行 / PoB 记录」分层，Agent 不替代合规与终审边界。
+- **成熟 Web2 市场**：Uber/Airbnb 在规模化前补齐信任与安全中间层；Phase 2 补齐的是可审计自动化，而非单纯加功能数量。
+
+## 具体交付物
 
 <CardGrid cols={2}>
-  <Card title="PoB 稳定化" icon="✅">结果、证据、审核和归因开始形成更清晰标准。</Card>
-  <Card title="Agent 正式化" icon="🤖">Agent 进入权限、日志和生命周期管理。</Card>
-  <Card title="节点方法被复制" icon="📐">高价值节点的执行方式开始被流程化。</Card>
-  <Card title="更高闭环密度" icon="🔄">同样的网络能跑出更多真实结果。</Card>
+  <Card title="PoB 稳定化" icon="✅">**交付**：PoB schema 版本、变更日志、审核 SLA、异议与复议流程；按 Deal 类型的 PoB 模板库。**指标**：跨月 PoB 结构一致性、审核积压天数、归因争议率趋势。</Card>
+  <Card title="Agent 正式化" icon="🤖">**交付**：角色权限矩阵、工具白名单、会话/任务日志保留策略、人工覆盖（human-in-the-loop）触发条件。**指标**：Agent 产出被采纳率、越权拦截次数、回滚与补丁次数（稳定性代理）。</Card>
+  <Card title="节点方法论产品化" icon="📐">**交付**：高价值节点的 playbook（检查清单、模板、培训材料）进入系统。**指标**：新节点达到「首单合格」时间、 playbook 使用率与产出对比。</Card>
+  <Card title="闭环密度" icon="🔄">**交付**：同一网络在单位时间内可并行推进的 Deal 数、资源冲突规则。**指标**：人均/节点 Deal 吞吐量、阶段停滞率（哪一卡最多）。</Card>
 </CardGrid>
 
----
+## 成功指标（示例）
 
-## 为什么这一阶段关键
+- PoB **v1.x** 冻结周期内，Breaking change 仅通过治理/版本号发布，并有迁移指南。
+- Agent 相关事故（错误推介、数据泄露、未授权操作）有可复盘的 postmortem 与规则补丁。
+- **可复制**：新区域或新垂直在预设 playbook 下，90 天内达到与基线可比的漏斗指标（由运营定义）。
 
-<Statement>第二阶段真正证明：WCN 不是人工拼接，而是一个逐步形成系统性的网络——从「有人在做事」进化到「系统开始自己稳定运转」。</Statement>
+## 进入第三阶段的信号（摘要）
 
----
+结算对象（谁应付谁、依据哪条 PoB、争议如何解决）在纸面与系统内可对齐；身份与权限模型足以支撑分账与审计，而不依赖临时表格。详见 [12.4](/wiki/roadmap/12-4-里程碑与阶段切换信号)。
 
-## 仍不应该做什么
+## 本阶段主要风险
 
-<Callout type="warning">仍然不应把复杂资产层和大规模链上承载放到核心位置；仍然不应让 Agent 越权承担高风险决策。</Callout>
+<CardGrid cols={2}>
+  <Card title="自动化信任错配" icon="⚠️">Agent 加速错误传播。**缓释**：分级自动化、影子模式、抽检与红队。</Card>
+  <Card title="PoB 过度工程" icon="📚">标准过细拖慢业务。**缓释**：以「可审计最小集」为底线，其余字段渐进。</Card>
+  <Card title="组织依赖英雄节点" icon="👤">规模化仍靠少数人。**缓释**：强制文档化与交接机制纳入 KPI。</Card>
+  <Card title="提前资产化" icon="💸">NFT/Token 与业务节奏脱节。**缓释**：资产层仅在 12.4 门槛满足后立项。</Card>
+</CardGrid>
+
+## 为何本阶段必须在 Phase 1 之后
+
+<Callout type="warning">没有稳定 Deal 与 Proof 样本，PoB 标准会变成空中楼阁；没有清晰人工流程，Agent 只会放大混乱。这与 Rollup 在 L1 费用与拥堵「真实发生」后才成为刚需同理——复杂度应被真实负载牵引。</Callout>
+
+<Statement>第二阶段结束时，应能向外部展示：同一套规则下，人机协同如何稳定产出更多可验证结果，且出事可追责、可补丁。</Statement>

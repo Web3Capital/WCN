@@ -1,44 +1,64 @@
 ---
 title: "7.4 Agent 的边界"
-description: "越靠近资金、法律、合同和治理，越需要把 Agent 的边界写死。"
+description: "读写、审批、资金与法律红线；幻觉与越权的风险矩阵；人机分工与可刹车设计。"
 chapter: 7
 order: 4
 ---
 
-<Hero badge="7.4 · Agent 边界" lead="WCN 不是让 Agent 自由发挥，而是让它在清晰边界内最大化发挥。越靠近资金、法律、合同、治理和声誉，越需要把边界写死。">
-# AI Agent 的价值越大，边界就越重要。
+<Hero badge="7.4 · Agent 边界" lead="能力越强，越需要硬边界：哪些输出只能草稿、哪些动作必须 HITL、哪些数据永不出域。边界不是限制创新，而是把 LLM 从「不可追责的黑箱」变成「可辩护的组件」——与 Copilot 仅建议、用户全责不同，WCN 要在网络层显式划分责任。">
+# 受控的 Agent 才可进入结算与信誉体系。
 </Hero>
 
 <MetaGrid>
-  <Meta label="这页作用" value="定义 Agent 权限的可做与不可做" />
-  <Meta label="核心主题" value="受控的 Agent 才是可信的 Agent" />
-  <Meta label="阅读重点" value="读写边界、审批边界、责任边界" />
+  <Meta label="这页作用" value="允许集 / 禁止集 / 风险与控制措施" />
+  <Meta label="核心主题" value="人保留最终承诺与资金权" />
+  <Meta label="阅读重点" value="法律、资金、PoB、对外承诺、日志" />
 </MetaGrid>
 
-## Agent 可以做什么
+## Agent 可以做什么（允许集）
 
 <CardGrid cols={2}>
-  <Card title="研究与整理" icon="🔍">摘要、对比、尽调初筛、材料结构化。</Card>
-  <Card title="流程与纪要" icon="📝">会议纪要、待办拆解、催办和状态更新。</Card>
-  <Card title="增长与监控" icon="📊">内容辅助、归因分析、指标监控、异常预警。</Card>
-  <Card title="任务执行支持" icon="⚙️">在明确权限下完成低风险、重复性工作。</Card>
+  <Card title="研究与整理" icon="🔍">摘要、对比矩阵、尽调初筛、引用带来源的 bullet；适合 GPT-4 / Claude 长文 + RAG。输出默认标注「未法律验证」。</Card>
+  <Card title="流程与纪要" icon="📝">会议纪要草稿、行动项、跟进邮件模板；Execution 类核心场景。时间线与发言人归因错误需人工改。</Card>
+  <Card title="增长与监控" icon="📊">文案变体、渠道要点、指标异常的叙述性说明；Liquidity 类只读行情后的自然语言警报。</Card>
+  <Card title="低风险自动化" icon="⚙️">在明确权限内填表、贴标签、同步状态字段；类比 RPA，但由 LLM 解析非结构化输入。</Card>
 </CardGrid>
 
----
-
-## Agent 不能做什么
+## Agent 不能做什么（禁止集）
 
 <CardGrid cols={3}>
-  <Card title="不能替代签约" icon="🚫">Agent 不能最终代表任何主体完成合同签署。</Card>
-  <Card title="不能替代付款" icon="🚫">Agent 不能单独触发高风险资金动作。</Card>
-  <Card title="不能给法律税务结论" icon="🚫">高风险专业结论必须由人类专业方给出。</Card>
-  <Card title="不能最终批准 PoB" icon="🚫">审核和结论必须保留给人类审核层。</Card>
-  <Card title="不能越权对外承诺" icon="🚫">尤其不能做收益、治理、监管相关承诺。</Card>
-  <Card title="不能绕过日志和人工接管" icon="🚫">任何关键动作都必须可回溯、可制止。</Card>
+  <Card title="不能替代签约" icon="🚫">电子签、具约束力条款、排他/对赌结论须人类与法务流程。</Card>
+  <Card title="不能单独驱动资金" icon="🚫">转账、拨款、链上授权、托管指令——即使接钱包工具也需多重人类批准与限额。</Card>
+  <Card title="不能出具法律/税务/审计意见" icon="🚫">可检索法规摘要，不得输出「对你方合法」类终局结论。</Card>
+  <Card title="不能最终裁定 PoB" icon="🚫">Proof Desk 与治理规则决定采纳；Agent 可预审排序，不可「自证通过」。</Card>
+  <Card title="不能越权对外承诺" icon="🚫">收益、监管状态、上所时间、背书关系——律所级表述禁止自动生成发送。</Card>
+  <Card title="不能绕过日志与接管" icon="🚫">关键路径须可中断、可回滚；禁止静默调用未登记工具。</Card>
 </CardGrid>
 
+## 风险矩阵（简）
+
+| 风险 | 表现 | 控制思路 |
+| --- | --- | --- |
+| 幻觉 | 捏造案例、错误法条、错公司名 | 强制引用；不确定则输出「未知」；关键字段规则校验 |
+| 提示注入 | 恶意网页/ PDF 诱导泄露或越权 | 工具隔离；不可信内容沙箱；出站动作 HITL |
+| 数据泄露 | 训练或日志带走机密 | 数据分级；日志脱敏；Retired 后清除密钥 |
+| 过度自主 | AutoGPT 式无限循环与费用 | 任务级预算与步数上限；无任务即不运行 |
+| 责任模糊 | 出事不知谁批的 | 采纳记录 + 审批链 + 模型/ prompt 版本号 |
+
 <Callout type="warning">
-没有边界，AI 不是「更强执行层」，而会变成「更大风险源」。
+没有边界时，AI 不是更强的执行层，而是**放大错误的杠杆**——尤其在高 stakes 文案与资金邻近流程。
 </Callout>
 
-<Statement>WCN 需要的是受控的、可信的、可进入结算的 Agent，而不是不可解释、不可追责的自动化噪音。</Statement>
+## 与 Microsoft Copilot / 通用助手的责任分界
+
+Copilot 通常条款约定：**建议由用户负责核实**。WCN 网络侧还要服务**多方归因**：因此 Agent 边界必须写入类型策略与任务合同，而不是仅靠终端用户自律。
+
+<Statement>WCN 需要的是可解释、可追责、可进入 PoB 的 Agent；不可把「模型说了」当成节点说了。</Statement>
+
+## TradFi 启示：自动化停在决策链之前
+
+COIN 类系统处理大量文档解析，**授信决策仍在银行政策与人审**；Aladdin 强调风险口径一致，**组合经理仍承担投资责任**。WCN 对齐同一原则：**Agent 压缩摩擦，不取代签字权。**
+
+<Callout type="tip">
+产品验收一句：**若删除 Agent，业务流程仍合法可跑，只是更慢**——则边界大致正确。若删除 Agent 流程无法闭环，说明人类环节被侵蚀过度。
+</Callout>

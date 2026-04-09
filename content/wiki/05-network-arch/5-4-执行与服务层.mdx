@@ -1,48 +1,62 @@
 ---
 title: "5.4 执行与服务层"
-description: "法务、审计、开发、增长和 Agent 把连接转化为可交付结果。"
+description: "从连接到交付的关键桥梁：法务、审计、开发、增长和 Agent 把 Deal 变成结果。"
 chapter: 5
 order: 4
 ---
 
-<Hero badge="5.4 · 执行与服务层" lead="项目与资本只是开始，真正让事情成立的是执行与服务层。这里汇集了法务、审计、安全、开发、增长、研究等能力，也包括可被正式接入的 Agent 执行能力。">
-# 这一层决定一件事：连接能不能被真正做成结果。
+<Hero badge="5.4 · 执行与服务层" lead="项目和资本只是开始。在 Web3 中，大量的 Deal 死在「连接了但没人做事」的阶段——介绍了律师但没人跟进，答应了审计但排不上期，说好了合作但没有 owner。执行与服务层解决的就是这个问题：把连接变成任务，把任务变成结果。">
+# L3 · 执行与服务层——真正让事情做成的一层。
 </Hero>
 
 <MetaGrid>
-  <Meta label="本页作用" value="定义结果真正发生的层" />
-  <Meta label="核心主题" value="从连接到交付的关键一层" />
-  <Meta label="阅读重点" value="服务节点、Agent、交付与推进" />
+  <Meta label="层级位置" value="L3 — 把 L2 的 Deal 推进成可交付结果" />
+  <Meta label="核心功能" value="服务匹配、Task 分配、Agent 执行、交付验收" />
+  <Meta label="行业痛点" value="Web3 服务碎片化、无标准交付、无结算归因" />
 </MetaGrid>
 
-## 执行与服务层回答的是：谁真正把事情做成？
-
-没有这一层，资本与项目只会停留在「认识了、聊过了、觉得不错」。
-
-<Statement>执行层的作用是把关系变成任务，把任务变成结果，把结果变成可验证输出。</Statement>
-
----
-
-## 这一层的典型对象
+## 当前 Web3 服务的结构性问题
 
 <CardGrid cols={2}>
-  <Card title="法务 / 审计 / 安全" description="处理合规、结构、风险和可信度问题。" icon="⚖️" />
-  <Card title="开发 / 研究 / 品牌 / 增长" description="推动产品、叙事、用户与市场层面的执行。" icon="🚀" />
-  <Card title="执行型 Agent" description="承担研究、筛选、提醒、纪要、监控和流程推进。" icon="🤖" />
-  <Card title="任务与回执系统" description="把服务与执行动作绑定到 task、output 和证据上。" icon="📋" />
+  <Card title="碎片化" icon="📱">法务找一家、审计找一家、做市找一家、增长找一家。每家都是独立沟通，没有统一的协调界面。一个项目方可能同时管理 8 个 Telegram 群和 5 个 Google Doc。</Card>
+  <Card title="无标准交付" icon="📋">服务商说「做完了」，但没有标准化的交付确认机制。审计报告的质量参差不齐，法律意见的覆盖范围不明确，增长服务的效果没有归因。</Card>
+  <Card title="无结算归因" icon="💸">服务费通常是预付或里程碑付款，与最终业务结果无关。做市商拿了费用但流动性没改善，增长团队拿了费用但用户没增长——没有系统把服务和结果绑定。</Card>
+  <Card title="无规模化路径" icon="📏">优秀的 FA、律师、审计师的时间是有限的。他们的方法论无法被复制，导致服务能力受限于个人产能。</Card>
 </CardGrid>
 
 ---
 
-## 缺少执行层会发生什么？
+## WCN 的执行与服务层如何运作
+
+<Steps>
+  <Step title="服务注册">服务节点录入能力：法务（合同/结构/合规）、审计（智能合约/财务）、安全、品牌、增长、开发、研究等。能力进入 Service Registry，可被 Deal 调用。</Step>
+  <Step title="Task 分配">当 Deal 需要服务时，系统从 Service Registry 匹配合适的服务节点。每个 Task 有明确的 owner、scope、deadline 和验收标准。</Step>
+  <Step title="执行推进">人类服务节点和 Agent 协同推进。Agent 负责信息整理、催办、纪要和状态追踪，人类负责判断、交付和签字。</Step>
+  <Step title="交付与证据">服务完成后，交付件进入 Evidence Packet——法律意见书、审计报告、交付 memo、SOW 确认等。交付质量由 Reviewer 审核。</Step>
+</Steps>
+
+---
+
+## 这一层的参与方
 
 <CardGrid cols={2}>
-  <Card title="Deal 停滞" description="从想法到可交付结果的路径断裂。" icon="⊘" />
-  <Card title="服务断层" description="项目的法务、安全、开发、增长问题无法被接住。" icon="⊘" />
-  <Card title="规模受限" description="没有 Agent，节点方法无法被规模化放大。" icon="⊘" />
-  <Card title="Proof 断供" description="没有结构化输出，PoB 就没有稳定输入。" icon="⊘" />
+  <Card title="法务 / 合规" icon="⚖️">SAFE/SAFT 结构审核、Token 法律意见、实体设立、监管咨询、投资人 KYC/AML。在 Web3 中，法务是最影响 Deal 速度的环节——一份法律意见可能卡住整个融资 2 周。</Card>
+  <Card title="审计 / 安全" icon="🔒">智能合约审计、财务审计、安全评估、渗透测试。高质量审计是项目获得投资和上所的前置条件。</Card>
+  <Card title="开发 / 研究" icon="💻">技术开发、架构评审、研究报告、竞品分析、Token 经济设计。Research Agent 可以覆盖 80% 的信息整理工作。</Card>
+  <Card title="增长 / BD" icon="🚀">品牌策略、内容创作、社区建设、KOL 合作、用户获取。Growth Agent 可以标准化分发流程和归因追踪。</Card>
 </CardGrid>
+
+---
+
+## Agent 在执行层的角色
+
+<CardGrid cols={2}>
+  <Card title="Research Agent" icon="🔬">项目摘要、竞品分析、风险标记、市场数据整理。把分析师 3 天的工作压缩到 30 分钟，人类审核后采纳。</Card>
+  <Card title="Execution Agent" icon="⚡">纪要自动生成、待办追踪、催办提醒、材料收集、状态更新。消除 Deal 中 30-40% 的协调时间。</Card>
+</CardGrid>
+
+<Statement>Agent 不替代服务节点的专业判断，而是放大他们的产能——让一个优秀律师的方法论服务 10 个 Deal 而不是 3 个。</Statement>
 
 <Callout type="tip">
-执行与服务层位于资本之后、分发之前，是最直接决定结果能否成立的关键桥梁。
+执行与服务层位于资本之后、分发之前，是最直接决定「Deal 能不能做成」的关键桥梁。没有这一层，WCN 只是一个高级版的介绍平台。
 </Callout>

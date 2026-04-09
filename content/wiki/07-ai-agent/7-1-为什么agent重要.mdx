@@ -1,41 +1,74 @@
 ---
 title: "7.1 为什么 Agent 重要"
-description: "Agent 把高价值执行动作从个体经验变为可复制的系统能力。"
+description: "相对通用 Agent 栈与 Copilot 的差异；LLM 能力与业务局限；TradFi 先例与 WCN 的受控执行层。"
 chapter: 7
 order: 1
 ---
 
-<Hero badge="7.1 · Agent 的意义" lead="WCN 引入 Agent，不是因为「AI 热」，而是因为很多高价值执行动作本来就重复、可结构化、可被放大。Agent 的意义在于把这些动作从个体经验，变成可复制能力。">
-# Agent 的价值，不是替代人，而是把优秀节点的方法复制成系统能力。
+<Hero badge="7.1 · Agent 的意义" lead="节点的高价值时间被重复性研究、纪要、跟进与初筛占满时，网络容量触顶。Agent 要把这些动作从个人经验抽成可审计、可复用的系统能力——同时明确：它不是无人值守的 AutoGPT，而是「人设定目标与红线、系统记录过程与结果」的执行助手。">
+# Agent 放大执行与标准化，不转移最终责任。
 </Hero>
 
 <MetaGrid>
-  <Meta label="这页作用" value="解释 Agent 的结构性价值" />
-  <Meta label="核心主题" value="放大执行，而不是替代责任" />
-  <Meta label="阅读重点" value="复制、提效、标准化、规模化" />
+  <Meta label="这页作用" value="产业坐标 + LLM 现实 + WCN 设计取舍" />
+  <Meta label="核心主题" value="受控自动化 vs 自主代理" />
+  <Meta label="阅读重点" value="框架对比、模型边界、TradFi 对标、闭环价值" />
 </MetaGrid>
 
-## 为什么 WCN 不能只靠人
+## 与常见 AI Agent 框架差在哪里
 
-高质量节点的时间是最稀缺资源。如果所有筛选、纪要、提醒、跟进和初步分析都只能由人完成，网络容量会很快触顶。
+| 形态 | 典型代表 | 强项 | 与 WCN 的差分 |
+| --- | --- | --- | --- |
+| 多角色编排 | CrewAI、部分 LangGraph 工作流 | 角色分工、任务链可读 | 少有统一 Proof / PoB / 跨节点结算；WCN 要求输出绑定任务 ID 与采纳链 |
+| 工具链 Agent | LangChain Agents、LlamaIndex Agent | 接 API、RAG、函数调用灵活 | 默认「能调就调」；WCN 需白名单工具、权限域、强制日志与人工闸 |
+| 办公 Copilot | Microsoft Copilot、Notion AI | 文档内起草、摘要、改写 | 单租户协作上下文；难做多方 deal 归因与链上/链下一致审计 |
+| 目标驱动自主体 | AutoGPT、BabyAGI 类实验 | 自分解子目标、循环执行 | 不可预测成本高、越权与幻觉风险大；与机构合规根本冲突 |
 
-<Statement>Agent 的价值，是把「高价值人类节点不该重复做的事」接下来。</Statement>
+<Statement>WCN 的 Agent 更接近「带 SLA 的执行服务」：输入范围、工具集、模型版本、审批点都可配置和吊销，而不是开放-ended 的「直到完成目标」循环。</Statement>
 
-## Agent 在 WCN 里能带来什么
+## 当前 LLM 在业务任务上的能力与硬限制
 
-<CardGrid cols={2}>
-  <Card title="提效" icon="⚡">缩短研究、筛选、纪要和任务推进的时间。</Card>
-  <Card title="标准化" icon="📐">让输出更有结构，更容易进入 Proof 和审核。</Card>
-  <Card title="可审计" icon="📝">日志和版本记录让过程更可追踪。</Card>
-  <Card title="可扩张" icon="🌐">同一套能力可以被更多节点和区域复用。</Card>
-</CardGrid>
+**GPT-4 系（含 o 系列推理模型）**：长上下文与指令遵循强，适合结构化抽取、多文档对比与草稿生成；仍可能捏造引用、混淆相似实体，对实时私有数据若无 RAG 则不可用。**Claude**：长文阅读与谨慎拒答风格利于初稿合规倾向，但在数值、条款交叉引用上仍需人类核对。**Gemini**：多模态与 Google 生态打通利于邮件/日历类辅助；跨语言与领域术语一致性需用术语表与模板约束。
 
----
+对机构业务共同的局限包括：**训练截止与知识漂移**（投后数据、监管更新需外接权威源）；**概率输出**（同一 prompt 两次结论可能微差，关键表需确定性规则或人工签核）；**提示注入与数据外泄**（Agent 读外部网页或用户粘贴内容时风险上升）；**成本与延迟**（全量 deal 流用最大模型不可持续，需路由到小模型+抽检）。
 
-## 为什么现在 Agent 特别重要
+<Callout type="warning">
+把 LLM 的流畅表述误认为「已验证事实」是部署失败的首要原因。WCN 侧应默认：Agent 产出 = 待审材料，除非进入采纳链与 Proof。
+</Callout>
 
-今天 AI 的能力已经足够覆盖大量流程动作，但行业还没有把这些能力真正放进一个可验证、可结算的网络里。
+## TradFi 里早已有的「受控自动化」
+
+这些系统都不是科幻里的自主员工，而是**规则 + 模型 + 人工复核**的混合体，与 WCN 哲学一致：
+
+- **JPMorgan COIN（Contract Intelligence）**：用机器学习解析法律条款与商业贷款文件，把数千法务小时压缩到可计量流程；重点是审计轨迹与人工例外处理，而非机器单独决策授信。
+- **Goldman Sachs**：公开资料中持续投入自然语言处理与内部助手类工具，用于研究摘要、合规检索与开发者效率；共性是内网数据边界与权限分层。
+- **BlackRock Aladdin**：风险与分析平台的核心是数据契约、一致指标与机构级治理；AI 若接入，必须服从同一套权限与版本管理——对应 WCN 里 Agent 类型化权限与生命周期。
 
 <Callout type="tip">
-WCN 的机会在于：它不仅使用 Agent，而是给 Agent 一个正式位置——有任务、有权限、有日志、有结算。
+TradFi 的教训是：**自动化收益来自流程标准化，而不是模型炫技。** WCN 先把任务、证据与采纳写清楚，Agent 才有稳定 ROI。
+</Callout>
+
+## Agent 在 WCN 里具体解决什么
+
+<CardGrid cols={2}>
+  <Card title="提效" icon="⚡">研究包初稿、会议纪要与待办拆分、跟进提醒、匹配候选排序——缩短节点从「知道」到「推进」的时钟时间。</Card>
+  <Card title="标准化" icon="📐">输出模板与字段对齐 Proof Desk，减少「每人一种写法」导致的审核返工。</Card>
+  <Card title="可审计" icon="📝">模型版本、prompt 哈希、检索片段 ID、工具调用记录构成辩护链，便于内审与对外说明。</Card>
+  <Card title="可扩张" icon="🌐">同一套受控 Agent 配置可复用到多区域、多节点，差异在权限与数据域而非口口相传。</Card>
+</CardGrid>
+
+## 具象工作流示例（简版）
+
+<Steps>
+  <Step title="募资侧初筛">Research Agent 按 checklist 从公开信息 + 节点上传材料生成「红线/黄线/待核实」表；Deal Agent 不自动联系项目方，只输出给指定节点 owner 审阅后一键创建 Task。</Step>
+  <Step title="投后例会">Execution Agent 根据录音/纪要模板生成行动项与 owner；节点修改后写入任务系统；未采纳段落不计入 PoB 候选。</Step>
+  <Step title="流动性事件">Liquidity Agent 监控约定指标阈值，生成「情况说明草稿」；是否对外沟通仍由节点人工发送。</Step>
+</Steps>
+
+## 为什么「现在」必须把 Agent 放进网络层
+
+模型能力已覆盖大量白领流程动作，但行业缺的是**可验证、可归因、可结算**的承载层。WCN 若只做 Chat 外壳，价值与任一 SaaS 助手重叠；若把 Agent 接进任务、日志、Proof 与 PoB，则形成差异化：**同一输出，是否被采纳、是否推动闭环，系统能区分。**
+
+<Callout type="info">
+总结：Agent 重要的原因不是追逐 AI 热点，而是**在合规边界内规模化执行**，并把执行从不可见的个人习惯变成网络可治理、可计价的资产。
 </Callout>

@@ -5,25 +5,25 @@ chapter: 6
 order: 9
 ---
 
-<Hero badge="6.9 · 节点生命周期" lead="如果节点不能被动态管理，系统很快就会积累大量低质量位置。WCN 的节点必须有完整生命周期：从申请、审核、上线，到复核、续期、降级和退出。">
-# 节点不是一旦加入就永久成立，而是一个持续被验证、续期、升级或淘汰的位置。
+<Hero badge="6.9 · 节点生命周期" lead="金融牌照与机构客户关系均需年审与触发式复核；节点席位同理。静态白名单会导致僵尸节点占用路由与品牌，稀释高质量节点的边际收益——生命周期是质量曲线的调节阀。">
+# 席位由持续验证定义，不由一次性准入定义。
 </Hero>
 
 <MetaGrid>
-  <Meta label="本页作用" value="定义节点状态机" />
-  <Meta label="核心主题" value="节点位置必须持续被验证" />
-  <Meta label="阅读重点" value="申请、上线、复核、续期、退出" />
+  <Meta label="设计目标" value="防止席位通胀；使贡献、违规与续期在同一状态机可读" />
+  <Meta label="TradFi 类比" value="类似 broker-dealer 年检、prime 客户定期 KYC refresh、分析师合规培训周期" />
+  <Meta label="数据用途" value="状态变迁日志服务风控、激励与对外披露（聚合匿名）" />
 </MetaGrid>
 
 ## 节点状态机
 
 <CardGrid cols={3}>
-  <Card title="Applied" description="节点提交申请，进入审核与资料验证阶段。" icon="📝" />
-  <Card title="Approved" description="通过资格审核，但尚未完成合同与上线动作。" icon="✅" />
-  <Card title="Active" description="已正式进入网络，具备推进 Deal 和提交 PoB 的资格。" icon="⚡" />
-  <Card title="Probation" description="进入观察期，通常因为输出不足、边界问题或低活跃。" icon="⚠️" />
-  <Card title="Suspended" description="节点被临时暂停权限，需等待复核或纠正。" icon="🔒" />
-  <Card title="Renewed / Revoked" description="通过续期继续存在，或因失职、违规而退出。" icon="🔄" />
+  <Card title="Applied" description="提交资质、推荐人、业务计划与拟覆盖范围；运营与合规初审材料完整性与利益冲突。" icon="📝" />
+  <Card title="Approved" description="资格通过但尚未完成协议签署、权限开通与培训；常见于背景调查或法务排队。" icon="✅" />
+  <Card title="Active" description="全功能路由与 PoB 提交权限；参与 KPI 统计与激励池。" icon="⚡" />
+  <Card title="Probation" description="触发条件示例：连续两季度低于最低引入数、客户投诉属实、PoB 造假嫌疑未结。" icon="⚠️" />
+  <Card title="Suspended" description="临时冻结权限：调查违规、待补充材料或司法配合；期间不参与分配。" icon="🔒" />
+  <Card title="Renewed / Revoked" description="续期通过则刷新授权期限；撤销则进入冷却期与品牌下架，关键记录依法或依协议保留。" icon="🔄" />
 </CardGrid>
 
 ---
@@ -31,24 +31,24 @@ order: 9
 ## 生命周期路径
 
 <Callout type="warning">
-申请 → 审核 → 签约 / 授权 → 上线 → 输出与复核 → 续期 / 升级 / 降级 / 退出
+申请 → 尽职调查与协议 → 权限开通 → Active 运营 → 季度 / 年度复核 → 续期、升级、降级或退出；重大事件可插入临时复核。
 </Callout>
 
 <CardGrid cols={2}>
-  <Card title="申请阶段看潜力" description="是否具备资源、角色和价值。" icon="🔍" />
-  <Card title="上线阶段看规则接受度" description="是否愿意进入系统边界与流程。" icon="📋" />
-  <Card title="运行阶段看真实输出" description="是否带来资源、推进 Deal、提交证据。" icon="⚡" />
-  <Card title="续期阶段看长期质量" description="是否值得继续占据网络位置。" icon="⭐" />
+  <Card title="准入阶段" description="评估资源真实性、历史声誉、与现有子图重叠度；必要时要求试点任务。" icon="🔍" />
+  <Card title="上线阶段" description="完成规则培训、保密分级测试、系统工具 onboarding；签署对外话术边界。" icon="📋" />
+  <Card title="运行阶段" description="按 KPI 跟踪 pipeline、闭环、PoB 质量与客户反馈；数据驱动路由权重。" icon="⚡" />
+  <Card title="续期阶段" description="对照贡献与违规记录决策：续约、减量权限、观察期或清退。" icon="⭐" />
 </CardGrid>
 
-<Statement>节点不是靠一次性「买入」定义，而是靠持续输出和系统验证定义。</Statement>
+<Statement>节点不是 NFT 式永久资产，而是与绩效和合规绑定的服务型合约；设计得当可让网络在扩张期仍保持边际质量不下降。</Statement>
 
 ---
 
-## 为什么生命周期必须严格？
+## 严格生命周期的系统理由
 
-节点系统一旦只进不出，就会迅速失去质量。
+静态扩容会带来三类问题：**路由被低产节点占用**、**PoB 争议处理成本上升**、**新节点因旧节点占位而却步**（逆向选择）。动态续期把「席位租金」隐含为持续贡献，与 TradFi 中 coverage banker 的年度 book review 逻辑一致。
 
-<Callout type="tip">
-高质量网络不是靠不断加节点，而是靠不断筛出、验证和保留真正有价值的节点。生命周期管理保证节点不是头衔，而是持续被证明的责任位置。
+<Callout type="info">
+建议在产品层暴露最低限度透明度：例如按赛道聚合的节点留存率、平均闭环时长变化，让市场参与者理解网络是在变厚还是变虚——无需泄露单个节点商业机密。
 </Callout>

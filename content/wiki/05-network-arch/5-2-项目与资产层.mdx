@@ -1,42 +1,68 @@
 ---
 title: "5.2 项目与资产层"
-description: "网络的需求起点：项目方与资产方进入系统，定义场景与需求。"
+description: "网络的需求起点：什么类型的项目进入、如何结构化表达需求、当前 Deal Flow 的痛点。"
 chapter: 5
 order: 2
 ---
 
-<Hero badge="5.2 · 项目与资产层" lead="如果没有项目与资产层，后面的资本、服务、分发和结算都不会有真实输入。这一层决定了网络是否有「事可做」。">
-# 这一层负责提出需求、提供资产、定义场景，是整个网络的起点。
+<Hero badge="5.2 · 项目与资产层" lead="没有项目和资产进入系统，后面的资本、服务、分发和结算都不会有真实输入。这一层是整个网络的需求入口，决定了 WCN 是否有「事可做」。当前 Web3 的 Deal Flow 高度碎片化——项目方通过 Telegram 群、会议和中间人接触资本，效率极低，信息严重不对称。">
+# L1 · 需求入口层——项目和资产带着真实问题进入系统。
 </Hero>
 
 <MetaGrid>
-  <Meta label="本页作用" value="定义需求与资产来源" />
-  <Meta label="核心主题" value="项目节点和业务场景" />
-  <Meta label="阅读重点" value="谁提出需求、谁提供资产" />
+  <Meta label="层级位置" value="L1 — 五层架构的需求入口" />
+  <Meta label="核心功能" value="项目录入、需求结构化、Deal 前准备" />
+  <Meta label="行业痛点" value="Web3 Deal Flow 碎片化，VC 看项目效率 < 3%" />
 </MetaGrid>
 
-## 项目与资产层回答的是：网络为什么存在？
+## 这一层回答的核心问题：网络为什么存在？
 
-只有当项目和资产带着真实需求进入系统，网络才有协作意义。它们带来的不是抽象流量，而是具体问题：
+只有当项目和资产带着真实需求进入系统，网络才有协作意义。需求不是抽象流量，而是具体问题：
 
-- **融资需求** — 需要资本与结构支持
-- **增长需求** — 需要品牌、媒体、渠道和社区支持
-- **服务需求** — 需要法务、安全、审计、开发、研究等支持
-- **资产与产品场景** — 需要被承载、被组织、被分发、被结算
-
-<Statement>需求不先进入系统，其他所有层都不会有真实输入。</Statement>
+<CardGrid cols={2}>
+  <Card title="融资需求" icon="💰">需要资本与结构支持——种子轮、A 轮、战略轮、OTC、Token Warrant 等不同融资工具的匹配。</Card>
+  <Card title="增长需求" icon="📈">需要品牌、媒体、渠道和社区支持——从叙事构建到用户获取，从 KOL 合作到交易所上架。</Card>
+  <Card title="服务需求" icon="🔧">需要法务、安全审计、技术开发、Token 经济设计等专业服务支持。</Card>
+  <Card title="资产场景" icon="🏗️">RWA 资产、链上权益、流动性产品等需要被组织、被分发、被结算的结构化资产。</Card>
+</CardGrid>
 
 ---
 
-## 这一层的典型对象
+## 当前 Web3 Deal Flow 的痛点
 
 <CardGrid cols={2}>
-  <Card title="Web3 Protocol / Application" description="从基础协议到应用层产品，提供链上业务与产品场景。" icon="🌐" />
-  <Card title="AI Project / Agent Platform" description="提供 AI 场景、执行能力和新型业务接口。" icon="🤖" />
-  <Card title="RWA / Asset Project" description="提供现实资产、权益映射和结构化需求。" icon="🏦" />
-  <Card title="DePIN / Infra / Payments" description="提供新基础设施、支付与清结算场景。" icon="⚙️" />
+  <Card title="信息碎片化" icon="📱">项目方的 Deck、数据、团队信息散落在 Telegram、Email、Google Drive 和各种会议中。一个 VC 可能同时在 5 个渠道收到同一个项目的不同版本资料。</Card>
+  <Card title="极低转化率" icon="📉">顶级 VC 一年看 3000-5000 个项目，最终投资 10-15 个，转化率不到 0.5%。大量时间浪费在不匹配的项目上——缺乏结构化的前置筛选。</Card>
+  <Card title="中间人依赖" icon="🤝">项目方到资本方的路径高度依赖个人关系和中间人。一个好项目如果不认识「对的人」，可能完全无法触达合适的投资方。</Card>
+  <Card title="无标准化录入" icon="📋">不同 VC 要求不同格式的资料——有的要 Notion，有的要 PDF，有的要填表。项目方花大量时间重复准备同样的信息。</Card>
+</CardGrid>
+
+> **数据参考**：根据 Pitchbook 2024 数据，Crypto VC 从首次接触到完成投资的平均周期是 67 天。其中约 40% 的时间花在信息收集和同步上——这正是 WCN 项目与资产层要解决的问题。
+
+---
+
+## WCN 如何解决：结构化录入
+
+项目进入 WCN 时，通过 Project Intake 完成标准化录入：
+
+<Steps>
+  <Step title="基础信息">项目名称、赛道、阶段、团队、产品状态、链部署情况。</Step>
+  <Step title="融资信息">目标金额、估值范围、融资工具（SAFE/SAFT/Token Warrant/Equity）、已有投资人。</Step>
+  <Step title="需求清单">明确列出需要的资源类型——资本、法务、审计、增长、做市、上所等。</Step>
+  <Step title="材料包">Deck、Tokenomics、技术文档、审计报告等一次性上传，所有资本方看到同一份结构化资料。</Step>
+</Steps>
+
+---
+
+## 进入系统的典型项目类型
+
+<CardGrid cols={2}>
+  <Card title="Web3 Protocol / DApp" icon="🌐">DeFi 协议、NFT 平台、GameFi、SocialFi 等应用层产品。融资需求 + 增长需求为主。</Card>
+  <Card title="AI + Crypto" icon="🤖">AI Agent 框架、去中心化推理、数据市场等。技术需求 + 战略资本需求为主。</Card>
+  <Card title="RWA / 资产项目" icon="🏦">房地产 Token 化、债券上链、供应链金融等。合规需求 + 资本配置需求为主。</Card>
+  <Card title="基础设施" icon="⚙️">L1/L2、跨链桥、预言机、DePIN、支付等。技术合作 + 生态资本需求为主。</Card>
 </CardGrid>
 
 <Callout type="tip">
-项目与资产层是整个 WCN 架构的起点——没有它，资本层没有可配对象，服务层没有可执行对象，分发层没有可传播对象，Proof 层也没有可验证对象。
+项目与资产层是整个 WCN 架构的起点——没有真实需求进入系统，资本层没有可配对象，服务层没有可执行对象，分发层没有可传播对象，验证层也没有可验证对象。一切从这里开始。
 </Callout>

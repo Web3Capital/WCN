@@ -5,42 +5,42 @@ chapter: 6
 order: 4
 ---
 
-<Hero badge="6.4 · 功能节点" lead="按功能分类是节点系统最基础的一层。项目节点、资本节点、服务节点、分发节点和 Agent 节点，决定了资源如何进入系统并形成闭环。">
-# 功能节点回答的是：这个节点在网络里到底负责什么。
+<Hero badge="6.4 · 功能节点" lead="功能分类是第一层路由表：决定需求从哪进、资本在哪接、服务如何拆工作包、流动性与叙事由谁承接、以及哪些环节可以自动化但必须可审计。">
+# 功能节点回答：在闭环里，你提供的是资产侧、资金侧、交付侧、市场侧还是执行放大器。
 </Hero>
 
 <MetaGrid>
-  <Meta label="本页作用" value="展开功能分类" />
-  <Meta label="核心主题" value="节点的角色由功能定义" />
-  <Meta label="阅读重点" value="不同功能节点的系统位置" />
+  <Meta label="闭环顺序" value="项目定义需求 → 资本定价与结构化 → 服务落地 → 分发承接 → Agent 规模化重复劳动" />
+  <Meta label="TradFi 类比" value="Corporate finance、Sales & trading、Operations、Marcom、中台自动化 的粗粒度映射" />
+  <Meta label="治理要点" value="功能标签绑定默认 PoB 模板与 KPI；跨功能撞单需预配置规则" />
 </MetaGrid>
 
 ## 功能节点总览
 
 <CardGrid cols={2}>
-  <Card title="项目节点" description="带入产品、资产、需求和业务场景，是网络的需求源头。" icon="📦" />
-  <Card title="资本节点" description="带入资金、投资判断和配置能力，是 Deal 的关键路由层。" icon="💰" />
-  <Card title="服务节点" description="带入法务、安全、审计、开发、研究、品牌等落地能力。" icon="🔧" />
-  <Card title="分发节点" description="带入媒体、KOL、社区、交易所、做市等市场承接能力。" icon="📡" />
-  <Card title="区域节点" description="带入国家、城市和本地资源组织能力。" icon="🌍" />
-  <Card title="Agent 节点" description="带入自动化执行、监控、筛选和推进能力。" icon="🤖" />
+  <Card title="项目节点" description="例如 L2、RWA 平台、支付应用：携带路线图、合规策略、融资节奏与上币需求；是需求与资产叙述的源头。" icon="📦" />
+  <Card title="资本节点" description="例如单一家办 500 万–5000 万美元配置区间、或专注 Seed 的加密基金：决定估值逻辑、条款清单与联合投资节奏。" icon="💰" />
+  <Card title="服务节点" description="例如 Top-tier 律所代币组、智能合约审计商、品牌公关 retainer：把口头引荐变成签字页与交付物。" icon="🔧" />
+  <Card title="分发节点" description="例如 Tier1 CEX 上币办、头部 KOL 矩阵、大型峰会 IP：承接 TGE、做市套餐与传播排期。" icon="📡" />
+  <Card title="区域节点" description="国家主节点与城市节点：在地理维度组织活动、政府关系与本地资本；详见 6.5、6.6。" icon="🌍" />
+  <Card title="Agent 节点" description="例如 7×24 监控融资轮次、自动起草首轮触达邮件草稿：必须披露模型边界、人工复核点与日志留存策略。" icon="🤖" />
 </CardGrid>
 
-<Statement>先分功能，才能分责任；先分责任，才能分贡献；先分贡献，才能分长期价值。</Statement>
+<Statement>先分功能，再分责任与贡献计量；否则同一机构在不同环节的角色混写，PoB 会无法拆分引荐费、执行费与成功费。</Statement>
 
 ---
 
-## 功能节点之间的核心差异
+## 功能分工与 TradFi 台面对照
 
 <CardGrid cols={2}>
-  <Card title="项目节点决定要做什么" description="定义需求与业务方向。" icon="🎯" />
-  <Card title="资本节点决定谁来接住价值" description="决定配置与投资路径。" icon="💰" />
-  <Card title="服务节点决定怎么做成" description="提供执行和交付能力。" icon="🔧" />
-  <Card title="分发节点决定怎么被外部承接" description="把结果推向市场和用户。" icon="📡" />
-  <Card title="区域节点决定在哪儿扩张" description="把全球网络拉到具体地理空间。" icon="🌍" />
-  <Card title="Agent 节点决定怎么规模化" description="把优秀方法变成可复制执行能力。" icon="🤖" />
+  <Card title="项目节点" description="对应企业客户部：定义交易动机与时间表。" icon="🎯" />
+  <Card title="资本节点" description="对应买方销售与 capital markets：匹配产品与约束。" icon="💰" />
+  <Card title="服务节点" description="对应中台与第三方顾问：把条款落到文件与代码。" icon="🔧" />
+  <Card title="分发节点" description="对应 ECM / 销售交易接口：把故事变成订单流与流动性。" icon="📡" />
+  <Card title="区域节点" description="对应分支机构 coverage：本地化关系与监管沟通。" icon="🌍" />
+  <Card title="Agent 节点" description="对应量化与中台脚本：放大标准流程，但不能替代受监管判断的披露点。" icon="🤖" />
 </CardGrid>
 
 <Callout type="tip">
-功能分类必须最先明确——连节点的功能都没分清，后面的撮合、任务、PoB 和结算都会失真。
+区域节点在 6.3 总览中与功能并列出现，但在实现上常是「功能 + 地理」的叠加标签；在 6.4 中强调其功能语义是「本地组织与落地」，避免与纯线上资本或服务节点混淆。
 </Callout>

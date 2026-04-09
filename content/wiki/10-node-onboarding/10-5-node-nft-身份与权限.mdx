@@ -2,45 +2,49 @@
 title: "10.5 Node NFT"
 chapter: 10
 order: 5
-description: "Node NFT 是身份与权限的数字化载体，不是收益型产品。"
+description: "Node NFT：可编程席位凭证；与 ENS、SBT、W3C Verifiable Credentials 对比——链上可组合身份 + 链下协议与 ACL 的混合信任模型。"
 ---
 
-<Hero badge="10.5 · Node NFT" lead="Node NFT 在 WCN 中首先是身份与权限载体，而不是当前阶段的收益型产品。它存在的意义，是让节点位置、访问权、等级和长期记录逐步数字化承载。">
-# Node NFT 的核心不是投机，而是把节点位置、身份与权限逐步数字化。
+<Hero badge="10.5 · Node NFT" lead="Node NFT 的首要用途是身份与权限的可编程承载：钱包持有即携带「在某版本规则下，某类席位的系统入口」——不是分红权凭证，也不是开放铸造的 PFP。设计思路上借鉴专业门禁卡（物理）与 SAML/OIDC 属性断言（传统 IT），但用链上对象实现跨应用可组合校验。">
+# 先有事后的席位与闭环，再有链上凭证；顺序颠倒则沦为空壳发行。
 </Hero>
 
 <MetaGrid>
-  <Meta label="核心定义" value="身份载体 + 权限载体 + 记录载体" />
-  <Meta label="当前阶段" value="不是收益产品，是数字化接口" />
-  <Meta label="前提条件" value="先有节点和闭环，再有 NFT 承载" />
+  <Meta label="定义" value="身份 + 权限 +（可选）历史指针的链上对象" />
+  <Meta label="非目标" value="承诺固定收益、开放炒作、与交付脱钩的收藏" />
+  <Meta label="信任栈" value="链上持有证明 + 链下协议 + 系统侧 ACL 实时状态" />
 </MetaGrid>
 
-## Node NFT 的三重角色
+## 与三类常见身份技术的对照
+
+| 方案 | 强项 | 局限 | Node NFT 的取舍 |
+| --- | --- | --- | --- |
+| **ENS** | 人类可读、广泛集成 | 不原生表达复杂权限与组织关系 | 可与 ENS 并列：ENS 指人/品牌，Node NFT 指**机构席位** |
+| **SBT（灵魂绑定代币）** | 强调不可转让、声誉绑定 | 升级、席位迁移、合规冻结场景不灵活 | WCN 可采用**可转移性由政策决定**的凭证（可锁仓、可收回映射） |
+| **W3C Verifiable Credentials** | 标准隐私模型、选择性披露 | 链上可组合性与钱包原生展示较弱 | 关键声明可双写：VC 用于合规披露，NFT 用于**协议内快速门禁** |
 
 <CardGrid cols={2}>
-  <Card title="身份载体" icon="🪪">证明某个节点在系统中的正式位置。</Card>
-  <Card title="权限载体" icon="🔑">映射访问权、参与权和部分未来系统能力。</Card>
-  <Card title="记录载体" icon="📊">未来可映射节点等级、信誉与历史。</Card>
-  <Card title="数字化位置" icon="⛓️">让节点席位逐步转向可编程承载。</Card>
+  <Card title="身份载体" icon="🪪">链上证明「某地址被绑定到某节点主体与席位代际」；刷新权限时常通过 metadata 版本或侧链状态根，而非频繁换钱包。</Card>
+  <Card title="权限载体" icon="🔑">作为调用 API、进入合约函数或解锁前端路由的**必要非充分**条件；最终仍以服务端 ACL 与合规 flag 为准——类似硬件 Token + 服务器 session。</Card>
+  <Card title="记录载体（演进）" icon="📊">可挂载信誉分、等级、历史 Task 哈希指针；完整证据仍多在链下对象存储 + Proof Desk，避免主网 gas 与隐私问题。</Card>
+  <Card title="可编程性" icon="⛓️">支持与激励合约、联合营销白名单、跨合作伙伴 SDK 对接；须在智能合约层限制**不可将 Node NFT 表述为证券或存款凭证**。</Card>
 </CardGrid>
 
 ---
 
-## Node NFT 不是什么
+## Node NFT 明确不是什么
 
 <CardGrid cols={2}>
-  <Card title="不是投资产品" icon="🚫">不能被写成保底收益或自动回报逻辑。</Card>
-  <Card title="不是纯头像凭证" icon="🚫">必须和正式位置、权限、责任绑定。</Card>
-  <Card title="不是空壳收藏品" icon="🚫">意义来自系统关系，而不是图像本身。</Card>
-  <Card title="不是金融化产品" icon="🚫">当前阶段不应被表达为收益承诺。</Card>
+  <Card title="不是理财产品" icon="🚫">不得承诺本金、固定收益或与管理规模挂钩的自动分润——与持牌基金/存款的法律边界清晰区隔。</Card>
+  <Card title="不是纯头像" icon="🚫">视觉层可有可无；价值来自与 WCN 账户、协议义务、KPI 的绑定关系。</Card>
+  <Card title="不是无许可铸造" icon="🚫">铸造权在网络治理/运营侧；开放 mint 会破坏席位稀缺性与风控前提。</Card>
+  <Card title="不是链上万能钥匙" icon="🚫">丢失私钥、主体解约、合规触发时，应能通过**冻结映射、轮换地址、作废代际**等运维手段处置。</Card>
 </CardGrid>
 
 ---
 
-## 为什么 WCN 需要 NFT 形态
+## 实施原则
 
-当网络成熟后，位置、权限、等级和长期记录都需要更标准化、更数字化的表达。NFT 是一种可能的承载方式，但前提是业务网络先成立。
+<Callout type="warning">**业务网络先行**：先有真实 Deal、Task、Reviewer 与证据标准，再扩大 NFT 承载范围。否则与「先卖会员卡再装修会所」同类风险——声誉与监管双面承压。</Callout>
 
-<Callout type="warning">先有节点和闭环，再有 NFT 承载——不是先卖 NFT 再找意义。</Callout>
-
-<Statement>当前阶段的 Node NFT 是身份、权限、位置与未来长期数字化接口，而非收益承诺。</Statement>
+<Statement>当前阶段应把 Node NFT 理解为**专业网络的数字化席卡**：链上可验证、链下可问责、系统可一键收回——而非链上投机标的。</Statement>
