@@ -16,7 +16,7 @@ export default async function AuditPage() {
     return (
       <div className="dashboard-page section">
         <div className="container">
-          <span className="eyebrow">Dashboard</span>
+          <span className="eyebrow">Admin</span>
           <h1>Audit log</h1>
           <div className="card" style={{ marginTop: 18, padding: "14px 16px" }}>
             <p className="muted" style={{ margin: 0 }}>
@@ -41,7 +41,7 @@ export default async function AuditPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Dashboard</span>
+        <span className="eyebrow">Admin</span>
         <h1>Audit log</h1>
         <p className="muted">Browse system events — status changes, creations, settlements, and role updates.</p>
         <div className="card" style={{ marginTop: 18 }}>

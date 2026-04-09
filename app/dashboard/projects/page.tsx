@@ -31,7 +31,7 @@ export default async function ProjectsPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Dashboard</span>
+        <span className="eyebrow">Network</span>
         <h1>Project pool</h1>
         <p className="muted">Intake and review projects and their needs.</p>
         {!isAdmin ? <ReadOnlyBanner /> : null}

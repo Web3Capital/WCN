@@ -21,7 +21,7 @@ export default async function SettlementPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Dashboard</span>
+        <span className="eyebrow">Verification</span>
         <h1>Settlement</h1>
         <p className="muted">Create cycles, generate lines, and export allocations.</p>
         {!isAdmin ? <ReadOnlyBanner /> : null}

@@ -56,8 +56,6 @@ export function ApprovalsUI() {
   return (
     <div>
       <div className="page-toolbar" style={{ marginBottom: 20 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Approval Queue</h1>
-        <div className="page-toolbar-spacer" />
         <div className="chip-group">
           {FILTERS.map((s) => (
             <button key={s} className={`chip ${filter === s ? "chip-active" : ""}`} onClick={() => setFilter(s)}>

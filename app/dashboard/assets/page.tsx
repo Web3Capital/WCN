@@ -6,7 +6,7 @@ export default function AssetsPhase3Page() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Dashboard · Phase 3</span>
+        <span className="eyebrow">Roadmap</span>
         <h1>Assets &amp; on-chain proofs</h1>
         <p className="muted">
           Third-version track: mature settlement inputs, stronger identity and location records, and selective movement

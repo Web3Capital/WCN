@@ -50,7 +50,7 @@ export default async function ProofDeskPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Proof Desk</span>
+        <span className="eyebrow">Verification</span>
         <h1>Evidence & Review</h1>
         <p className="muted">Submit evidence, track review progress, and manage the reviewer queue.</p>
         <ProofDeskConsole

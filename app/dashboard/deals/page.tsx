@@ -54,7 +54,7 @@ export default async function DealsPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Deal Room</span>
+        <span className="eyebrow">Network</span>
         <h1>Deals</h1>
         <p className="muted">Each deal is an auditable business event — not a chat thread.</p>
         <DealsConsole

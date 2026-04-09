@@ -17,14 +17,17 @@ const layers = [
 
 export default function HowItWorksPage() {
   return (
-    <main className="section">
+    <main>
+      <section className="section hero hero-orb">
       <div className="container">
-        <span className="eyebrow">How It Works</span>
-        <h1>From resources to verified outcomes.</h1>
-        <p className="muted" style={{ maxWidth: 900 }}>
-          WCN is not "activity rewards." It is a business loop: structure work, execute with humans + agents, verify with
-          evidence, and record PoB as the basis for future settlement.
-        </p>
+        <div className="section-head">
+          <span className="eyebrow">How It Works</span>
+          <h1>From resources to verified outcomes.</h1>
+          <p className="muted" style={{ maxWidth: 900 }}>
+            WCN is not &ldquo;activity rewards.&rdquo; It is a business loop: structure work, execute with humans + agents, verify with
+            evidence, and record PoB as the basis for future settlement.
+          </p>
+        </div>
         <div className="grid-3 card-grid-animated">
           {loop.map(([title, description], i) => (
             <div className="card step-card" key={title}>
@@ -53,6 +56,7 @@ export default function HowItWorksPage() {
           </div>
         </div>
       </div>
+      </section>
     </main>
   );
 }

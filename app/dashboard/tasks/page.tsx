@@ -38,7 +38,7 @@ export default async function TasksPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Dashboard</span>
+        <span className="eyebrow">Work</span>
         <h1>Task system</h1>
         <p className="muted">Structure work into tasks, assign nodes, and track progress.</p>
         {!isAdmin ? <ReadOnlyBanner /> : null}

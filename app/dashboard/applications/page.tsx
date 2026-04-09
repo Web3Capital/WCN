@@ -23,7 +23,7 @@ export default async function ApplicationsPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Dashboard</span>
+        <span className="eyebrow">Admin</span>
         <h1>Node applications</h1>
         <p className="muted">
           {isAdmin

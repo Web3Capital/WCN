@@ -20,6 +20,8 @@ export default async function NotificationsPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
+        <span className="eyebrow">Console</span>
+        <h1>Notifications</h1>
         <NotificationsUI notifications={JSON.parse(JSON.stringify(notifications))} />
       </div>
     </div>

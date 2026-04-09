@@ -44,39 +44,49 @@ export default function InviteActivationPage() {
   }
 
   return (
-    <main className="section" style={{ minHeight: "80vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div className="container" style={{ maxWidth: 440 }}>
-        <div className="card" style={{ padding: 32 }}>
-          <h1 style={{ fontSize: 22, marginBottom: 4 }}>Activate your account</h1>
+    <main className="section">
+      <div className="container" style={{ maxWidth: 480 }}>
+        <span className="eyebrow">Welcome</span>
+        <h1>Activate your account</h1>
+        <div className="card" style={{ marginTop: 18 }}>
           <p className="muted" style={{ marginBottom: 20 }}>Set your password to join the WCN network.</p>
 
           {success ? (
-            <div className="badge badge-green" style={{ fontSize: 14, padding: "10px 16px" }}>{success}</div>
+            <div className="badge badge-green" role="status" style={{ fontSize: 14, padding: "10px 16px" }}>{success}</div>
           ) : (
-            <form onSubmit={handleSubmit} style={{ display: "grid", gap: 14 }}>
-              <input
-                type="text"
-                placeholder="Full name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-              <input
-                type="password"
-                placeholder="Password (min 8 characters)"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={8}
-              />
-              <input
-                type="password"
-                placeholder="Confirm password"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-                required
-              />
-              {error ? <p style={{ color: "var(--red)", margin: 0, fontSize: 13 }}>{error}</p> : null}
+            <form onSubmit={handleSubmit} className="form">
+              <label className="field">
+                <span className="label">Full name</span>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  autoComplete="name"
+                />
+              </label>
+              <label className="field">
+                <span className="label">Password (min 8 characters)</span>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={8}
+                  autoComplete="new-password"
+                />
+              </label>
+              <label className="field">
+                <span className="label">Confirm password</span>
+                <input
+                  type="password"
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  required
+                  autoComplete="new-password"
+                />
+              </label>
+              {error ? <p className="form-error" role="alert">{error}</p> : null}
               <button type="submit" className="button" disabled={busy} style={{ width: "100%" }}>
                 {busy ? "Activating..." : "Activate account"}
               </button>

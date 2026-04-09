@@ -24,15 +24,16 @@ type CockpitData = {
 
 function DistributionBar({ items, colorMap }: { items: Distribution; colorMap?: Record<string, string> }) {
   const total = items.reduce((a, b) => a + b.count, 0);
-  if (total === 0) return <p className="muted" style={{ fontSize: 13 }}>No data.</p>;
+  if (total === 0) return <p className="muted distribution-empty">No data.</p>;
 
   return (
     <div>
-      <div style={{ display: "flex", borderRadius: 6, overflow: "hidden", height: 20, marginBottom: 8 }}>
+      <div className="distribution-bar">
         {items.map((item) => (
           <div
             key={item.label}
             title={`${item.label}: ${item.count}`}
+            className="distribution-segment"
             style={{
               width: `${(item.count / total) * 100}%`,
               background: colorMap?.[item.label] ?? "var(--accent)",
@@ -41,12 +42,15 @@ function DistributionBar({ items, colorMap }: { items: Distribution; colorMap?: 
           />
         ))}
       </div>
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+      <div className="distribution-legend">
         {items.map((item) => (
-          <div key={item.label} style={{ fontSize: 12, display: "flex", alignItems: "center", gap: 4 }}>
-            <span style={{ width: 8, height: 8, borderRadius: 2, background: colorMap?.[item.label] ?? "var(--accent)", display: "inline-block" }} />
+          <div key={item.label}>
+            <span
+              className="distribution-legend-dot"
+              style={{ background: colorMap?.[item.label] ?? "var(--accent)" }}
+            />
             <span className="muted">{item.label.replace(/_/g, " ")}:</span>
-            <span style={{ fontWeight: 700 }}>{item.count}</span>
+            <span className="distribution-legend-value">{item.count}</span>
           </div>
         ))}
       </div>
@@ -73,8 +77,8 @@ export function DataCockpit({ data }: { data: CockpitData }) {
   const s = data.summary;
 
   return (
-    <div style={{ marginTop: 20 }}>
-      <div className="grid-5" style={{ marginBottom: 20 }}>
+    <div className="data-cockpit">
+      <div className="grid-5">
         {[
           { label: "Active Nodes", value: s.activeNodes },
           { label: "Active Projects", value: s.activeProjects },
@@ -87,26 +91,26 @@ export function DataCockpit({ data }: { data: CockpitData }) {
           { label: "Open Disputes", value: s.openDisputes },
           { label: "Settled Cycles", value: s.settledCycles },
         ].map((m) => (
-          <div key={m.label} className="stat-card" style={{ textAlign: "center" }}>
+          <div key={m.label} className="stat-card">
             <div className="stat-number">{m.value}</div>
             <div className="stat-label">{m.label}</div>
           </div>
         ))}
       </div>
 
-      <div className="grid-2" style={{ gap: 16 }}>
+      <div className="grid-2">
         <div className="card" style={{ padding: 18 }}>
-          <h3 style={{ margin: "0 0 12px" }}>Nodes by Status</h3>
+          <h3>Nodes by Status</h3>
           <DistributionBar items={data.distributions.nodesByStatus} colorMap={NODE_COLORS} />
         </div>
         <div className="card" style={{ padding: 18 }}>
-          <h3 style={{ margin: "0 0 12px" }}>Deals by Stage</h3>
+          <h3>Deals by Stage</h3>
           <DistributionBar items={data.distributions.dealsByStage} colorMap={DEAL_COLORS} />
         </div>
       </div>
 
-      <div className="card" style={{ padding: 18, marginTop: 16 }}>
-        <h3 style={{ margin: "0 0 12px" }}>PoB Event Status</h3>
+      <div className="card" style={{ padding: 18 }}>
+        <h3>PoB Event Status</h3>
         <DistributionBar items={data.distributions.pobByStatus} colorMap={POB_COLORS} />
       </div>
     </div>

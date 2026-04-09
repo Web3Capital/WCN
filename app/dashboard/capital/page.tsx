@@ -37,7 +37,7 @@ export default async function CapitalPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Capital Pool</span>
+        <span className="eyebrow">Network</span>
         <h1>Capital Profiles</h1>
         <p className="muted">Manage investor profiles, preferences, and activity.</p>
         <CapitalConsole

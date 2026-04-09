@@ -3,14 +3,14 @@ import Link from "next/link";
 export function Footer() {
   return (
     <footer className="footer">
-      <div className="container" style={{ padding: "48px 0 32px" }}>
+      <div className="container">
         <div className="footer-grid">
           <div className="footer-col">
             <div className="brand">
               <span className="brand-mark" />
               <span>WCN</span>
             </div>
-            <p className="muted" style={{ marginTop: 12, fontSize: 14, lineHeight: 1.6 }}>
+            <p className="muted footer-tagline">
               Global Institutional Orchestrator for Web3 & AI. Turning fragmented capital and execution into a verifiable, settleable network.
             </p>
           </div>
@@ -35,7 +35,7 @@ export function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p className="muted" style={{ margin: 0, fontSize: 13 }}>
+          <p className="muted footer-copyright">
             &copy; {new Date().getFullYear()} WCN Network. All rights reserved.
           </p>
         </div>

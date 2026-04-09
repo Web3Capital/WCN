@@ -16,7 +16,7 @@ export default async function UsersPage() {
     return (
       <div className="dashboard-page section">
         <div className="container">
-          <span className="eyebrow">Dashboard</span>
+          <span className="eyebrow">Admin</span>
           <h1>Users</h1>
           <div className="card" style={{ marginTop: 18, padding: "14px 16px" }}>
             <p className="muted" style={{ margin: 0 }}>
@@ -44,7 +44,7 @@ export default async function UsersPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Dashboard</span>
+        <span className="eyebrow">Admin</span>
         <h1>Users</h1>
         <p className="muted">Manage user accounts and roles.</p>
         <div className="card" style={{ marginTop: 18 }}>

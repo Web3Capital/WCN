@@ -110,7 +110,7 @@ export function Nav() {
             </Link>
           ) : null}
 
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div className="nav-utils">
             <button
               type="button"
               className="theme-toggle"
@@ -143,11 +143,9 @@ export function Nav() {
             Apply as a Node
           </Link>
           {authed ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div className="nav-user">
               <UserAvatar name={displayName} />
-              <span className="muted" style={{ fontSize: 13, maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {displayName}
-              </span>
+              <span className="nav-user-name muted">{displayName}</span>
               <button className="button-secondary" type="button" onClick={() => signOut({ callbackUrl: "/" })}>
                 Sign out
               </button>

@@ -48,7 +48,7 @@ export default async function DataCockpitPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Data Cockpit</span>
+        <span className="eyebrow">Intelligence</span>
         <h1>Network Health</h1>
         <p className="muted">Network-wide metrics for operational intelligence — not vanity metrics.</p>
         <DataCockpit data={data} />

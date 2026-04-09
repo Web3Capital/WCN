@@ -43,7 +43,7 @@ export default async function PobPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Dashboard</span>
+        <span className="eyebrow">Verification</span>
         <h1>PoB verification</h1>
         <p className="muted">Record and review proof-of-business outcomes.</p>
         {!isAdmin ? <ReadOnlyBanner /> : null}

@@ -53,10 +53,7 @@ export function DisputesUI({ disputes: initialDisputes }: { disputes: Dispute[] 
   return (
     <div>
       <div className="page-toolbar" style={{ marginBottom: 20 }}>
-        <div>
-          <h1 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 4px" }}>Disputes</h1>
-          <p className="muted" style={{ margin: 0, fontSize: 13 }}>{disputes.length} total disputes</p>
-        </div>
+        <p className="muted" style={{ margin: 0, fontSize: 13 }}>{disputes.length} total disputes</p>
         <div className="page-toolbar-spacer" />
         <div className="chip-group">
           {FILTERS.map((s) => (

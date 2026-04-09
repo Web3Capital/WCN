@@ -21,7 +21,7 @@ export default async function NodesPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Dashboard</span>
+        <span className="eyebrow">Network</span>
         <h1>Node registry</h1>
         <p className="muted">Create, review, and manage nodes.</p>
         {!isAdmin ? <ReadOnlyBanner /> : null}

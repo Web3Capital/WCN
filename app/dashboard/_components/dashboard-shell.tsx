@@ -160,22 +160,17 @@ function GlobalSearch() {
 
   return (
     <div ref={ref} style={{ position: "relative", width: "100%" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 8, padding: "6px 10px" }}>
-        <Search size={15} style={{ color: "var(--muted)", flexShrink: 0 }} />
+      <div className="search-box">
+        <Search size={15} className="search-box-icon" />
         <input
           placeholder="Search nodes, projects, deals, tasks..."
           value={q}
           onChange={(e) => search(e.target.value)}
           onFocus={() => setOpen(true)}
-          style={{ border: "none", background: "none", outline: "none", flex: 1, fontSize: 13, color: "var(--text)", padding: 0 }}
         />
       </div>
       {open && results.length > 0 && (
-        <div style={{
-          position: "absolute", top: "calc(100% + 4px)", left: 0, right: 0,
-          background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 8,
-          boxShadow: "0 8px 24px rgba(0,0,0,.12)", zIndex: 100, maxHeight: 320, overflowY: "auto",
-        }}>
+        <div className="search-dropdown">
           {results.map((r) => (
             <button
               key={`${r.type}-${r.id}`}
@@ -235,47 +230,26 @@ function NotificationBell() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        style={{ background: "none", border: "none", cursor: "pointer", padding: 4, position: "relative", color: "var(--muted)" }}
+        className="bell-btn"
         aria-label="Notifications"
       >
         <Bell size={18} />
-        {count > 0 && (
-          <span style={{
-            position: "absolute", top: -2, right: -4, background: "var(--red)", color: "#fff",
-            borderRadius: 99, fontSize: 10, fontWeight: 700, padding: "1px 5px", lineHeight: 1.3,
-          }}>
-            {count > 9 ? "9+" : count}
-          </span>
-        )}
+        {count > 0 && <span className="bell-badge">{count > 9 ? "9+" : count}</span>}
       </button>
       {open && (
-        <div style={{
-          position: "absolute", top: "calc(100% + 6px)", right: 0, width: 320,
-          background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 8,
-          boxShadow: "0 8px 24px rgba(0,0,0,.12)", zIndex: 100, maxHeight: 380, overflowY: "auto",
-        }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 12px", borderBottom: "1px solid var(--line)" }}>
-            <span style={{ fontWeight: 700, fontSize: 13 }}>Notifications</span>
-            {count > 0 && (
-              <button onClick={markAllRead} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 11, color: "var(--accent)" }}>
-                Mark all read
-              </button>
-            )}
+        <div className="bell-dropdown">
+          <div className="bell-dropdown-header">
+            <span>Notifications</span>
+            {count > 0 && <button onClick={markAllRead}>Mark all read</button>}
           </div>
           {items.length === 0 ? (
             <p className="muted" style={{ padding: 16, textAlign: "center", fontSize: 13 }}>No notifications.</p>
           ) : (
             items.slice(0, 20).map((n) => (
-              <div
-                key={n.id}
-                style={{
-                  padding: "8px 12px", borderBottom: "1px solid var(--line)", fontSize: 13,
-                  background: n.readAt ? "transparent" : "color-mix(in oklab, var(--accent) 5%, transparent)",
-                }}
-              >
-                <div style={{ fontWeight: n.readAt ? 400 : 600 }}>{n.title}</div>
-                {n.body && <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{n.body}</div>}
-                <div className="muted" style={{ fontSize: 11, marginTop: 2 }}>{new Date(n.createdAt).toLocaleString()}</div>
+              <div key={n.id} className={`bell-item ${n.readAt ? "" : "bell-item-unread"}`}>
+                <div className={n.readAt ? "" : "bell-item-title"}>{n.title}</div>
+                {n.body && <div className="bell-item-body">{n.body}</div>}
+                <div className="bell-item-time">{new Date(n.createdAt).toLocaleString()}</div>
               </div>
             ))
           )}
@@ -363,7 +337,7 @@ export function DashboardShell({
               {roleLabel(role)}
             </span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "-8px 0 0" }}>
+          <div className="sidebar-user-row">
             <span className="user-avatar" style={{ width: 28, height: 28, fontSize: 11 }}>
               {(displayName || "?").charAt(0).toUpperCase()}
             </span>
@@ -372,8 +346,8 @@ export function DashboardShell({
             </p>
           </div>
 
-          <div style={{ padding: "0 0 8px", display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ flex: 1 }}><GlobalSearch /></div>
+          <div className="sidebar-search-row">
+            <div><GlobalSearch /></div>
             <NotificationBell />
           </div>
 
@@ -425,7 +399,7 @@ export function DashboardShell({
         </div>
       </aside>
 
-      <main id="main-content" className="dashboard-main" tabIndex={-1}>{children}</main>
+      <div className="dashboard-main" role="main" tabIndex={-1}>{children}</div>
     </div>
   );
 }

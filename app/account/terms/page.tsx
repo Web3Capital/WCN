@@ -108,17 +108,20 @@ export default function TermsAcceptancePage() {
 
   if (loading) {
     return (
-      <main className="section" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <p className="muted">Loading...</p>
+      <main className="section">
+        <div className="container" style={{ maxWidth: 560 }}>
+          <p className="muted">Loading...</p>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="section" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <main className="section">
       <div className="container" style={{ maxWidth: 560 }}>
-        <div className="card" style={{ padding: 32 }}>
-          <h1 style={{ fontSize: 22, marginBottom: 4 }}>Terms & Agreements</h1>
+        <span className="eyebrow">Onboarding</span>
+        <h1>Terms & Agreements</h1>
+        <div className="card" style={{ marginTop: 18 }}>
           <p className="muted" style={{ marginBottom: 20 }}>
             Please review and accept the following agreements before continuing.
           </p>

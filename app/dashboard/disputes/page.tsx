@@ -28,6 +28,8 @@ export default async function DisputesPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
+        <span className="eyebrow">Verification</span>
+        <h1>Disputes</h1>
         <DisputesUI disputes={JSON.parse(JSON.stringify(disputes))} />
       </div>
     </div>

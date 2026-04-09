@@ -31,7 +31,7 @@ export default async function AgentsPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Dashboard</span>
+        <span className="eyebrow">Work</span>
         <h1>Agents</h1>
         <p className="muted">Register agents, grant permissions, and inspect execution logs.</p>
         {!isAdmin ? <ReadOnlyBanner /> : null}

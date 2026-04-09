@@ -50,10 +50,11 @@ export default function TwoFactorSetupPage() {
   }
 
   return (
-    <main className="section" style={{ minHeight: "80vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <main className="section">
       <div className="container" style={{ maxWidth: 480 }}>
-        <div className="card" style={{ padding: 32 }}>
-          <h1 style={{ fontSize: 22, marginBottom: 4 }}>Two-Factor Authentication</h1>
+        <span className="eyebrow">Account</span>
+        <h1>Two-Factor Authentication</h1>
+        <div className="card" style={{ marginTop: 18 }}>
 
           {step === "generate" ? (
             <>

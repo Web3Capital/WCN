@@ -27,7 +27,7 @@ export default async function RiskPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Risk Console</span>
+        <span className="eyebrow">Intelligence</span>
         <h1>Risk & Compliance</h1>
         <p className="muted">
           {openCount} open flags · {criticalCount} critical

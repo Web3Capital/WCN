@@ -18,11 +18,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang={lang} data-theme={dataTheme}>
       <body>
         <Providers>
-          <a href="#main-content" className="visually-hidden" style={{ position: "absolute", top: 8, left: 8, zIndex: 999, padding: "8px 12px", background: "var(--accent)", color: "#fff", borderRadius: 8 }}>Skip to content</a>
+          <a href="#main-content" className="skip-link">Skip to content</a>
           <Nav />
-          <div id="main-content">
+          <main id="main-content">
             {children}
-          </div>
+          </main>
           <Footer />
         </Providers>
       </body>

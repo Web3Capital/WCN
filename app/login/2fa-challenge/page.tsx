@@ -42,10 +42,11 @@ export default function TwoFactorChallengePage() {
   }
 
   return (
-    <main className="section" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <main className="section">
       <div className="container" style={{ maxWidth: 420 }}>
-        <div className="card" style={{ padding: 32 }}>
-          <h1 style={{ fontSize: 22, marginBottom: 4 }}>Two-Factor Verification</h1>
+        <span className="eyebrow">Security</span>
+        <h1>Two-Factor Verification</h1>
+        <div className="card" style={{ marginTop: 18 }}>
           <p className="muted" style={{ marginBottom: 20 }}>
             Enter the 6-digit code from your authenticator app.
           </p>
