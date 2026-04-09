@@ -72,10 +72,16 @@ export function AccountSettings({ name, email, role, has2FA }: {
 
       <div className="card" style={{ padding: 20 }}>
         <h3 style={{ margin: "0 0 12px" }}>Change Password</h3>
-        <form onSubmit={changePassword} style={{ display: "grid", gap: 10 }}>
-          <input type="password" placeholder="Current password" value={currentPw} onChange={(e) => setCurrentPw(e.target.value)} required />
-          <input type="password" placeholder="New password (min 8 chars)" value={newPw} onChange={(e) => setNewPw(e.target.value)} required minLength={8} />
-          {msg ? <p style={{ color: msg.includes("updated") ? "var(--green)" : "var(--red)", margin: 0, fontSize: 13 }}>{msg}</p> : null}
+        <form onSubmit={changePassword} className="form">
+          <label className="field">
+            <span className="label">Current password</span>
+            <input type="password" value={currentPw} onChange={(e) => setCurrentPw(e.target.value)} autoComplete="current-password" required />
+          </label>
+          <label className="field">
+            <span className="label">New password (min 8 chars)</span>
+            <input type="password" value={newPw} onChange={(e) => setNewPw(e.target.value)} autoComplete="new-password" required minLength={8} />
+          </label>
+          {msg ? <p style={{ color: msg.includes("updated") ? "var(--green)" : "var(--red)", margin: 0, fontSize: 13 }} role="status">{msg}</p> : null}
           <button type="submit" className="button-secondary" disabled={busy}>
             {busy ? "Saving..." : "Update password"}
           </button>
@@ -85,7 +91,7 @@ export function AccountSettings({ name, email, role, has2FA }: {
       <div className="card" style={{ padding: 20 }}>
         <h3 style={{ margin: "0 0 12px" }}>Sessions</h3>
         <p className="muted" style={{ margin: "0 0 12px", fontSize: 13 }}>Sign out of all other devices.</p>
-        {sessionMsg ? <p style={{ color: "var(--amber)", margin: "0 0 8px", fontSize: 13 }}>{sessionMsg}</p> : null}
+        {sessionMsg ? <p role="status" style={{ color: "var(--amber)", margin: "0 0 8px", fontSize: 13 }}>{sessionMsg}</p> : null}
         <button className="button-secondary" onClick={revokeAllSessions} disabled={busy}>
           Revoke all sessions
         </button>

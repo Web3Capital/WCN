@@ -89,7 +89,7 @@ export default function HomePage() {
             <h2 style={{ marginTop: 14 }}>Built for real-world coordination.</h2>
             <p className="muted">Designed for capital partners, regional operators, and execution teams across Web3 and AI.</p>
           </div>
-          <div className="grid-5" style={{ opacity: 0.35 }}>
+          <div className="grid-5" style={{ opacity: 0.55 }}>
             {["Capital Partners", "Regional Hubs", "AI Labs", "Legal & Audit", "Market Makers"].map((name) => (
               <div key={name} style={{ textAlign: "center", padding: "24px 12px", borderRadius: "var(--radius-md)", border: "1px solid var(--line)" }}>
                 <span style={{ fontWeight: 700, fontSize: 14, letterSpacing: "0.02em" }}>{name}</span>

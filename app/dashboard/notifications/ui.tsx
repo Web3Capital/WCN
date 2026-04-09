@@ -13,6 +13,12 @@ type Notification = {
   createdAt: string;
 };
 
+const TYPE_BADGE: Record<string, string> = {
+  TASK_ASSIGNED: "badge-accent", EVIDENCE_SUBMITTED: "badge-amber",
+  APPROVAL_PENDING: "badge-purple", FREEZE_APPLIED: "badge-red",
+  REVIEW_DECISION: "badge-green", DISPUTE_CREATED: "badge-yellow",
+};
+
 export function NotificationsUI({ notifications }: { notifications: Notification[] }) {
   const [items, setItems] = useState(notifications);
   const [busy, setBusy] = useState(false);
@@ -34,11 +40,12 @@ export function NotificationsUI({ notifications }: { notifications: Notification
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+      <div className="page-toolbar" style={{ marginBottom: 20 }}>
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 4px" }}>Notifications</h1>
           <p className="muted" style={{ margin: 0, fontSize: 13 }}>{unreadCount} unread of {items.length} total</p>
         </div>
+        <div className="page-toolbar-spacer" />
         {unreadCount > 0 && (
           <button className="button" style={{ fontSize: 12 }} disabled={busy} onClick={markAllRead}>
             Mark All Read
@@ -47,11 +54,9 @@ export function NotificationsUI({ notifications }: { notifications: Notification
       </div>
 
       {items.length === 0 ? (
-        <div className="card" style={{ padding: 32, textAlign: "center" }}>
-          <p className="muted">No notifications.</p>
-        </div>
+        <div className="empty-state card"><p>No notifications.</p></div>
       ) : (
-        <div style={{ display: "grid", gap: 8 }}>
+        <div style={{ display: "grid", gap: 6 }}>
           {items.map((n) => (
             <div
               key={n.id}
@@ -64,16 +69,14 @@ export function NotificationsUI({ notifications }: { notifications: Notification
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <span className="badge" style={{ fontSize: 10 }}>{n.type.replace(/_/g, " ")}</span>
+                  <span className={`badge ${TYPE_BADGE[n.type] ?? ""}`} style={{ fontSize: 10 }}>{n.type.replace(/_/g, " ")}</span>
                   <strong style={{ fontSize: 14 }}>{n.title}</strong>
                 </div>
-                <span className="muted" style={{ fontSize: 11 }}>{new Date(n.createdAt).toLocaleString()}</span>
+                <span className="muted" style={{ fontSize: 11, flexShrink: 0 }}>{new Date(n.createdAt).toLocaleString()}</span>
               </div>
               {n.body && <p className="muted" style={{ margin: 0, fontSize: 13 }}>{n.body}</p>}
               {n.entityType && n.entityId && (
-                <p className="muted" style={{ margin: "4px 0 0", fontSize: 11 }}>
-                  {n.entityType} #{n.entityId.slice(0, 8)}
-                </p>
+                <p className="muted" style={{ margin: "4px 0 0", fontSize: 11 }}>{n.entityType} #{n.entityId.slice(0, 8)}</p>
               )}
             </div>
           ))}

@@ -52,7 +52,7 @@ export function LoginForm() {
         />
       </label>
 
-      {error ? <p className="form-error">{error}</p> : null}
+      {error ? <p className="form-error" role="alert">{error}</p> : null}
 
       <button className="button" type="submit" disabled={loading}>
         {loading ? "Signing in..." : "Sign in"}

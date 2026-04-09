@@ -194,7 +194,7 @@ export function AgentsConsole({
                 key={a.id}
                 type="button"
                 className="apps-row"
-                style={{ borderColor: active ? "color-mix(in oklab, var(--accent) 55%, var(--line))" : undefined }}
+                data-active={active ? "true" : "false"}
                 onClick={() => setSelectedId(a.id)}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>

@@ -69,8 +69,8 @@ export function SignupForm() {
         />
       </label>
 
-      {error ? <p className="form-error">{error}</p> : null}
-      {success ? <p className="muted">Account created. Signing you in…</p> : null}
+      {error ? <p className="form-error" role="alert">{error}</p> : null}
+      {success ? <p className="muted" role="status">Account created. Signing you in…</p> : null}
 
       <button className="button" type="submit" disabled={loading}>
         {loading ? "Creating..." : "Create account"}

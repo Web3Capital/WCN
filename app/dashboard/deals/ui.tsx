@@ -22,6 +22,8 @@ const STAGE_BADGE: Record<string, string> = {
   SIGNED: "badge-green", FUNDED: "badge-green", PASSED: "badge-red", PAUSED: "",
 };
 
+const STAGES = ["ALL", "SOURCED", "MATCHED", "DD", "TERM_SHEET", "SIGNED", "FUNDED", "PASSED", "PAUSED"] as const;
+
 export function DealsConsole({ initialDeals, nodes, projects, isAdmin }: {
   initialDeals: DealRow[];
   nodes: { id: string; name: string }[];
@@ -58,73 +60,91 @@ export function DealsConsole({ initialDeals, nodes, projects, isAdmin }: {
 
   return (
     <div style={{ marginTop: 20 }}>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
-        {["ALL", "SOURCED", "MATCHED", "DD", "TERM_SHEET", "SIGNED", "FUNDED", "PASSED", "PAUSED"].map((s) => (
-          <button
-            key={s}
-            className={filter === s ? "button" : "button-secondary"}
-            style={{ fontSize: 12 }}
-            onClick={() => setFilter(s)}
-          >
-            {s === "ALL" ? `All (${deals.length})` : s.replace(/_/g, " ")}
-          </button>
-        ))}
+      <div className="page-toolbar">
+        <div className="chip-group">
+          {STAGES.map((s) => (
+            <button key={s} className={`chip ${filter === s ? "chip-active" : ""}`} onClick={() => setFilter(s)}>
+              {s === "ALL" ? `All (${deals.length})` : s.replace(/_/g, " ")}
+            </button>
+          ))}
+        </div>
+        {isAdmin && (
+          <>
+            <div className="page-toolbar-spacer" />
+            <button className="button" onClick={() => setShowForm(!showForm)}>{showForm ? "Cancel" : "New deal"}</button>
+          </>
+        )}
       </div>
 
-      {isAdmin && (
-        <div style={{ marginBottom: 16 }}>
-          {!showForm ? (
-            <button className="button" onClick={() => setShowForm(true)}>New deal</button>
-          ) : (
-            <div className="card" style={{ padding: 18 }}>
-              <form onSubmit={createDeal} style={{ display: "grid", gap: 10 }}>
-                <input placeholder="Deal title *" value={title} onChange={(e) => setTitle(e.target.value)} required />
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <select value={leadNodeId} onChange={(e) => setLeadNodeId(e.target.value)} required style={{ flex: 1, minWidth: 160 }}>
-                    <option value="">Lead node *</option>
-                    {nodes.map((n) => <option key={n.id} value={n.id}>{n.name}</option>)}
-                  </select>
-                  <select value={projectId} onChange={(e) => setProjectId(e.target.value)} style={{ flex: 1, minWidth: 160 }}>
-                    <option value="">No project</option>
-                    {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-                  </select>
-                </div>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <button type="submit" className="button" disabled={busy}>{busy ? "Creating..." : "Create"}</button>
-                  <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>Cancel</button>
-                </div>
-              </form>
+      {isAdmin && showForm && (
+        <div className="card" style={{ padding: 18, marginBottom: 16 }}>
+          <form onSubmit={createDeal} className="form">
+            <label className="field">
+              <span className="label">Deal title</span>
+              <input placeholder="Deal title *" value={title} onChange={(e) => setTitle(e.target.value)} required />
+            </label>
+            <div className="grid-2" style={{ gap: 12 }}>
+              <label className="field">
+                <span className="label">Lead node</span>
+                <select value={leadNodeId} onChange={(e) => setLeadNodeId(e.target.value)} required>
+                  <option value="">Lead node *</option>
+                  {nodes.map((n) => <option key={n.id} value={n.id}>{n.name}</option>)}
+                </select>
+              </label>
+              <label className="field">
+                <span className="label">Project</span>
+                <select value={projectId} onChange={(e) => setProjectId(e.target.value)}>
+                  <option value="">No project</option>
+                  {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                </select>
+              </label>
             </div>
-          )}
+            <div style={{ display: "flex", gap: 8 }}>
+              <button type="submit" className="button" disabled={busy}>{busy ? "Creating..." : "Create"}</button>
+              <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+            </div>
+          </form>
         </div>
       )}
 
-      <div className="apps-list">
-        {filtered.map((d) => (
-          <Link
-            key={d.id}
-            href={`/dashboard/deals/${d.id}`}
-            className="apps-row"
-            style={{ display: "flex", alignItems: "center", gap: 12 }}
-          >
-            <span className={`status-dot ${d.stage === "SIGNED" || d.stage === "FUNDED" ? "status-dot-green" : d.stage === "PASSED" ? "status-dot-red" : "status-dot-amber"}`} />
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 700 }}>{d.title}</div>
-              <div className="muted" style={{ fontSize: 13 }}>
-                {d.leadNode.name}
-                {d.project ? ` · ${d.project.name}` : ""}
-                {d.capital ? ` · ${d.capital.name}` : ""}
-                {d.nextAction ? ` · Next: ${d.nextAction}` : ""}
-              </div>
-            </div>
-            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-              <span className={`badge ${STAGE_BADGE[d.stage] ?? ""}`}>{d.stage.replace(/_/g, " ")}</span>
-              <span className="muted" style={{ fontSize: 11 }}>{d._count.tasks}T · {d._count.milestones}M · {d._count.participants}P</span>
-            </div>
-          </Link>
-        ))}
-        {filtered.length === 0 && <p className="muted" style={{ padding: 20, textAlign: "center" }}>No deals found.</p>}
-      </div>
+      {filtered.length === 0 ? (
+        <div className="empty-state"><p>No deals found.</p></div>
+      ) : (
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th style={{ width: 32 }}></th>
+              <th>Deal</th>
+              <th>Lead Node</th>
+              <th>Stage</th>
+              <th>Stats</th>
+              <th>Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((d) => (
+              <tr key={d.id}>
+                <td>
+                  <span className={`status-dot ${d.stage === "SIGNED" || d.stage === "FUNDED" ? "status-dot-green" : d.stage === "PASSED" ? "status-dot-red" : "status-dot-amber"}`} />
+                </td>
+                <td>
+                  <Link href={`/dashboard/deals/${d.id}`} style={{ fontWeight: 700, fontSize: 13, color: "var(--accent)" }}>
+                    {d.title}
+                  </Link>
+                  {d.nextAction && <div className="muted" style={{ fontSize: 11 }}>Next: {d.nextAction}</div>}
+                </td>
+                <td>
+                  <div style={{ fontSize: 13 }}>{d.leadNode.name}</div>
+                  {d.project && <div className="muted" style={{ fontSize: 11 }}>{d.project.name}</div>}
+                </td>
+                <td><span className={`badge ${STAGE_BADGE[d.stage] ?? ""}`}>{d.stage.replace(/_/g, " ")}</span></td>
+                <td className="muted" style={{ fontSize: 11 }}>{d._count.tasks}T · {d._count.milestones}M · {d._count.participants}P</td>
+                <td className="muted" style={{ fontSize: 11 }}>{new Date(d.updatedAt).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

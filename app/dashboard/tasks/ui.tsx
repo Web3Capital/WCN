@@ -212,9 +212,7 @@ export function TasksConsole({
                 key={r.id}
                 type="button"
                 className="apps-row"
-                style={{
-                  borderColor: active ? "color-mix(in oklab, var(--accent) 55%, var(--line))" : undefined
-                }}
+                data-active={active ? "true" : "false"}
                 onClick={() => setSelectedId(r.id)}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>

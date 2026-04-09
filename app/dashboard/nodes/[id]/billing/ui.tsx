@@ -26,42 +26,38 @@ export function NodeBillingUI({ node, isAdmin }: { node: NodeData; isAdmin: bool
       <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 16 }}>Billing & Contract: {node.name}</h1>
 
       <div className="grid-4" style={{ marginBottom: 20 }}>
-        <div className="card" style={{ padding: 16 }}>
-          <p className="muted" style={{ fontSize: 11, margin: "0 0 4px" }}>Billing Status</p>
-          <span className="badge" style={{ fontSize: 12 }}>{node.billingStatus ?? "N/A"}</span>
+        <div className="stat-card">
+          <div className="stat-label">Billing Status</div>
+          <span className="badge" style={{ fontSize: 12, marginTop: 6 }}>{node.billingStatus ?? "N/A"}</span>
         </div>
-        <div className="card" style={{ padding: 16 }}>
-          <p className="muted" style={{ fontSize: 11, margin: "0 0 4px" }}>Deposit Status</p>
-          <span className="badge" style={{ fontSize: 12 }}>{node.depositStatus ?? "N/A"}</span>
+        <div className="stat-card">
+          <div className="stat-label">Deposit Status</div>
+          <span className="badge" style={{ fontSize: 12, marginTop: 6 }}>{node.depositStatus ?? "N/A"}</span>
         </div>
-        <div className="card" style={{ padding: 16 }}>
-          <p className="muted" style={{ fontSize: 11, margin: "0 0 4px" }}>Seat Fee Status</p>
-          <span className="badge" style={{ fontSize: 12 }}>{node.seatFeeStatus ?? "N/A"}</span>
+        <div className="stat-card">
+          <div className="stat-label">Seat Fee Status</div>
+          <span className="badge" style={{ fontSize: 12, marginTop: 6 }}>{node.seatFeeStatus ?? "N/A"}</span>
         </div>
-        <div className="card" style={{ padding: 16 }}>
-          <p className="muted" style={{ fontSize: 11, margin: "0 0 4px" }}>Active Seats</p>
-          <span style={{ fontSize: 20, fontWeight: 700 }}>{node.seats.filter(s => s.status === "ACTIVE").length}</span>
+        <div className="stat-card">
+          <div className="stat-label">Active Seats</div>
+          <div className="stat-number" style={{ marginTop: 4 }}>{node.seats.filter(s => s.status === "ACTIVE").length}</div>
         </div>
       </div>
 
       <div className="card" style={{ padding: 20, marginBottom: 20 }}>
         <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Seats ({node.seats.length})</h2>
         {node.seats.length === 0 ? (
-          <p className="muted" style={{ fontSize: 13 }}>No seats.</p>
+          <div className="empty-state"><p>No seats.</p></div>
         ) : (
-          <table style={{ width: "100%", fontSize: 13 }}>
+          <table className="data-table">
             <thead>
-              <tr style={{ textAlign: "left", borderBottom: "1px solid var(--line)" }}>
-                <th style={{ padding: "6px 0" }}>Level</th>
-                <th>Status</th>
-                <th>Created</th>
-              </tr>
+              <tr><th>Level</th><th>Status</th><th>Created</th></tr>
             </thead>
             <tbody>
               {node.seats.map((s) => (
-                <tr key={s.id} style={{ borderBottom: "1px solid var(--line)" }}>
-                  <td style={{ padding: "6px 0" }}>{s.level}</td>
-                  <td><span className={`badge ${s.status === "ACTIVE" ? "badge-green" : ""}`} style={{ fontSize: 10 }}>{s.status}</span></td>
+                <tr key={s.id}>
+                  <td style={{ fontWeight: 600 }}>{s.level}</td>
+                  <td><span className={`badge ${s.status === "ACTIVE" ? "badge-green" : ""}`}>{s.status}</span></td>
                   <td className="muted">{new Date(s.createdAt).toLocaleDateString()}</td>
                 </tr>
               ))}
@@ -73,22 +69,17 @@ export function NodeBillingUI({ node, isAdmin }: { node: NodeData; isAdmin: bool
       <div className="card" style={{ padding: 20 }}>
         <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Stake Ledger ({node.stakeLedger.length})</h2>
         {node.stakeLedger.length === 0 ? (
-          <p className="muted" style={{ fontSize: 13 }}>No stake entries.</p>
+          <div className="empty-state"><p>No stake entries.</p></div>
         ) : (
-          <table style={{ width: "100%", fontSize: 13 }}>
+          <table className="data-table">
             <thead>
-              <tr style={{ textAlign: "left", borderBottom: "1px solid var(--line)" }}>
-                <th style={{ padding: "6px 0" }}>Action</th>
-                <th>Amount</th>
-                <th>Notes</th>
-                <th>Date</th>
-              </tr>
+              <tr><th>Action</th><th>Amount</th><th>Notes</th><th>Date</th></tr>
             </thead>
             <tbody>
               {node.stakeLedger.map((e) => (
-                <tr key={e.id} style={{ borderBottom: "1px solid var(--line)" }}>
-                  <td style={{ padding: "6px 0" }}><span className="badge" style={{ fontSize: 10 }}>{e.action}</span></td>
-                  <td>{e.amount.toLocaleString()}</td>
+                <tr key={e.id}>
+                  <td><span className="badge" style={{ fontSize: 10 }}>{e.action}</span></td>
+                  <td style={{ fontWeight: 600 }}>{e.amount.toLocaleString()}</td>
                   <td className="muted">{e.notes ?? "—"}</td>
                   <td className="muted">{new Date(e.createdAt).toLocaleDateString()}</td>
                 </tr>

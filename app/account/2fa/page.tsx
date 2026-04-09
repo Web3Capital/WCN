@@ -76,17 +76,21 @@ export default function TwoFactorSetupPage() {
               <p className="muted" style={{ fontSize: 12, marginBottom: 12 }}>
                 OTP Auth URL: <code style={{ fontSize: 11 }}>{otpauthUrl}</code>
               </p>
-              <form onSubmit={handleVerify} style={{ display: "grid", gap: 12 }}>
-                <input
-                  type="text"
-                  placeholder="Enter 6-digit code"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  required
-                  maxLength={6}
-                  style={{ textAlign: "center", fontSize: 20, letterSpacing: 8 }}
-                />
-                {error ? <p style={{ color: "var(--red)", margin: 0, fontSize: 13 }}>{error}</p> : null}
+              <form onSubmit={handleVerify} className="form">
+                <label className="field">
+                  <span className="label">Verification code</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    required
+                    maxLength={6}
+                    style={{ textAlign: "center", fontSize: 20, letterSpacing: 8 }}
+                  />
+                </label>
+                {error ? <p className="form-error" role="alert">{error}</p> : null}
                 <button type="submit" className="button" disabled={busy || code.length !== 6} style={{ width: "100%" }}>
                   {busy ? "Verifying..." : "Verify & enable"}
                 </button>

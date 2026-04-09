@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { ConfirmDialog } from "../../_components/confirm-dialog";
 
 type Line = { id: string; nodeId: string; node: { id: string; name: string }; scoreTotal: number; allocation: number; pobCount: number };
 type Approval = { id: string; actionType: string; status: string; requestedById: string; reason: string | null; createdAt: string };
@@ -21,14 +22,10 @@ type Cycle = {
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  DRAFT: "",
-  RECONCILED: "badge-yellow",
-  LOCK_PENDING_APPROVAL: "badge-yellow",
-  LOCKED: "badge-green",
-  EXPORTED: "badge-green",
-  REOPEN_PENDING_APPROVAL: "badge-yellow",
-  REOPENED: "",
-  FINALIZED: "badge-green",
+  DRAFT: "", RECONCILED: "badge-amber",
+  LOCK_PENDING_APPROVAL: "badge-yellow", LOCKED: "badge-green",
+  EXPORTED: "badge-green", REOPEN_PENDING_APPROVAL: "badge-yellow",
+  REOPENED: "badge-amber", FINALIZED: "badge-green",
 };
 
 export function SettlementCycleDetailUI({
@@ -41,6 +38,7 @@ export function SettlementCycleDetailUI({
   isAdmin: boolean;
 }) {
   const [busy, setBusy] = useState(false);
+  const [reopenOpen, setReopenOpen] = useState(false);
 
   async function requestLock() {
     setBusy(true);
@@ -55,9 +53,9 @@ export function SettlementCycleDetailUI({
     setBusy(false);
   }
 
-  async function requestReopen() {
-    const reason = prompt("Reopen reason:");
+  async function requestReopen(reason?: string) {
     if (!reason) return;
+    setReopenOpen(false);
     setBusy(true);
     try {
       await fetch(`/api/settlement/cycles/${cycle.id}/reopen`, {
@@ -79,27 +77,25 @@ export function SettlementCycleDetailUI({
         &larr; All Cycles
       </Link>
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginTop: 12, marginBottom: 20 }}>
+      <div className="detail-header" style={{ marginTop: 12 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 4px" }}>
-            {cycle.kind} Cycle
-          </h1>
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            <span className={`badge ${STATUS_COLORS[cycle.status] ?? ""}`} style={{ fontSize: 11 }}>{cycle.status.replace(/_/g, " ")}</span>
+          <h1 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 4px" }}>{cycle.kind} Cycle</h1>
+          <div className="detail-header-meta">
+            <span className={`badge ${STATUS_COLORS[cycle.status] ?? ""}`}>{cycle.status.replace(/_/g, " ")}</span>
             <span className="muted" style={{ fontSize: 12 }}>
-              {new Date(cycle.startAt).toLocaleDateString()} - {new Date(cycle.endAt).toLocaleDateString()}
+              {new Date(cycle.startAt).toLocaleDateString()} – {new Date(cycle.endAt).toLocaleDateString()}
             </span>
           </div>
         </div>
         {isAdmin && (
-          <div style={{ display: "flex", gap: 6 }}>
+          <div className="detail-actions">
             {cycle.status === "RECONCILED" && (
               <button className="button" style={{ fontSize: 11, padding: "4px 12px" }} disabled={busy} onClick={requestLock}>
                 Request Lock (Dual)
               </button>
             )}
             {(cycle.status === "LOCKED" || cycle.status === "EXPORTED") && (
-              <button className="button" style={{ fontSize: 11, padding: "4px 12px", background: "var(--yellow)", color: "#000" }} disabled={busy} onClick={requestReopen}>
+              <button className="button-secondary" style={{ fontSize: 11, padding: "4px 12px", color: "var(--amber)" }} disabled={busy} onClick={() => setReopenOpen(true)}>
                 Request Reopen (Dual)
               </button>
             )}
@@ -120,21 +116,21 @@ export function SettlementCycleDetailUI({
       )}
 
       <div className="grid-4" style={{ marginBottom: 20 }}>
-        <div className="card" style={{ padding: 16 }}>
-          <p className="muted" style={{ fontSize: 11, margin: "0 0 4px" }}>Pool</p>
-          <span style={{ fontSize: 20, fontWeight: 700 }}>${cycle.pool.toLocaleString()}</span>
+        <div className="stat-card">
+          <div className="stat-label">Pool</div>
+          <div className="stat-number" style={{ marginTop: 4 }}>${cycle.pool.toLocaleString()}</div>
         </div>
-        <div className="card" style={{ padding: 16 }}>
-          <p className="muted" style={{ fontSize: 11, margin: "0 0 4px" }}>Nodes</p>
-          <span style={{ fontSize: 20, fontWeight: 700 }}>{cycle.lines.length}</span>
+        <div className="stat-card">
+          <div className="stat-label">Nodes</div>
+          <div className="stat-number" style={{ marginTop: 4 }}>{cycle.lines.length}</div>
         </div>
-        <div className="card" style={{ padding: 16 }}>
-          <p className="muted" style={{ fontSize: 11, margin: "0 0 4px" }}>Total PoB</p>
-          <span style={{ fontSize: 20, fontWeight: 700 }}>{totalPob}</span>
+        <div className="stat-card">
+          <div className="stat-label">Total PoB</div>
+          <div className="stat-number" style={{ marginTop: 4 }}>{totalPob}</div>
         </div>
-        <div className="card" style={{ padding: 16 }}>
-          <p className="muted" style={{ fontSize: 11, margin: "0 0 4px" }}>Total Score</p>
-          <span style={{ fontSize: 20, fontWeight: 700 }}>{totalScore.toFixed(1)}</span>
+        <div className="stat-card">
+          <div className="stat-label">Total Score</div>
+          <div className="stat-number" style={{ marginTop: 4 }}>{totalScore.toFixed(1)}</div>
         </div>
       </div>
 
@@ -148,12 +144,12 @@ export function SettlementCycleDetailUI({
       <div className="card" style={{ padding: 20 }}>
         <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Allocation Lines ({cycle.lines.length})</h2>
         {cycle.lines.length === 0 ? (
-          <p className="muted" style={{ fontSize: 13 }}>No lines generated yet.</p>
+          <div className="empty-state"><p>No lines generated yet.</p></div>
         ) : (
-          <table style={{ width: "100%", fontSize: 13 }}>
+          <table className="data-table">
             <thead>
-              <tr style={{ textAlign: "left", borderBottom: "1px solid var(--line)" }}>
-                <th style={{ padding: "6px 0" }}>Node</th>
+              <tr>
+                <th>Node</th>
                 <th>Score</th>
                 <th>PoB Count</th>
                 <th>Allocation</th>
@@ -162,13 +158,11 @@ export function SettlementCycleDetailUI({
             </thead>
             <tbody>
               {cycle.lines.map((l) => (
-                <tr key={l.id} style={{ borderBottom: "1px solid var(--line)" }}>
-                  <td style={{ padding: "6px 0" }}>
-                    <Link href={`/dashboard/nodes/${l.node.id}`}>{l.node.name}</Link>
-                  </td>
+                <tr key={l.id}>
+                  <td><Link href={`/dashboard/nodes/${l.node.id}`} style={{ color: "var(--accent)", fontWeight: 600 }}>{l.node.name}</Link></td>
                   <td>{l.scoreTotal.toFixed(1)}</td>
                   <td>{l.pobCount}</td>
-                  <td>${l.allocation.toLocaleString()}</td>
+                  <td style={{ fontWeight: 700 }}>${l.allocation.toLocaleString()}</td>
                   <td className="muted">{totalScore > 0 ? `${((l.scoreTotal / totalScore) * 100).toFixed(1)}%` : "—"}</td>
                 </tr>
               ))}
@@ -176,6 +170,19 @@ export function SettlementCycleDetailUI({
           </table>
         )}
       </div>
+
+      <ConfirmDialog
+        open={reopenOpen}
+        title="Request Reopen (Dual Control)"
+        description="This action requires dual-control approval. Provide a reason."
+        confirmLabel="Submit Reopen Request"
+        variant="danger"
+        withInput
+        inputLabel="Reason"
+        inputPlaceholder="Reason for reopening..."
+        onConfirm={requestReopen}
+        onCancel={() => setReopenOpen(false)}
+      />
     </div>
   );
 }

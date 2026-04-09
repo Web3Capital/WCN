@@ -67,18 +67,33 @@ export function CapitalConsole({ initialProfiles, nodes, isAdmin }: {
             <button className="button" onClick={() => setShowForm(true)}>Add capital profile</button>
           ) : (
             <div className="card" style={{ padding: 18 }}>
-              <form onSubmit={createProfile} style={{ display: "grid", gap: 10 }}>
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <input placeholder="Name *" value={name} onChange={(e) => setName(e.target.value)} required style={{ flex: 1, minWidth: 160 }} />
-                  <input placeholder="Entity" value={entity} onChange={(e) => setEntity(e.target.value)} style={{ flex: 1, minWidth: 160 }} />
+              <form onSubmit={createProfile} className="form">
+                <div className="grid-2" style={{ gap: 12 }}>
+                  <label className="field">
+                    <span className="label">Name</span>
+                    <input placeholder="Name *" value={name} onChange={(e) => setName(e.target.value)} required />
+                  </label>
+                  <label className="field">
+                    <span className="label">Entity</span>
+                    <input placeholder="Entity" value={entity} onChange={(e) => setEntity(e.target.value)} />
+                  </label>
                 </div>
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <select value={nodeId} onChange={(e) => setNodeId(e.target.value)} style={{ flex: 1, minWidth: 160 }}>
-                    <option value="">No linked node</option>
-                    {nodes.map((n) => <option key={n.id} value={n.id}>{n.name}</option>)}
-                  </select>
-                  <input type="number" placeholder="Min ticket" value={ticketMin} onChange={(e) => setTicketMin(e.target.value)} style={{ width: 120 }} />
-                  <input type="number" placeholder="Max ticket" value={ticketMax} onChange={(e) => setTicketMax(e.target.value)} style={{ width: 120 }} />
+                <div className="grid-3" style={{ gap: 12 }}>
+                  <label className="field">
+                    <span className="label">Linked node</span>
+                    <select value={nodeId} onChange={(e) => setNodeId(e.target.value)}>
+                      <option value="">No linked node</option>
+                      {nodes.map((n) => <option key={n.id} value={n.id}>{n.name}</option>)}
+                    </select>
+                  </label>
+                  <label className="field">
+                    <span className="label">Min ticket</span>
+                    <input type="number" placeholder="Min ticket" value={ticketMin} onChange={(e) => setTicketMin(e.target.value)} />
+                  </label>
+                  <label className="field">
+                    <span className="label">Max ticket</span>
+                    <input type="number" placeholder="Max ticket" value={ticketMax} onChange={(e) => setTicketMax(e.target.value)} />
+                  </label>
                 </div>
                 <div style={{ display: "flex", gap: 8 }}>
                   <button type="submit" className="button" disabled={busy}>{busy ? "Creating..." : "Create"}</button>

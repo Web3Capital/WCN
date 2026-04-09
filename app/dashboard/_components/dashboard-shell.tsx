@@ -181,16 +181,10 @@ function GlobalSearch() {
               key={`${r.type}-${r.id}`}
               type="button"
               onClick={() => { setOpen(false); setQ(""); setResults([]); router.push(r.href); }}
-              style={{
-                display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 12px",
-                background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "var(--text)",
-                textAlign: "left",
-              }}
-              onMouseEnter={(e) => { (e.target as HTMLElement).style.background = "var(--line)"; }}
-              onMouseLeave={(e) => { (e.target as HTMLElement).style.background = "none"; }}
+              className="search-result-btn"
             >
               <span className="badge" style={{ fontSize: 10, flexShrink: 0 }}>{r.type}</span>
-              <span style={{ flex: 1, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.label}</span>
+              <span className="search-result-label">{r.label}</span>
               {r.badge && <span className="badge" style={{ fontSize: 10 }}>{r.badge}</span>}
             </button>
           ))}
@@ -330,16 +324,16 @@ export function DashboardShell({
       </button>
 
       {crumbs.length > 0 ? (
-        <nav aria-label="Breadcrumb" style={{ padding: "0 16px", display: "none" }} className="dashboard-breadcrumb">
-          <ol style={{ display: "flex", gap: 6, listStyle: "none", margin: 0, padding: 0, fontSize: 13, color: "var(--muted)" }}>
-            <li><Link href="/dashboard" style={{ color: "var(--muted)" }}>Console</Link></li>
+        <nav aria-label="Breadcrumb" className="dashboard-breadcrumb">
+          <ol className="breadcrumb-list">
+            <li><Link href="/dashboard" className="muted">Console</Link></li>
             {crumbs.map((c, i) => (
-              <li key={c.href} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ opacity: 0.4 }}>/</span>
+              <li key={c.href} className="breadcrumb-separator">
+                <span className="breadcrumb-slash">/</span>
                 {i === crumbs.length - 1 ? (
-                  <span style={{ color: "var(--text)", fontWeight: 600 }}>{c.label}</span>
+                  <span className="breadcrumb-current">{c.label}</span>
                 ) : (
-                  <Link href={c.href} style={{ color: "var(--muted)" }}>{c.label}</Link>
+                  <Link href={c.href} className="muted">{c.label}</Link>
                 )}
               </li>
             ))}
@@ -426,7 +420,7 @@ export function DashboardShell({
         </div>
       </aside>
 
-      <main className="dashboard-main">{children}</main>
+      <main id="main-content" className="dashboard-main" tabIndex={-1}>{children}</main>
     </div>
   );
 }

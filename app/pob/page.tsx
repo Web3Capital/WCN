@@ -60,13 +60,11 @@ export default function PobPage() {
           <h3>Scoring formula</h3>
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, marginTop: 12 }}>
             <span className="badge badge-accent">Effective PoB</span>
-            <span style={{ fontSize: 18, fontWeight: 300 }}>=</span>
+            <span className="formula-op">=</span>
             {["Base Value", "Business Weight", "Quality Mult", "Time Mult", "Risk Discount"].map((factor, i) => (
               <span key={factor} style={{ display: "contents" }}>
-                <span style={{ padding: "6px 12px", borderRadius: "var(--radius-md)", border: "1px solid var(--line)", background: "color-mix(in oklab, var(--bg-soft) 84%, transparent)", fontSize: 14, fontWeight: 600 }}>
-                  {factor}
-                </span>
-                {i < 4 && <span style={{ fontSize: 18, fontWeight: 300, color: "var(--muted)" }}>×</span>}
+                <span className="formula-chip">{factor}</span>
+                {i < 4 && <span className="formula-op">×</span>}
               </span>
             ))}
           </div>

@@ -55,18 +55,18 @@ function DistributionBar({ items, colorMap }: { items: Distribution; colorMap?: 
 }
 
 const NODE_COLORS: Record<string, string> = {
-  LIVE: "var(--green)", APPROVED: "#22c55e", SUBMITTED: "var(--amber)", UNDER_REVIEW: "#f59e0b",
-  SUSPENDED: "var(--red)", OFFBOARDED: "#991b1b", REJECTED: "#dc2626", DRAFT: "var(--muted)",
-  CONTRACTING: "#8b5cf6", PROBATION: "#d97706", NEED_MORE_INFO: "#eab308",
+  LIVE: "var(--green)", APPROVED: "var(--green)", SUBMITTED: "var(--amber)", UNDER_REVIEW: "var(--amber)",
+  SUSPENDED: "var(--red)", OFFBOARDED: "var(--red)", REJECTED: "var(--red)", DRAFT: "var(--muted)",
+  CONTRACTING: "var(--purple)", PROBATION: "var(--amber)", NEED_MORE_INFO: "var(--yellow)",
 };
 const DEAL_COLORS: Record<string, string> = {
-  SOURCED: "var(--muted)", MATCHED: "#f59e0b", INTRO_SENT: "#f59e0b", MEETING_DONE: "#8b5cf6",
-  DD: "#7c3aed", TERM_SHEET: "#6d28d9", SIGNED: "var(--green)", FUNDED: "#16a34a",
-  PASSED: "var(--red)", PAUSED: "#9ca3af",
+  SOURCED: "var(--muted)", MATCHED: "var(--amber)", INTRO_SENT: "var(--amber)", MEETING_DONE: "var(--purple)",
+  DD: "var(--purple)", TERM_SHEET: "var(--purple)", SIGNED: "var(--green)", FUNDED: "var(--green)",
+  PASSED: "var(--red)", PAUSED: "var(--muted)",
 };
 const POB_COLORS: Record<string, string> = {
   CREATED: "var(--muted)", PENDING_REVIEW: "var(--amber)", EFFECTIVE: "var(--green)",
-  REJECTED: "var(--red)", FROZEN: "#1e3a5f",
+  REJECTED: "var(--red)", FROZEN: "var(--purple)",
 };
 
 export function DataCockpit({ data }: { data: CockpitData }) {
@@ -74,7 +74,7 @@ export function DataCockpit({ data }: { data: CockpitData }) {
 
   return (
     <div style={{ marginTop: 20 }}>
-      <div className="grid-4" style={{ marginBottom: 20 }}>
+      <div className="grid-5" style={{ marginBottom: 20 }}>
         {[
           { label: "Active Nodes", value: s.activeNodes },
           { label: "Active Projects", value: s.activeProjects },
@@ -87,7 +87,7 @@ export function DataCockpit({ data }: { data: CockpitData }) {
           { label: "Open Disputes", value: s.openDisputes },
           { label: "Settled Cycles", value: s.settledCycles },
         ].map((m) => (
-          <div key={m.label} className="card" style={{ padding: 14, textAlign: "center" }}>
+          <div key={m.label} className="stat-card" style={{ textAlign: "center" }}>
             <div className="stat-number">{m.value}</div>
             <div className="stat-label">{m.label}</div>
           </div>

@@ -61,12 +61,12 @@ export function NodeOnboardingUI({ node, isAdmin }: { node: NodeData; isAdmin: b
 
       <div className="card" style={{ padding: 20, marginBottom: 20 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 600 }}>Progress</h2>
-          <span style={{ fontSize: 24, fontWeight: 700 }}>{progress}%</span>
+          <h2 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Progress</h2>
+          <span className="stat-number" style={{ fontSize: 24 }}>{progress}%</span>
         </div>
 
-        <div style={{ background: "var(--line)", borderRadius: 6, height: 8, overflow: "hidden", marginBottom: 16 }}>
-          <div style={{ width: `${progress}%`, height: "100%", background: "var(--accent)", borderRadius: 6, transition: "width 0.3s" }} />
+        <div className="progress-bar" style={{ marginBottom: 16 }}>
+          <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
         </div>
 
         {node.onboardingScore != null && (
@@ -81,21 +81,21 @@ export function NodeOnboardingUI({ node, isAdmin }: { node: NodeData; isAdmin: b
       </div>
 
       <div className="grid-4">
-        <div className="card" style={{ padding: 16 }}>
-          <p className="muted" style={{ fontSize: 11, margin: "0 0 4px" }}>Projects</p>
-          <span style={{ fontSize: 20, fontWeight: 700 }}>{node.projects.length}</span>
+        <div className="stat-card">
+          <div className="stat-label">Projects</div>
+          <div className="stat-number" style={{ marginTop: 4 }}>{node.projects.length}</div>
         </div>
-        <div className="card" style={{ padding: 16 }}>
-          <p className="muted" style={{ fontSize: 11, margin: "0 0 4px" }}>Tasks Owned</p>
-          <span style={{ fontSize: 20, fontWeight: 700 }}>{node.tasksAsOwner.length}</span>
+        <div className="stat-card">
+          <div className="stat-label">Tasks Owned</div>
+          <div className="stat-number" style={{ marginTop: 4 }}>{node.tasksAsOwner.length}</div>
         </div>
-        <div className="card" style={{ padding: 16 }}>
-          <p className="muted" style={{ fontSize: 11, margin: "0 0 4px" }}>Contract</p>
-          <span className="badge" style={{ fontSize: 11 }}>{hasContract ? "Sent" : "Pending"}</span>
+        <div className="stat-card">
+          <div className="stat-label">Contract</div>
+          <span className="badge" style={{ fontSize: 11, marginTop: 6 }}>{hasContract ? "Sent" : "Pending"}</span>
         </div>
-        <div className="card" style={{ padding: 16 }}>
-          <p className="muted" style={{ fontSize: 11, margin: "0 0 4px" }}>Go Live</p>
-          <span className="badge" style={{ fontSize: 11 }}>{node.goLiveAt ? new Date(node.goLiveAt).toLocaleDateString() : "Not yet"}</span>
+        <div className="stat-card">
+          <div className="stat-label">Go Live</div>
+          <span className="badge" style={{ fontSize: 11, marginTop: 6 }}>{node.goLiveAt ? new Date(node.goLiveAt).toLocaleDateString() : "Not yet"}</span>
         </div>
       </div>
     </div>

@@ -50,21 +50,24 @@ export default function TwoFactorChallengePage() {
             Enter the 6-digit code from your authenticator app.
           </p>
 
-          <form onSubmit={handleSubmit} style={{ display: "grid", gap: 14 }}>
-            <input
-              type="text"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              placeholder="000000"
-              value={code}
-              onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-              required
-              maxLength={6}
-              style={{ textAlign: "center", fontSize: 24, letterSpacing: 10, fontWeight: 700 }}
-              autoFocus
-            />
+          <form onSubmit={handleSubmit} className="form">
+            <label className="field">
+              <span className="label">Verification code</span>
+              <input
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                placeholder="000000"
+                value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                required
+                maxLength={6}
+                style={{ textAlign: "center", fontSize: 24, letterSpacing: 10, fontWeight: 700 }}
+                autoFocus
+              />
+            </label>
 
-            {error && <p style={{ color: "var(--red)", margin: 0, fontSize: 13 }}>{error}</p>}
+            {error && <p className="form-error" role="alert">{error}</p>}
 
             <button
               type="submit"

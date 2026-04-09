@@ -70,25 +70,30 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
     <div style={{ marginTop: 20 }}>
       <div className="card" style={{ padding: 20, marginBottom: 20 }}>
         <h3 style={{ margin: "0 0 14px" }}>Send new invite</h3>
-        <form onSubmit={createInvite} style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <input
-            type="email"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ flex: 1, minWidth: 200 }}
-          />
-          <select value={role} onChange={(e) => setRole(e.target.value)} style={{ minWidth: 160 }}>
-            {ROLES.map((r) => <option key={r} value={r}>{r.replace(/_/g, " ")}</option>)}
-          </select>
+        <form onSubmit={createInvite} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "flex-end" }}>
+          <label className="field" style={{ flex: 1, minWidth: 200, margin: 0 }}>
+            <span className="label">Email address</span>
+            <input
+              type="email"
+              placeholder="user@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </label>
+          <label className="field" style={{ minWidth: 160, margin: 0 }}>
+            <span className="label">Role</span>
+            <select value={role} onChange={(e) => setRole(e.target.value)}>
+              {ROLES.map((r) => <option key={r} value={r}>{r.replace(/_/g, " ")}</option>)}
+            </select>
+          </label>
           <button type="submit" className="button" disabled={busy}>
             {busy ? "Sending..." : "Send invite"}
           </button>
         </form>
         {error && <p style={{ color: "var(--red)", margin: "8px 0 0", fontSize: 13 }}>{error}</p>}
         {lastToken && (
-          <div style={{ marginTop: 12, padding: 12, background: "color-mix(in oklab, var(--green) 10%, transparent)", borderRadius: 8, fontSize: 13 }}>
+          <div role="status" aria-live="polite" style={{ marginTop: 12, padding: 12, background: "color-mix(in oklab, var(--green) 10%, transparent)", borderRadius: 8, fontSize: 13 }}>
             <strong>Invite created!</strong> Copy the link below (shown only once):
             <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 6 }}>
               <code style={{ flex: 1, fontSize: 12, wordBreak: "break-all" }}>{`${typeof window !== 'undefined' ? window.location.origin : ''}/invite/${lastToken}`}</code>
@@ -102,15 +107,15 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
 
       <div className="card" style={{ padding: 0, overflow: "hidden" }}>
         <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+          <table className="data-table">
             <thead>
-              <tr style={{ borderBottom: "1px solid var(--line)", textAlign: "left" }}>
-                <th style={{ padding: "10px 14px" }}>Email</th>
-                <th style={{ padding: "10px 14px" }}>Role</th>
-                <th style={{ padding: "10px 14px" }}>Status</th>
-                <th style={{ padding: "10px 14px" }}>Created by</th>
-                <th style={{ padding: "10px 14px" }}>Expires</th>
-                <th style={{ padding: "10px 14px" }}>Token</th>
+              <tr>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Created by</th>
+                <th>Expires</th>
+                <th>Token</th>
               </tr>
             </thead>
             <tbody>
@@ -119,29 +124,19 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
                 const status = inv.activatedAt ? "Activated" : inv.revokedAt ? "Revoked" : expired ? "Expired" : "Pending";
                 const badgeClass = inv.activatedAt ? "badge-green" : inv.revokedAt ? "badge-red" : expired ? "badge-red" : "badge-amber";
                 return (
-                  <tr key={inv.id} style={{ borderBottom: "1px solid var(--line)" }}>
-                    <td style={{ padding: "10px 14px", fontWeight: 600 }}>{inv.email}</td>
-                    <td style={{ padding: "10px 14px" }}>
-                      <span className="badge">{inv.role.replace(/_/g, " ")}</span>
-                    </td>
-                    <td style={{ padding: "10px 14px" }}>
-                      <span className={`badge ${badgeClass}`}>{status}</span>
-                    </td>
-                    <td style={{ padding: "10px 14px" }} className="muted">{inv.createdBy}</td>
-                    <td style={{ padding: "10px 14px" }} className="muted">
-                      {new Date(inv.expiresAt).toLocaleDateString()}
-                    </td>
-                    <td style={{ padding: "10px 14px", fontFamily: "monospace", fontSize: 11 }} className="muted">
-                      {inv.tokenHash}
-                    </td>
+                  <tr key={inv.id}>
+                    <td style={{ fontWeight: 600 }}>{inv.email}</td>
+                    <td><span className="badge">{inv.role.replace(/_/g, " ")}</span></td>
+                    <td><span className={`badge ${badgeClass}`}>{status}</span></td>
+                    <td className="muted">{inv.createdBy}</td>
+                    <td className="muted">{new Date(inv.expiresAt).toLocaleDateString()}</td>
+                    <td className="muted" style={{ fontFamily: "monospace", fontSize: 11 }}>{inv.tokenHash}</td>
                   </tr>
                 );
               })}
               {invites.length === 0 && (
                 <tr>
-                  <td colSpan={6} style={{ padding: 20, textAlign: "center" }} className="muted">
-                    No invites yet.
-                  </td>
+                  <td colSpan={6} className="empty-state">No invites yet.</td>
                 </tr>
               )}
             </tbody>

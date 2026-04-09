@@ -51,7 +51,7 @@ export function ApplyForm() {
 
   if (status === "success") {
     return (
-      <div>
+      <div role="status" aria-live="polite">
         <p style={{ marginTop: 0 }}>
           <strong>Submitted.</strong>
         </p>
@@ -101,7 +101,7 @@ export function ApplyForm() {
         <textarea value={whyWcn} onChange={(e) => setWhyWcn(e.target.value)} />
       </label>
 
-      {error ? <p className="form-error">{error}</p> : null}
+      {error ? <p className="form-error" role="alert">{error}</p> : null}
       <button className="button" type="submit" disabled={status === "submitting"}>
         {status === "submitting" ? "Submitting..." : "Submit application"}
       </button>

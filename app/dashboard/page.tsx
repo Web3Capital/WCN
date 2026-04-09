@@ -156,7 +156,7 @@ export default async function DashboardIndex() {
               <Link href="/dashboard/deals" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14 }}>
                 <span className="status-dot status-dot-purple" /> Deal Room
               </Link>
-              <Link href="/dashboard/pob" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14 }}>
+              <Link href="/dashboard/proof-desk" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14 }}>
                 <span className="status-dot status-dot-amber" /> Proof Desk
               </Link>
             </div>

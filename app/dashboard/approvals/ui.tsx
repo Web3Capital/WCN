@@ -17,11 +17,10 @@ type Approval = {
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  PENDING: "",
-  APPROVED: "badge-green",
-  REJECTED: "badge-red",
-  EXPIRED: "badge-yellow",
+  PENDING: "badge-amber", APPROVED: "badge-green", REJECTED: "badge-red", EXPIRED: "badge-yellow",
 };
+
+const FILTERS = ["PENDING", "APPROVED", "REJECTED"] as const;
 
 export function ApprovalsUI() {
   const [approvals, setApprovals] = useState<Approval[]>([]);
@@ -56,16 +55,12 @@ export function ApprovalsUI() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700 }}>Approval Queue</h1>
-        <div style={{ display: "flex", gap: 6 }}>
-          {["PENDING", "APPROVED", "REJECTED"].map((s) => (
-            <button
-              key={s}
-              className={`badge ${filter === s ? "badge-green" : ""}`}
-              onClick={() => setFilter(s)}
-              style={{ cursor: "pointer", fontSize: 11, padding: "4px 10px" }}
-            >
+      <div className="page-toolbar" style={{ marginBottom: 20 }}>
+        <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Approval Queue</h1>
+        <div className="page-toolbar-spacer" />
+        <div className="chip-group">
+          {FILTERS.map((s) => (
+            <button key={s} className={`chip ${filter === s ? "chip-active" : ""}`} onClick={() => setFilter(s)}>
               {s}
             </button>
           ))}
@@ -75,52 +70,49 @@ export function ApprovalsUI() {
       {loading ? (
         <p className="muted">Loading...</p>
       ) : approvals.length === 0 ? (
-        <div className="card" style={{ padding: 32, textAlign: "center" }}>
-          <p className="muted">No {filter.toLowerCase()} approvals.</p>
-        </div>
+        <div className="empty-state card"><p>No {filter.toLowerCase()} approvals.</p></div>
       ) : (
-        <div style={{ display: "grid", gap: 10 }}>
-          {approvals.map((a) => (
-            <div key={a.id} className="card" style={{ padding: 16 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 4 }}>
-                    <span className={`badge ${STATUS_COLORS[a.status] ?? ""}`} style={{ fontSize: 10 }}>{a.status}</span>
-                    <span className="badge" style={{ fontSize: 10 }}>{a.actionType}</span>
-                  </div>
-                  <p style={{ margin: "0 0 4px", fontWeight: 600, fontSize: 14 }}>
-                    {a.entityType} #{a.entityId.slice(0, 8)}
-                  </p>
-                  {a.reason && <p className="muted" style={{ margin: 0, fontSize: 12 }}>{a.reason}</p>}
-                  <p className="muted" style={{ margin: "4px 0 0", fontSize: 11 }}>
-                    Requested: {new Date(a.createdAt).toLocaleString()}
-                    {a.decidedAt && ` | Decided: ${new Date(a.decidedAt).toLocaleString()}`}
-                  </p>
-                </div>
-                {a.status === "PENDING" && (
-                  <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                    <button
-                      className="button"
-                      style={{ fontSize: 11, padding: "4px 12px" }}
-                      disabled={busy === a.id}
-                      onClick={() => decide(a.id, "APPROVED")}
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="button"
-                      style={{ fontSize: 11, padding: "4px 12px", background: "var(--red)", color: "#fff" }}
-                      disabled={busy === a.id}
-                      onClick={() => decide(a.id, "REJECTED")}
-                    >
-                      Reject
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Action</th>
+              <th>Entity</th>
+              <th>Reason</th>
+              <th>Requested</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {approvals.map((a) => (
+              <tr key={a.id}>
+                <td><span className={`badge ${STATUS_COLORS[a.status] ?? ""}`}>{a.status}</span></td>
+                <td><span className="badge" style={{ fontSize: 10 }}>{a.actionType}</span></td>
+                <td>
+                  <div style={{ fontSize: 13, fontWeight: 600 }}>{a.entityType}</div>
+                  <div className="muted" style={{ fontSize: 11 }}>#{a.entityId.slice(0, 8)}</div>
+                </td>
+                <td className="muted" style={{ fontSize: 12 }}>{a.reason || "—"}</td>
+                <td className="muted" style={{ fontSize: 11 }}>
+                  {new Date(a.createdAt).toLocaleString()}
+                  {a.decidedAt && <div>Decided: {new Date(a.decidedAt).toLocaleString()}</div>}
+                </td>
+                <td>
+                  {a.status === "PENDING" && (
+                    <div style={{ display: "flex", gap: 4 }}>
+                      <button className="button" style={{ fontSize: 11, padding: "4px 12px" }} disabled={busy === a.id} onClick={() => decide(a.id, "APPROVED")}>
+                        Approve
+                      </button>
+                      <button className="button-secondary" style={{ fontSize: 11, padding: "4px 12px", color: "var(--red)" }} disabled={busy === a.id} onClick={() => decide(a.id, "REJECTED")}>
+                        Reject
+                      </button>
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );
