@@ -20,9 +20,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <a href="#main-content" className="skip-link">Skip to content</a>
           <Nav />
-          <main id="main-content">
+          <div id="main-content">
             {children}
-          </main>
+          </div>
           <Footer />
         </Providers>
       </body>
