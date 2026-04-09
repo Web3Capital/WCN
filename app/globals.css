@@ -185,6 +185,219 @@ a { color: inherit; text-decoration: none; }
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.nav-link-pill {
+  padding: 8px 10px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.nav-link-pill:hover {
+  background: color-mix(in oklab, var(--text) 6%, transparent);
+  color: var(--text);
+}
+.nav-link-pill[aria-current="page"] {
+  color: var(--text);
+  background: color-mix(in oklab, var(--text) 8%, transparent);
+}
+.nav-dropdown-wrap {
+  position: relative;
+}
+.nav-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--dur-1) var(--ease-out), color var(--dur-1) var(--ease-out);
+}
+.nav-dropdown-trigger:hover,
+.nav-dropdown-trigger-active {
+  background: color-mix(in oklab, var(--text) 6%, transparent);
+  color: var(--text);
+}
+.nav-dropdown-chevron {
+  flex-shrink: 0;
+  opacity: 0.75;
+  transition: transform var(--dur-2) var(--ease-out);
+}
+.nav-dropdown-wrap[data-open="true"] .nav-dropdown-chevron {
+  transform: rotate(180deg);
+}
+.nav-dropdown-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 200px;
+  padding: 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--bg-soft) 94%, transparent);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-md);
+  z-index: 50;
+}
+.nav-dropdown-panel[hidden] {
+  display: none !important;
+}
+.nav-dropdown-link {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  transition: background var(--dur-1) var(--ease-out);
+}
+.nav-dropdown-link:hover {
+  background: color-mix(in oklab, var(--text) 6%, transparent);
+}
+.nav-dropdown-link[aria-current="page"] {
+  background: color-mix(in oklab, var(--accent) 12%, transparent);
+  color: var(--text);
+  font-weight: 600;
+}
+.nav-account-wrap {
+  position: relative;
+}
+.nav-account-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 4px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--bg) 86%, transparent);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  font: inherit;
+  color: var(--text);
+  transition: background var(--dur-1) var(--ease-out), border-color var(--dur-1) var(--ease-out);
+}
+.nav-account-trigger:hover {
+  background: color-mix(in oklab, var(--text) 6%, transparent);
+}
+.nav-account-chevron {
+  flex-shrink: 0;
+  opacity: 0.65;
+  transition: transform var(--dur-2) var(--ease-out);
+}
+.nav-account-chevron[data-open="true"] {
+  transform: rotate(180deg);
+}
+.account-menu-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(280px, calc(100vw - 32px));
+  padding: 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--bg-soft) 96%, transparent);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-md);
+  z-index: 50;
+  overflow: hidden;
+}
+.account-menu-panel[hidden] {
+  display: none !important;
+}
+.account-menu-head {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.account-menu-name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+  word-break: break-word;
+}
+.account-menu-email {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.35;
+  word-break: break-all;
+}
+.account-menu-actions {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.account-menu-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  transition: background var(--dur-1) var(--ease-out);
+}
+.account-menu-link:hover {
+  background: color-mix(in oklab, var(--text) 6%, transparent);
+}
+.account-menu-signout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--bg) 88%, transparent);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--dur-1) var(--ease-out);
+}
+.account-menu-signout:hover {
+  background: color-mix(in oklab, var(--red) 8%, transparent);
+}
+.dashboard-account-wrap {
+  position: relative;
+}
+.dashboard-account-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 4px 4px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--bg) 88%, transparent);
+  cursor: pointer;
+  font: inherit;
+  color: var(--text);
+  transition: background var(--dur-1) var(--ease-out), border-color var(--dur-1) var(--ease-out);
+}
+.dashboard-account-trigger:hover {
+  background: color-mix(in oklab, var(--text) 6%, transparent);
+}
+.dashboard-account-chevron {
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: transform var(--dur-2) var(--ease-out);
+}
+.dashboard-account-chevron[data-open="true"] {
+  transform: rotate(180deg);
+}
+.account-menu-panel--dashboard {
+  right: 0;
+  left: auto;
+}
 .theme-toggle {
   display: inline-flex;
   align-items: center;
@@ -228,15 +441,15 @@ a { color: inherit; text-decoration: none; }
   background: color-mix(in oklab, var(--text) 6%, transparent);
   color: var(--text);
 }
-.nav-links a {
+.nav-links > a:not(.nav-cta):not(.button-secondary) {
   padding: 8px 10px;
   border-radius: 999px;
 }
-.nav-links a:hover {
+.nav-links > a:not(.nav-cta):not(.button-secondary):hover {
   background: color-mix(in oklab, var(--text) 6%, transparent);
   color: var(--text);
 }
-.nav-links a[aria-current="page"] {
+.nav-links > a:not(.nav-cta):not(.button-secondary)[aria-current="page"] {
   color: var(--text);
   background: color-mix(in oklab, var(--text) 8%, transparent);
 }
@@ -543,7 +756,7 @@ html[data-dashboard="true"] .footer {
   display: flex;
   align-items: stretch;
   width: 100%;
-  min-height: calc(100vh - 72px);
+  min-height: 100vh;
 }
 .dashboard-sidebar-toggle {
   display: none;
@@ -567,7 +780,7 @@ html[data-dashboard="true"] .footer {
   display: none;
   position: fixed;
   inset: 0;
-  top: 72px;
+  top: 0;
   z-index: 35;
   background: rgba(0, 0, 0, 0.35);
   border: 0;
@@ -580,9 +793,9 @@ html[data-dashboard="true"] .footer {
   border-right: 1px solid var(--line);
   background: color-mix(in oklab, var(--bg-soft) 92%, transparent);
   position: sticky;
-  top: 72px;
+  top: 0;
   align-self: flex-start;
-  max-height: calc(100vh - 72px);
+  max-height: 100vh;
   overflow-y: auto;
   z-index: 36;
 }
@@ -737,11 +950,6 @@ html[data-dashboard="true"] .footer {
 }
 .dashboard-topbar-right .search-box {
   width: 280px;
-}
-.dashboard-topbar-avatar {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
 }
 .dashboard-page h1 {
   font-size: clamp(28px, 3.5vw, 44px);
@@ -924,7 +1132,7 @@ html[data-dashboard="true"] .footer {
   .dashboard-sidebar {
     position: fixed;
     left: 0;
-    top: 72px;
+    top: 0;
     bottom: 0;
     max-height: none;
     width: min(300px, 88vw);
@@ -987,10 +1195,25 @@ html[data-dashboard="true"] .footer {
   .nav-links[data-open="true"] {
     opacity: 1;
     transform: translateY(0px) scale(1);
-    max-height: 420px;
+    max-height: min(72vh, 560px);
     pointer-events: auto;
   }
-  .nav-links a { width: fit-content; }
+  .nav-links > a:not(.button-secondary),
+  .nav-link-pill { width: fit-content; }
+  .nav-dropdown-panel {
+    position: static;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    box-shadow: none;
+    min-width: 0;
+    width: 100%;
+  }
+  .account-menu-panel--nav {
+    position: static;
+    width: 100%;
+    margin-top: 8px;
+    box-shadow: var(--shadow-sm);
+  }
 }
 
 /* —— Badge system —— */

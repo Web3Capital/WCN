@@ -8,6 +8,7 @@ import {
   AlertTriangle,
   BarChart3,
   Bot,
+  ChevronDown,
   ClipboardList,
   FolderKanban,
   Handshake,
@@ -15,8 +16,10 @@ import {
   Inbox,
   Landmark,
   LayoutDashboard,
+  ListChecks,
   ListTodo,
   Bell,
+  LogOut,
   Mail,
   Menu,
   Network,
@@ -24,10 +27,12 @@ import {
   Rocket,
   Scale,
   ShieldCheck,
+  User,
   Users,
   X
 } from "lucide-react";
 import type { Role } from "@prisma/client";
+import { signOut } from "next-auth/react";
 
 type NavItem = { href: string; label: string; icon: ReactNode; roles?: string[] };
 
@@ -62,7 +67,7 @@ const GROUPS: { title: string; items: NavItem[] }[] = [
     title: "Verification",
     items: [
       { href: "/dashboard/proof-desk", label: "Evidence Desk", icon: <ShieldCheck size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK", "NODE_OWNER", "SERVICE_NODE"] },
-      { href: "/dashboard/pob", label: "PoB Records", icon: <ShieldCheck size={18} strokeWidth={2} /> },
+      { href: "/dashboard/pob", label: "PoB Records", icon: <ListChecks size={18} strokeWidth={2} /> },
       { href: "/dashboard/disputes", label: "Disputes", icon: <AlertTriangle size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK"] },
       { href: "/dashboard/settlement", label: "Settlement", icon: <Scale size={18} strokeWidth={2} /> }
     ]
@@ -75,7 +80,7 @@ const GROUPS: { title: string; items: NavItem[] }[] = [
     ]
   },
   {
-    title: "Admin",
+    title: "Governance",
     items: [
       { href: "/dashboard/approvals", label: "Approvals", icon: <ShieldCheck size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "FINANCE_ADMIN", "REVIEWER", "RISK_DESK"] },
       { href: "/dashboard/applications", label: "Applications", icon: <Inbox size={18} strokeWidth={2} /> },
@@ -185,6 +190,74 @@ function GlobalSearch() {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+function AccountMenu({ displayName, email }: { displayName: string; email?: string }) {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as HTMLElement)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
+  return (
+    <div ref={ref} className="dashboard-account-wrap">
+      <button
+        type="button"
+        className="dashboard-account-trigger"
+        aria-expanded={open}
+        aria-haspopup="true"
+        aria-label="Account menu"
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span className="user-avatar" style={{ width: 32, height: 32, fontSize: 12 }}>
+          {(displayName || "?").charAt(0).toUpperCase()}
+        </span>
+        <ChevronDown size={16} className="dashboard-account-chevron" aria-hidden data-open={open ? "true" : "false"} />
+      </button>
+      <div className="account-menu-panel account-menu-panel--dashboard" hidden={!open}>
+        <div className="account-menu-head">
+          <p className="account-menu-name">{displayName}</p>
+          {email ? <p className="account-menu-email muted">{email}</p> : null}
+        </div>
+        <div className="account-menu-actions">
+          <Link href="/account" className="account-menu-link" onClick={() => setOpen(false)}>
+            <User size={16} strokeWidth={2} aria-hidden />
+            Account settings
+          </Link>
+          <Link href="/" className="account-menu-link" onClick={() => setOpen(false)}>
+            <Home size={16} strokeWidth={2} aria-hidden />
+            Site home
+          </Link>
+          <button
+            type="button"
+            className="account-menu-signout"
+            onClick={() => signOut({ callbackUrl: "/" })}
+          >
+            <LogOut size={16} strokeWidth={2} aria-hidden />
+            Sign out
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -364,10 +437,6 @@ export function DashboardShell({
           </nav>
 
           <div className="dashboard-sidebar-footer">
-            <Link href="/account" className="dashboard-nav-link dashboard-nav-link-muted">
-              <span className="dashboard-nav-icon" aria-hidden><Users size={16} strokeWidth={2} /></span>
-              Account settings
-            </Link>
             <Link href="/" className="dashboard-nav-link dashboard-nav-link-muted">
               <span className="dashboard-nav-icon" aria-hidden><Home size={16} strokeWidth={2} /></span>
               Site home
@@ -402,11 +471,7 @@ export function DashboardShell({
           <div className="dashboard-topbar-right">
             <GlobalSearch />
             <NotificationBell />
-            <Link href="/account" className="dashboard-topbar-avatar" title={email}>
-              <span className="user-avatar" style={{ width: 32, height: 32, fontSize: 12 }}>
-                {(displayName || "?").charAt(0).toUpperCase()}
-              </span>
-            </Link>
+            <AccountMenu displayName={displayName} email={email} />
           </div>
         </header>
         {children}
