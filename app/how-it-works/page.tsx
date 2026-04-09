@@ -7,6 +7,14 @@ const loop = [
   ["Settlement (Phase 2)", "PoB competes for a periodic allocation pool; governance and staking follow."]
 ];
 
+const layers = [
+  { label: "Human nodes layer", desc: "Resources, trust, accountability", width: "100%" },
+  { label: "Agent execution layer", desc: "Research, matching, operations", width: "88%" },
+  { label: "PoB verification layer", desc: "Evidence, review, risk checks", width: "76%" },
+  { label: "Settlement layer", desc: "Allocation, staking, governance", width: "64%" },
+  { label: "Asset layer", desc: "On-chain identity, issuance, liquidity", width: "52%" }
+];
+
 export default function HowItWorksPage() {
   return (
     <main className="section">
@@ -14,29 +22,35 @@ export default function HowItWorksPage() {
         <span className="eyebrow">How It Works</span>
         <h1>From resources to verified outcomes.</h1>
         <p className="muted" style={{ maxWidth: 900 }}>
-          WCN is not “activity rewards.” It is a business loop: structure work, execute with humans + agents, verify with
+          WCN is not "activity rewards." It is a business loop: structure work, execute with humans + agents, verify with
           evidence, and record PoB as the basis for future settlement.
         </p>
-        <div className="grid-3">
-          {loop.map(([title, description]) => (
-            <div className="card" key={title}>
+        <div className="grid-3 card-grid-animated">
+          {loop.map(([title, description], i) => (
+            <div className="card step-card" key={title}>
+              <span className="step-card-number">{i + 1}</span>
               <h3>{title}</h3>
               <p>{description}</p>
             </div>
           ))}
         </div>
-        <div className="card" style={{ marginTop: 20 }}>
+
+        <div className="card" style={{ marginTop: 28, padding: "28px 24px" }}>
           <h3>5-layer architecture</h3>
-          <ul className="list-clean">
-            <li>Human nodes layer (resources, trust, accountability)</li>
-            <li>Agent execution layer (research, matching, operations)</li>
-            <li>PoB verification layer (evidence, review, risk checks)</li>
-            <li>Settlement layer (Phase 2: allocation, staking, governance)</li>
-            <li>Asset layer (Phase 3: on-chain identity, issuance, liquidity)</li>
-          </ul>
-          <p>
+          <p className="muted" style={{ marginBottom: 18 }}>
             Traditional systems allocate by status or negotiation. WCN allocates by verified contribution.
           </p>
+          <div className="tier-stack">
+            {layers.map((layer, i) => (
+              <div key={layer.label} className="tier-bar" style={{ width: layer.width, marginLeft: "auto", marginRight: "auto" }}>
+                <span className="badge badge-accent" style={{ minWidth: 28, justifyContent: "center" }}>{i + 1}</span>
+                <div>
+                  <div className="tier-bar-label">{layer.label}</div>
+                  <div className="tier-bar-desc">{layer.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </main>

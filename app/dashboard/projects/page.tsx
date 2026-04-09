@@ -6,13 +6,14 @@ import { ReadOnlyBanner } from "@/app/dashboard/_components/read-only-banner";
 import { ProjectsConsole } from "./ui";
 import { getOwnedNodeIds, memberProjectsWhere } from "@/lib/member-data-scope";
 import { redactProjectForMember, redactNodeForMember } from "@/lib/member-redact";
+import { isAdminRole } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProjectsPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
-  const isAdmin = session.user.role === "ADMIN";
+  const isAdmin = isAdminRole(session.user.role);
   const userId = session.user.id;
 
   const prisma = getPrisma();

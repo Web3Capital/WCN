@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 
 type NodeRow = { id: string; name: string; type: string };
 type ProjectRow = { id: string; name: string };
@@ -17,7 +18,11 @@ type TaskRow = {
 };
 
 const TASK_TYPES = ["FUNDRAISING", "GROWTH", "RESOURCE", "LIQUIDITY", "RESEARCH", "EXECUTION", "OTHER"] as const;
-const TASK_STATUS = ["OPEN", "IN_PROGRESS", "WAITING_REVIEW", "DONE", "CANCELLED"] as const;
+const TASK_STATUS = [
+  "DRAFT", "ASSIGNED", "IN_PROGRESS", "SUBMITTED",
+  "ACCEPTED", "REWORK", "BLOCKED", "CANCELLED", "CLOSED",
+  "OPEN", "WAITING_REVIEW", "DONE",
+] as const;
 
 export function TasksConsole({
   initial,
@@ -212,13 +217,14 @@ export function TasksConsole({
                 }}
                 onClick={() => setSelectedId(r.id)}
               >
-                <div>
-                  <div style={{ fontWeight: 800 }}>{r.title}</div>
-                  <div className="muted" style={{ fontSize: 13 }}>
-                    {r.type} · {r.status}
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span className={`status-dot ${r.status === "CLOSED" || r.status === "ACCEPTED" || r.status === "DONE" ? "status-dot-green" : r.status === "IN_PROGRESS" || r.status === "SUBMITTED" || r.status === "REWORK" ? "status-dot-amber" : r.status === "CANCELLED" || r.status === "BLOCKED" ? "status-dot-red" : ""}`} />
+                  <div>
+                    <Link href={`/dashboard/tasks/${r.id}`} style={{ fontWeight: 800, color: "var(--accent)" }} onClick={(e) => e.stopPropagation()}>{r.title}</Link>
+                    <div className="muted" style={{ fontSize: 13 }}>{r.type}</div>
                   </div>
                 </div>
-                <div className="pill">{r.projectId ? "Project" : "—"}</div>
+                <span className={`badge ${r.status === "DONE" ? "badge-green" : r.status === "IN_PROGRESS" ? "badge-amber" : r.status === "CANCELLED" ? "badge-red" : ""}`}>{r.status}</span>
               </button>
             );
           })}

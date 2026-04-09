@@ -1,6 +1,41 @@
 import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/admin";
+import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { isAdminRole } from "@/lib/permissions";
+import { redactProjectForMember } from "@/lib/member-redact";
+import { AuditAction, writeAudit } from "@/lib/audit";
+import type { ProjectStatus } from "@prisma/client";
+
+const VALID_STATUSES = new Set([
+  "DRAFT", "SUBMITTED", "SCREENED", "CURATED", "IN_DEAL_ROOM",
+  "ACTIVE", "ON_HOLD", "APPROVED", "REJECTED", "ARCHIVED",
+]);
+
+export async function GET(_req: Request, { params }: { params: { id: string } }) {
+  const auth = await requireSignedIn();
+  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+
+  const prisma = getPrisma();
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+
+  const project = await prisma.project.findUnique({
+    where: { id: params.id },
+    include: {
+      node: { select: { id: true, name: true, ownerUserId: true } },
+      tasks: { select: { id: true, title: true, status: true }, take: 20, orderBy: { createdAt: "desc" } },
+      pobRecords: { select: { id: true, businessType: true, score: true, status: true }, take: 10 },
+      evidence: { select: { id: true, title: true, type: true, createdAt: true }, take: 20, orderBy: { createdAt: "desc" } },
+      _count: { select: { tasks: true, pobRecords: true, evidence: true, deals: true } },
+    },
+  });
+
+  if (!project) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+
+  return NextResponse.json({
+    ok: true,
+    project: isAdmin ? project : redactProjectForMember(project, auth.session.user?.id ?? ""),
+  });
+}
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const admin = await requireAdmin();
@@ -9,37 +44,47 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
-  const data: any = {};
-  if (body?.name !== undefined) data.name = String(body.name).trim();
-  if (body?.sector !== undefined) data.sector = body.sector ? String(body.sector) : null;
-  if (body?.website !== undefined) data.website = body.website ? String(body.website) : null;
-  if (body?.pitchUrl !== undefined) data.pitchUrl = body.pitchUrl ? String(body.pitchUrl) : null;
-  if (body?.fundraisingNeed !== undefined) data.fundraisingNeed = body.fundraisingNeed ? String(body.fundraisingNeed) : null;
-  if (body?.contactName !== undefined) data.contactName = body.contactName ? String(body.contactName) : null;
-  if (body?.contactEmail !== undefined) data.contactEmail = body.contactEmail ? String(body.contactEmail) : null;
-  if (body?.contactTelegram !== undefined) data.contactTelegram = body.contactTelegram ? String(body.contactTelegram) : null;
-  if (body?.description !== undefined) data.description = body.description ? String(body.description) : null;
-  if (body?.nodeId !== undefined) data.nodeId = body.nodeId ? String(body.nodeId) : null;
+  const existing = await prisma.project.findUnique({ where: { id: params.id }, select: { id: true, status: true } });
+  if (!existing) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
 
-  if (body?.stage !== undefined) {
-    const stage = String(body.stage);
-    const allowedStages = new Set(["IDEA", "SEED", "SERIES_A", "SERIES_B", "SERIES_C", "GROWTH", "PUBLIC", "OTHER"]);
-    if (!allowedStages.has(stage)) {
-      return NextResponse.json({ ok: false, error: "Invalid stage." }, { status: 400 });
-    }
-    data.stage = stage;
+  const data: Record<string, unknown> = {};
+
+  const stringFields = [
+    "name", "sector", "website", "pitchUrl", "fundraisingNeed",
+    "contactName", "contactEmail", "contactTelegram", "description", "internalNotes",
+  ] as const;
+  for (const f of stringFields) {
+    if (body?.[f] !== undefined) data[f] = body[f] ? String(body[f]).trim() : null;
+  }
+
+  if (body?.stage !== undefined) data.stage = String(body.stage);
+  if (body?.internalScore !== undefined) data.internalScore = body.internalScore != null ? Number(body.internalScore) : null;
+  if (body?.nodeId !== undefined) data.nodeId = body.nodeId ? String(body.nodeId) : null;
+  if (body?.confidentialityLevel !== undefined) data.confidentialityLevel = String(body.confidentialityLevel);
+
+  if (body?.riskTags !== undefined) {
+    data.riskTags = Array.isArray(body.riskTags) ? body.riskTags.map((t: unknown) => String(t).trim()).filter(Boolean) : [];
   }
 
   if (body?.status !== undefined) {
-    const status = String(body.status);
-    const allowed = new Set(["DRAFT", "SUBMITTED", "APPROVED", "REJECTED", "ARCHIVED"]);
-    if (!allowed.has(status)) {
-      return NextResponse.json({ ok: false, error: "Invalid status." }, { status: 400 });
+    const newStatus = String(body.status);
+    if (!VALID_STATUSES.has(newStatus)) {
+      return NextResponse.json({ ok: false, error: "Invalid project status." }, { status: 400 });
     }
-    data.status = status;
+    data.status = newStatus;
   }
 
   const project = await prisma.project.update({ where: { id: params.id }, data });
+
+  if (data.status && data.status !== existing.status) {
+    await writeAudit({
+      actorUserId: admin.session.user?.id ?? null,
+      action: AuditAction.PROJECT_STATUS_CHANGE,
+      targetType: "PROJECT",
+      targetId: params.id,
+      metadata: { previousStatus: existing.status, newStatus: data.status },
+    });
+  }
+
   return NextResponse.json({ ok: true, project });
 }
-

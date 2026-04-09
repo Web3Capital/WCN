@@ -5,13 +5,14 @@ import { redirect } from "next/navigation";
 import { ReadOnlyBanner } from "@/app/dashboard/_components/read-only-banner";
 import { SettlementConsole } from "./ui";
 import { redactSettlementCycleForMember } from "@/lib/member-redact";
+import { isAdminRole } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
 export default async function SettlementPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
-  const isAdmin = session.user.role === "ADMIN";
+  const isAdmin = isAdminRole(session.user.role);
 
   const prisma = getPrisma();
   const cycles = await prisma.settlementCycle.findMany({ orderBy: { startAt: "desc" }, take: 50 });

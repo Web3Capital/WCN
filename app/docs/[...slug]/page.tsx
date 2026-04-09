@@ -4,7 +4,6 @@ import { getWcnChapters, getWcnDocBySlugParts, getAllWcnDocs } from "@/lib/wcn-d
 import { cookies } from "next/headers";
 
 export function generateStaticParams() {
-  // Pre-render both languages if English content exists.
   const zh = getAllWcnDocs("zh").map((doc) => ({ slug: doc.slugParts }));
   const en = getAllWcnDocs("en").map((doc) => ({ slug: doc.slugParts }));
   return [...zh, ...en];
@@ -32,7 +31,11 @@ export default function DocPage({ params }: { params: { slug: string[] } }) {
   if (!doc) notFound();
 
   const chapters = getWcnChapters(lang);
+  const allDocs = getAllWcnDocs(lang);
   const current = doc.slugParts.join("/");
+  const currentIndex = allDocs.findIndex((d) => d.slugParts.join("/") === current);
+  const prevDoc = currentIndex > 0 ? allDocs[currentIndex - 1] : null;
+  const nextDoc = currentIndex < allDocs.length - 1 ? allDocs[currentIndex + 1] : null;
 
   return (
     <main className="section">
@@ -60,9 +63,23 @@ export default function DocPage({ params }: { params: { slug: string[] } }) {
           <h1>{doc.title}</h1>
           {doc.description ? <p>{doc.description}</p> : null}
           {renderContent(doc.content)}
+
+          <div className="docs-nav-footer">
+            {prevDoc ? (
+              <Link href={`/docs/${prevDoc.slugParts.join("/")}`} className="docs-nav-btn">
+                <span className="docs-nav-btn-label">← Previous</span>
+                <span>{prevDoc.title}</span>
+              </Link>
+            ) : <span />}
+            {nextDoc ? (
+              <Link href={`/docs/${nextDoc.slugParts.join("/")}`} className="docs-nav-btn" style={{ textAlign: "right" }}>
+                <span className="docs-nav-btn-label">Next →</span>
+                <span>{nextDoc.title}</span>
+              </Link>
+            ) : <span />}
+          </div>
         </article>
       </div>
     </main>
   );
 }
-

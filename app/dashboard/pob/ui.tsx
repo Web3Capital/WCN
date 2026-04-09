@@ -354,13 +354,14 @@ export function PobConsole({
                 }}
                 onClick={() => setSelectedId(r.id)}
               >
-                <div>
-                  <div style={{ fontWeight: 800 }}>{r.businessType}</div>
-                  <div className="muted" style={{ fontSize: 13 }}>
-                    {r.status} · score {Math.round((r.score ?? 0) * 100) / 100}
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span className={`status-dot ${r.status === "APPROVED" ? "status-dot-green" : r.status === "REJECTED" ? "status-dot-red" : r.status === "REVIEWING" ? "status-dot-amber" : ""}`} />
+                  <div>
+                    <div style={{ fontWeight: 800 }}>{r.businessType}</div>
+                    <div className="muted" style={{ fontSize: 13 }}>score {Math.round((r.score ?? 0) * 100) / 100}</div>
                   </div>
                 </div>
-                <div className="pill">{r.nodeId ? "Node" : "—"}</div>
+                <span className={`badge ${r.status === "APPROVED" ? "badge-green" : r.status === "REJECTED" ? "badge-red" : r.status === "REVIEWING" ? "badge-amber" : ""}`}>{r.status}</span>
               </button>
             );
           })}
@@ -577,8 +578,8 @@ export function PobConsole({
                   <div key={d.id} className="apps-row" style={{ cursor: "default", flexDirection: "column", alignItems: "stretch", gap: 6 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <div>
-                        <div style={{ fontWeight: 800, color: "var(--text)" }}>{d.status}</div>
-                        <div className="muted" style={{ fontSize: 13 }}>{d.reason}</div>
+                        <span className={`badge ${d.status === "OPEN" ? "badge-red" : d.status === "RESOLVED" ? "badge-green" : ""}`}>{d.status}</span>
+                        <div className="muted" style={{ fontSize: 13, marginTop: 4 }}>{d.reason}</div>
                         {d.resolution ? <div className="muted" style={{ fontSize: 12 }}>Resolution: {d.resolution}</div> : null}
                       </div>
                       <span className="muted" style={{ fontSize: 12, whiteSpace: "nowrap" }}>

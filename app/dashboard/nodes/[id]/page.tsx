@@ -1,49 +1,41 @@
-import { getPrisma } from "@/lib/prisma";
-import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { redirect, notFound } from "next/navigation";
-import { ReadOnlyBanner } from "@/app/dashboard/_components/read-only-banner";
-import { NodeGovernance } from "./ui";
+import { authOptions } from "@/lib/auth";
+import { getPrisma } from "@/lib/prisma";
+import { isAdminRole } from "@/lib/permissions";
+import { redactNodeForMember } from "@/lib/member-redact";
+import { NodeDetail } from "./ui";
 
 export const dynamic = "force-dynamic";
 
 export default async function NodeDetailPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
-  const isAdmin = session.user.role === "ADMIN";
 
   const prisma = getPrisma();
+  const isAdmin = isAdminRole(session.user.role);
+
   const node = await prisma.node.findUnique({
     where: { id: params.id },
     include: {
-      seats: { orderBy: { createdAt: "desc" } },
-      stakeLedger: { orderBy: { createdAt: "desc" } },
-      penalties: { orderBy: { createdAt: "desc" } }
-    }
+      owner: { select: { id: true, name: true, email: true } },
+      projects: { select: { id: true, name: true, status: true }, take: 30 },
+      tasksAsOwner: { select: { id: true, title: true, status: true }, take: 30, orderBy: { createdAt: "desc" } },
+      ownedAgents: { select: { id: true, name: true, status: true, type: true } },
+      _count: { select: { pobRecords: true, settlementLines: true } },
+    },
   });
 
-  if (!node) notFound();
+  if (!node) redirect("/dashboard/nodes");
 
-  if (!isAdmin && node.ownerUserId !== session.user.id) {
-    redirect("/dashboard/nodes");
-  }
+  const data = isAdmin || node.ownerUserId === session.user.id
+    ? node
+    : redactNodeForMember(node);
 
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Dashboard / Nodes</span>
-        <h1>{node.name}</h1>
-        <p className="muted">{node.type} · {node.status} · Level {node.level} · {node.region || "No region"}</p>
-        {!isAdmin ? <ReadOnlyBanner /> : null}
-        <div style={{ marginTop: 18 }}>
-          <NodeGovernance
-            nodeId={node.id}
-            initialSeats={node.seats as any}
-            initialStake={node.stakeLedger as any}
-            initialPenalties={node.penalties as any}
-            readOnly={!isAdmin}
-          />
-        </div>
+        <NodeDetail node={JSON.parse(JSON.stringify(data))} isAdmin={isAdmin} />
       </div>
     </div>
   );

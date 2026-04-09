@@ -81,13 +81,14 @@ export function ApplicationsTable({
             data-active={a.id === activeId ? "true" : "false"}
             onClick={() => setActiveId(a.id)}
           >
-            <div style={{ display: "grid", gap: 4 }}>
-              <div style={{ fontWeight: 800, color: "var(--text)" }}>{a.applicantName}</div>
-              <div className="muted" style={{ fontSize: 13 }}>
-                {a.organization ?? "—"} · {a.nodeType ?? "—"}
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span className={`status-dot ${a.status === "APPROVED" ? "status-dot-green" : a.status === "REJECTED" ? "status-dot-red" : a.status === "REVIEWING" ? "status-dot-amber" : ""}`} />
+              <div>
+                <div style={{ fontWeight: 800, color: "var(--text)" }}>{a.applicantName}</div>
+                <div className="muted" style={{ fontSize: 13 }}>{a.organization ?? "—"} · {a.nodeType ?? "—"}</div>
               </div>
             </div>
-            <span className="pill">{a.status}</span>
+            <span className={`badge ${a.status === "APPROVED" ? "badge-green" : a.status === "REJECTED" ? "badge-red" : a.status === "REVIEWING" ? "badge-amber" : ""}`}>{a.status}</span>
           </button>
         ))}
       </div>

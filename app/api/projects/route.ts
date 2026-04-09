@@ -5,13 +5,14 @@ import { ProjectStatus } from "@prisma/client";
 import { getOwnedNodeIds, memberProjectsWhere } from "@/lib/member-data-scope";
 import { redactProjectForMember } from "@/lib/member-redact";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { isAdminRole } from "@/lib/permissions";
 
 export async function GET() {
   const auth = await requireSignedIn();
   if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
   const prisma = getPrisma();
-  const isAdmin = auth.session.user?.role === "ADMIN";
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
   const userId = auth.session.user!.id;
 
   const where = isAdmin ? {} : memberProjectsWhere(await getOwnedNodeIds(prisma, userId));

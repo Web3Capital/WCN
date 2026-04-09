@@ -5,13 +5,14 @@ import { redirect } from "next/navigation";
 import { ReadOnlyBanner } from "@/app/dashboard/_components/read-only-banner";
 import { NodesConsole } from "./ui";
 import { redactNodeForMember } from "@/lib/member-redact";
+import { isAdminRole } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
 export default async function NodesPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
-  const isAdmin = session.user.role === "ADMIN";
+  const isAdmin = isAdminRole(session.user.role);
 
   const prisma = getPrisma();
   const nodes = await prisma.node.findMany({ orderBy: { createdAt: "desc" }, take: 200 });

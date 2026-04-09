@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import { isAdminRole } from "@/lib/permissions";
 
 const links = [
   { href: "/", label: "Home" },
@@ -15,6 +16,11 @@ const links = [
   { href: "/docs", label: "Docs" }
 ];
 
+function UserAvatar({ name }: { name: string }) {
+  const letter = (name || "?").charAt(0).toUpperCase();
+  return <span className="user-avatar">{letter}</span>;
+}
+
 export function Nav() {
   const pathname = usePathname() ?? "/";
   const normalizedPath = pathname.replace(/\/$/, "") || "/";
@@ -24,7 +30,7 @@ export function Nav() {
   const navId = useId();
   const { data: session, status } = useSession();
   const authed = status === "authenticated";
-  const isAdmin = authed && session?.user?.role === "ADMIN";
+  const isAdmin = authed && isAdminRole(session?.user?.role ?? "USER");
 
   function isActive(href: string) {
     const normalizedHref = href.replace(/\/$/, "") || "/";
@@ -66,6 +72,8 @@ export function Nav() {
     window.location.reload();
   }
 
+  const displayName = session?.user?.name || session?.user?.email || "Account";
+
   return (
     <header className="nav">
       <div className="container nav-inner">
@@ -101,44 +109,49 @@ export function Nav() {
               {isAdmin ? "Admin" : "Console"}
             </Link>
           ) : null}
-          <button
-            type="button"
-            className="theme-toggle"
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            onClick={toggleTheme}
-          >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-          <div className="lang-toggle" role="group" aria-label="Language">
+
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <button
               type="button"
-              className="lang-chip"
-              aria-pressed={lang === "en"}
-              onClick={() => switchLang("en")}
+              className="theme-toggle"
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              onClick={toggleTheme}
             >
-              EN
+              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
             </button>
-            <button
-              type="button"
-              className="lang-chip"
-              aria-pressed={lang === "zh"}
-              onClick={() => switchLang("zh")}
-            >
-              中文
-            </button>
+            <div className="lang-toggle" role="group" aria-label="Language">
+              <button
+                type="button"
+                className="lang-chip"
+                aria-pressed={lang === "en"}
+                onClick={() => switchLang("en")}
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                className="lang-chip"
+                aria-pressed={lang === "zh"}
+                onClick={() => switchLang("zh")}
+              >
+                中文
+              </button>
+            </div>
           </div>
+
           <Link className="button-secondary" href="/apply">
             Apply as a Node
           </Link>
           {authed ? (
-            <>
-              <span className="muted" style={{ fontSize: 13 }}>
-                {session?.user?.name || session?.user?.email || "Account"}
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <UserAvatar name={displayName} />
+              <span className="muted" style={{ fontSize: 13, maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {displayName}
               </span>
               <button className="button-secondary" type="button" onClick={() => signOut({ callbackUrl: "/" })}>
                 Sign out
               </button>
-            </>
+            </div>
           ) : (
             <Link className="button-secondary" href="/login">
               Sign in

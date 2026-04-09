@@ -271,12 +271,13 @@ h2 {
 }
 h3 { font-size: 22px; letter-spacing: -0.02em; margin-bottom: 12px; }
 p, li { color: var(--muted); line-height: 1.7; font-size: 16px; }
-.hero-grid, .grid-2, .grid-3, .grid-5 {
+.hero-grid, .grid-2, .grid-3, .grid-4, .grid-5 {
   display: grid; gap: 20px;
 }
 .hero-grid { grid-template-columns: 1.2fr 0.8fr; align-items: center; }
 .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .grid-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .section { padding: 72px 0; }
 .section-tight { padding: 48px 0; }
@@ -636,7 +637,7 @@ input:focus, textarea:focus, select:focus { border-color: color-mix(in oklab, va
   .apps-layout { grid-template-columns: 1fr; }
 }
 @media (max-width: 960px) {
-  .hero-grid, .grid-2, .grid-3, .grid-5, .docs-layout { grid-template-columns: 1fr; }
+  .hero-grid, .grid-2, .grid-3, .grid-4, .grid-5, .docs-layout { grid-template-columns: 1fr; }
   .kpis { grid-template-columns: 1fr; }
   .hero-panels { grid-template-columns: 1fr; }
   .nav-inner, .footer-inner { min-height: auto; padding: 14px 0; align-items: flex-start; flex-direction: column; }

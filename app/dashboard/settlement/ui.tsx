@@ -200,6 +200,32 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
                 <button className="button-secondary" type="button" disabled={!lines?.length} onClick={exportCsv}>
                   Export CSV
                 </button>
+                <button className="button-secondary" type="button" disabled={busy} onClick={async () => {
+                  if (!selected) return;
+                  setBusy(true);
+                  try {
+                    const res = await fetch(`/api/settlement/cycles/${selected.id}/export`, { method: "POST" });
+                    const data = await res.json();
+                    if (!data?.ok) throw new Error(data?.error ?? "Export failed.");
+                    await refresh();
+                  } catch (e: any) { setError(e?.message ?? "Export failed."); } finally { setBusy(false); }
+                }}>
+                  Export &amp; Lock
+                </button>
+                <button className="button-secondary" type="button" disabled={busy} style={{ color: "var(--amber)" }} onClick={async () => {
+                  if (!selected) return;
+                  const reason = prompt("Reopen reason:");
+                  if (!reason) return;
+                  setBusy(true);
+                  try {
+                    const res = await fetch(`/api/settlement/cycles/${selected.id}/reopen`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ reason }) });
+                    const data = await res.json();
+                    if (!data?.ok) throw new Error(data?.error ?? "Reopen failed.");
+                    await refresh();
+                  } catch (e: any) { setError(e?.message ?? "Reopen failed."); } finally { setBusy(false); }
+                }}>
+                  Reopen
+                </button>
               </>
             ) : null}
             {lines?.length ? (

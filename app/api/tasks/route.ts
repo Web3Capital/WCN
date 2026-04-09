@@ -5,13 +5,14 @@ import { TaskStatus } from "@prisma/client";
 import { getOwnedNodeIds, memberTasksWhere } from "@/lib/member-data-scope";
 import { redactTaskForMember } from "@/lib/member-redact";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { isAdminRole } from "@/lib/permissions";
 
 export async function GET() {
   const auth = await requireSignedIn();
   if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
   const prisma = getPrisma();
-  const isAdmin = auth.session.user?.role === "ADMIN";
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
   const userId = auth.session.user!.id;
 
   const where = isAdmin ? {} : memberTasksWhere(await getOwnedNodeIds(prisma, userId));
@@ -58,7 +59,11 @@ export async function POST(req: Request) {
       description: body?.description ? String(body.description) : null,
       projectId: body?.projectId ? String(body.projectId) : null,
       ownerNodeId: body?.ownerNodeId ? String(body.ownerNodeId) : null,
-      dueAt: body?.dueAt ? new Date(String(body.dueAt)) : null
+      dealId: body?.dealId ? String(body.dealId) : null,
+      assigneeUserId: body?.assigneeUserId ? String(body.assigneeUserId) : null,
+      acceptanceOwner: body?.acceptanceOwner ? String(body.acceptanceOwner) : null,
+      evidenceRequired: Array.isArray(body?.evidenceRequired) ? body.evidenceRequired.map((s: unknown) => String(s)) : [],
+      dueAt: body?.dueAt ? new Date(String(body.dueAt)) : null,
     }
   });
 

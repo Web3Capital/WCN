@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ApplicationsTable } from "./ui";
+import { isAdminRole } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +13,7 @@ export default async function ApplicationsPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
 
-  const isAdmin = session.user.role === "ADMIN";
+  const isAdmin = isAdminRole(session.user.role);
   const applications = await prisma.application.findMany({
     where: isAdmin ? undefined : { userId: session.user.id },
     orderBy: { createdAt: "desc" },

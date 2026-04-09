@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { Network } from "lucide-react";
 
 type NodeRow = {
   id: string;
@@ -19,7 +20,10 @@ type NodeRow = {
 };
 
 const NODE_TYPES = ["GLOBAL", "REGION", "CITY", "INDUSTRY", "FUNCTIONAL", "AGENT"] as const;
-const NODE_STATUS = ["DRAFT", "SUBMITTED", "ACTIVE", "SUSPENDED", "REJECTED"] as const;
+const NODE_STATUS = [
+  "DRAFT", "SUBMITTED", "UNDER_REVIEW", "NEED_MORE_INFO", "APPROVED",
+  "REJECTED", "CONTRACTING", "LIVE", "PROBATION", "SUSPENDED", "OFFBOARDED",
+] as const;
 
 export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]; readOnly?: boolean }) {
   const [rows, setRows] = useState<NodeRow[]>(initial);
@@ -180,15 +184,18 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
                 }}
                 onClick={() => setSelectedId(r.id)}
               >
-                <div>
-                  <Link href={`/dashboard/nodes/${r.id}`} style={{ fontWeight: 800, color: "var(--accent)" }} onClick={(e) => e.stopPropagation()}>
-                    {r.name}
-                  </Link>
-                  <div className="muted" style={{ fontSize: 13 }}>
-                    {r.type} · {r.status} · L{r.level}
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span className={`status-dot ${r.status === "LIVE" || r.status === "APPROVED" ? "status-dot-green" : r.status === "SUSPENDED" || r.status === "REJECTED" || r.status === "OFFBOARDED" ? "status-dot-red" : r.status === "SUBMITTED" || r.status === "UNDER_REVIEW" || r.status === "CONTRACTING" || r.status === "PROBATION" ? "status-dot-amber" : ""}`} />
+                  <div>
+                    <Link href={`/dashboard/nodes/${r.id}`} style={{ fontWeight: 800, color: "var(--accent)" }} onClick={(e) => e.stopPropagation()}>
+                      {r.name}
+                    </Link>
+                    <div className="muted" style={{ fontSize: 13 }}>
+                      {r.type} · L{r.level}
+                    </div>
                   </div>
                 </div>
-                <div className="pill">{r.city || r.region || "—"}</div>
+                <span className={`badge ${r.status === "LIVE" || r.status === "APPROVED" ? "badge-green" : r.status === "SUSPENDED" || r.status === "REJECTED" || r.status === "OFFBOARDED" ? "badge-red" : r.status === "SUBMITTED" || r.status === "UNDER_REVIEW" || r.status === "CONTRACTING" || r.status === "PROBATION" ? "badge-amber" : ""}`}>{r.status}</span>
               </button>
             );
           })}

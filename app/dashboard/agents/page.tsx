@@ -6,13 +6,14 @@ import { ReadOnlyBanner } from "@/app/dashboard/_components/read-only-banner";
 import { AgentsConsole } from "./ui";
 import { getOwnedNodeIds, memberAgentsWhere } from "@/lib/member-data-scope";
 import { redactAgentForMember, redactNodeForMember } from "@/lib/member-redact";
+import { isAdminRole } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
 export default async function AgentsPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
-  const isAdmin = session.user.role === "ADMIN";
+  const isAdmin = isAdminRole(session.user.role);
   const userId = session.user.id;
 
   const prisma = getPrisma();

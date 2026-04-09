@@ -6,13 +6,14 @@ import { ReadOnlyBanner } from "@/app/dashboard/_components/read-only-banner";
 import { PobConsole } from "./ui";
 import { getOwnedNodeIds, memberPoBWhere, memberTasksWhere, memberProjectsWhere, memberEvidenceWhere } from "@/lib/member-data-scope";
 import { redactNodeForMember, redactEvidenceForMember } from "@/lib/member-redact";
+import { isAdminRole } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
 export default async function PobPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
-  const isAdmin = session.user.role === "ADMIN";
+  const isAdmin = isAdminRole(session.user.role);
   const userId = session.user.id;
 
   const prisma = getPrisma();

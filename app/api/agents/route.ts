@@ -4,13 +4,14 @@ import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { getOwnedNodeIds, memberAgentsWhere } from "@/lib/member-data-scope";
 import { redactAgentForMember } from "@/lib/member-redact";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { isAdminRole } from "@/lib/permissions";
 
 export async function GET() {
   const auth = await requireSignedIn();
   if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
   const prisma = getPrisma();
-  const isAdmin = auth.session.user?.role === "ADMIN";
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
   const userId = auth.session.user!.id;
 
   const where = isAdmin ? {} : memberAgentsWhere(await getOwnedNodeIds(prisma, userId));

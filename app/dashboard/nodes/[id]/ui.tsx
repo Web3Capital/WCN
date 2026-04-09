@@ -3,250 +3,206 @@
 import { useState } from "react";
 import Link from "next/link";
 
-type SeatRow = { id: string; level: number; status: string; createdAt: string | Date };
-type StakeRow = { id: string; action: string; amount: number; notes: string | null; createdAt: string | Date };
-type PenaltyRow = { id: string; type: string; reason: string; amount: number | null; createdAt: string | Date };
+type NodeData = {
+  id: string;
+  name: string;
+  type: string;
+  status: string;
+  level: number;
+  region: string | null;
+  city: string | null;
+  jurisdiction: string | null;
+  description: string | null;
+  tags: string[];
+  entityName: string | null;
+  entityType: string | null;
+  contactName: string | null;
+  contactEmail: string | null;
+  resourcesOffered: string | null;
+  pastCases: string | null;
+  recommendation: string | null;
+  allowedServices: string[];
+  riskLevel: string | null;
+  billingStatus: string | null;
+  depositStatus: string | null;
+  seatFeeStatus: string | null;
+  onboardingScore: number | null;
+  owner: { id: string; name: string | null; email: string | null } | null;
+  projects: { id: string; name: string; status: string }[];
+  tasksAsOwner: { id: string; title: string; status: string }[];
+  ownedAgents: { id: string; name: string; status: string; type: string }[];
+  _count: { pobRecords: number; settlementLines: number };
+};
 
-export function NodeGovernance({
-  nodeId,
-  initialSeats,
-  initialStake,
-  initialPenalties,
-  readOnly = false
-}: {
-  nodeId: string;
-  initialSeats: SeatRow[];
-  initialStake: StakeRow[];
-  initialPenalties: PenaltyRow[];
-  readOnly?: boolean;
-}) {
-  const [seats, setSeats] = useState<SeatRow[]>(initialSeats);
-  const [stake, setStake] = useState<StakeRow[]>(initialStake);
-  const [penalties, setPenalties] = useState<PenaltyRow[]>(initialPenalties);
+const LIFECYCLE = [
+  "DRAFT", "SUBMITTED", "UNDER_REVIEW", "NEED_MORE_INFO", "APPROVED",
+  "CONTRACTING", "LIVE", "PROBATION", "SUSPENDED", "OFFBOARDED", "REJECTED",
+];
 
+const STATUS_COLOR: Record<string, string> = {
+  LIVE: "badge-green", APPROVED: "badge-green",
+  SUSPENDED: "badge-red", REJECTED: "badge-red", OFFBOARDED: "badge-red",
+  SUBMITTED: "badge-amber", UNDER_REVIEW: "badge-amber", CONTRACTING: "badge-amber", PROBATION: "badge-amber",
+};
+
+export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean }) {
+  const [status, setStatus] = useState(node.status);
   const [busy, setBusy] = useState(false);
+  const [notes, setNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const [newSeat, setNewSeat] = useState({ level: "1", status: "ACTIVE" });
-  const [newStake, setNewStake] = useState({ action: "DEPOSIT", amount: "", notes: "" });
-  const [newPenalty, setNewPenalty] = useState({ type: "FREEZE", reason: "", amount: "" });
-
-  async function refreshSeats() {
-    const res = await fetch(`/api/nodes/${nodeId}/seats`, { cache: "no-store" });
-    const data = await res.json();
-    if (data?.ok) setSeats(data.seats);
-  }
-
-  async function refreshStake() {
-    const res = await fetch(`/api/nodes/${nodeId}/stake`, { cache: "no-store" });
-    const data = await res.json();
-    if (data?.ok) setStake(data.entries);
-  }
-
-  async function refreshPenalties() {
-    const res = await fetch(`/api/nodes/${nodeId}/penalties`, { cache: "no-store" });
-    const data = await res.json();
-    if (data?.ok) setPenalties(data.penalties);
-  }
-
-  async function addSeat() {
-    setError(null);
+  async function transition(newStatus: string) {
     setBusy(true);
+    setError(null);
     try {
-      const res = await fetch(`/api/nodes/${nodeId}/seats`, {
-        method: "POST",
+      const res = await fetch(`/api/nodes/${node.id}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ level: Number(newSeat.level), status: newSeat.status })
+        body: JSON.stringify({ status: newStatus, notes: notes || undefined }),
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Failed.");
-      setNewSeat({ level: "1", status: "ACTIVE" });
-      await refreshSeats();
-    } catch (e: any) {
-      setError(e?.message ?? "Failed.");
-    } finally {
-      setBusy(false);
-    }
+      if (data.ok) {
+        setStatus(newStatus);
+        setNotes("");
+      } else {
+        setError(data.error || "Transition failed.");
+      }
+    } finally { setBusy(false); }
   }
-
-  async function addStake() {
-    setError(null);
-    setBusy(true);
-    try {
-      const res = await fetch(`/api/nodes/${nodeId}/stake`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: newStake.action, amount: Number(newStake.amount), notes: newStake.notes || null })
-      });
-      const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Failed.");
-      setNewStake({ action: "DEPOSIT", amount: "", notes: "" });
-      await refreshStake();
-    } catch (e: any) {
-      setError(e?.message ?? "Failed.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function addPenalty() {
-    setError(null);
-    setBusy(true);
-    try {
-      const res = await fetch(`/api/nodes/${nodeId}/penalties`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: newPenalty.type, reason: newPenalty.reason, amount: newPenalty.amount ? Number(newPenalty.amount) : null })
-      });
-      const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Failed.");
-      setNewPenalty({ type: "FREEZE", reason: "", amount: "" });
-      await refreshPenalties();
-    } catch (e: any) {
-      setError(e?.message ?? "Failed.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  const runningBalance = [...stake].reverse().reduce((sum, e) => {
-    if (e.action === "DEPOSIT") return sum + e.amount;
-    if (e.action === "WITHDRAW" || e.action === "SLASH") return sum - e.amount;
-    return sum;
-  }, 0);
 
   return (
-    <div style={{ display: "grid", gap: 18 }}>
-      <Link href="/dashboard/nodes" className="muted" style={{ fontSize: 13, display: "inline-block" }}>
-        &larr; Back to Node registry
-      </Link>
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+        <span className="eyebrow">Node</span>
+        <span className={`badge ${STATUS_COLOR[status] ?? ""}`}>{status}</span>
+        <span className="badge">{node.type}</span>
+        <span className="badge">L{node.level}</span>
+        {node.riskLevel && <span className="badge badge-red">{node.riskLevel}</span>}
+      </div>
+      <h1 style={{ marginTop: 4 }}>{node.name}</h1>
+      {node.owner && (
+        <p className="muted" style={{ margin: "4px 0 0" }}>
+          Owner: {node.owner.name || node.owner.email}
+        </p>
+      )}
 
-      {error ? <p className="form-error">{error}</p> : null}
-
-      {/* Seats */}
-      <div className="card" style={{ padding: 14 }}>
-        <div className="pill" style={{ marginBottom: 10 }}>Seats ({seats.length})</div>
-        {!readOnly ? (
-          <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
-            <label className="field" style={{ flex: "0 0 80px" }}>
-              <span className="label">Level</span>
-              <input type="number" value={newSeat.level} onChange={(e) => setNewSeat((s) => ({ ...s, level: e.target.value }))} />
-            </label>
-            <label className="field" style={{ flex: "0 0 120px" }}>
-              <span className="label">Status</span>
-              <select value={newSeat.status} onChange={(e) => setNewSeat((s) => ({ ...s, status: e.target.value }))}>
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="FROZEN">FROZEN</option>
-                <option value="REVOKED">REVOKED</option>
-              </select>
-            </label>
-            <button className="button-secondary" type="button" disabled={busy} onClick={addSeat} style={{ alignSelf: "flex-end" }}>
-              Add seat
-            </button>
+      <div className="grid-2" style={{ marginTop: 20, gap: 16 }}>
+        <div className="card" style={{ padding: 18 }}>
+          <h3 style={{ margin: "0 0 12px" }}>Profile</h3>
+          <div style={{ display: "grid", gap: 8, fontSize: 14 }}>
+            {node.region && <div><span className="muted">Region:</span> {node.region}</div>}
+            {node.city && <div><span className="muted">City:</span> {node.city}</div>}
+            {node.jurisdiction && <div><span className="muted">Jurisdiction:</span> {node.jurisdiction}</div>}
+            {node.entityName && <div><span className="muted">Entity:</span> {node.entityName} {node.entityType ? `(${node.entityType})` : ""}</div>}
+            {node.contactName && <div><span className="muted">Contact:</span> {node.contactName}</div>}
+            {node.contactEmail && <div><span className="muted">Email:</span> {node.contactEmail}</div>}
+            {node.resourcesOffered && <div><span className="muted">Resources:</span> {node.resourcesOffered}</div>}
+            {node.pastCases && <div><span className="muted">Past cases:</span> {node.pastCases}</div>}
+            {node.recommendation && <div><span className="muted">Recommendation:</span> {node.recommendation}</div>}
+            {node.description && <div style={{ marginTop: 8 }}><span className="muted">Description:</span><p style={{ margin: "4px 0 0" }}>{node.description}</p></div>}
           </div>
-        ) : null}
-        <div className="apps-list">
-          {seats.map((s) => (
-            <div key={s.id} className="apps-row" style={{ cursor: "default" }}>
-              <div>
-                <span style={{ fontWeight: 800 }}>Level {s.level}</span>
-                <span className="muted" style={{ marginLeft: 8 }}>{s.status}</span>
-              </div>
-              <span className="muted" style={{ fontSize: 12 }}>{new Date(s.createdAt as any).toLocaleDateString()}</span>
+          {node.tags.length > 0 && (
+            <div style={{ marginTop: 12, display: "flex", gap: 6, flexWrap: "wrap" }}>
+              {node.tags.map((t) => <span key={t} className="badge" style={{ fontSize: 11 }}>{t}</span>)}
             </div>
-          ))}
-          {seats.length === 0 ? <p className="muted" style={{ margin: 0 }}>No seats allocated.</p> : null}
+          )}
+          {node.allowedServices.length > 0 && (
+            <div style={{ marginTop: 8, display: "flex", gap: 6, flexWrap: "wrap" }}>
+              <span className="muted" style={{ fontSize: 12 }}>Services:</span>
+              {node.allowedServices.map((s) => <span key={s} className="badge badge-accent" style={{ fontSize: 11 }}>{s}</span>)}
+            </div>
+          )}
+        </div>
+
+        <div className="card" style={{ padding: 18 }}>
+          <h3 style={{ margin: "0 0 12px" }}>Stats & Billing</h3>
+          <div className="grid-2" style={{ gap: 12, marginBottom: 14 }}>
+            <div><div className="stat-number">{node.projects.length}</div><div className="stat-label">Projects</div></div>
+            <div><div className="stat-number">{node.tasksAsOwner.length}</div><div className="stat-label">Tasks</div></div>
+            <div><div className="stat-number">{node._count.pobRecords}</div><div className="stat-label">PoB records</div></div>
+            <div><div className="stat-number">{node.ownedAgents.length}</div><div className="stat-label">Agents</div></div>
+          </div>
+          {isAdmin && (
+            <div style={{ display: "grid", gap: 6, fontSize: 13 }}>
+              <div><span className="muted">Billing:</span> {node.billingStatus ?? "—"}</div>
+              <div><span className="muted">Deposit:</span> {node.depositStatus ?? "—"}</div>
+              <div><span className="muted">Seat fee:</span> {node.seatFeeStatus ?? "—"}</div>
+              {node.onboardingScore != null && <div><span className="muted">Onboarding score:</span> {node.onboardingScore}</div>}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Stake Ledger */}
-      <div className="card" style={{ padding: 14 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-          <div className="pill">Stake Ledger ({stake.length})</div>
-          <div className="pill" style={{ background: runningBalance >= 0 ? "var(--green-bg)" : "var(--red-bg)" }}>
-            Balance: {runningBalance.toLocaleString()}
+      {isAdmin && (
+        <div className="card" style={{ padding: 18, marginTop: 16 }}>
+          <h3 style={{ margin: "0 0 12px" }}>Lifecycle Actions</h3>
+          <input
+            placeholder="Notes (optional)"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            style={{ marginBottom: 10, width: "100%", maxWidth: 400 }}
+          />
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {LIFECYCLE.map((s) => (
+              <button
+                key={s}
+                className="button-secondary"
+                style={{ fontSize: 12 }}
+                disabled={busy || s === status}
+                onClick={() => transition(s)}
+              >
+                {s.replace(/_/g, " ")}
+              </button>
+            ))}
           </div>
+          {error && <p className="form-error" style={{ marginTop: 8 }}>{error}</p>}
         </div>
-        {!readOnly ? (
-          <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
-            <label className="field" style={{ flex: "0 0 120px" }}>
-              <span className="label">Action</span>
-              <select value={newStake.action} onChange={(e) => setNewStake((s) => ({ ...s, action: e.target.value }))}>
-                <option value="DEPOSIT">DEPOSIT</option>
-                <option value="WITHDRAW">WITHDRAW</option>
-                <option value="FREEZE">FREEZE</option>
-                <option value="UNFREEZE">UNFREEZE</option>
-                <option value="SLASH">SLASH</option>
-              </select>
-            </label>
-            <label className="field" style={{ flex: "0 0 100px" }}>
-              <span className="label">Amount</span>
-              <input type="number" value={newStake.amount} onChange={(e) => setNewStake((s) => ({ ...s, amount: e.target.value }))} />
-            </label>
-            <label className="field" style={{ flex: 1, minWidth: 120 }}>
-              <span className="label">Notes</span>
-              <input value={newStake.notes} onChange={(e) => setNewStake((s) => ({ ...s, notes: e.target.value }))} />
-            </label>
-            <button className="button-secondary" type="button" disabled={busy} onClick={addStake} style={{ alignSelf: "flex-end" }}>
-              Record
-            </button>
-          </div>
-        ) : null}
-        <div className="apps-list">
-          {stake.map((e) => (
-            <div key={e.id} className="apps-row" style={{ cursor: "default" }}>
-              <div>
-                <span style={{ fontWeight: 800 }}>{e.action}</span>
-                <span style={{ marginLeft: 8 }}>{e.amount.toLocaleString()}</span>
-                {e.notes ? <span className="muted" style={{ marginLeft: 8, fontSize: 13 }}>{e.notes}</span> : null}
-              </div>
-              <span className="muted" style={{ fontSize: 12 }}>{new Date(e.createdAt as any).toLocaleDateString()}</span>
-            </div>
-          ))}
-          {stake.length === 0 ? <p className="muted" style={{ margin: 0 }}>No stake entries.</p> : null}
-        </div>
-      </div>
+      )}
 
-      {/* Penalties */}
-      <div className="card" style={{ padding: 14 }}>
-        <div className="pill" style={{ marginBottom: 10 }}>Penalties ({penalties.length})</div>
-        {!readOnly ? (
-          <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
-            <label className="field" style={{ flex: "0 0 120px" }}>
-              <span className="label">Type</span>
-              <select value={newPenalty.type} onChange={(e) => setNewPenalty((s) => ({ ...s, type: e.target.value }))}>
-                <option value="FREEZE">FREEZE</option>
-                <option value="SLASH">SLASH</option>
-                <option value="DOWNGRADE">DOWNGRADE</option>
-              </select>
-            </label>
-            <label className="field" style={{ flex: 1, minWidth: 150 }}>
-              <span className="label">Reason</span>
-              <input value={newPenalty.reason} onChange={(e) => setNewPenalty((s) => ({ ...s, reason: e.target.value }))} />
-            </label>
-            <label className="field" style={{ flex: "0 0 100px" }}>
-              <span className="label">Amount</span>
-              <input type="number" value={newPenalty.amount} onChange={(e) => setNewPenalty((s) => ({ ...s, amount: e.target.value }))} placeholder="Optional" />
-            </label>
-            <button className="button-secondary" type="button" disabled={busy || !newPenalty.reason.trim()} onClick={addPenalty} style={{ alignSelf: "flex-end" }}>
-              Add penalty
-            </button>
+      {node.projects.length > 0 && (
+        <div className="card" style={{ padding: 18, marginTop: 16 }}>
+          <h3 style={{ margin: "0 0 12px" }}>Projects</h3>
+          <div style={{ display: "grid", gap: 8 }}>
+            {node.projects.map((p) => (
+              <Link key={p.id} href={`/dashboard/projects/${p.id}`} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14 }}>
+                <span className={`status-dot ${p.status === "ACTIVE" || p.status === "APPROVED" ? "status-dot-green" : p.status === "REJECTED" ? "status-dot-red" : "status-dot-amber"}`} />
+                <span style={{ fontWeight: 600 }}>{p.name}</span>
+                <span className="badge" style={{ fontSize: 11 }}>{p.status}</span>
+              </Link>
+            ))}
           </div>
-        ) : null}
-        <div className="apps-list">
-          {penalties.map((p) => (
-            <div key={p.id} className="apps-row" style={{ cursor: "default" }}>
-              <div>
-                <span style={{ fontWeight: 800 }}>{p.type}</span>
-                {p.amount !== null ? <span style={{ marginLeft: 8 }}>{p.amount.toLocaleString()}</span> : null}
-                <div className="muted" style={{ fontSize: 13 }}>{p.reason}</div>
-              </div>
-              <span className="muted" style={{ fontSize: 12 }}>{new Date(p.createdAt as any).toLocaleDateString()}</span>
-            </div>
-          ))}
-          {penalties.length === 0 ? <p className="muted" style={{ margin: 0 }}>No penalties.</p> : null}
         </div>
-      </div>
+      )}
+
+      {node.tasksAsOwner.length > 0 && (
+        <div className="card" style={{ padding: 18, marginTop: 16 }}>
+          <h3 style={{ margin: "0 0 12px" }}>Tasks</h3>
+          <div style={{ display: "grid", gap: 8 }}>
+            {node.tasksAsOwner.map((t) => (
+              <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14 }}>
+                <span className={`status-dot ${t.status === "CLOSED" || t.status === "ACCEPTED" ? "status-dot-green" : t.status === "CANCELLED" ? "status-dot-red" : "status-dot-amber"}`} />
+                <span style={{ fontWeight: 600 }}>{t.title}</span>
+                <span className="badge" style={{ fontSize: 11 }}>{t.status}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {node.ownedAgents.length > 0 && (
+        <div className="card" style={{ padding: 18, marginTop: 16 }}>
+          <h3 style={{ margin: "0 0 12px" }}>Agents</h3>
+          <div style={{ display: "grid", gap: 8 }}>
+            {node.ownedAgents.map((a) => (
+              <div key={a.id} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14 }}>
+                <span className={`status-dot ${a.status === "ACTIVE" ? "status-dot-green" : a.status === "SUSPENDED" ? "status-dot-red" : "status-dot-amber"}`} />
+                <span style={{ fontWeight: 600 }}>{a.name}</span>
+                <span className="badge badge-purple" style={{ fontSize: 11 }}>{a.type}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

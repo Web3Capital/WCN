@@ -197,13 +197,14 @@ export function AgentsConsole({
                 style={{ borderColor: active ? "color-mix(in oklab, var(--accent) 55%, var(--line))" : undefined }}
                 onClick={() => setSelectedId(a.id)}
               >
-                <div>
-                  <div style={{ fontWeight: 800 }}>{a.name}</div>
-                  <div className="muted" style={{ fontSize: 13 }}>
-                    {a.type} · {a.status}
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span className={`status-dot ${a.status === "ACTIVE" ? "status-dot-green" : a.status === "SUSPENDED" ? "status-dot-red" : "status-dot-amber"}`} />
+                  <div>
+                    <div style={{ fontWeight: 800 }}>{a.name}</div>
+                    <div className="muted" style={{ fontSize: 13 }}>{a.type}</div>
                   </div>
                 </div>
-                <div className="pill">{a.permissions?.length ?? 0} perms</div>
+                <span className={`badge ${a.status === "ACTIVE" ? "badge-green" : a.status === "SUSPENDED" ? "badge-red" : "badge-amber"}`}>{a.status}</span>
               </button>
             );
           })}

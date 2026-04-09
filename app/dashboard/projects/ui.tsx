@@ -167,13 +167,14 @@ export function ProjectsConsole({
                 }}
                 onClick={() => setSelectedId(r.id)}
               >
-                <div>
-                  <div style={{ fontWeight: 800 }}>{r.name}</div>
-                  <div className="muted" style={{ fontSize: 13 }}>
-                    {r.status} · {r.stage}
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span className={`status-dot ${r.status === "APPROVED" ? "status-dot-green" : r.status === "REJECTED" || r.status === "ARCHIVED" ? "status-dot-red" : r.status === "SUBMITTED" ? "status-dot-amber" : ""}`} />
+                  <div>
+                    <div style={{ fontWeight: 800 }}>{r.name}</div>
+                    <div className="muted" style={{ fontSize: 13 }}>{r.stage} · {r.sector || "—"}</div>
                   </div>
                 </div>
-                <div className="pill">{r.sector || "—"}</div>
+                <span className={`badge ${r.status === "APPROVED" ? "badge-green" : r.status === "REJECTED" || r.status === "ARCHIVED" ? "badge-red" : r.status === "SUBMITTED" ? "badge-amber" : ""}`}>{r.status}</span>
               </button>
             );
           })}

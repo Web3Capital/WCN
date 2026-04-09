@@ -2,13 +2,14 @@ import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { isAdminRole } from "@/lib/permissions";
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
   const auth = await requireSignedIn();
   if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
   const prisma = getPrisma();
-  const isAdmin = auth.session.user?.role === "ADMIN";
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
 
   if (!isAdmin) {
     const node = await prisma.node.findUnique({ where: { id: params.id }, select: { ownerUserId: true } });
