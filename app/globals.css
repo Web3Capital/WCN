@@ -449,6 +449,12 @@ input:focus, textarea:focus, select:focus { border-color: color-mix(in oklab, va
   gap: 12px;
 }
 
+/* —— Dashboard: hide global nav + footer —— */
+html[data-dashboard="true"] .nav,
+html[data-dashboard="true"] .footer {
+  display: none;
+}
+
 /* —— Dashboard console —— */
 .dashboard-app {
   display: flex;

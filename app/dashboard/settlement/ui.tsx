@@ -154,6 +154,9 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
 
         <div className="pill" style={{ marginBottom: 10 }}>Cycles ({rows.length})</div>
         <div className="apps-list">
+          {rows.length === 0 && (
+            <div className="empty-state"><p>No cycles yet.</p></div>
+          )}
           {rows.map((c) => (
             <button key={c.id} type="button" className="apps-row" data-active={c.id === selectedId ? "true" : "false"} onClick={() => setSelectedId(c.id)}>
               <div>

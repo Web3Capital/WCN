@@ -307,6 +307,11 @@ export function DashboardShell({
     setOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    document.documentElement.setAttribute("data-dashboard", "true");
+    return () => document.documentElement.removeAttribute("data-dashboard");
+  }, []);
+
   const isRoleAdmin = ADMIN_ROLES.has(role);
 
   return (
