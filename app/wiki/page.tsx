@@ -3,17 +3,17 @@ import { getChapters } from "@/lib/docs";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Documentation",
-  description: "WCN 完整文档 — 从项目介绍到系统架构，全面了解 Web3 Capital Network。",
+  title: "Wiki",
+  description: "WCN 完整知识库 — 从项目介绍到系统架构，全面了解 Web3 Capital Network。",
 };
 
-export default function DocsLandingPage() {
+export default function WikiLandingPage() {
   const chapters = getChapters();
 
   return (
     <div className="docs-landing">
       <header className="docs-landing-hero">
-        <h1>WCN Documentation</h1>
+        <h1>WCN Wiki</h1>
         <p>
           从项目定义到系统架构，从节点机制到商业模式 — 全面了解 Web3 Capital Network 的设计与运作方式。
         </p>
@@ -22,7 +22,7 @@ export default function DocsLandingPage() {
       <div className="docs-landing-chapters">
         {chapters.map((ch) => {
           const firstDoc = ch.docs[0];
-          const href = firstDoc?.href ?? "/docs";
+          const href = firstDoc?.href ?? "/wiki";
 
           return (
             <Link key={ch.slug} href={href} className="docs-landing-card">

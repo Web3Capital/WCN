@@ -10,7 +10,7 @@ const staticPaths = [
   "/pob",
   "/login",
   "/signup",
-  "/docs"
+  "/wiki"
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {

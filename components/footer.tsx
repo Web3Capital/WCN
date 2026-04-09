@@ -23,7 +23,7 @@ export function Footer() {
           </div>
           <div className="footer-col">
             <h4>Resources</h4>
-            <Link href="/docs">Documentation</Link>
+            <Link href="/wiki">Wiki</Link>
             <Link href="/about">About WCN</Link>
             <Link href="/dashboard/assets">Phase 3 Roadmap</Link>
           </div>

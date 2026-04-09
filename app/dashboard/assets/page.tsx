@@ -45,7 +45,7 @@ export default function AssetsPhase3Page() {
             {" · "}
             <Link href="/how-it-works">How it works</Link>
             {" · "}
-            <Link href="/docs">Docs</Link>
+            <Link href="/wiki">Wiki</Link>
           </p>
         </div>
       </div>

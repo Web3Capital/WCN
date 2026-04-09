@@ -15,24 +15,24 @@ import * as cheerio from "cheerio";
 /* ------------------------------------------------------------------ */
 
 const SRC = path.join(process.cwd(), "content", "wcn");
-const DEST = path.join(process.cwd(), "content", "docs");
+const DEST = path.join(process.cwd(), "content", "wiki");
 
 const CHAPTER_META: Record<number, { slug: string; title: string; icon: string; description: string }> = {
-  1:  { slug: "project-intro",    title: "项目介绍",       icon: "📖", description: "WCN 的定义、边界、愿景与时代窗口" },
-  2:  { slug: "problem-space",    title: "问题空间",       icon: "🔍", description: "当前行业面临的核心问题与挑战" },
-  3:  { slug: "solution",         title: "解决方案",       icon: "💡", description: "WCN 的整体解法与核心创新" },
-  4:  { slug: "token-model",      title: "代币模型",       icon: "🪙", description: "WCN 代币系统设计与经济模型" },
-  5:  { slug: "network-arch",     title: "网络架构",       icon: "🏗️", description: "五层架构总览与各层详解" },
-  6:  { slug: "node-system",      title: "节点系统",       icon: "🌐", description: "节点分类、责任与生命周期" },
-  7:  { slug: "agent-system",     title: "Agent 系统",     icon: "🤖", description: "AI Agent 的角色与执行机制" },
-  8:  { slug: "pob",              title: "PoB 机制",       icon: "✅", description: "Proof of Business 验证与归因" },
-  9:  { slug: "business-model",   title: "商业模式",       icon: "💰", description: "收入来源、节点席位与服务收入" },
-  10: { slug: "settlement",       title: "结算系统",       icon: "⚖️", description: "结算流程与分配机制" },
-  11: { slug: "governance",       title: "治理体系",       icon: "🏛️", description: "治理框架与决策流程" },
-  12: { slug: "risk-control",     title: "风控体系",       icon: "🛡️", description: "风险评估、预警与应对机制" },
-  13: { slug: "compliance",       title: "合规框架",       icon: "📋", description: "法律合规与监管框架" },
-  14: { slug: "roadmap",          title: "路线图",         icon: "🗺️", description: "发展阶段与里程碑规划" },
-  15: { slug: "appendix",         title: "附录",           icon: "📎", description: "术语表、参考资料与补充说明" },
+  1:  { slug: "project-intro",    title: "项目介绍",             icon: "📖", description: "WCN 的定义、边界、愿景与时代窗口" },
+  2:  { slug: "industry-problem", title: "行业问题",             icon: "🔍", description: "Web3 的结构性割裂、资本低效与贡献结算难题" },
+  3:  { slug: "solution",         title: "WCN 的解法",           icon: "💡", description: "整体解法、核心判断与三个核心创新" },
+  4:  { slug: "how-it-works",     title: "WCN 如何运作",         icon: "⚙️", description: "最小业务闭环、节点到结算流程与角色分工" },
+  5:  { slug: "network-arch",     title: "网络架构",             icon: "🏗️", description: "五层架构总览与各层详解" },
+  6:  { slug: "node-system",      title: "节点系统",             icon: "🌐", description: "节点分类、责任与生命周期" },
+  7:  { slug: "ai-agent",         title: "AI Agent 系统",        icon: "🤖", description: "AI Agent 的角色、类型、生命周期与业务闭环" },
+  8:  { slug: "pob",              title: "Proof of Business",    icon: "✅", description: "PoB 定义、有效闭环、验证流程与归因逻辑" },
+  9:  { slug: "business-model",   title: "商业模式",             icon: "💰", description: "收入来源、节点席位与服务收入" },
+  10: { slug: "node-onboarding",  title: "节点加入",             icon: "🚪", description: "谁可以加入、如何加入、席位与授权、Node NFT" },
+  11: { slug: "governance",       title: "治理与合规",           icon: "🏛️", description: "当前治理、过渡治理、未来治理与合规原则" },
+  12: { slug: "roadmap",          title: "路线图",               icon: "🗺️", description: "三个阶段：Network MVP → PoB 协同 → 结算资产层" },
+  13: { slug: "why-wcn",          title: "为什么是 WCN",         icon: "🏆", description: "创始人优势、模型优势与差异化竞争力" },
+  14: { slug: "join-wcn",         title: "加入 WCN",             icon: "🤝", description: "申请成为节点、申请合作、获取访问权限" },
+  15: { slug: "resources",        title: "资源中心",             icon: "📦", description: "白皮书、One Pager、Pitch Deck、FAQ 与法律声明" },
 };
 
 /* ------------------------------------------------------------------ */

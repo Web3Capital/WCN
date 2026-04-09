@@ -16,7 +16,7 @@ export interface DocMeta {
 
 export interface DocEntry {
   slug: string[];          // e.g. ["project-intro", "what-is-wcn"]
-  href: string;            // e.g. "/docs/project-intro/what-is-wcn"
+  href: string;            // e.g. "/wiki/project-intro/what-is-wcn"
   meta: DocMeta;
   content: string;         // raw MDX body (no frontmatter)
   chapterSlug: string;     // e.g. "project-intro"
@@ -45,7 +45,7 @@ interface ChapterMeta {
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
 
-const CONTENT_ROOT = path.join(process.cwd(), "content", "docs");
+const CONTENT_ROOT = path.join(process.cwd(), "content", "wiki");
 
 function readJsonSafe<T>(filePath: string): T | null {
   try {
@@ -115,7 +115,7 @@ function loadAll(): { docs: DocEntry[]; chapters: ChapterEntry[] } {
 
       const fileSlug = file === "index.mdx" ? "" : file.replace(/\.mdx$/, "");
       const slug = fileSlug ? [chapterSlug, fileSlug] : [chapterSlug];
-      const href = "/docs/" + slug.join("/");
+      const href = "/wiki/" + slug.join("/");
 
       const entry: DocEntry = {
         slug,

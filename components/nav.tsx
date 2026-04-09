@@ -19,7 +19,7 @@ const networkLinks = [
 
 const resourceLinks = [
   { href: "/how-it-works", label: "How It Works" },
-  { href: "/docs", label: "Docs" }
+  { href: "/wiki", label: "Wiki" }
 ] as const;
 
 function UserAvatar({ name }: { name: string }) {
@@ -31,7 +31,7 @@ function pathMatchesNav(path: string, href: string) {
   const p = path.replace(/\/$/, "") || "/";
   const h = href.replace(/\/$/, "") || "/";
   if (h === "/") return p === "/";
-  if (h.startsWith("/docs")) return p === "/docs" || p.startsWith("/docs/");
+  if (h.startsWith("/wiki")) return p === "/wiki" || p.startsWith("/wiki/");
   return p === h || p.startsWith(`${h}/`);
 }
 

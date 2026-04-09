@@ -29,9 +29,9 @@ export function DocsSidebar({
   const nav = (
     <nav className="docs-sidebar-inner" aria-label="Documentation">
       <div className="docs-sidebar-header">
-        <Link href="/docs" className="docs-sidebar-logo">
+        <Link href="/wiki" className="docs-sidebar-logo">
           <span className="docs-sidebar-mark">W³</span>
-          <span className="docs-sidebar-title">WCN Docs</span>
+          <span className="docs-sidebar-title">WCN Wiki</span>
         </Link>
       </div>
 

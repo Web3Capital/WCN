@@ -23,7 +23,7 @@ export default function HomePage() {
             </p>
             <div className="cta-row cta-centered">
               <Link href="/apply" className="button">Apply as a Node</Link>
-              <Link href="/docs" className="button-secondary">Read the Wiki</Link>
+              <Link href="/wiki" className="button-secondary">Read the Wiki</Link>
             </div>
           </div>
 

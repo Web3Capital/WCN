@@ -10,7 +10,7 @@ export function DocsBreadcrumb({
     <nav className="docs-breadcrumb" aria-label="Breadcrumb">
       <ol>
         <li>
-          <Link href="/docs">Docs</Link>
+          <Link href="/wiki">Wiki</Link>
         </li>
         {items.map((item, i) => (
           <li key={i}>

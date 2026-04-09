@@ -45,21 +45,20 @@ export function generateMetadata({ params }: { params: { slug: string[] } }): Me
 
 const LEGACY_MAP: Record<string, string> = {
   introduction: "project-intro",
-  problem: "problem-space",
+  problem: "industry-problem",
   solution: "solution",
-  mechanism: "token-model",
+  mechanism: "how-it-works",
   pob: "pob",
-  settlement: "settlement",
+  settlement: "node-onboarding",
   nodes: "node-system",
-  agents: "agent-system",
+  agents: "ai-agent",
   governance: "governance",
 };
 
-export default async function DocPage({ params }: { params: { slug: string[] } }) {
+export default async function WikiPage({ params }: { params: { slug: string[] } }) {
   const decoded = params.slug.map((s) => decodeURIComponent(s));
   let doc = getDocBySlug(decoded);
 
-  // Handle legacy single-segment slugs (e.g. /docs/introduction)
   if (!doc && decoded.length === 1) {
     const mapped = LEGACY_MAP[decoded[0]];
     if (mapped) {
@@ -86,7 +85,7 @@ export default async function DocPage({ params }: { params: { slug: string[] } }
   });
 
   const crumbs = [
-    { label: doc.chapterTitle, href: `/docs/${doc.chapterSlug}` },
+    { label: doc.chapterTitle, href: `/wiki/${doc.chapterSlug}` },
     { label: doc.meta.title },
   ];
 
