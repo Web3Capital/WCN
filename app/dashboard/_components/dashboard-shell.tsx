@@ -302,24 +302,6 @@ export function DashboardShell({
         <span>Console menu</span>
       </button>
 
-      {crumbs.length > 0 ? (
-        <nav aria-label="Breadcrumb" className="dashboard-breadcrumb">
-          <ol className="breadcrumb-list">
-            <li><Link href="/dashboard" className="muted">Console</Link></li>
-            {crumbs.map((c, i) => (
-              <li key={c.href} className="breadcrumb-separator">
-                <span className="breadcrumb-slash">/</span>
-                {i === crumbs.length - 1 ? (
-                  <span className="breadcrumb-current">{c.label}</span>
-                ) : (
-                  <Link href={c.href} className="muted">{c.label}</Link>
-                )}
-              </li>
-            ))}
-          </ol>
-        </nav>
-      ) : null}
-
       {open ? (
         <button
           type="button"
@@ -344,11 +326,6 @@ export function DashboardShell({
             <p className="dashboard-sidebar-user muted" title={email} style={{ margin: 0 }}>
               {displayName}
             </p>
-          </div>
-
-          <div className="sidebar-search-row">
-            <div><GlobalSearch /></div>
-            <NotificationBell />
           </div>
 
           <nav className="dashboard-nav" aria-label="Console">
@@ -399,7 +376,41 @@ export function DashboardShell({
         </div>
       </aside>
 
-      <div className="dashboard-main" role="main" tabIndex={-1}>{children}</div>
+      <div className="dashboard-main" role="main" tabIndex={-1}>
+        <header className="dashboard-topbar">
+          <div className="dashboard-topbar-left">
+            {crumbs.length > 0 ? (
+              <nav aria-label="Breadcrumb">
+                <ol className="breadcrumb-list">
+                  <li><Link href="/dashboard" className="muted">Console</Link></li>
+                  {crumbs.map((c, i) => (
+                    <li key={c.href} className="breadcrumb-separator">
+                      <span className="breadcrumb-slash">/</span>
+                      {i === crumbs.length - 1 ? (
+                        <span className="breadcrumb-current">{c.label}</span>
+                      ) : (
+                        <Link href={c.href} className="muted">{c.label}</Link>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            ) : (
+              <span className="dashboard-topbar-title">WCN Console</span>
+            )}
+          </div>
+          <div className="dashboard-topbar-right">
+            <GlobalSearch />
+            <NotificationBell />
+            <Link href="/account" className="dashboard-topbar-avatar" title={email}>
+              <span className="user-avatar" style={{ width: 32, height: 32, fontSize: 12 }}>
+                {(displayName || "?").charAt(0).toUpperCase()}
+              </span>
+            </Link>
+          </div>
+        </header>
+        {children}
+      </div>
     </div>
   );
 }
