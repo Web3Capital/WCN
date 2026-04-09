@@ -10,6 +10,10 @@ export type AuditPayload = {
   deviceInfo?: string | null;
   ipAddress?: string | null;
   workspaceId?: string | null;
+  requestId?: string | null;
+  actorId?: string | null;
+  before?: Record<string, unknown> | null;
+  after?: Record<string, unknown> | null;
 };
 
 export const AuditAction = {
@@ -25,10 +29,35 @@ export const AuditAction = {
   // Invite
   INVITE_SEND: "INVITE_SEND",
   INVITE_ACTIVATE: "INVITE_ACTIVATE",
+  INVITE_REVOKE: "INVITE_REVOKE",
 
   // User / Role
   USER_ROLE_CHANGE: "USER_ROLE_CHANGE",
   USER_STATUS_CHANGE: "USER_STATUS_CHANGE",
+
+  // Workspace / Role Assignment
+  WORKSPACE_CREATE: "WORKSPACE_CREATE",
+  WORKSPACE_UPDATE: "WORKSPACE_UPDATE",
+  MEMBERSHIP_CREATE: "MEMBERSHIP_CREATE",
+  MEMBERSHIP_UPDATE: "MEMBERSHIP_UPDATE",
+  ROLE_ASSIGNMENT_GRANT: "ROLE_ASSIGNMENT_GRANT",
+  ROLE_ASSIGNMENT_REVOKE: "ROLE_ASSIGNMENT_REVOKE",
+
+  // Terms
+  TERMS_ACCEPT: "TERMS_ACCEPT",
+
+  // Access Grant
+  ACCESS_GRANT_CREATE: "ACCESS_GRANT_CREATE",
+  ACCESS_GRANT_REVOKE: "ACCESS_GRANT_REVOKE",
+
+  // Approval
+  APPROVAL_REQUEST: "APPROVAL_REQUEST",
+  APPROVAL_APPROVE: "APPROVAL_APPROVE",
+  APPROVAL_REJECT: "APPROVAL_REJECT",
+
+  // Entity Freeze
+  ENTITY_FREEZE: "ENTITY_FREEZE",
+  ENTITY_UNFREEZE: "ENTITY_UNFREEZE",
 
   // Node
   NODE_CREATE: "NODE_CREATE",
@@ -70,6 +99,8 @@ export const AuditAction = {
   SETTLEMENT_LINES_GENERATE: "SETTLEMENT_LINES_GENERATE",
   SETTLEMENT_EXPORT: "SETTLEMENT_EXPORT",
   SETTLEMENT_REOPEN: "SETTLEMENT_REOPEN",
+  SETTLEMENT_LOCK_APPROVAL: "SETTLEMENT_LOCK_APPROVAL",
+  SETTLEMENT_REOPEN_APPROVAL: "SETTLEMENT_REOPEN_APPROVAL",
 
   // Agent
   AGENT_CREATE: "AGENT_CREATE",
@@ -81,6 +112,7 @@ export const AuditAction = {
   APPLICATION_STATUS_CHANGE: "APPLICATION_STATUS_CHANGE",
   DISPUTE_CREATE: "DISPUTE_CREATE",
   DISPUTE_RESOLVE: "DISPUTE_RESOLVE",
+  DISPUTE_ESCALATE: "DISPUTE_ESCALATE",
   STAKE_ACTION: "STAKE_ACTION",
   PENALTY_CREATE: "PENALTY_CREATE",
 
@@ -93,6 +125,11 @@ export const AuditAction = {
   FILE_UPLOAD: "FILE_UPLOAD",
   FILE_DOWNLOAD: "FILE_DOWNLOAD",
   FILE_SHARE_REVOKE: "FILE_SHARE_REVOKE",
+  FILE_DELETE: "FILE_DELETE",
+  FILE_PRESIGN: "FILE_PRESIGN",
+
+  // Search
+  SEARCH_INDEX_UPDATE: "SEARCH_INDEX_UPDATE",
 } as const;
 
 export async function writeAudit(payload: AuditPayload): Promise<void> {
@@ -110,6 +147,16 @@ export async function writeAudit(payload: AuditPayload): Promise<void> {
       deviceInfo: payload.deviceInfo ?? null,
       ipAddress: payload.ipAddress ?? null,
       workspaceId: payload.workspaceId ?? null,
+      requestId: payload.requestId ?? null,
+      actorId: payload.actorId ?? null,
+      before:
+        payload.before === null || payload.before === undefined
+          ? undefined
+          : (payload.before as Prisma.InputJsonValue),
+      after:
+        payload.after === null || payload.after === undefined
+          ? undefined
+          : (payload.after as Prisma.InputJsonValue),
     },
   });
 }

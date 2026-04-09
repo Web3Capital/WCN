@@ -17,7 +17,13 @@ export type Resource =
   | "notification"
   | "file"
   | "review"
-  | "dispute";
+  | "dispute"
+  | "workspace"
+  | "approval"
+  | "access_grant"
+  | "entity_freeze"
+  | "terms"
+  | "search";
 
 export type Action =
   | "read"
@@ -61,6 +67,12 @@ const POLICIES: Record<string, PolicyMap> = {
     file: FULL_ACCESS,
     review: FULL_ACCESS,
     dispute: FULL_ACCESS,
+    workspace: FULL_ACCESS,
+    approval: FULL_ACCESS,
+    access_grant: FULL_ACCESS,
+    entity_freeze: FULL_ACCESS,
+    terms: FULL_ACCESS,
+    search: ["read"],
   },
   ADMIN: {
     node: FULL_ACCESS,
@@ -80,6 +92,12 @@ const POLICIES: Record<string, PolicyMap> = {
     file: FULL_ACCESS,
     review: FULL_ACCESS,
     dispute: FULL_ACCESS,
+    workspace: FULL_ACCESS,
+    approval: FULL_ACCESS,
+    access_grant: FULL_ACCESS,
+    entity_freeze: FULL_ACCESS,
+    terms: FULL_ACCESS,
+    search: ["read"],
   },
   FINANCE_ADMIN: {
     ...ALL_READ,
@@ -136,6 +154,25 @@ const POLICIES: Record<string, PolicyMap> = {
     audit: ["read"],
     notification: ["read"],
     deal: ["read"],
+    approval: ["read", "create", "update"],
+    entity_freeze: ["read", "create"],
+  },
+  RISK_DESK: {
+    ...ALL_READ,
+    evidence: ["read", "review"],
+    pob: ["read", "review"],
+    review: ["read", "create"],
+    dispute: ["read", "create", "update"],
+    risk: FULL_ACCESS,
+    audit: ["read", "export"],
+    notification: ["read"],
+    deal: ["read"],
+    capital: ["read"],
+    settlement: ["read"],
+    agent: ["read", "freeze"],
+    entity_freeze: FULL_ACCESS,
+    approval: ["read", "create", "update"],
+    file: ["read"],
   },
   AGENT_OWNER: {
     ...ALL_READ,
@@ -152,10 +189,37 @@ const POLICIES: Record<string, PolicyMap> = {
     audit: ["read"],
     notification: ["read"],
   },
+  SYSTEM: {
+    node: FULL_ACCESS,
+    project: FULL_ACCESS,
+    capital: FULL_ACCESS,
+    deal: FULL_ACCESS,
+    task: FULL_ACCESS,
+    evidence: FULL_ACCESS,
+    pob: FULL_ACCESS,
+    settlement: FULL_ACCESS,
+    agent: FULL_ACCESS,
+    user: FULL_ACCESS,
+    invite: FULL_ACCESS,
+    audit: FULL_ACCESS,
+    risk: FULL_ACCESS,
+    notification: FULL_ACCESS,
+    file: FULL_ACCESS,
+    review: FULL_ACCESS,
+    dispute: FULL_ACCESS,
+    workspace: FULL_ACCESS,
+    approval: FULL_ACCESS,
+    access_grant: FULL_ACCESS,
+    entity_freeze: FULL_ACCESS,
+    terms: FULL_ACCESS,
+    search: FULL_ACCESS,
+  },
   USER: {
     ...ALL_READ,
     notification: ["read"],
     file: ["read"],
+    search: ["read"],
+    terms: ["read", "create"],
   },
 };
 
@@ -173,7 +237,7 @@ export function canAny(role: Role, actions: Action[], resource: Resource): boole
 
 const ADMIN_ROLES: Set<string> = new Set(["FOUNDER", "ADMIN"]);
 const HIGH_PRIV_ROLES: Set<string> = new Set([
-  "FOUNDER", "ADMIN", "FINANCE_ADMIN", "REVIEWER", "AGENT_OWNER"
+  "FOUNDER", "ADMIN", "FINANCE_ADMIN", "REVIEWER", "RISK_DESK", "AGENT_OWNER"
 ]);
 
 export function isAdminRole(role: Role): boolean {

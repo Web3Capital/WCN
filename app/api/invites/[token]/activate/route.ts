@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { createHash } from "crypto";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { requiresTwoFactor } from "@/lib/permissions";
 
-export async function POST(req: Request, { params }: { params: { token: string } }) {
+function hashToken(raw: string): string {
+  return createHash("sha256").update(raw).digest("hex");
+}
+
+export async function POST(req: Request, { params }: { params: Promise<{ token: string }> }) {
+  const { token: rawToken } = await params;
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
@@ -15,12 +21,16 @@ export async function POST(req: Request, { params }: { params: { token: string }
     return NextResponse.json({ ok: false, error: "Password must be at least 8 characters." }, { status: 400 });
   }
 
-  const invite = await prisma.invite.findUnique({ where: { token: params.token } });
+  const tokenHash = hashToken(rawToken);
+  const invite = await prisma.invite.findUnique({ where: { tokenHash } });
   if (!invite) {
     return NextResponse.json({ ok: false, error: "Invalid invite." }, { status: 404 });
   }
   if (invite.activatedAt) {
     return NextResponse.json({ ok: false, error: "Invite already activated." }, { status: 410 });
+  }
+  if (invite.revokedAt) {
+    return NextResponse.json({ ok: false, error: "Invite has been revoked." }, { status: 410 });
   }
   if (invite.expiresAt < new Date()) {
     return NextResponse.json({ ok: false, error: "Invite expired." }, { status: 410 });
@@ -53,10 +63,22 @@ export async function POST(req: Request, { params }: { params: { token: string }
   }
 
   if (invite.workspaceId) {
-    await prisma.workspaceMembership.upsert({
+    const membership = await prisma.workspaceMembership.upsert({
       where: { userId_workspaceId: { userId, workspaceId: invite.workspaceId } },
-      create: { userId, workspaceId: invite.workspaceId, role: invite.role },
-      update: { role: invite.role },
+      create: { userId, workspaceId: invite.workspaceId, isPrimary: true },
+      update: {},
+    });
+
+    await prisma.roleAssignment.create({
+      data: {
+        workspaceMembershipId: membership.id,
+        role: invite.role,
+      },
+    });
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { activeWorkspaceId: invite.workspaceId, activeRole: invite.role },
     });
   }
 

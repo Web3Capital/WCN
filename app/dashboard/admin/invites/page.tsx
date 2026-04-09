@@ -22,10 +22,11 @@ export default async function InvitesPage() {
   const serialized = invites.map((inv) => ({
     id: inv.id,
     email: inv.email,
-    token: inv.token,
+    tokenHash: inv.tokenHash.slice(0, 8) + "…",
     role: inv.role,
     expiresAt: inv.expiresAt.toISOString(),
     activatedAt: inv.activatedAt?.toISOString() ?? null,
+    revokedAt: inv.revokedAt?.toISOString() ?? null,
     createdBy: inv.createdBy?.name || inv.createdBy?.email || "—",
     createdAt: inv.createdAt.toISOString(),
   }));

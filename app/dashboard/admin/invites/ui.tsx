@@ -5,17 +5,18 @@ import { useState } from "react";
 type InviteRow = {
   id: string;
   email: string;
-  token: string;
+  tokenHash: string;
   role: string;
   expiresAt: string;
   activatedAt: string | null;
+  revokedAt: string | null;
   createdBy: string;
   createdAt: string;
 };
 
 const ROLES = [
   "FOUNDER", "ADMIN", "FINANCE_ADMIN", "NODE_OWNER", "PROJECT_OWNER",
-  "CAPITAL_NODE", "SERVICE_NODE", "REVIEWER", "AGENT_OWNER", "OBSERVER"
+  "CAPITAL_NODE", "SERVICE_NODE", "REVIEWER", "RISK_DESK", "AGENT_OWNER", "OBSERVER"
 ];
 
 export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] }) {
@@ -24,12 +25,14 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
   const [role, setRole] = useState("NODE_OWNER");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [copied, setCopied] = useState<string | null>(null);
+  const [lastToken, setLastToken] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   async function createInvite(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setError("");
+    setLastToken(null);
     try {
       const res = await fetch("/api/invites", {
         method: "POST",
@@ -38,13 +41,15 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
       });
       const data = await res.json();
       if (!data.ok) { setError(data.error || "Failed."); return; }
+      setLastToken(data.invite.token);
       setInvites([{
         id: data.invite.id,
         email: data.invite.email,
-        token: data.invite.token,
+        tokenHash: data.invite.tokenHash?.slice(0, 8) + "…" || "—",
         role: data.invite.role,
         expiresAt: data.invite.expiresAt,
         activatedAt: null,
+        revokedAt: null,
         createdBy: "You",
         createdAt: new Date().toISOString(),
       }, ...invites]);
@@ -53,11 +58,12 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
     finally { setBusy(false); }
   }
 
-  function copyLink(token: string) {
-    const url = `${window.location.origin}/invite/${token}`;
+  function copyLink() {
+    if (!lastToken) return;
+    const url = `${window.location.origin}/invite/${lastToken}`;
     navigator.clipboard.writeText(url);
-    setCopied(token);
-    setTimeout(() => setCopied(null), 2000);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   return (
@@ -80,7 +86,18 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
             {busy ? "Sending..." : "Send invite"}
           </button>
         </form>
-        {error ? <p style={{ color: "var(--red)", margin: "8px 0 0", fontSize: 13 }}>{error}</p> : null}
+        {error && <p style={{ color: "var(--red)", margin: "8px 0 0", fontSize: 13 }}>{error}</p>}
+        {lastToken && (
+          <div style={{ marginTop: 12, padding: 12, background: "color-mix(in oklab, var(--green) 10%, transparent)", borderRadius: 8, fontSize: 13 }}>
+            <strong>Invite created!</strong> Copy the link below (shown only once):
+            <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 6 }}>
+              <code style={{ flex: 1, fontSize: 12, wordBreak: "break-all" }}>{`${typeof window !== 'undefined' ? window.location.origin : ''}/invite/${lastToken}`}</code>
+              <button className="button" style={{ fontSize: 11, padding: "3px 10px", flexShrink: 0 }} onClick={copyLink}>
+                {copied ? "Copied!" : "Copy"}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="card" style={{ padding: 0, overflow: "hidden" }}>
@@ -93,14 +110,14 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
                 <th style={{ padding: "10px 14px" }}>Status</th>
                 <th style={{ padding: "10px 14px" }}>Created by</th>
                 <th style={{ padding: "10px 14px" }}>Expires</th>
-                <th style={{ padding: "10px 14px" }}>Link</th>
+                <th style={{ padding: "10px 14px" }}>Token</th>
               </tr>
             </thead>
             <tbody>
               {invites.map((inv) => {
                 const expired = new Date(inv.expiresAt) < new Date();
-                const status = inv.activatedAt ? "Activated" : expired ? "Expired" : "Pending";
-                const badgeClass = inv.activatedAt ? "badge-green" : expired ? "badge-red" : "badge-amber";
+                const status = inv.activatedAt ? "Activated" : inv.revokedAt ? "Revoked" : expired ? "Expired" : "Pending";
+                const badgeClass = inv.activatedAt ? "badge-green" : inv.revokedAt ? "badge-red" : expired ? "badge-red" : "badge-amber";
                 return (
                   <tr key={inv.id} style={{ borderBottom: "1px solid var(--line)" }}>
                     <td style={{ padding: "10px 14px", fontWeight: 600 }}>{inv.email}</td>
@@ -114,27 +131,19 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
                     <td style={{ padding: "10px 14px" }} className="muted">
                       {new Date(inv.expiresAt).toLocaleDateString()}
                     </td>
-                    <td style={{ padding: "10px 14px" }}>
-                      {!inv.activatedAt && !expired ? (
-                        <button
-                          className="button-secondary"
-                          style={{ fontSize: 11, padding: "3px 8px" }}
-                          onClick={() => copyLink(inv.token)}
-                        >
-                          {copied === inv.token ? "Copied!" : "Copy link"}
-                        </button>
-                      ) : "—"}
+                    <td style={{ padding: "10px 14px", fontFamily: "monospace", fontSize: 11 }} className="muted">
+                      {inv.tokenHash}
                     </td>
                   </tr>
                 );
               })}
-              {invites.length === 0 ? (
+              {invites.length === 0 && (
                 <tr>
                   <td colSpan={6} style={{ padding: 20, textAlign: "center" }} className="muted">
                     No invites yet.
                   </td>
                 </tr>
-              ) : null}
+              )}
             </tbody>
           </table>
         </div>

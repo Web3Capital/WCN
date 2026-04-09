@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/admin";
+import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const auth = await requirePermission("update", "dispute");
+  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
-  const existing = await prisma.dispute.findUnique({ where: { id: params.id } });
+  const existing = await prisma.dispute.findUnique({ where: { id } });
   if (!existing) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
 
   const data: Record<string, unknown> = {};
@@ -27,14 +28,15 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   if (body?.resolution !== undefined) data.resolution = body.resolution ? String(body.resolution) : null;
 
-  const dispute = await prisma.dispute.update({ where: { id: params.id }, data });
+  const dispute = await prisma.dispute.update({ where: { id }, data });
 
+  const auditAction = data.status === "ESCALATED" ? AuditAction.DISPUTE_ESCALATE : AuditAction.DISPUTE_RESOLVE;
   if (data.status && data.status !== existing.status) {
     await writeAudit({
-      actorUserId: admin.session.user?.id ?? null,
-      action: AuditAction.DISPUTE_RESOLVE,
+      actorUserId: auth.session.user?.id ?? null,
+      action: auditAction,
       targetType: "DISPUTE",
-      targetId: params.id,
+      targetId: id,
       metadata: { previousStatus: existing.status, newStatus: data.status, resolution: data.resolution },
     });
   }

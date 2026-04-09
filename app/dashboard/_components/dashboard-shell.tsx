@@ -61,8 +61,9 @@ const GROUPS: { title: string; items: NavItem[] }[] = [
   {
     title: "Verification",
     items: [
-      { href: "/dashboard/proof-desk", label: "Evidence Desk", icon: <ShieldCheck size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "REVIEWER", "NODE_OWNER", "SERVICE_NODE"] },
+      { href: "/dashboard/proof-desk", label: "Evidence Desk", icon: <ShieldCheck size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK", "NODE_OWNER", "SERVICE_NODE"] },
       { href: "/dashboard/pob", label: "PoB Records", icon: <ShieldCheck size={18} strokeWidth={2} /> },
+      { href: "/dashboard/disputes", label: "Disputes", icon: <AlertTriangle size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK"] },
       { href: "/dashboard/settlement", label: "Settlement", icon: <Scale size={18} strokeWidth={2} /> }
     ]
   },
@@ -76,10 +77,11 @@ const GROUPS: { title: string; items: NavItem[] }[] = [
   {
     title: "Admin",
     items: [
+      { href: "/dashboard/approvals", label: "Approvals", icon: <ShieldCheck size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "FINANCE_ADMIN", "REVIEWER", "RISK_DESK"] },
       { href: "/dashboard/applications", label: "Applications", icon: <Inbox size={18} strokeWidth={2} /> },
       { href: "/dashboard/users", label: "Users", icon: <Users size={18} strokeWidth={2} /> },
       { href: "/dashboard/admin/invites", label: "Invites", icon: <Mail size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN"] },
-      { href: "/dashboard/audit", label: "Audit Log", icon: <ClipboardList size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "REVIEWER"] }
+      { href: "/dashboard/audit", label: "Audit Log", icon: <ClipboardList size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK"] }
     ]
   },
   {
@@ -118,8 +120,10 @@ function roleLabel(role: Role): string {
     CAPITAL_NODE: "Capital",
     SERVICE_NODE: "Service",
     REVIEWER: "Reviewer",
+    RISK_DESK: "Risk Desk",
     AGENT_OWNER: "Agent Owner",
     OBSERVER: "Observer",
+    SYSTEM: "System",
     USER: "Member",
   };
   return map[role] || role;

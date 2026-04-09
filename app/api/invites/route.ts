@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { createHash, randomBytes } from "crypto";
+
+function hashToken(raw: string): string {
+  return createHash("sha256").update(raw).digest("hex");
+}
 
 export async function GET() {
   const auth = await requirePermission("read", "invite");
@@ -33,7 +38,7 @@ export async function POST(req: Request) {
   }
 
   const existing = await prisma.invite.findFirst({
-    where: { email, activatedAt: null, expiresAt: { gt: new Date() } },
+    where: { email, activatedAt: null, revokedAt: null, expiresAt: { gt: new Date() } },
   });
   if (existing) {
     return NextResponse.json({ ok: false, error: "Active invite already exists for this email." }, { status: 409 });
@@ -42,9 +47,13 @@ export async function POST(req: Request) {
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + expiresInDays);
 
+  const rawToken = randomBytes(32).toString("hex");
+  const tokenHash = hashToken(rawToken);
+
   const invite = await prisma.invite.create({
     data: {
       email,
+      tokenHash,
       role: role as any,
       expiresAt,
       createdById: auth.session.user!.id,
@@ -60,5 +69,5 @@ export async function POST(req: Request) {
     metadata: { email, role, expiresAt: expiresAt.toISOString() },
   });
 
-  return NextResponse.json({ ok: true, invite });
+  return NextResponse.json({ ok: true, invite: { ...invite, token: rawToken } });
 }
