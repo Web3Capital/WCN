@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Proof of Business (PoB) — WCN",
+  title: "Proof of Business (PoB)",
   description:
     "PoB is WCN’s result-first value layer: verified business loops, evidence, review, attribution, and an auditable path to settlement—not activity points.",
 };
@@ -95,12 +95,12 @@ const formulaFactors: { name: string; hint: string }[] = [
 export default function PobPage() {
   return (
     <main className="pob-page">
-      <section className="section hero hero-orb">
-        <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">Proof of Business (PoB)</span>
-            <h1>Only verified outcomes become value.</h1>
-            <p className="muted hero-lede">
+      <section className="section hero hero-orb pob-hero">
+        <div className="container pob-hero-container">
+          <div className="section-head pob-hero-intro">
+            <span className="eyebrow pob-eyebrow">Proof of Business (PoB)</span>
+            <h1 className="pob-hero-title">Only verified outcomes become value.</h1>
+            <p className="muted hero-lede pob-hero-lede">
               PoB is WCN&apos;s <strong className="pob-strong">result-first accounting layer</strong>. It does not pay for noise.
               It recognizes business loops that can be <strong className="pob-strong">proved, attributed, and audited</strong>—so
               capital and execution align with what actually happened.
@@ -109,24 +109,24 @@ export default function PobPage() {
 
           <div className="pob-hero-grid card-grid-animated">
             <div className="pob-hero-copy">
-              <p className="muted" style={{ fontSize: 17, lineHeight: 1.65, marginBottom: 0 }}>
+              <p className="muted pob-hero-sub">
                 This matches the wiki definition: PoB is not loyalty points or a marketing scoreboard. It is the mechanism that
                 turns real, verifiable results into objects the system can admit, record, and—over time—use as settlement input.
               </p>
               <div className="pob-hero-ctas">
-                <Link href="/wiki" className="button-secondary">
+                <Link href="/wiki" className="button-secondary pob-hero-link">
                   PoB in wiki
                 </Link>
-                <Link href="/how-it-works" className="button-secondary">
+                <Link href="/how-it-works" className="button-secondary pob-hero-link">
                   How it works
                 </Link>
-                <Link href="/nodes" className="button-secondary">
+                <Link href="/nodes" className="button-secondary pob-hero-link">
                   Node network
                 </Link>
               </div>
             </div>
 
-            <div className="pob-pillars-panel" aria-label="PoB pillars">
+            <div className="pob-pillars-panel glass" aria-label="PoB pillars">
               <div className="pob-pillars-head">
                 <ShieldCheck size={22} className="pob-pillars-icon" aria-hidden />
                 <span>What PoB enforces</span>
@@ -147,67 +147,79 @@ export default function PobPage() {
         </div>
       </section>
 
-      <section className="section section-alt">
+      <section className="section section-alt pob-boundaries">
         <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">Boundaries</span>
-            <h2>Rewarded vs. rejected</h2>
-            <p className="muted hero-lede">
+          <div className="section-head pob-section-head">
+            <span className="eyebrow pob-eyebrow">Boundaries</span>
+            <h2 className="pob-section-h2">Rewarded vs. rejected</h2>
+            <p className="muted hero-lede pob-section-lede">
               PoB rewards <strong className="pob-strong">closed loops</strong>, not vanity metrics. If it cannot be evidenced
               and reviewed, it does not enter the ledger.
             </p>
           </div>
-          <div className="grid-2 card-grid-animated">
-            <div className="card pob-dual-card pob-dual-yes">
-              <div className="pob-dual-icon" aria-hidden>
-                <CheckCircle2 size={24} strokeWidth={2} />
+          <div className="pob-split-board grid-2 card-grid-animated">
+            <div className="pob-split-slab pob-split-slab--yes">
+              <span className="pob-split-watermark" aria-hidden>
+                01
+              </span>
+              <div className="card pob-dual-card pob-dual-yes">
+                <div className="pob-dual-icon" aria-hidden>
+                  <CheckCircle2 size={24} strokeWidth={2} />
+                </div>
+                <h3>What is rewarded</h3>
+                <ul className="pob-list">
+                  {rewarded.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
               </div>
-              <h3>What is rewarded</h3>
-              <ul className="pob-list">
-                {rewarded.map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-              </ul>
             </div>
-            <div className="card pob-dual-card pob-dual-no">
-              <div className="pob-dual-icon pob-dual-icon-muted" aria-hidden>
-                <Ban size={24} strokeWidth={2} />
+            <div className="pob-split-slab pob-split-slab--no">
+              <span className="pob-split-watermark" aria-hidden>
+                02
+              </span>
+              <div className="card pob-dual-card pob-dual-no">
+                <div className="pob-dual-icon pob-dual-icon-muted" aria-hidden>
+                  <Ban size={24} strokeWidth={2} />
+                </div>
+                <h3>What is not rewarded</h3>
+                <ul className="pob-list">
+                  {notRewarded.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
               </div>
-              <h3>What is not rewarded</h3>
-              <ul className="pob-list">
-                {notRewarded.map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-              </ul>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="section">
+      <section className="section pob-verify">
         <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">Verification</span>
-            <h2>From “it happened” to “system-confirmed”</h2>
-            <p className="muted hero-lede">
+          <div className="section-head pob-section-head">
+            <span className="eyebrow pob-eyebrow">Verification</span>
+            <h2 className="pob-section-h2">From “it happened” to “system-confirmed”</h2>
+            <p className="muted hero-lede pob-section-lede">
               Aligned with the five-step path in our wiki: submission, evidence, review, conclusion, and archival—not a single
               click or social post.
             </p>
           </div>
-          <div className="pob-flow card-grid-animated">
-            {verificationSteps.map((step, i) => (
-              <div key={step.title} className="pob-flow-card">
-                <div className="pob-flow-icon">{step.icon}</div>
-                <div className="pob-flow-step">Step {i + 1}</div>
-                <h3 className="pob-flow-title">{step.title}</h3>
-                <p className="pob-flow-body">{step.body}</p>
-              </div>
-            ))}
+          <div className="pob-flow-wrap">
+            <div className="pob-flow card-grid-animated">
+              {verificationSteps.map((step, i) => (
+                <div key={step.title} className="pob-flow-card">
+                  <div className="pob-flow-icon">{step.icon}</div>
+                  <div className="pob-flow-step">Step {i + 1}</div>
+                  <h3 className="pob-flow-title">{step.title}</h3>
+                  <p className="pob-flow-body">{step.body}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="section section-alt">
+      <section className="section section-alt pob-proof-section">
         <div className="container">
           <div className="card pob-proof-desk card-grid-animated">
             <div className="pob-proof-desk-inner">
@@ -215,9 +227,7 @@ export default function PobPage() {
                 <ShieldCheck size={26} strokeWidth={2} />
               </div>
               <div>
-                <span className="eyebrow" style={{ marginBottom: 10 }}>
-                  Proof Desk
-                </span>
+                <span className="eyebrow pob-eyebrow pob-proof-eyebrow">Proof Desk</span>
                 <h2 className="pob-proof-desk-title">The verification control plane</h2>
                 <p className="muted pob-proof-desk-lede">
                   Proof Desk is not a passive upload folder. It is where evidence is collected, reviews are queued, disputes
@@ -247,24 +257,25 @@ export default function PobPage() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section pob-scoring">
         <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">Scoring</span>
-            <h2>Effective PoB composition</h2>
-            <p className="muted hero-lede">
+          <div className="section-head pob-section-head">
+            <span className="eyebrow pob-eyebrow">Scoring</span>
+            <h2 className="pob-section-h2">Effective PoB composition</h2>
+            <p className="muted hero-lede pob-section-lede">
               A compact formula expresses how verified outcomes aggregate. Parameters evolve with governance; Phase 1 stresses
               evidence and auditability before token settlement.
             </p>
           </div>
-          <div className="pob-formula-card card-grid-animated">
-            <div className="pob-formula-row" aria-label="Effective PoB formula">
-              <span className="badge badge-accent">Effective PoB</span>
-              <span className="formula-op">=</span>
+          <div className="card pob-formula-card card-grid-animated">
+            <p className="pob-formula-label">Composition</p>
+            <div className="pob-formula-specbar" aria-label="Effective PoB formula">
+              <span className="pob-formula-eq">Effective PoB</span>
+              <span className="pob-formula-op">=</span>
               {formulaFactors.map((factor, i) => (
-                <span key={factor.name} style={{ display: "contents" }}>
-                  <span className="formula-chip">{factor.name}</span>
-                  {i < formulaFactors.length - 1 ? <span className="formula-op">×</span> : null}
+                <span key={factor.name} className="pob-formula-term-wrap">
+                  <span className="pob-formula-term">{factor.name}</span>
+                  {i < formulaFactors.length - 1 ? <span className="pob-formula-op">×</span> : null}
                 </span>
               ))}
             </div>
@@ -284,9 +295,9 @@ export default function PobPage() {
         </div>
       </section>
 
-      <section className="section section-alt">
+      <section className="section section-alt pob-attrib-section">
         <div className="container">
-          <div className="grid-2 card-grid-animated" style={{ alignItems: "stretch" }}>
+          <div className="grid-2 pob-attrib-grid card-grid-animated">
             <div className="card pob-attrib-card">
               <div className="pob-attrib-icon" aria-hidden>
                 <Split size={22} strokeWidth={2} />
@@ -311,7 +322,7 @@ export default function PobPage() {
         </div>
       </section>
 
-      <section className="section section-tight">
+      <section className="section section-tight pob-cta-section">
         <div className="container">
           <div className="pob-cta-band">
             <div className="pob-cta-copy">
