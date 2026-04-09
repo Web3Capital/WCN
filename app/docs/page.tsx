@@ -1,11 +1,41 @@
-import { redirect } from "next/navigation";
-import { getWcnChapters } from "@/lib/wcn-docs";
-import { cookies } from "next/headers";
+import Link from "next/link";
+import { getChapters } from "@/lib/docs";
+import type { Metadata } from "next";
 
-export default function DocsIndexPage() {
-  const lang = cookies().get("wcn_lang")?.value === "zh" ? "zh" : "en";
-  const chapters = getWcnChapters(lang);
-  const first = chapters[0]?.docs[0];
-  redirect(first ? `/docs/${first.slugParts.join("/")}` : "/");
+export const metadata: Metadata = {
+  title: "Documentation",
+  description: "WCN 完整文档 — 从项目介绍到系统架构，全面了解 Web3 Capital Network。",
+};
+
+export default function DocsLandingPage() {
+  const chapters = getChapters();
+
+  return (
+    <div className="docs-landing">
+      <header className="docs-landing-hero">
+        <h1>WCN Documentation</h1>
+        <p>
+          从项目定义到系统架构，从节点机制到商业模式 — 全面了解 Web3 Capital Network 的设计与运作方式。
+        </p>
+      </header>
+
+      <div className="docs-landing-chapters">
+        {chapters.map((ch) => {
+          const firstDoc = ch.docs[0];
+          const href = firstDoc?.href ?? "/docs";
+
+          return (
+            <Link key={ch.slug} href={href} className="docs-landing-card">
+              {ch.icon && <span className="docs-landing-card-icon">{ch.icon}</span>}
+              <span className="docs-landing-card-title">{ch.title}</span>
+              {ch.description && (
+                <span className="docs-landing-card-desc">{ch.description}</span>
+              )}
+              <span className="docs-landing-card-count">{ch.docs.length} pages</span>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
-

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllWcnDocs } from "@/lib/wcn-docs";
+import { getAllDocs } from "@/lib/docs";
 
 const staticPaths = [
   "/",
@@ -9,7 +9,8 @@ const staticPaths = [
   "/nodes",
   "/pob",
   "/login",
-  "/signup"
+  "/signup",
+  "/docs"
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -25,9 +26,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === "/" ? 1 : 0.8
   }));
 
-  const docs = getAllWcnDocs("zh");
+  const docs = getAllDocs();
   const docEntries: MetadataRoute.Sitemap = docs.map((doc) => ({
-    url: `${base}/docs/${doc.slugParts.join("/")}`,
+    url: `${base}${doc.href}`,
     changeFrequency: "monthly" as const,
     priority: 0.6
   }));
