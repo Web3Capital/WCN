@@ -1,6 +1,10 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
 
 export function Footer() {
+  const t = useTranslations("footer");
+  const nav = useTranslations("nav");
+
   return (
     <footer className="footer">
       <div className="container">
@@ -10,33 +14,37 @@ export function Footer() {
               <span className="brand-mark" />
               <span>WCN</span>
             </div>
-            <p className="muted footer-tagline">
-              Global Institutional Orchestrator for Web3 & AI. Turning fragmented capital and execution into a verifiable, settleable network.
-            </p>
+            <p className="muted footer-tagline">{t("tagline")}</p>
           </div>
           <div className="footer-col">
-            <h4>Product</h4>
-            <Link href="/how-it-works">How It Works</Link>
-            <Link href="/nodes">Node Network</Link>
-            <Link href="/pob">Proof of Business</Link>
-            <Link href="/apply">Apply as a Node</Link>
+            <h4>{t("product")}</h4>
+            <Link href="/how-it-works">{nav("howItWorks")}</Link>
+            <Link href="/nodes">{nav("nodeNetwork")}</Link>
+            <Link href="/pob">{t("proofOfBusiness")}</Link>
+            <Link href="/apply">{nav("applyAsNode")}</Link>
           </div>
           <div className="footer-col">
-            <h4>Resources</h4>
-            <Link href="/wiki">Wiki</Link>
-            <Link href="/about">About WCN</Link>
-            <Link href="/dashboard/assets">Phase 3 Roadmap</Link>
+            <h4>{t("resources")}</h4>
+            <Link href="/wiki">{nav("wiki")}</Link>
+            <Link href="/about">{t("aboutWcn")}</Link>
+            <Link href="/dashboard/assets">{t("phase3Roadmap")}</Link>
           </div>
           <div className="footer-col">
-            <h4>Connect</h4>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter / X</a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a href="https://t.me" target="_blank" rel="noopener noreferrer">Telegram</a>
+            <h4>{t("connect")}</h4>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+              {t("twitterX")}
+            </a>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+              {t("github")}
+            </a>
+            <a href="https://t.me" target="_blank" rel="noopener noreferrer">
+              {t("telegram")}
+            </a>
           </div>
         </div>
         <div className="footer-bottom">
           <p className="muted footer-copyright">
-            &copy; {new Date().getFullYear()} WCN Network. All rights reserved.
+            {t("copyright", { year: new Date().getFullYear() })}
           </p>
         </div>
       </div>

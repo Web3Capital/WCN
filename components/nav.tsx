@@ -1,26 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname as useNextPathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { ChevronDown, Menu, Moon, Sun, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { isAdminRole } from "@/lib/permissions";
-
-const primaryLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" }
-] as const;
-
-const networkLinks = [
-  { href: "/nodes", label: "Node Network" },
-  { href: "/pob", label: "PoB" }
-] as const;
-
-const resourceLinks = [
-  { href: "/how-it-works", label: "How It Works" },
-  { href: "/wiki", label: "Wiki" }
-] as const;
+import { useTranslations } from "next-intl";
+import { Link, usePathname, useRouter } from "@/i18n/routing";
+import { locales, localeMetadata, type Locale } from "@/i18n/config";
 
 function UserAvatar({ name }: { name: string }) {
   const letter = (name || "?").charAt(0).toUpperCase();
@@ -28,7 +15,8 @@ function UserAvatar({ name }: { name: string }) {
 }
 
 function pathMatchesNav(path: string, href: string) {
-  const p = path.replace(/\/$/, "") || "/";
+  const stripped = path.replace(/^\/(en|zh|ja|ko|es|fr|de|pt|ar|ru)/, "") || "/";
+  const p = stripped.replace(/\/$/, "") || "/";
   const h = href.replace(/\/$/, "") || "/";
   if (h === "/") return p === "/";
   if (h.startsWith("/wiki")) return p === "/wiki" || p.startsWith("/wiki/");
@@ -38,13 +26,17 @@ function pathMatchesNav(path: string, href: string) {
 type MegaKey = "network" | "resources" | null;
 
 export function Nav() {
-  const pathname = usePathname() ?? "/";
-  const normalizedPath = pathname.replace(/\/$/, "") || "/";
+  const t = useTranslations("nav");
+  const rawPathname = useNextPathname() ?? "/";
+  const intlPathname = usePathname();
+  const router = useRouter();
+  const normalizedPath = rawPathname.replace(/\/$/, "") || "/";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mega, setMega] = useState<MegaKey>(null);
   const [accountOpen, setAccountOpen] = useState(false);
-  const [lang, setLang] = useState<"en" | "zh">("en");
+  const [langOpen, setLangOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark" | "system">("system");
+  const langRef = useRef<HTMLDivElement>(null);
   const navId = useId();
   const networkPanelId = useId();
   const resourcesPanelId = useId();
@@ -54,6 +46,21 @@ export function Nav() {
   const authed = status === "authenticated";
   const isAdmin = authed && isAdminRole(session?.user?.role ?? "USER");
 
+  const primaryLinks = [
+    { href: "/" as const, label: t("home") },
+    { href: "/about" as const, label: t("about") },
+  ];
+
+  const networkLinks = [
+    { href: "/nodes" as const, label: t("nodeNetwork") },
+    { href: "/pob" as const, label: t("pob") },
+  ];
+
+  const resourceLinks = [
+    { href: "/how-it-works" as const, label: t("howItWorks") },
+    { href: "/wiki" as const, label: t("wiki") },
+  ];
+
   const networkActive = networkLinks.some((l) => pathMatchesNav(normalizedPath, l.href));
   const resourcesActive = resourceLinks.some((l) => pathMatchesNav(normalizedPath, l.href));
 
@@ -61,11 +68,10 @@ export function Nav() {
     setMobileOpen(false);
     setMega(null);
     setAccountOpen(false);
+    setLangOpen(false);
   }, [normalizedPath]);
 
   useEffect(() => {
-    const match = document.cookie.match(/(?:^|;\s*)wcn_lang=(en|zh)(?:;|$)/);
-    setLang(match?.[1] === "zh" ? "zh" : "en");
     const themeMatch = document.cookie.match(/(?:^|;\s*)wcn_theme=(light|dark|system)(?:;|$)/);
     setTheme((themeMatch?.[1] as "light" | "dark" | "system") ?? "system");
   }, []);
@@ -75,6 +81,9 @@ export function Nav() {
       if (shellRef.current && !shellRef.current.contains(e.target as Node)) {
         setMega(null);
         setAccountOpen(false);
+      }
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
       }
     }
     document.addEventListener("mousedown", onDoc);
@@ -86,21 +95,18 @@ export function Nav() {
       if (e.key === "Escape") {
         setMega(null);
         setAccountOpen(false);
+        setLangOpen(false);
       }
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
-  async function switchLang(next: "en" | "zh") {
-    if (next === lang) return;
-    setLang(next);
-    await fetch("/api/lang", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ lang: next })
-    });
-    window.location.reload();
+  const currentLocale = (rawPathname.match(/^\/(en|zh|ja|ko|es|fr|de|pt|ar|ru)(?:\/|$)/)?.[1] || "en") as Locale;
+
+  function switchLocale(next: Locale) {
+    setLangOpen(false);
+    router.replace(intlPathname, { locale: next });
   }
 
   async function toggleTheme() {
@@ -109,7 +115,7 @@ export function Nav() {
     await fetch("/api/theme", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ theme: next })
+      body: JSON.stringify({ theme: next }),
     });
     window.location.reload();
   }
@@ -137,7 +143,7 @@ export function Nav() {
         <button
           type="button"
           className="nav-toggle"
-          aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+          aria-label={mobileOpen ? t("closeNav") : t("openNav")}
           aria-expanded={mobileOpen}
           aria-controls={navId}
           onClick={() => setMobileOpen((v) => !v)}
@@ -168,7 +174,7 @@ export function Nav() {
               aria-controls={networkPanelId}
               onClick={() => toggleMega("network")}
             >
-              Network
+              {t("network")}
               <ChevronDown size={16} className="nav-dropdown-chevron" aria-hidden />
             </button>
             <div
@@ -202,7 +208,7 @@ export function Nav() {
               aria-controls={resourcesPanelId}
               onClick={() => toggleMega("resources")}
             >
-              Resources
+              {t("resources")}
               <ChevronDown size={16} className="nav-dropdown-chevron" aria-hidden />
             </button>
             <div
@@ -228,33 +234,41 @@ export function Nav() {
             <button
               type="button"
               className="theme-toggle"
-              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              aria-label={theme === "dark" ? t("switchToLight") : t("switchToDark")}
               onClick={toggleTheme}
             >
               {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
             </button>
-            <div className="lang-toggle" role="group" aria-label="Language">
+            <div className="lang-toggle" ref={langRef}>
               <button
                 type="button"
-                className="lang-chip"
-                aria-pressed={lang === "en"}
-                onClick={() => switchLang("en")}
+                className="lang-trigger"
+                aria-expanded={langOpen}
+                aria-haspopup="true"
+                aria-label={t("language")}
+                onClick={() => setLangOpen((v) => !v)}
               >
-                EN
+                <span className="lang-current">{localeMetadata[currentLocale].nativeName}</span>
+                <ChevronDown size={14} className="lang-chevron" aria-hidden />
               </button>
-              <button
-                type="button"
-                className="lang-chip"
-                aria-pressed={lang === "zh"}
-                onClick={() => switchLang("zh")}
-              >
-                中文
-              </button>
+              <div className="lang-dropdown" hidden={!langOpen}>
+                {locales.map((loc) => (
+                  <button
+                    key={loc}
+                    type="button"
+                    className={`lang-option${loc === currentLocale ? " lang-option-active" : ""}`}
+                    onClick={() => switchLocale(loc)}
+                  >
+                    <span className="lang-option-native">{localeMetadata[loc].nativeName}</span>
+                    <span className="lang-option-name muted">{localeMetadata[loc].name}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
           <Link className="button-secondary nav-cta" href="/apply">
-            Apply as a Node
+            {t("applyAsNode")}
           </Link>
 
           {authed ? (
@@ -285,24 +299,24 @@ export function Nav() {
                     className="account-menu-link"
                     onClick={() => setAccountOpen(false)}
                   >
-                    {isAdmin ? "Admin console" : "Console"}
+                    {isAdmin ? t("adminConsole") : t("console")}
                   </Link>
                   <Link href="/account" className="account-menu-link" onClick={() => setAccountOpen(false)}>
-                    Account settings
+                    {t("accountSettings")}
                   </Link>
                   <button
                     type="button"
                     className="account-menu-signout"
                     onClick={() => signOut({ callbackUrl: "/" })}
                   >
-                    Sign out
+                    {t("signOut")}
                   </button>
                 </div>
               </div>
             </div>
           ) : (
             <Link className="button-secondary" href="/login">
-              Sign in
+              {t("signIn")}
             </Link>
           )}
         </nav>
