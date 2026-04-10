@@ -18,6 +18,7 @@ export function initWCN(): void {
 }
 
 // Auto-initialize on import in server context
-if (typeof window === "undefined") {
+// Skip if no database URL is configured (e.g., during CI/CD build)
+if (typeof window === "undefined" && (process.env.POSTGRES_URL || process.env.DATABASE_URL)) {
   initWCN();
 }
