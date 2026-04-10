@@ -22,9 +22,22 @@ const REVIEW_COLORS: Record<string, string> = {
   APPROVED: "badge-green", MODIFIED: "", REJECTED: "badge-red",
 };
 
-export function ReviewQueueUI({ pendingRuns, recentReviewed }: { pendingRuns: PendingRun[]; recentReviewed: ReviewedRun[] }) {
+const AGENT_TYPES = ["ALL", "RESEARCH", "DEAL", "EXECUTION", "GROWTH"] as const;
+const REVIEW_PAGE_SIZE = 10;
+
+export function ReviewQueueUI({ pendingRuns: initialPending, recentReviewed: initialReviewed }: { pendingRuns: PendingRun[]; recentReviewed: ReviewedRun[] }) {
+  const [pendingRuns] = useState(initialPending);
+  const [recentReviewed] = useState(initialReviewed);
   const [busy, setBusy] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [typeFilter, setTypeFilter] = useState("ALL");
+  const [rejectNoteId, setRejectNoteId] = useState<string | null>(null);
+  const [rejectNote, setRejectNote] = useState("");
+  const [page, setPage] = useState(0);
+
+  const filteredPending = typeFilter === "ALL" ? pendingRuns : pendingRuns.filter((r) => r.agent.type === typeFilter);
+  const totalPages = Math.ceil(filteredPending.length / REVIEW_PAGE_SIZE);
+  const pagedPending = filteredPending.slice(page * REVIEW_PAGE_SIZE, (page + 1) * REVIEW_PAGE_SIZE);
 
   async function submitReview(runId: string, reviewStatus: string, reviewNotes?: string) {
     setBusy(true);
@@ -51,13 +64,23 @@ export function ReviewQueueUI({ pendingRuns, recentReviewed }: { pendingRuns: Pe
         </Link>
       </div>
 
-      {pendingRuns.length === 0 ? (
+      <div className="page-toolbar" style={{ marginBottom: 12 }}>
+        <div className="chip-group">
+          {AGENT_TYPES.map((t) => (
+            <button key={t} className={`chip ${typeFilter === t ? "chip-active" : ""}`} onClick={() => { setTypeFilter(t); setPage(0); }}>
+              {t === "ALL" ? `All (${pendingRuns.length})` : t}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {pagedPending.length === 0 ? (
         <div className="card" style={{ padding: 40, textAlign: "center" }}>
           <p className="muted">No pending reviews. All agent outputs have been processed.</p>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {pendingRuns.map((run) => {
+          {pagedPending.map((run) => {
             const isExpanded = expandedId === run.id;
             return (
               <div key={run.id} className="card" style={{ padding: 16, border: "1px solid var(--border)" }}>
@@ -79,7 +102,7 @@ export function ReviewQueueUI({ pendingRuns, recentReviewed }: { pendingRuns: Pe
                     <button className="button" style={{ fontSize: 10, padding: "3px 10px", background: "var(--green, #22c55e)", color: "#fff" }} disabled={busy} onClick={() => submitReview(run.id, "APPROVED")}>
                       Approve
                     </button>
-                    <button className="button" style={{ fontSize: 10, padding: "3px 10px", background: "var(--red)", color: "#fff" }} disabled={busy} onClick={() => submitReview(run.id, "REJECTED")}>
+                    <button className="button" style={{ fontSize: 10, padding: "3px 10px", background: "var(--red)", color: "#fff" }} disabled={busy} onClick={() => { setRejectNoteId(rejectNoteId === run.id ? null : run.id); setRejectNote(""); }}>
                       Reject
                     </button>
                   </div>
@@ -93,9 +116,37 @@ export function ReviewQueueUI({ pendingRuns, recentReviewed }: { pendingRuns: Pe
                     {JSON.stringify(run.outputs, null, 2)}
                   </pre>
                 )}
+                {rejectNoteId === run.id && (
+                  <div style={{ marginTop: 10, display: "flex", gap: 8, alignItems: "flex-end" }}>
+                    <textarea
+                      autoFocus
+                      placeholder="Rejection reason (optional)"
+                      value={rejectNote}
+                      onChange={(e) => setRejectNote(e.target.value)}
+                      rows={2}
+                      style={{ flex: 1, padding: 8, borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg1)", fontSize: 12 }}
+                    />
+                    <button
+                      className="button"
+                      style={{ fontSize: 11, padding: "6px 14px", background: "var(--red)", color: "#fff" }}
+                      disabled={busy}
+                      onClick={() => { submitReview(run.id, "REJECTED", rejectNote || undefined); setRejectNoteId(null); }}
+                    >
+                      Confirm Reject
+                    </button>
+                  </div>
+                )}
               </div>
             );
           })}
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 12 }}>
+          <button className="button-secondary" style={{ fontSize: 11, padding: "4px 12px" }} disabled={page === 0} onClick={() => setPage(page - 1)}>← Prev</button>
+          <span className="muted" style={{ fontSize: 12, lineHeight: "28px" }}>Page {page + 1} of {totalPages}</span>
+          <button className="button-secondary" style={{ fontSize: 11, padding: "4px 12px" }} disabled={page >= totalPages - 1} onClick={() => setPage(page + 1)}>Next →</button>
         </div>
       )}
 

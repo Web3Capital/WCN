@@ -19,13 +19,18 @@ const STATUS_BADGE: Record<string, string> = {
   DRAFT: "", ACTIVE: "badge-green", PAUSED: "badge-amber", COMPLETED: "badge-green", CANCELLED: "badge-red",
 };
 
+const STATUSES = ["ALL", "DRAFT", "ACTIVE", "PAUSED", "COMPLETED", "CANCELLED"] as const;
+
 export function CampaignDashboard({ campaigns: initial }: { campaigns: Campaign[] }) {
   const [campaigns, setCampaigns] = useState(initial);
   const [showForm, setShowForm] = useState(false);
+  const [filter, setFilter] = useState("ALL");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [budget, setBudget] = useState("");
   const [busy, setBusy] = useState(false);
+
+  const filtered = filter === "ALL" ? campaigns : campaigns.filter((c) => c.status === filter);
 
   async function create(e: React.FormEvent) {
     e.preventDefault();
@@ -78,8 +83,18 @@ export function CampaignDashboard({ campaigns: initial }: { campaigns: Campaign[
         </div>
       )}
 
-      {campaigns.length === 0 ? (
-        <div className="empty-state"><p>No campaigns yet.</p></div>
+      <div className="page-toolbar" style={{ marginBottom: 12 }}>
+        <div className="chip-group">
+          {STATUSES.map((s) => (
+            <button key={s} className={`chip ${filter === s ? "chip-active" : ""}`} onClick={() => setFilter(s)}>
+              {s === "ALL" ? `All (${campaigns.length})` : s}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {filtered.length === 0 ? (
+        <div className="empty-state"><p>No campaigns found.</p></div>
       ) : (
         <table className="data-table">
           <thead>
@@ -93,9 +108,9 @@ export function CampaignDashboard({ campaigns: initial }: { campaigns: Campaign[
             </tr>
           </thead>
           <tbody>
-            {campaigns.map((c) => (
+            {filtered.map((c) => (
               <tr key={c.id}>
-                <td style={{ fontWeight: 600 }}>{c.title}</td>
+                <td><a href={`/dashboard/campaigns/${c.id}`} style={{ fontWeight: 600, color: "var(--accent)" }}>{c.title}</a></td>
                 <td><span className={`badge ${STATUS_BADGE[c.status] ?? ""}`}>{c.status}</span></td>
                 <td>{c.budget ? `$${c.budget.toLocaleString()}` : "—"}</td>
                 <td>{c.channels.length}</td>

@@ -598,5 +598,70 @@ export function initEventHandlers(): void {
     }
   });
 
+  // ─── Agent Output Reviewed → Post-Approval Automation ──────────
+  eventBus.on(Events.AGENT_OUTPUT_REVIEWED, async (payload: any) => {
+    if (payload.reviewStatus !== "APPROVED" && payload.reviewStatus !== "MODIFIED") return;
+    try {
+      const prisma = getPrisma();
+      const run = await prisma.agentRun.findUnique({
+        where: { id: payload.runId },
+        select: { id: true, agentId: true, outputType: true, outputs: true, inputs: true, agent: { select: { type: true } } },
+      });
+      if (!run) return;
+
+      const agentType = run.agent.type;
+      const outputs = run.outputs as Record<string, any> | null;
+      const inputs = run.inputs as Record<string, any> | null;
+
+      if (agentType === "RESEARCH" && inputs?.projectId && outputs) {
+        await prisma.project.update({
+          where: { id: inputs.projectId },
+          data: {
+            ...(outputs.summary ? { description: outputs.summary } : {}),
+            ...(outputs.riskTags ? { metadata: { riskTags: outputs.riskTags } } : {}),
+          },
+        }).catch(() => {});
+      }
+
+      if (agentType === "DEAL" && inputs?.matchId && outputs) {
+        const match = await prisma.match.findUnique({ where: { id: inputs.matchId }, select: { convertedDealId: true } });
+        if (match?.convertedDealId) {
+          await prisma.dealNote.create({
+            data: { dealId: match.convertedDealId, content: JSON.stringify(outputs), authorId: payload.reviewedBy },
+          }).catch(() => {});
+        }
+      }
+
+      if (agentType === "EXECUTION" && inputs?.dealId && outputs?.actionItems) {
+        for (const item of outputs.actionItems as Array<{ title: string; assignee?: string }>) {
+          await prisma.task.create({
+            data: {
+              title: item.title,
+              dealId: inputs.dealId,
+              status: "DRAFT",
+              type: "EXECUTION",
+            },
+          }).catch(() => {});
+        }
+      }
+
+      if (agentType === "GROWTH" && inputs?.projectId && outputs) {
+        const agent = await prisma.agent.findUnique({ where: { id: run.agentId }, select: { ownerNodeId: true } });
+        if (agent?.ownerNodeId) {
+          await prisma.agentLog.create({
+            data: {
+              agentId: run.agentId,
+              ownerNodeId: agent.ownerNodeId,
+              actionType: "post_approval.growth_strategy",
+              outputReference: JSON.stringify(outputs),
+            },
+          }).catch(() => {});
+        }
+      }
+    } catch (e) {
+      console.error("[Agent] Post-approval automation failed:", e);
+    }
+  });
+
   console.log("[WCN] Event handlers initialized — " + eventBus.listEvents().length + " event types registered");
 }

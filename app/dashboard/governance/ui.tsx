@@ -20,9 +20,12 @@ const STATUS_BADGE: Record<string, string> = {
   DRAFT: "", ACTIVE: "badge-green", PASSED: "badge-green", REJECTED: "badge-red", EXECUTED: "badge-green", CANCELLED: "badge-red",
 };
 
+const STATUS_LIST = ["ALL", "DRAFT", "ACTIVE", "PASSED", "REJECTED", "EXECUTED", "CANCELLED"] as const;
+
 export function GovernanceDashboard({ proposals: initial, userId }: { proposals: Proposal[]; userId: string }) {
   const [proposals, setProposals] = useState(initial);
   const [showForm, setShowForm] = useState(false);
+  const [filter, setFilter] = useState("ALL");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [type, setType] = useState("GENERAL");
@@ -52,6 +55,18 @@ export function GovernanceDashboard({ proposals: initial, userId }: { proposals:
         setTitle(""); setDescription("");
       }
     } finally { setBusy(false); }
+  }
+
+  async function transitionProposal(proposalId: string, action: string) {
+    const res = await fetch("/api/governance/proposals", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, proposalId }),
+    });
+    const d = await res.json();
+    if (d.ok && d.data?.status) {
+      setProposals(proposals.map((p) => p.id === proposalId ? { ...p, status: d.data.status } : p));
+    }
   }
 
   async function vote(proposalId: string, option: string) {
@@ -114,11 +129,21 @@ export function GovernanceDashboard({ proposals: initial, userId }: { proposals:
         </div>
       )}
 
-      {proposals.length === 0 ? (
-        <div className="empty-state"><p>No proposals yet.</p></div>
+      <div className="page-toolbar" style={{ marginBottom: 12 }}>
+        <div className="chip-group">
+          {STATUS_LIST.map((s) => (
+            <button key={s} className={`chip ${filter === s ? "chip-active" : ""}`} onClick={() => setFilter(s)}>
+              {s === "ALL" ? `All (${proposals.length})` : s}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {(() => { const shown = filter === "ALL" ? proposals : proposals.filter((p) => p.status === filter); return shown.length === 0 ? (
+        <div className="empty-state"><p>No proposals found.</p></div>
       ) : (
         <div style={{ display: "grid", gap: 16 }}>
-          {proposals.map((p) => {
+          {shown.map((p) => {
             const userVote = p.votes.find((v) => v.voterId === userId);
             const voteCounts: Record<string, number> = {};
             for (const opt of p.options) voteCounts[opt] = 0;
@@ -147,15 +172,25 @@ export function GovernanceDashboard({ proposals: initial, userId }: { proposals:
                   ))}
                 </div>
 
-                <div className="muted" style={{ marginTop: 8, fontSize: 12 }}>
-                  {p.votes.length} vote{p.votes.length !== 1 ? "s" : ""} · Quorum: {p.quorum}
-                  {p.deadline && ` · Deadline: ${new Date(p.deadline).toLocaleDateString()}`}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+                  <div className="muted" style={{ fontSize: 12 }}>
+                    {p.votes.length} vote{p.votes.length !== 1 ? "s" : ""} · Quorum: {p.quorum}
+                    {p.deadline && ` · Deadline: ${new Date(p.deadline).toLocaleDateString()}`}
+                  </div>
+                  <div style={{ display: "flex", gap: 6 }}>
+                    {p.status === "DRAFT" && (
+                      <button className="button" style={{ fontSize: 10, padding: "3px 10px" }} onClick={() => transitionProposal(p.id, "ACTIVE")}>Activate</button>
+                    )}
+                    {p.status === "ACTIVE" && p.votes.length >= p.quorum && (
+                      <button className="button" style={{ fontSize: 10, padding: "3px 10px" }} onClick={() => transitionProposal(p.id, "finalize")}>Finalize</button>
+                    )}
+                  </div>
                 </div>
               </div>
             );
           })}
         </div>
-      )}
+      ); })()}
     </div>
   );
 }

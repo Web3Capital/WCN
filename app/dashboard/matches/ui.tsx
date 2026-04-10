@@ -33,6 +33,8 @@ const STATUS_BADGE: Record<string, string> = {
 
 const STATUSES = ["ALL", "GENERATED", "INTEREST_EXPRESSED", "CONVERTED_TO_DEAL", "DECLINED", "EXPIRED"] as const;
 
+const PAGE_SIZE = 20;
+
 export function MatchesConsole({
   initialMatches,
   isAdmin,
@@ -45,8 +47,13 @@ export function MatchesConsole({
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
+  const [convertModalId, setConvertModalId] = useState<string | null>(null);
+  const [convertDealId, setConvertDealId] = useState("");
 
-  const filtered = filter === "ALL" ? matches : matches.filter((m) => m.status === filter);
+  const allFiltered = filter === "ALL" ? matches : matches.filter((m) => m.status === filter);
+  const totalPages = Math.ceil(allFiltered.length / PAGE_SIZE);
+  const filtered = allFiltered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
   async function performAction(matchId: string, action: "interest" | "decline" | "convert", dealId?: string) {
     setBusy(matchId);
@@ -175,10 +182,7 @@ export function MatchesConsole({
                           className="button"
                           style={{ fontSize: 10, padding: "3px 8px" }}
                           disabled={busy === m.id}
-                          onClick={() => {
-                            const dealId = prompt("Enter Deal ID to link:");
-                            if (dealId) performAction(m.id, "convert", dealId);
-                          }}
+                          onClick={() => { setConvertModalId(m.id); setConvertDealId(""); }}
                         >
                           Convert
                         </button>
@@ -222,6 +226,40 @@ export function MatchesConsole({
             ))}
           </tbody>
         </table>
+      )}
+
+      {totalPages > 1 && (
+        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 16 }}>
+          <button className="button-secondary" style={{ fontSize: 11, padding: "4px 12px" }} disabled={page === 0} onClick={() => setPage(page - 1)}>← Prev</button>
+          <span className="muted" style={{ fontSize: 12, lineHeight: "28px" }}>Page {page + 1} of {totalPages}</span>
+          <button className="button-secondary" style={{ fontSize: 11, padding: "4px 12px" }} disabled={page >= totalPages - 1} onClick={() => setPage(page + 1)}>Next →</button>
+        </div>
+      )}
+
+      {convertModalId && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999 }} onClick={() => setConvertModalId(null)}>
+          <div className="card" style={{ padding: 24, width: 400, maxWidth: "90vw" }} onClick={(e) => e.stopPropagation()}>
+            <h3 style={{ marginBottom: 12 }}>Convert to Deal</h3>
+            <p className="muted" style={{ fontSize: 13, marginBottom: 16 }}>Enter the Deal ID to link this match.</p>
+            <input
+              autoFocus
+              placeholder="Deal ID"
+              value={convertDealId}
+              onChange={(e) => setConvertDealId(e.target.value)}
+              style={{ width: "100%", padding: 10, borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg1)", fontSize: 13, marginBottom: 12 }}
+            />
+            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+              <button className="button-secondary" onClick={() => setConvertModalId(null)}>Cancel</button>
+              <button
+                className="button"
+                disabled={!convertDealId.trim() || busy === convertModalId}
+                onClick={() => { performAction(convertModalId, "convert", convertDealId.trim()); setConvertModalId(null); }}
+              >
+                Convert
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

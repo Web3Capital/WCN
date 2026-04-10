@@ -27,8 +27,9 @@ function isPublicPath(pathname: string): boolean {
   if (pathname.startsWith("/invite/")) return true;
   if (pathname.startsWith("/_next")) return true;
   if (pathname.startsWith("/favicon")) return true;
-  // Open API v1 routes use their own API key auth — skip session check here
   if (pathname.startsWith("/api/v1/")) return true;
+  if (pathname === "/api/health") return true;
+  if (pathname === "/api/cron") return true;
   return false;
 }
 

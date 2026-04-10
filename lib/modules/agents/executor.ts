@@ -179,6 +179,44 @@ interface ExecutionPlan {
   }>;
 }
 
+async function checkAgentPermission(agentId: string, requiredScope: string): Promise<boolean> {
+  const prisma = getPrisma();
+  const perm = await prisma.agentPermission.findFirst({
+    where: { agentId, scope: requiredScope },
+  });
+  return !!perm;
+}
+
+const SCOPE_MAP: Record<string, string> = {
+  REPORT: "project.read",
+  MATCH_MEMO: "match.read",
+  MEETING_NOTES: "deal.read",
+  CONTENT_DRAFT: "project.read",
+};
+
+// Agent chaining: after a successful run, optionally trigger the next agent
+async function chainNextAgent(currentAgentType: string, runResult: AgentRunResult, inputs: Record<string, unknown>) {
+  const prisma = getPrisma();
+
+  if (currentAgentType === "RESEARCH" && inputs.projectId) {
+    const dealAgent = await prisma.agent.findFirst({ where: { type: "DEAL", status: "ACTIVE" }, select: { id: true } });
+    if (dealAgent) {
+      const matches = await prisma.match.findMany({
+        where: { projectId: inputs.projectId as string, status: "GENERATED" },
+        select: { id: true },
+        take: 3,
+      });
+      for (const match of matches) {
+        try {
+          await runDealAgent(dealAgent.id, match.id, `chain:${runResult.runId}`);
+        } catch (e) {
+          console.error(`[Chain] Deal agent failed for match ${match.id}:`, e);
+        }
+      }
+    }
+  }
+}
+
 async function executeAgent(plan: ExecutionPlan): Promise<AgentRunResult> {
   const prisma = getPrisma();
 
@@ -188,6 +226,16 @@ async function executeAgent(plan: ExecutionPlan): Promise<AgentRunResult> {
   });
   if (!agent) throw new Error(`Agent ${plan.agentId} not found`);
   if (agent.status !== "ACTIVE") throw new Error(`Agent ${plan.agentId} is ${agent.status}`);
+
+  const requiredScope = SCOPE_MAP[plan.outputType] || "general";
+  const hasPermission = await checkAgentPermission(agent.id, requiredScope);
+  if (!hasPermission) {
+    const allPerms = await prisma.agentPermission.findMany({ where: { agentId: agent.id }, select: { scope: true } });
+    const hasFallback = allPerms.some((p) => p.scope === "*" || p.scope === "admin");
+    if (!hasFallback) {
+      console.warn(`[Agent] ${agent.id} missing permission '${requiredScope}', proceeding with warning`);
+    }
+  }
 
   const run = await prisma.agentRun.create({
     data: {
@@ -241,7 +289,7 @@ async function executeAgent(plan: ExecutionPlan): Promise<AgentRunResult> {
       outputType: plan.outputType,
     });
 
-    return {
+    const agentResult: AgentRunResult = {
       runId: run.id,
       agentId: agent.id,
       status: "SUCCESS",
@@ -253,6 +301,13 @@ async function executeAgent(plan: ExecutionPlan): Promise<AgentRunResult> {
       modelId: result.modelId,
       cost,
     };
+
+    // Fire-and-forget chaining (don't block the response)
+    chainNextAgent(agent.type, agentResult, plan.inputs).catch((e) =>
+      console.error("[Chain] Agent chaining failed:", e)
+    );
+
+    return agentResult;
   } catch (error) {
     await prisma.agentRun.update({
       where: { id: run.id },

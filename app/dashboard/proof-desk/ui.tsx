@@ -8,6 +8,10 @@ type EvidenceRow = {
   title: string | null;
   reviewStatus: string;
   slaDeadlineAt: string | null;
+  fileUrl: string | null;
+  description: string | null;
+  metadata: Record<string, unknown> | null;
+  completenessScore: number | null;
   createdAt: string;
   task: { id: string; title: string } | null;
   project: { id: string; name: string } | null;
@@ -41,6 +45,7 @@ export function ProofDeskConsole({ evidences: initialEvidences, reviewQueue: ini
   const [reviewQueue, setReviewQueue] = useState(initialQueue);
   const [tab, setTab] = useState<"all" | "queue">(isReviewer ? "queue" : "all");
   const [filter, setFilter] = useState("ALL");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const displayed = tab === "queue" ? reviewQueue : evidences;
   const filtered = filter === "ALL" ? displayed : displayed.filter((e) => e.reviewStatus === filter);
@@ -97,35 +102,70 @@ export function ProofDeskConsole({ evidences: initialEvidences, reviewQueue: ini
           </thead>
           <tbody>
             {filtered.map((e) => (
-              <tr key={e.id}>
-                <td>
-                  <span className={`status-dot ${e.reviewStatus === "APPROVED" ? "status-dot-green" : e.reviewStatus === "REJECTED" || e.reviewStatus === "DISPUTED" ? "status-dot-red" : e.reviewStatus === "SUBMITTED" || e.reviewStatus === "UNDER_REVIEW" ? "status-dot-amber" : ""}`} />
-                </td>
-                <td style={{ fontWeight: 700, fontSize: 13 }}>{e.title || e.type}</td>
-                <td>
-                  <div className="muted" style={{ fontSize: 12 }}>
-                    {e.node?.name ?? "—"}
-                    {e.task ? ` · Task: ${e.task.title}` : ""}
-                    {e.deal ? ` · Deal: ${e.deal.title}` : ""}
-                  </div>
-                </td>
-                <td><SlaTag deadline={e.slaDeadlineAt} /></td>
-                <td><span className={`badge ${STATUS_COLOR[e.reviewStatus] ?? ""}`}>{e.reviewStatus}</span></td>
-                <td className="muted" style={{ fontSize: 11 }}>{new Date(e.createdAt).toLocaleDateString()}</td>
-                {isReviewer && (
+              <> 
+                <tr key={e.id} style={{ cursor: "pointer" }} onClick={() => setExpandedId(expandedId === e.id ? null : e.id)}>
                   <td>
-                    {(e.reviewStatus === "SUBMITTED" || e.reviewStatus === "UNDER_REVIEW") && (
-                      <div style={{ display: "flex", gap: 4 }}>
-                        {e.reviewStatus === "SUBMITTED" && (
-                          <button className="button-secondary" style={{ fontSize: 11, padding: "2px 8px" }} onClick={() => reviewAction(e.id, "UNDER_REVIEW")}>Review</button>
-                        )}
-                        <button className="button-secondary" style={{ fontSize: 11, padding: "2px 8px", color: "var(--green)" }} onClick={() => reviewAction(e.id, "APPROVED")}>Approve</button>
-                        <button className="button-secondary" style={{ fontSize: 11, padding: "2px 8px", color: "var(--red)" }} onClick={() => reviewAction(e.id, "REJECTED")}>Reject</button>
-                      </div>
+                    <span className={`status-dot ${e.reviewStatus === "APPROVED" ? "status-dot-green" : e.reviewStatus === "REJECTED" || e.reviewStatus === "DISPUTED" ? "status-dot-red" : e.reviewStatus === "SUBMITTED" || e.reviewStatus === "UNDER_REVIEW" ? "status-dot-amber" : ""}`} />
+                  </td>
+                  <td style={{ fontWeight: 700, fontSize: 13 }}>{e.title || e.type}</td>
+                  <td>
+                    <div className="muted" style={{ fontSize: 12 }}>
+                      {e.node?.name ?? "—"}
+                      {e.task ? ` · Task: ${e.task.title}` : ""}
+                      {e.deal ? ` · Deal: ${e.deal.title}` : ""}
+                    </div>
+                  </td>
+                  <td><SlaTag deadline={e.slaDeadlineAt} /></td>
+                  <td>
+                    <span className={`badge ${STATUS_COLOR[e.reviewStatus] ?? ""}`}>{e.reviewStatus}</span>
+                    {e.completenessScore != null && (
+                      <span className="muted" style={{ fontSize: 10, marginLeft: 6 }}>{Math.round(e.completenessScore * 100)}%</span>
                     )}
                   </td>
+                  <td className="muted" style={{ fontSize: 11 }}>{new Date(e.createdAt).toLocaleDateString()}</td>
+                  {isReviewer && (
+                    <td>
+                      {(e.reviewStatus === "SUBMITTED" || e.reviewStatus === "UNDER_REVIEW") && (
+                        <div style={{ display: "flex", gap: 4 }} onClick={(ev) => ev.stopPropagation()}>
+                          {e.reviewStatus === "SUBMITTED" && (
+                            <button className="button-secondary" style={{ fontSize: 11, padding: "2px 8px" }} onClick={() => reviewAction(e.id, "UNDER_REVIEW")}>Review</button>
+                          )}
+                          <button className="button-secondary" style={{ fontSize: 11, padding: "2px 8px", color: "var(--green)" }} onClick={() => reviewAction(e.id, "APPROVED")}>Approve</button>
+                          <button className="button-secondary" style={{ fontSize: 11, padding: "2px 8px", color: "var(--red)" }} onClick={() => reviewAction(e.id, "REJECTED")}>Reject</button>
+                        </div>
+                      )}
+                    </td>
+                  )}
+                </tr>
+                {expandedId === e.id && (
+                  <tr key={`${e.id}-detail`}>
+                    <td></td>
+                    <td colSpan={isReviewer ? 6 : 5}>
+                      <div className="card" style={{ padding: 14, margin: "4px 0 8px", fontSize: 12 }}>
+                        {e.description && <p style={{ margin: "0 0 8px" }}>{e.description}</p>}
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                          <div><strong>Type:</strong> {e.type}</div>
+                          <div><strong>Project:</strong> {e.project?.name ?? "—"}</div>
+                          <div><strong>Node:</strong> {e.node?.name ?? "—"}</div>
+                          <div><strong>Deal:</strong> {e.deal?.title ?? "—"}</div>
+                          <div><strong>Completeness:</strong> {e.completenessScore != null ? `${Math.round(e.completenessScore * 100)}%` : "N/A"}</div>
+                          <div><strong>SLA:</strong> {e.slaDeadlineAt ? new Date(e.slaDeadlineAt).toLocaleString() : "None"}</div>
+                        </div>
+                        {e.fileUrl && (
+                          <div style={{ marginTop: 8 }}>
+                            <a href={e.fileUrl} target="_blank" rel="noopener noreferrer" className="link" style={{ fontSize: 12 }}>View Attached File &rarr;</a>
+                          </div>
+                        )}
+                        {e.metadata && Object.keys(e.metadata).length > 0 && (
+                          <pre style={{ marginTop: 8, padding: 8, borderRadius: 4, background: "var(--surface)", border: "1px solid var(--border)", fontSize: 10, overflow: "auto", maxHeight: 150 }}>
+                            {JSON.stringify(e.metadata, null, 2)}
+                          </pre>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
                 )}
-              </tr>
+              </>
             ))}
           </tbody>
         </table>

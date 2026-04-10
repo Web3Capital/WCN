@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
+import { getWeeklyTimeSeries, getFunnelData, detectAnomalies } from "@/lib/modules/cockpit/weekly-report";
 import { DataCockpit } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +21,7 @@ export default async function DataCockpitPage() {
     activeNodes, activeProjects, activeDeals, totalTasks, totalEvidence, totalPoB,
     totalCapital, totalAgents, openDisputes, settledCycles,
     nodesByStatus, dealsByStage, pobByStatus,
+    timeSeries, funnel,
   ] = await Promise.all([
     prisma.node.count({ where: { status: "LIVE" } }),
     prisma.project.count({ where: { status: { in: ["ACTIVE", "IN_DEAL_ROOM", "CURATED"] } } }),
@@ -34,7 +36,16 @@ export default async function DataCockpitPage() {
     prisma.node.groupBy({ by: ["status"], _count: true }),
     prisma.deal.groupBy({ by: ["stage"], _count: true }),
     prisma.poBRecord.groupBy({ by: ["pobEventStatus"], _count: true }),
+    getWeeklyTimeSeries(prisma),
+    getFunnelData(prisma),
   ]);
+
+  const anomalies = [
+    detectAnomalies(timeSeries.deals, "Deals"),
+    detectAnomalies(timeSeries.pob, "PoB Records"),
+    detectAnomalies(timeSeries.evidence, "Evidence"),
+    detectAnomalies(timeSeries.tasks, "Tasks"),
+  ].filter(Boolean) as NonNullable<ReturnType<typeof detectAnomalies>>[];
 
   const data = {
     summary: { activeNodes, activeProjects, activeDeals, totalTasks, totalEvidence, totalPoB, totalCapital, totalAgents, openDisputes, settledCycles },
@@ -43,6 +54,9 @@ export default async function DataCockpitPage() {
       dealsByStage: dealsByStage.map((g) => ({ label: g.stage, count: g._count })),
       pobByStatus: pobByStatus.map((g) => ({ label: g.pobEventStatus, count: g._count })),
     },
+    timeSeries,
+    funnel,
+    anomalies,
   };
 
   return (

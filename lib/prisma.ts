@@ -21,7 +21,15 @@ export function getPrisma() {
     throw new Error("POSTGRES_URL must be a direct postgres:// connection string (not prisma+postgres).");
   }
 
-  const pool = new Pool({ connectionString: url });
+  const pool = new Pool({
+    connectionString: url,
+    max: Number(process.env.DB_POOL_MAX) || 10,
+    idleTimeoutMillis: Number(process.env.DB_POOL_IDLE_TIMEOUT) || 30000,
+    connectionTimeoutMillis: Number(process.env.DB_POOL_CONNECT_TIMEOUT) || 5000,
+    ...(process.env.NODE_ENV === "production" && {
+      ssl: { rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED !== "false" },
+    }),
+  });
   const adapter = new PrismaPg(pool);
 
   globalForPrisma.prisma = new PrismaClient({

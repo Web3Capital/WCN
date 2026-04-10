@@ -4,6 +4,8 @@ import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { cookies } from "next/headers";
 import { Providers } from "@/components/providers";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -48,6 +50,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </div>
           <Footer />
+          <SpeedInsights />
+          <Analytics />
         </Providers>
       </body>
     </html>
