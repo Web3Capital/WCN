@@ -3,18 +3,26 @@
 import { useState } from "react";
 
 type Vote = { id: string; voterId: string; option: string; weight: number };
+type OptionItem = string | { id: string; label: string };
 type Proposal = {
   id: string;
   title: string;
   description: string | null;
   type: string;
   status: string;
-  options: string[];
+  options: OptionItem[];
   quorum: number;
   deadline: string | null;
   votes: Vote[];
   createdAt: string;
 };
+
+function optionLabel(opt: OptionItem): string {
+  return typeof opt === "string" ? opt : opt.label;
+}
+function optionKey(opt: OptionItem): string {
+  return typeof opt === "string" ? opt : opt.id;
+}
 
 const STATUS_BADGE: Record<string, string> = {
   DRAFT: "", ACTIVE: "badge-green", PASSED: "badge-green", REJECTED: "badge-red", EXECUTED: "badge-green", CANCELLED: "badge-red",
@@ -146,7 +154,7 @@ export function GovernanceDashboard({ proposals: initial, userId }: { proposals:
           {shown.map((p) => {
             const userVote = p.votes.find((v) => v.voterId === userId);
             const voteCounts: Record<string, number> = {};
-            for (const opt of p.options) voteCounts[opt] = 0;
+            for (const opt of p.options) voteCounts[optionKey(opt)] = 0;
             for (const v of p.votes) voteCounts[v.option] = (voteCounts[v.option] ?? 0) + 1;
 
             return (
@@ -160,16 +168,20 @@ export function GovernanceDashboard({ proposals: initial, userId }: { proposals:
                 </div>
 
                 <div style={{ display: "flex", gap: 12, marginTop: 12, flexWrap: "wrap" }}>
-                  {p.options.map((opt) => (
-                    <button
-                      key={opt}
-                      className={`chip ${userVote?.option === opt ? "chip-active" : ""}`}
-                      onClick={() => p.status === "ACTIVE" && vote(p.id, opt)}
-                      disabled={p.status !== "ACTIVE"}
-                    >
-                      {opt} ({voteCounts[opt] ?? 0})
-                    </button>
-                  ))}
+                  {p.options.map((opt) => {
+                    const key = optionKey(opt);
+                    const label = optionLabel(opt);
+                    return (
+                      <button
+                        key={key}
+                        className={`chip ${userVote?.option === key ? "chip-active" : ""}`}
+                        onClick={() => p.status === "ACTIVE" && vote(p.id, key)}
+                        disabled={p.status !== "ACTIVE"}
+                      >
+                        {label} ({voteCounts[key] ?? 0})
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
