@@ -11,6 +11,7 @@ import {
   ChevronDown,
   ClipboardList,
   FolderKanban,
+  Gavel,
   GitCompareArrows,
   Handshake,
   Home,
@@ -22,21 +23,19 @@ import {
   Bell,
   LogOut,
   Mail,
+  Megaphone,
   Menu,
   Network,
   Search,
-  Rocket,
   Scale,
   Settings,
   ShieldCheck,
+  Trophy,
   User,
   UserCircle,
   Users,
-  X,
-  ScanEye,
-  Trophy,
-  Megaphone,
   Vote,
+  X,
 } from "lucide-react";
 import type { Role } from "@prisma/client";
 import { signOut } from "next-auth/react";
@@ -72,7 +71,6 @@ const GROUP_DEFS: NavDef[] = [
     items: [
       { href: "/dashboard/tasks", labelKey: "tasks", icon: <ListTodo size={18} strokeWidth={2} /> },
       { href: "/dashboard/agents", labelKey: "agents", icon: <Bot size={18} strokeWidth={2} /> },
-      { href: "/dashboard/agents/review", labelKey: "agentReview", icon: <ScanEye size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN"] },
     ],
   },
   {
@@ -88,7 +86,7 @@ const GROUP_DEFS: NavDef[] = [
       {
         href: "/dashboard/disputes",
         labelKey: "disputes",
-        icon: <AlertTriangle size={18} strokeWidth={2} />,
+        icon: <Gavel size={18} strokeWidth={2} />,
         roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK"],
       },
       { href: "/dashboard/settlement", labelKey: "settlement", icon: <Scale size={18} strokeWidth={2} /> },
@@ -103,7 +101,7 @@ const GROUP_DEFS: NavDef[] = [
     ],
   },
   {
-    titleKey: "governance",
+    titleKey: "admin",
     items: [
       {
         href: "/dashboard/approvals",
@@ -111,33 +109,17 @@ const GROUP_DEFS: NavDef[] = [
         icon: <ShieldCheck size={18} strokeWidth={2} />,
         roles: ["FOUNDER", "ADMIN", "FINANCE_ADMIN", "REVIEWER", "RISK_DESK"],
       },
-      { href: "/dashboard/applications", labelKey: "applications", icon: <Inbox size={18} strokeWidth={2} /> },
-      {
-        href: "/dashboard/users",
-        labelKey: "users",
-        icon: <Users size={18} strokeWidth={2} />,
-        roles: ["FOUNDER", "ADMIN"],
-      },
-      { href: "/dashboard/governance", labelKey: "proposals", icon: <Vote size={18} strokeWidth={2} /> },
-      {
-        href: "/dashboard/admin/invites",
-        labelKey: "invites",
-        icon: <Mail size={18} strokeWidth={2} />,
-        roles: ["FOUNDER", "ADMIN"],
-      },
-      {
-        href: "/dashboard/audit",
-        labelKey: "auditLog",
-        icon: <ClipboardList size={18} strokeWidth={2} />,
-        roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK"],
-      },
+      { href: "/dashboard/applications", labelKey: "applications", icon: <Inbox size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "REVIEWER"] },
+      { href: "/dashboard/users", labelKey: "users", icon: <Users size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN"] },
+      { href: "/dashboard/admin/invites", labelKey: "invites", icon: <Mail size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN"] },
+      { href: "/dashboard/audit", labelKey: "auditLog", icon: <ClipboardList size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK"] },
     ],
   },
   {
     titleKey: "ecosystem",
     items: [
+      { href: "/dashboard/governance", labelKey: "proposals", icon: <Vote size={18} strokeWidth={2} /> },
       { href: "/dashboard/campaigns", labelKey: "campaigns", icon: <Megaphone size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN"] },
-      { href: "/dashboard/assets", labelKey: "phase3Assets", icon: <Rocket size={18} strokeWidth={2} /> },
     ],
   },
 ];

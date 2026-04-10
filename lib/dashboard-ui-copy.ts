@@ -5,7 +5,7 @@ export const DASHBOARD_UI: Record<
   {
     brand: string;
     groups: Record<
-      "overview" | "network" | "work" | "verification" | "intelligence" | "governance" | "ecosystem",
+      "overview" | "network" | "work" | "verification" | "intelligence" | "admin" | "ecosystem",
       string
     >;
     items: Record<
@@ -17,20 +17,18 @@ export const DASHBOARD_UI: Record<
       | "matches"
       | "tasks"
       | "agents"
-      | "agentReview"
       | "evidenceDesk"
       | "pobRecords"
       | "disputes"
       | "settlement"
       | "dataCockpit"
       | "riskConsole"
+      | "reputation"
       | "approvals"
       | "applications"
       | "users"
       | "invites"
       | "auditLog"
-      | "phase3Assets"
-      | "reputation"
       | "campaigns"
       | "proposals",
       string
@@ -74,7 +72,7 @@ export const DASHBOARD_UI: Record<
       work: "Work",
       verification: "Verification",
       intelligence: "Intelligence",
-      governance: "Governance",
+      admin: "Admin",
       ecosystem: "Ecosystem",
     },
     items: {
@@ -86,21 +84,19 @@ export const DASHBOARD_UI: Record<
       matches: "Matches",
       tasks: "Tasks",
       agents: "Agents",
-      agentReview: "Agent Review",
       evidenceDesk: "Evidence Desk",
-      pobRecords: "PoB records",
+      pobRecords: "PoB Records",
       disputes: "Disputes",
       settlement: "Settlement",
-      dataCockpit: "Data cockpit",
-      riskConsole: "Risk console",
+      dataCockpit: "Data Cockpit",
+      riskConsole: "Risk Console",
       reputation: "Reputation",
       approvals: "Approvals",
       applications: "Applications",
       users: "Users",
-      proposals: "Proposals",
       invites: "Invites",
-      auditLog: "Audit log",
-      phase3Assets: "Phase 3 · Assets",
+      auditLog: "Audit Log",
+      proposals: "Governance",
       campaigns: "Campaigns",
     },
     account: {
@@ -187,7 +183,7 @@ export const DASHBOARD_UI: Record<
       work: "工作",
       verification: "核验",
       intelligence: "情报",
-      governance: "治理",
+      admin: "管理",
       ecosystem: "生态",
     },
     items: {
@@ -199,7 +195,6 @@ export const DASHBOARD_UI: Record<
       matches: "匹配",
       tasks: "任务",
       agents: "智能体",
-      agentReview: "智能体审核",
       evidenceDesk: "证据台",
       pobRecords: "PoB 记录",
       disputes: "争议",
@@ -210,10 +205,9 @@ export const DASHBOARD_UI: Record<
       approvals: "审批",
       applications: "申请",
       users: "用户",
-      proposals: "提案",
       invites: "邀请",
       auditLog: "审计日志",
-      phase3Assets: "阶段 3 · 资产",
+      proposals: "治理",
       campaigns: "推广活动",
     },
     account: {
