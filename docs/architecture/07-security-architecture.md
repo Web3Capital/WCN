@@ -25,13 +25,24 @@
 │  Layer 1: middleware.ts                           │
 │  ─ JWT validation (fast path)                     │
 │  ─ Public path whitelist check                    │
-│  ─ Rate limiting (per IP/user)                    │
+│  ─ Rate limiting (fail-closed in production)      │
 │  ─ CORS enforcement                              │
+│  ─ X-Request-Id injection (correlation)           │
 ├──────────────────────────────────────────────────┤
 │  Layer 2: API Route / Server Component            │
 │  ─ getServerSession() (full session validation)   │
 │  ─ Account status check (active? suspended?)      │
 │  ─ 2FA requirement check                         │
+│                                                  │
+│  OR (preferred for new routes):                   │
+│                                                  │
+│  Layer 2: withAuth() HOF (lib/core/with-auth.ts) │
+│  ─ Session validation (automatic)                 │
+│  ─ Account status: LOCKED/SUSPENDED/OFFBOARDED    │
+│    returns 401/403 immediately                    │
+│  ─ Role enforcement (optional)                    │
+│  ─ Permission check via can() (optional)          │
+│  ─ User object injected into handler context      │
 ├──────────────────────────────────────────────────┤
 │  Layer 3: Permission Middleware                   │
 │  ─ Role check (ADMIN / MEMBER / OBSERVER)         │
@@ -43,6 +54,11 @@
 │  ─ Query filtered by user's accessible nodes      │
 │  ─ Sensitive fields redacted for non-owners       │
 │  ─ Confidential entities hidden from non-grantees │
+├──────────────────────────────────────────────────┤
+│  Layer 5: Error Sanitization                      │
+│  ─ lib/core/safe-error.ts                         │
+│  ─ Production: generic messages, no stack traces   │
+│  ─ Development: full error details preserved       │
 └──────────────────────────────────────────────────┘
 ```
 
@@ -166,6 +182,36 @@ function redactForMember(entity: any, userNodeIds: string[]): any {
 }
 ```
 
+### Error Sanitization (Implemented in `lib/core/safe-error.ts`)
+
+Production errors never expose internal details to clients:
+
+```typescript
+// safeErrorMessage(error) → string
+// In production: returns generic message ("An internal error occurred")
+// In development: returns the full error message for debugging
+
+// sanitizeError(error) → { message, code }
+// In production: strips stack traces, internal paths, SQL fragments
+// In development: preserves all detail
+```
+
+All API routes should use `safeErrorMessage()` when constructing error responses. The `withAuth()` HOF uses this internally.
+
+### API Key Security (Implemented in `app/api/apikeys/route.ts`)
+
+API key creation enforces scope limits to prevent privilege escalation:
+
+- **Wildcard block**: Non-admin users cannot create keys with `*` (wildcard) scope
+- **Node ownership verification**: If a key specifies a `nodeId`, the system verifies the requesting user owns that node (via `ownerUserId`) or has ADMIN role
+- **Validation**: Empty scopes, missing nodeId, and other edge cases return 400
+
+### Rate Limiting — Fail-Closed (Implemented in `lib/rate-limit.ts`)
+
+Rate limiting uses Upstash Redis with a sliding window counter. In production, if Redis is unavailable (connection error, timeout), the system **denies the request** (returns a rate-limited result) rather than allowing it through. This prevents a Redis outage from becoming a DDoS vulnerability.
+
+In development, rate limiting is fail-open to avoid blocking local work.
+
 ---
 
 ## Threat Model
@@ -185,19 +231,22 @@ function redactForMember(entity: any, userNodeIds: string[]): any {
 | **Agent misuse** | MEDIUM | Permission levels (READ→ACT), human approval gate, full audit |
 | **Insider threat** | MEDIUM | Principle of least privilege, all admin actions audited |
 | **Data exfiltration** | MEDIUM | File access logging, rate limiting on bulk reads |
-| **DDoS** | MEDIUM | Vercel edge network, rate limiting, request throttling |
+| **DDoS** | MEDIUM | Vercel edge network, fail-closed rate limiting (production), request throttling |
 
-### Security Headers
+### Security Headers (Implemented in `next.config.mjs`)
+
+All routes receive these headers via the `async headers()` function in `next.config.mjs`:
 
 ```
-Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; ...
-X-Content-Type-Options: nosniff
 X-Frame-Options: DENY
-X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
 Referrer-Policy: strict-origin-when-cross-origin
-Permissions-Policy: camera=(), microphone=(), geolocation=()
+X-DNS-Prefetch-Control: on
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
 ```
+
+**Note**: `X-XSS-Protection` is intentionally omitted (deprecated in modern browsers; CSP is the replacement). A Content-Security-Policy header should be added as the application matures.
 
 ---
 

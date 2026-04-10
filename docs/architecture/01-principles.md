@@ -10,7 +10,7 @@ WCN exists to coordinate real business between real organizations. Every archite
 
 ---
 
-## 10 Governing Principles
+## 14 Governing Principles
 
 ### P1: Correctness Over Performance
 
@@ -76,7 +76,7 @@ The system architecture must support three governance phases without rewriting:
 
 ### P6: Explicit State Machines for All Lifecycles
 
-Every entity with a lifecycle (Node, Deal, Task, Evidence, Settlement, Application) uses an explicit state machine defined in `lib/state-machines/`. This means:
+Every entity with a lifecycle (Node, Deal, Task, Evidence, Settlement, Application) uses an explicit state machine. All state machines are consolidated in `lib/core/state-machine.ts` as the single source of truth. The legacy files under `lib/state-machines/` are deprecated re-export shims kept for backward compatibility.
 
 - Valid transitions are enumerated (no arbitrary status changes)
 - Side effects are triggered by transitions (not by status values)
@@ -84,7 +84,7 @@ Every entity with a lifecycle (Node, Deal, Task, Evidence, Settlement, Applicati
 - Transition history is audited
 
 ```typescript
-// lib/state-machines/deal.ts
+// lib/core/state-machine.ts (canonical location)
 const DEAL_TRANSITIONS = {
   DRAFT:          ["ACTIVE", "CANCELLED"],
   ACTIVE:         ["DUE_DILIGENCE", "CLOSED_LOST", "CANCELLED"],
@@ -136,8 +136,54 @@ Current network: <100 nodes. Target: 10,000+ nodes. Architecture must support 10
 **Practical meaning**:
 - Use PostgreSQL (sufficient for 10K nodes, millions of records) — don't adopt microservices prematurely
 - Use server-side rendering (sufficient for dashboard traffic) — don't build a SPA framework
-- Use in-process event bus (sufficient for current load) — but design event schemas so they can move to Redis/Kafka later
+- Use in-process event bus (implemented, sufficient for current load) — backed by Transactional Outbox for reliability; event schemas designed to move to Redis/Kafka later
 - Use Prisma ORM (sufficient for current complexity) — but keep complex queries in raw SQL escape hatches
+
+### P11: Hexagonal Inversion — Ports Over Infrastructure
+
+Domain logic depends on pure TypeScript interfaces (ports), never on infrastructure (Prisma, Redis, S3) directly. Every module defines a `ports.ts` with data-access contracts using domain-level types — zero ORM imports.
+
+```
+lib/modules/deals/ports.ts       → DealPort interface (findMany, findById, create, update)
+lib/modules/matching/ports.ts    → MatchPort interface (findForProject, findForCapital, ...)
+lib/modules/settlement/ports.ts  → SettlementPort interface (getCycles, getLines, ...)
+... 21 modules total
+```
+
+**Why**: Swapping from Prisma to Drizzle, adding a caching layer, or extracting a module into a microservice requires only a new adapter — zero changes to business logic. Ports also make unit testing trivial (inject mock adapters).
+
+### P12: Extension over Modification
+
+New business capabilities are added by **registering** into extension points, not by modifying core code. A generic `ExtensionPoint<TConfig, THandler>` pattern powers domain registries for node types, deal types, agent types, and settlement methods.
+
+```
+✅ Register a new node type: nodeTypeRegistry.register("EXCHANGE", { ... })
+✅ Register a new deal type: dealTypeRegistry.register("M_AND_A", { ... })
+❌ Add a new if-else branch in the deal service for each new type
+❌ Modify the node creation function whenever a new node type is introduced
+```
+
+**Trade-off accepted**: Slightly more indirection for dramatic reduction in coupling and risk when the business evolves.
+
+### P13: Fail-Closed by Default
+
+When infrastructure is degraded or a check is ambiguous, the system denies the request rather than allowing it through. This is non-negotiable for a financial platform:
+
+- **Rate limiter**: Redis unavailable in production → return 429 (deny), not pass-through
+- **Auth wrapper**: Session invalid or account LOCKED/SUSPENDED → return 401/403 immediately
+- **Error responses**: Production errors return generic messages; stack traces and internal details are never exposed (`lib/core/safe-error.ts`)
+
+**Exception**: Development environment retains fail-open behavior for rate limiting to avoid blocking local work.
+
+### P14: Mechanical Boundary Enforcement
+
+Module isolation is enforced by **tooling**, not just documentation or code review:
+
+- **ESLint** `no-restricted-imports` rules (`lib/modules/.eslintrc.json`) block direct imports of module internals (e.g., `service.ts`, `engine.ts`) from outside the module boundary
+- **dependency-cruiser** (`.dependency-cruiser.cjs`) detects cross-module internal imports and circular dependencies in CI
+- **Barrel exports** (`lib/modules/*/index.ts`) define the only importable surface for each module
+
+If the tooling allows it, the architecture permits it. If the tooling blocks it, no amount of "but I need it" justifies a bypass — find the contract-compliant way.
 
 ---
 
@@ -152,6 +198,8 @@ Current network: <100 nodes. Target: 10,000+ nodes. Architecture must support 10
 | **"Smart" UI** | Business logic in React components is untestable | API-first, thin UI layer |
 | **DAO-style open governance from day one** | Premature decentralization → deadlock | Progressive decentralization per P5 |
 | **On-chain everything** | Expensive, slow, irreversible for iteration | Off-chain first, anchor critical proofs on-chain |
+| **Convention-only boundaries** | Humans forget, code review misses | Mechanical enforcement via ESLint + dependency-cruiser (P14) |
+| **Fail-open security** | One Redis outage = open door | Fail-closed by default, deny on ambiguity (P13) |
 
 ---
 

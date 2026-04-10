@@ -12,7 +12,7 @@ All structured business data lives in PostgreSQL. One logical database, partitio
 
 ```
 PostgreSQL 16
-├── 44 Prisma models (current)
+├── 45 Prisma models (current, including Outbox for reliable event delivery)
 ├── ~55 models (target, after adding Distribution, Reputation, etc.)
 ├── Estimated scale: <10M rows total for first 2 years
 ├── Connection: @prisma/adapter-pg with connection pooling
@@ -83,15 +83,20 @@ Client → API Route → Permission Check → Service Function → Prisma → Po
 
 ### Pattern 2: Event-Driven Side Effects
 
-Business events trigger cascading operations across modules.
+Business events trigger cascading operations across modules via two delivery paths:
 
 ```
-Module A completes action
-  → Emits domain event to Event Bus
-  → Module B listener: creates record
-  → Module C listener: sends notification
-  → Module D listener: updates metrics
-  → @wcn/audit listener: logs everything
+Fast path (in-process EventBus):
+  Module A completes action
+    → eventBus.emit("deal.closed", payload)
+    → Module B handler: creates record          (immediate, best-effort)
+    → Module C handler: sends notification
+    → @wcn/audit handler: logs everything
+
+Reliable path (Transactional Outbox):
+  Module A completes action inside Prisma transaction
+    → writeToOutbox(tx, "deal.closed", payload) (atomic with state change)
+    → Cron polls Outbox → emits to EventBus     (guaranteed delivery with retry)
 
 Example: deal.closed
   → @wcn/proof-desk: create Evidence Packet (DRAFT)
@@ -101,6 +106,8 @@ Example: deal.closed
   → @wcn/capital: update capital deployment stats
   → @wcn/audit: log deal close with full details
 ```
+
+Event handlers live in per-module `handlers.ts` files (11 modules), not a central file.
 
 ### Pattern 3: Computed Aggregation (CQRS Read Side)
 
@@ -141,6 +148,31 @@ Failure handling:
   - All steps logged to audit
 ```
 
+### Pattern 5: Transactional Outbox
+
+For critical state changes, the event is written to the `Outbox` table inside the same database transaction as the state change. This guarantees atomicity: either both the state change and the event persist, or neither does.
+
+```
+Prisma.$transaction([
+  prisma.deal.update({ ... status: "CLOSED_WON" }),
+  writeToOutbox(tx, "deal.closed", { dealId, totalAmount })
+])
+→ State changed AND event persisted atomically
+
+Cron job (app/api/cron/route.ts):
+  → processOutbox() polls undelivered events
+  → Emits each to the in-process EventBus
+  → Marks as delivered on success
+  → Increments retryCount on failure (max 10 retries)
+  → cleanupOutbox() removes delivered events older than 30 days
+
+Outbox model (prisma/schema.prisma):
+  id, eventName, payload (JSON), actorId, requestId,
+  delivered, deliveredAt, retryCount, lastError, createdAt
+```
+
+This pattern bridges the gap between the in-process EventBus (fast but lossy on crash) and a future external message broker (Redis Streams / Kafka). It provides durability without additional infrastructure.
+
 ---
 
 ## Data Ownership Matrix
@@ -169,6 +201,7 @@ Failure handling:
 | Notification | M16 notifications | M16 | M16 | User notifications |
 | SearchDocument | M17 search | M17 | M17 | Populated from events |
 | AuditLog | M18 audit | M18 | M18 + all | Append-only from all modules |
+| Outbox | Core (`lib/core/outbox.ts`) | Core, health | Core (via writeToOutbox) | Reliable event delivery with retry |
 
 ---
 

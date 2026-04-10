@@ -105,8 +105,10 @@ Branch deploys:
 
 Gates:
   - Lint must pass (zero errors)
+  - ESLint module boundary rules pass (lib/modules/.eslintrc.json — no cross-module internal imports)
+  - dependency-cruiser pass (.dependency-cruiser.cjs — no circular deps, no uncontracted imports)
   - TypeScript must compile (strict mode)
-  - Unit tests must pass (>80% coverage for service layer)
+  - Unit tests must pass (178+ tests, >80% coverage for service layer)
   - API integration tests must pass
   - Build must succeed
   - Prisma schema must be valid
@@ -198,9 +200,17 @@ Keep in monolith (tightly coupled, low volume):
 ```
 ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
 │    Metrics   │  │    Logs      │  │    Traces    │
-│  Prometheus  │  │  Structured  │  │  OpenTelemetry│
-│  + Grafana   │  │  JSON logs   │  │  (future)    │
+│  Prometheus  │  │  Structured  │  │  X-Request-Id│
+│  + Grafana   │  │  JSON logs   │  │  (correlation│
+│  (RUNNING)   │  │              │  │   + future   │
+│              │  │              │  │   OpenTelemetry)
 └──────────────┘  └──────────────┘  └──────────────┘
+
+Implemented:
+  lib/core/metrics.ts      → In-process counters + histograms
+  /api/metrics             → Prometheus-compatible text export (secret-protected)
+  lib/core/request-id.ts   → X-Request-Id on every response (via middleware.ts)
+  /api/health              → Expanded: outbox depth, memory, event bus stats, Node.js version
 ```
 
 ### Key Metrics (SLIs)
@@ -213,6 +223,7 @@ Keep in monolith (tightly coupled, low volume):
 | Database query time (P95) | < 100ms | > 500ms |
 | Agent execution time (P95) | < 60s | > 120s |
 | Event processing delay | < 1s | > 10s |
+| Outbox pending depth | < 50 | > 200 |
 | Authentication success rate | > 95% | < 90% |
 | Uptime | 99.9% | Any downtime |
 

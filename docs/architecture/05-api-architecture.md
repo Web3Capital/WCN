@@ -49,9 +49,11 @@ POST   /api/account/2fa/setup               → Start 2FA enrollment
 ```
 Authorization: Bearer <JWT>          (required for authenticated endpoints)
 Content-Type: application/json       (required for POST/PATCH)
-X-Request-Id: <uuid>                 (optional, for tracing)
+X-Request-Id: <uuid>                 (auto-injected by middleware.ts if not provided)
 X-WCN-Workspace: <workspace-id>     (future, for multi-workspace)
 ```
+
+**Note**: Every response includes an `X-Request-Id` header for tracing. If the client provides one, it is preserved; otherwise `middleware.ts` generates a new UUID via `lib/core/request-id.ts`.
 
 ### Success Response
 ```json
@@ -81,6 +83,8 @@ X-WCN-Workspace: <workspace-id>     (future, for multi-workspace)
 }
 ```
 
+**Production error sanitization**: In production, internal error messages and stack traces are never exposed. `lib/core/safe-error.ts` maps all unhandled errors to generic user-friendly messages (e.g., "An internal error occurred"). In development, full error details are preserved for debugging.
+
 ### Error Codes Convention
 ```
 HTTP 400 — Validation error (bad input)
@@ -95,16 +99,45 @@ HTTP 500 — Internal server error
 
 ---
 
-## API Route Handler Pattern
+## API Route Handler Patterns
 
-Every API route follows this pattern:
+Two patterns are available for API routes. The `withAuth()` HOF is preferred for new routes.
+
+### Pattern A: `withAuth()` Wrapper (Preferred)
+
+The `withAuth()` higher-order function (`lib/core/with-auth.ts`) handles session validation, account status checks (LOCKED/SUSPENDED/OFFBOARDED), role enforcement, and permission verification in one call:
+
+```typescript
+// app/api/deals/route.ts
+import { withAuth } from "@/lib/core/with-auth";
+import { validateCreateDeal } from "@/lib/modules/deals/validation";
+import { createDeal } from "@/lib/modules/deals/service";
+
+export const POST = withAuth(async (req, { user }) => {
+  // user is guaranteed: authenticated, active account, correct role + permission
+  const body = await req.json();
+  const validation = validateCreateDeal(body);
+  if (!validation.success) {
+    return NextResponse.json({ error: { code: "VALIDATION_ERROR", details: validation.errors } }, { status: 400 });
+  }
+
+  const deal = await createDeal(validation.data, user);
+  return NextResponse.json({ data: deal }, { status: 201 });
+}, {
+  role: "MEMBER",
+  permission: { action: "create", resource: "deal" }
+});
+```
+
+### Pattern B: Manual Auth (Legacy)
+
+The explicit step-by-step pattern. Used in existing routes; acceptable but more error-prone:
 
 ```typescript
 // app/api/deals/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { getPrisma } from "@/lib/prisma";
 import { audit } from "@/lib/audit";
 import { hasPermission } from "@/lib/permissions";
 import { validateCreateDeal } from "@/lib/modules/deals/validation";
@@ -190,7 +223,7 @@ GET /api/search?q=DeFi+lending&type=project,node
 | Agent execution | 10 runs | per minute per agent |
 | Search | 30 queries | per minute per user |
 
-Implementation: Redis-backed sliding window counter.
+Implementation: Redis-backed sliding window counter (Upstash Redis). **Fail-closed in production**: if Redis is unavailable, requests are denied (429) rather than allowed through. Development environment is fail-open to avoid blocking local work.
 
 ---
 
@@ -308,3 +341,10 @@ Accept: application/vnd.wcn.v2+json
 | GET | /api/search | Auth | Full-text search |
 | POST | /api/search-index | Admin | Rebuild index |
 | GET | /api/audit | Admin | Audit log |
+
+### Platform Infrastructure
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | /api/health | Public | Expanded health check: DB, outbox metrics, memory, event bus stats, Node.js version |
+| GET | /api/metrics | Secret | Prometheus-compatible metrics export (counters, histograms). Protected by `METRICS_SECRET` |
+| POST | /api/cron | Secret | Background processing: outbox polling, cleanup, scheduled tasks |

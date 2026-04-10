@@ -34,10 +34,12 @@ async function closeDeal(dealId) {
 
 ## Event Bus — Progressive Implementation
 
-### Phase 1: In-Process Event Emitter (Current Target)
+### Phase 1: In-Process Event Emitter (Implemented)
+
+The in-process EventBus is running in production (`lib/core/event-bus.ts`). It handles 50+ event types with 11 per-module handler registrations.
 
 ```typescript
-// lib/core/event-bus.ts
+// lib/core/event-bus.ts (implemented)
 type EventHandler = (payload: unknown) => Promise<void>;
 
 class EventBus {
@@ -51,11 +53,9 @@ class EventBus {
 
   async emit(event: string, payload: unknown) {
     const handlers = this.handlers.get(event) || [];
-    // Execute all handlers concurrently, don't block the emitter
     await Promise.allSettled(
       handlers.map(h => h(payload).catch(err => {
         console.error(`Event handler failed for ${event}:`, err);
-        // Log to audit — handler failures must not be silent
       }))
     );
   }
@@ -66,7 +66,7 @@ export const eventBus = new EventBus();
 
 **Pros**: Zero infrastructure, works in Vercel serverless, simple debugging.
 **Cons**: Events lost if process crashes mid-handling, no replay.
-**Acceptable because**: Volume is low (<1000 events/day initially), crash risk is low with Vercel's managed runtime.
+**Mitigation**: The Transactional Outbox (see below) provides durability for critical events without requiring external infrastructure.
 
 ### Phase 2: Redis Streams (When Volume Exceeds In-Process)
 
@@ -312,37 +312,73 @@ risk.alert_resolved:
 
 ---
 
-## Event Handler Registration
+## Event Sovereignty — Per-Module Handler Ownership
+
+Each module owns its event reactions in a dedicated `handlers.ts` file. The central `lib/core/event-handlers.ts` is a thin orchestrator (47 lines) that imports and calls each module's initialization function. This replaces the previous "God Object" pattern where a single 668-line file contained all event handling logic.
+
+### Per-Module Handler Pattern
 
 ```typescript
-// lib/core/event-handlers.ts
-// Central registration point — loaded at app startup
+// lib/modules/evidence/handlers.ts — Evidence module owns its reactions
+import { eventBus } from "@/lib/core/event-bus";
 
-import { eventBus } from "./event-bus";
+let _initialized = false;
 
-// Proof Desk reactions
-eventBus.on("deal.closed", async (payload) => {
-  const { dealId } = payload as { dealId: string };
-  await proofDeskService.createPacketFromDeal(dealId);
-});
+export function initEvidenceHandlers(): void {
+  if (_initialized) return;
+  _initialized = true;
 
-// Notification reactions
-eventBus.on("deal.closed", async (payload) => {
-  const { dealId } = payload as { dealId: string };
-  await notificationService.notifyDealParticipants(dealId, "deal_closed");
-});
+  eventBus.on("deal.closed", async (payload) => {
+    const { dealId } = payload as { dealId: string };
+    await assemblePacketForDeal(dealId);
+  });
 
-// Cockpit reactions
-eventBus.on("deal.closed", async (payload) => {
-  await cockpitService.incrementMetric("deals_closed_total");
-  await cockpitService.incrementMetric("deals_closed_monthly");
-});
-
-// Audit (universal listener)
-eventBus.on("*", async (event, payload) => {
-  await auditService.logEvent(event, payload);
-});
+  eventBus.on("task.completed", async (payload) => {
+    const { taskId, dealId } = payload as { taskId: string; dealId: string };
+    await addEvidenceFromTask(taskId, dealId);
+  });
+}
 ```
+
+### Central Orchestrator
+
+```typescript
+// lib/core/event-handlers.ts — thin orchestrator, ~47 lines
+import { initAuditHandler } from "./handlers/audit";
+import { initDealHandlers } from "@/lib/modules/deals/handlers";
+import { initMatchingHandlers } from "@/lib/modules/matching/handlers";
+import { initEvidenceHandlers } from "@/lib/modules/evidence/handlers";
+import { initPobHandlers } from "@/lib/modules/pob/handlers";
+import { initSettlementHandlers } from "@/lib/modules/settlement/handlers";
+import { initReputationHandlers } from "@/lib/modules/reputation/handlers";
+import { initRiskHandlers } from "@/lib/modules/risk/handlers";
+import { initAgentHandlers } from "@/lib/modules/agents/handlers";
+import { initNotificationHandlers } from "@/lib/modules/notification/handlers";
+import { initSearchHandlers } from "@/lib/modules/search/handlers";
+import { initRealtimeHandlers } from "@/lib/modules/realtime/handlers";
+
+export function initEventHandlers(): void {
+  initAuditHandler();       // universal audit listener (lib/core/handlers/audit.ts)
+  initDealHandlers();
+  initMatchingHandlers();
+  initEvidenceHandlers();
+  initPobHandlers();
+  initSettlementHandlers();
+  initReputationHandlers();
+  initRiskHandlers();
+  initAgentHandlers();
+  initNotificationHandlers();
+  initSearchHandlers();
+  initRealtimeHandlers();
+}
+```
+
+### Benefits of Event Sovereignty
+
+- **Module autonomy**: Changing how matching reacts to `project.created` requires editing only `lib/modules/matching/handlers.ts`
+- **Testability**: Each handler module can be tested in isolation
+- **Discoverability**: `grep` for event reactions is scoped to one file per module
+- **No God Object**: No single file grows unboundedly with every new event reaction
 
 ---
 
@@ -412,19 +448,71 @@ eventBus.on("deal.closed", async ({ dealId }) => {
 
 ---
 
-## Dead Letter Queue
+## Transactional Outbox — Reliable Event Delivery
 
-Events that fail after all retries go to a dead letter queue for manual investigation:
+The in-process EventBus is fast but best-effort: if the process crashes mid-handling, events are lost. For critical state changes, the **Transactional Outbox** pattern guarantees atomicity between the state change and the event.
 
-```typescript
-interface DeadLetterEntry {
-  event: string;
-  payload: unknown;
-  error: string;
-  retryCount: number;
-  firstFailedAt: Date;
-  lastFailedAt: Date;
+### How It Works
+
+```
+1. Service function opens a Prisma transaction
+2. State change and event write happen in the SAME transaction:
+     prisma.$transaction([
+       prisma.deal.update({ status: "CLOSED_WON" }),
+       writeToOutbox(tx, "deal.closed", { dealId, totalAmount })
+     ])
+3. Both persist atomically (or neither does)
+4. Cron job (app/api/cron/route.ts) polls undelivered Outbox rows
+5. For each: emit to EventBus → mark delivered → record deliveredAt
+6. On failure: increment retryCount, record lastError, retry next cycle
+7. After 10 retries: row stays for manual investigation (acts as DLQ)
+8. Weekly cleanup removes delivered events older than 30 days
+```
+
+### Outbox Schema
+
+```prisma
+model Outbox {
+  id          String   @id @default(cuid())
+  eventName   String
+  payload     Json
+  actorId     String?
+  requestId   String?
+  delivered   Boolean  @default(false)
+  deliveredAt DateTime?
+  retryCount  Int      @default(0)
+  lastError   String?
+  createdAt   DateTime @default(now())
+
+  @@index([delivered, createdAt])
+  @@index([eventName])
 }
 ```
 
-Admin dashboard shows dead letter entries for manual replay or dismissal.
+### API
+
+```typescript
+// lib/core/outbox.ts
+writeToOutbox(tx, eventName, payload, opts?)  // use inside Prisma transaction
+processOutbox(batchSize?)                     // poll + emit (called by cron)
+cleanupOutbox(retentionDays?)                 // remove old delivered events
+getOutboxMetrics()                            // pending/failed/oldest (used by /api/health)
+```
+
+### Monitoring
+
+The `/api/health` endpoint includes outbox metrics: pending count, failed count (retryCount > 0), and age of the oldest undelivered event. This enables alerting on delivery backlogs.
+
+---
+
+## Dead Letter Queue
+
+The Outbox model doubles as the Dead Letter Queue. Events that fail after 10 retries remain in the table with `delivered: false` and `retryCount >= 10` for manual investigation. The admin health endpoint surfaces these as "failed" outbox entries.
+
+```
+Outbox rows where:
+  delivered = false AND retryCount >= 10
+  → Visible in /api/health as "failedCount"
+  → Manual investigation: inspect payload + lastError
+  → Resolution: fix root cause, reset retryCount to 0, or delete
+```

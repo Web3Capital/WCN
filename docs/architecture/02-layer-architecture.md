@@ -29,11 +29,13 @@ Persistent storage, caching, file storage, and message transport. No business lo
 
 | Component | Technology | Purpose | Current Status |
 |-----------|------------|---------|----------------|
-| **Primary DB** | PostgreSQL 16 (via Prisma) | All structured data | ✅ Running |
-| **Cache** | Redis 7 | Session cache, rate limiting, matching cache, real-time pub/sub | ❌ Not deployed |
+| **Primary DB** | PostgreSQL 16 (via Prisma) | All structured data (45 models) | ✅ Running |
+| **Cache** | Redis 7 (Upstash) | Rate limiting, matching cache | ⚠️ Partial (rate limiting only) |
 | **Object Storage** | S3-compatible (Vercel Blob / AWS S3) | File uploads, materials, exports | ⚠️ Partial (File model exists, no S3) |
-| **Event Bus** | In-process → Redis Streams → Kafka (future) | Domain event transport | ❌ Not implemented |
+| **Event Bus** | In-process EventBus (`lib/core/event-bus.ts`) | Domain event transport | ✅ Running (50+ event types, 11 handler modules) |
+| **Outbox** | PostgreSQL (`Outbox` model + `lib/core/outbox.ts`) | Reliable event delivery with retry | ✅ Running (cron-polled, fail-safe) |
 | **Search Index** | PostgreSQL FTS → MeiliSearch (future) | Full-text search | ⚠️ Partial (SearchDocument model) |
+| **Metrics** | In-process (`lib/core/metrics.ts`) → Prometheus | Counters, histograms, API latency | ✅ Running (`/api/metrics` endpoint) |
 
 ### Data Ownership Rules
 
@@ -60,6 +62,7 @@ Persistent storage, caching, file storage, and message transport. No business lo
 @wcn/search    owns: SearchDocument, SavedSearch
 
 Shared: File, FileAccessLog, Workspace, WorkspaceMembership, RoleAssignment
+Cross-cutting: Outbox (reliable event delivery, owned by lib/core/outbox.ts)
 ```
 
 ---
@@ -300,7 +303,11 @@ How users and external systems interact with WCN. Currently a Next.js web applic
 |-----------|------------|---------|
 | **Web App** | Next.js 14 (App Router, RSC) | Primary user interface |
 | **API Gateway** | Next.js API routes + middleware.ts | RESTful API for all modules |
-| **Auth Middleware** | NextAuth + JWT + custom permission middleware | Request authentication and authorization |
+| **Auth Middleware** | NextAuth + JWT + `withAuth()` HOF (`lib/core/with-auth.ts`) | Standardized auth: session + account status + role + permission in one wrapper |
+| **Request Correlation** | `X-Request-Id` header (`lib/core/request-id.ts` + `middleware.ts`) | Every response carries a unique request ID for tracing |
+| **Error Sanitization** | `lib/core/safe-error.ts` | Production errors return generic messages; no stack traces or internal details exposed |
+| **Security Headers** | `next.config.mjs` `headers()` | HSTS, X-Frame-Options, X-Content-Type-Options, Permissions-Policy, Referrer-Policy |
+| **Observability** | `/api/metrics` (Prometheus) + `/api/health` (expanded) | Metrics export, health check with outbox/memory/event bus stats |
 | **Real-time** | Future: WebSocket / SSE | Live updates for deals, tasks, notifications |
 | **Webhooks** | Future: outbound webhook system | External system integration |
 | **SDK** | Future: `@wcn/sdk` npm package | Programmatic access for node operators |

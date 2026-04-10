@@ -6,11 +6,15 @@
 
 ## Module Anatomy
 
-Every module follows the same internal structure:
+Every module follows the same internal structure. Files marked with `*` are present in all 21 modules; others are present where applicable.
 
 ```
 lib/modules/<module-name>/
+├── ports.ts          * # Domain interfaces — hexagonal ports (pure TS, zero ORM imports)
+├── index.ts          * # Barrel exports — the ONLY importable surface for other modules
 ├── service.ts          # Business logic (pure functions, no HTTP concerns)
+├── handlers.ts         # Event handler registration — module owns its event reactions
+├── registry.ts         # Extension point registration (node types, deal types, etc.)
 ├── events.ts           # Event definitions (emitted + consumed)
 ├── types.ts            # TypeScript interfaces/types for this domain
 ├── validation.ts       # Zod schemas for input validation
@@ -31,6 +35,8 @@ app/dashboard/<module-name>/
 │   └── page.tsx        # Detail view
 └── _components/        # Module-specific UI components
 ```
+
+**Boundary enforcement**: ESLint rules in `lib/modules/.eslintrc.json` block cross-module imports of internal files (e.g., `service.ts`, `engine.ts`). Only `ports.ts`, `index.ts`, and `types.ts` are importable from outside a module boundary. `dependency-cruiser` (`.dependency-cruiser.cjs`) enforces this in CI.
 
 ---
 
@@ -307,7 +313,7 @@ Cross-cutting (L4, connect to everything):
 
 ## Module Communication Summary
 
-### Synchronous (Direct Service Calls)
+### Synchronous (Direct Service Calls via Barrel Exports)
 ```
 Any module → @wcn/identity.getCurrentUser()     (auth check)
 Any module → @wcn/identity.hasPermission()       (permission check)
@@ -315,9 +321,15 @@ Any module → @wcn/nodes.getNode()                (node info lookup)
 Any module → @wcn/audit.audit()                  (log action)
 @wcn/deals → @wcn/projects.getProject()          (project info for deal)
 @wcn/capital → @wcn/projects.searchProjects()    (matching input)
+
+Import rule: Always import through the module's index.ts barrel, never
+from internal files (service.ts, engine.ts). Enforced by ESLint.
 ```
 
-### Asynchronous (Event-Driven)
+### Asynchronous (Event-Driven — Per-Module Handlers)
+
+Each module owns its event reactions in `lib/modules/*/handlers.ts`. The central `lib/core/event-handlers.ts` is a thin orchestrator that calls each module's `init*Handlers()` function.
+
 ```
 project.created    → @wcn/capital (trigger matching), @wcn/search (index)
 match.generated    → @wcn/notifications (alert capital node)
@@ -326,7 +338,13 @@ deal.closed        → @wcn/proof-desk (create packet), @wcn/notifications
 evidence.approved  → @wcn/pob (generate PoB)
 pob.created        → @wcn/settlement (include in cycle), @wcn/reputation (update score)
 settlement.distributed → @wcn/notifications (notify nodes), @wcn/cockpit (update metrics)
+
+Handler modules (11): deals, matching, evidence, pob, settlement,
+reputation, risk, agents, notification, search, realtime
 ```
+
+### Reliable Delivery (Transactional Outbox)
+For critical events where loss is unacceptable, `writeToOutbox()` stores the event atomically alongside the state change in a single database transaction. A cron job polls undelivered events and emits them via the EventBus with retry semantics.
 
 ---
 
@@ -389,8 +407,9 @@ wcn-nextjs-starter/
 │       ├── audit/            # M18
 │       └── data-cockpit/     # M14
 ├── lib/
-│   ├── modules/              # Domain logic (TARGET structure)
-│   │   ├── identity/         # service.ts, events.ts, types.ts, validation.ts
+│   ├── modules/              # Domain logic (each module: ports.ts, index.ts, service.ts, handlers.ts, ...)
+│   │   ├── .eslintrc.json    # Cross-module import restrictions (no-restricted-imports)
+│   │   ├── identity/         # ports.ts, index.ts, service.ts, events.ts, types.ts, validation.ts
 │   │   ├── nodes/
 │   │   ├── governance/
 │   │   ├── projects/
@@ -408,8 +427,18 @@ wcn-nextjs-starter/
 │   │   ├── notifications/
 │   │   ├── search/
 │   │   └── audit/
-│   ├── core/                 # Cross-cutting: event-bus.ts, permissions.ts, state-machine.ts
-│   ├── state-machines/       # (existing, migrate to lib/modules/*/state-machine.ts)
+│   ├── core/                 # Cross-cutting infrastructure
+│   │   ├── event-bus.ts      # In-process EventBus
+│   │   ├── event-handlers.ts # Thin orchestrator — calls per-module init*Handlers()
+│   │   ├── state-machine.ts  # All state machines (canonical source)
+│   │   ├── outbox.ts         # Transactional Outbox (write, process, cleanup)
+│   │   ├── registry.ts       # Generic ExtensionPoint<TConfig, THandler>
+│   │   ├── with-auth.ts      # withAuth() HOF for API route authentication
+│   │   ├── safe-error.ts     # Production error sanitization
+│   │   ├── request-id.ts     # X-Request-Id generation and retrieval
+│   │   ├── metrics.ts        # In-process counters/histograms (Prometheus export)
+│   │   └── permissions.ts    # RBAC permission matrix
+│   ├── state-machines/       # DEPRECATED re-export shims → lib/core/state-machine.ts
 │   ├── prisma.ts
 │   └── auth.ts
 ├── prisma/
@@ -422,5 +451,6 @@ wcn-nextjs-starter/
 ├── docs/
 │   ├── architecture/         # This document set
 │   └── prd/                  # 18 PRDs
-└── middleware.ts              # Auth gate
+├── .dependency-cruiser.cjs    # CI boundary enforcement (no cross-module internals, no circular)
+└── middleware.ts              # Auth gate + X-Request-Id injection
 ```
