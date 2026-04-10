@@ -1,17 +1,21 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
+import { apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, addDealParticipantSchema } from "@/lib/core/validation";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   const auth = await requirePermission("update", "deal");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(addDealParticipantSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-  const nodeId = body?.nodeId ? String(body.nodeId) : null;
-  const role = String(body?.role ?? "participant");
-
-  if (!nodeId) return NextResponse.json({ ok: false, error: "nodeId required." }, { status: 400 });
+  const { nodeId, role } = parsed.data;
 
   const participant = await prisma.dealParticipant.upsert({
     where: { dealId_nodeId: { dealId: params.id, nodeId } },
@@ -20,5 +24,12 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     include: { node: { select: { id: true, name: true } } },
   });
 
-  return NextResponse.json({ ok: true, participant });
+  await eventBus.emit(Events.DEAL_PARTICIPANT_ADDED, {
+    dealId: params.id,
+    nodeId,
+    userId: body?.userId ?? undefined,
+    role,
+  }, { actorId: auth.session.user?.id });
+
+  return apiCreated(participant);
 }

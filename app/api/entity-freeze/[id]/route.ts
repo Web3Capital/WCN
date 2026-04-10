@@ -1,19 +1,20 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const auth = await requirePermission("freeze", "risk");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const freeze = await prisma.entityFreeze.findUnique({ where: { id } });
-  if (!freeze) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
-  if (freeze.liftedAt) return NextResponse.json({ ok: false, error: "Already lifted." }, { status: 400 });
+  if (!freeze) return apiNotFound("EntityFreeze");
+  if (freeze.liftedAt) return apiValidationError([{ path: "id", message: "Already lifted." }]);
 
   const updated = await prisma.entityFreeze.update({
     where: { id },
@@ -32,5 +33,5 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     metadata: { freezeId: id, reason: body?.reason },
   });
 
-  return NextResponse.json({ ok: true, freeze: updated });
+  return apiOk(updated);
 }

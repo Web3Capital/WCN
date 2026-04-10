@@ -72,7 +72,7 @@ export function DealDetail({ deal, nodes, isAdmin }: {
     });
     const data = await res.json();
     if (data.ok) {
-      setLocalNotes([{ ...data.note, createdAt: new Date().toISOString() }, ...localNotes]);
+      setLocalNotes([{ ...data.data, createdAt: new Date().toISOString() }, ...localNotes]);
       setNoteText("");
     }
   }
@@ -86,7 +86,7 @@ export function DealDetail({ deal, nodes, isAdmin }: {
     });
     const data = await res.json();
     if (data.ok) {
-      setMilestones([...milestones, { ...data.milestone, dueAt: null, doneAt: null }]);
+      setMilestones([...milestones, { ...data.data, dueAt: null, doneAt: null }]);
       setMsTitle("");
     }
   }
@@ -112,7 +112,7 @@ export function DealDetail({ deal, nodes, isAdmin }: {
     });
     const data = await res.json();
     if (data.ok) {
-      setParticipants([...participants, data.participant]);
+      setParticipants([...participants, data.data]);
       setAddNodeId("");
     }
   }

@@ -1,17 +1,17 @@
+import "@/lib/core/init";
 import type { Prisma } from "@prisma/client";
 import { ApplicationStatus } from "@prisma/client";
-import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
-import { ApiCode, apiError } from "@/lib/api-error";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { assertPoBStatusValue, canTransitionPoBStatus, pobTransitionErrorMessage } from "@/lib/pob-state";
 import { canTransitionPoB } from "@/lib/state-machines/evidence-pob";
+import { apiOk, apiUnauthorized, apiNotFound, apiValidationError, apiConflict } from "@/lib/core/api-response";
 import type { PoBEventStatus } from "@prisma/client";
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const record = await prisma.poBRecord.findUnique({
@@ -27,20 +27,20 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
     },
   });
 
-  if (!record) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!record) return apiNotFound("PoBRecord");
 
-  return NextResponse.json({ ok: true, record });
+  return apiOk(record);
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const admin = await requireAdmin();
-  if (!admin.ok) return apiError(ApiCode.UNAUTHORIZED, "Unauthorized.", 401);
+  if (!admin.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const existing = await prisma.poBRecord.findUnique({ where: { id: params.id } });
-  if (!existing) return apiError(ApiCode.NOT_FOUND, "PoB record not found.", 404);
+  if (!existing) return apiNotFound("PoBRecord");
 
   const data: Prisma.PoBRecordUpdateInput = {};
   if (body?.notes !== undefined) data.notes = body.notes ? String(body.notes) : null;
@@ -57,10 +57,10 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (body?.status !== undefined) {
     const status = String(body.status);
     if (!assertPoBStatusValue(status)) {
-      return apiError(ApiCode.VALIDATION_ERROR, "Invalid status.", 400, { allowed: ["PENDING", "REVIEWING", "APPROVED", "REJECTED"] });
+      return apiValidationError([{ path: "status", message: "Invalid status." }]);
     }
     if (!canTransitionPoBStatus(existing.status, status)) {
-      return apiError(ApiCode.POB_INVALID_TRANSITION, pobTransitionErrorMessage(existing.status, status), 409, { from: existing.status, to: status });
+      return apiConflict(pobTransitionErrorMessage(existing.status, status));
     }
     data.status = status as ApplicationStatus;
   }
@@ -68,10 +68,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (body?.pobEventStatus !== undefined) {
     const newStatus = String(body.pobEventStatus) as PoBEventStatus;
     if (!canTransitionPoB(existing.pobEventStatus, newStatus)) {
-      return NextResponse.json({
-        ok: false,
-        error: `Cannot transition PoB event from ${existing.pobEventStatus} to ${newStatus}.`,
-      }, { status: 400 });
+      return apiValidationError([{ path: "pobEventStatus", message: `Cannot transition from ${existing.pobEventStatus} to ${newStatus}.` }]);
     }
     data.pobEventStatus = newStatus;
 
@@ -82,7 +79,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 
   if (Object.keys(data).length === 0) {
-    return apiError(ApiCode.VALIDATION_ERROR, "No valid fields to update.", 400);
+    return apiValidationError([{ path: "body", message: "No valid fields to update." }]);
   }
 
   const record = await prisma.poBRecord.update({ where: { id: params.id }, data });
@@ -112,5 +109,5 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     },
   });
 
-  return NextResponse.json({ ok: true, record });
+  return apiOk(record);
 }

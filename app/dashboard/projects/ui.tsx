@@ -48,8 +48,9 @@ export function ProjectsConsole({
     const res = await fetch("/api/projects", { cache: "no-store" });
     const data = await res.json();
     if (!data?.ok) throw new Error(data?.error ?? "Failed to load projects.");
-    setRows(data.projects);
-    if (!selectedId && data.projects?.[0]?.id) setSelectedId(data.projects[0].id);
+    const list = data.data ?? [];
+    setRows(list);
+    if (!selectedId && list[0]?.id) setSelectedId(list[0].id);
   }
 
   async function onCreate() {

@@ -39,12 +39,14 @@ export function AuditConsole({ initial, actions }: { initial: AuditRow[]; action
     const data = await res.json().catch(() => null);
     setLoading(false);
     if (!data?.ok) return;
+    const payload = data.data;
+    if (!payload) return;
     if (append) {
-      setRows((prev) => [...prev, ...data.logs]);
+      setRows((prev) => [...prev, ...payload.logs]);
     } else {
-      setRows(data.logs);
+      setRows(payload.logs);
     }
-    setCursor(data.nextCursor ?? null);
+    setCursor(payload.nextCursor ?? null);
   }
 
   const selected = selectedId ? rows.find((r) => r.id === selectedId) ?? null : null;

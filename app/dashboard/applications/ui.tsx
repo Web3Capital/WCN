@@ -49,7 +49,7 @@ export function ApplicationsTable({
     if (!activeId || readOnly) { setReviews([]); return; }
     fetch(`/api/reviews?targetType=APPLICATION&targetId=${activeId}`, { cache: "no-store" })
       .then((r) => r.json())
-      .then((d) => { if (d?.ok) setReviews(d.reviews); })
+      .then((d) => { if (d?.ok) setReviews(d.data ?? []); })
       .catch(() => {});
   }, [activeId, readOnly]);
 
@@ -67,7 +67,7 @@ export function ApplicationsTable({
       setError(json?.error ?? "Failed to save.");
       return;
     }
-    setItems((prev) => prev.map((x) => (x.id === id ? json.application : x)));
+    setItems((prev) => prev.map((x) => (x.id === id ? json.data : x)));
   }
 
   return (

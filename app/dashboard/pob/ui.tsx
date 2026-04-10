@@ -72,7 +72,7 @@ export function PobConsole({
     if (!selectedId || readOnly) { setPobReviews([]); return; }
     fetch(`/api/reviews?targetType=POB&targetId=${selectedId}`, { cache: "no-store" })
       .then((r) => r.json())
-      .then((d) => { if (d?.ok) setPobReviews(d.reviews); })
+      .then((d) => { if (d?.ok) setPobReviews(d.data ?? []); })
       .catch(() => {});
   }, [selectedId, readOnly]);
 
@@ -80,8 +80,9 @@ export function PobConsole({
     const res = await fetch("/api/pob", { cache: "no-store" });
     const data = await res.json();
     if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
-    setRows(data.pob);
-    if (!selectedId && data.pob?.[0]?.id) setSelectedId(data.pob[0].id);
+    const list = data.data ?? [];
+    setRows(list);
+    if (!selectedId && list[0]?.id) setSelectedId(list[0].id);
   }
 
   async function onCreate() {

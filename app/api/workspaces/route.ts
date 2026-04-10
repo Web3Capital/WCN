@@ -1,11 +1,13 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiCreated, apiUnauthorized, apiConflict, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, createWorkspaceSchema } from "@/lib/core/validation";
 
 export async function GET() {
   const auth = await requirePermission("read", "invite");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const userId = auth.session.user!.id;
@@ -19,32 +21,28 @@ export async function GET() {
     orderBy: { createdAt: "desc" },
   });
 
-  return NextResponse.json({ ok: true, workspaces: memberships });
+  return apiOk(memberships);
 }
 
 export async function POST(req: Request) {
   const auth = await requirePermission("create", "invite");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(createWorkspaceSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-  const name = String(body?.name ?? "").trim();
-  const slug = String(body?.slug ?? "").trim().toLowerCase().replace(/[^a-z0-9-]/g, "-");
-
-  if (!name || !slug) {
-    return NextResponse.json({ ok: false, error: "Name and slug required." }, { status: 400 });
-  }
+  const { name, slug, description } = parsed.data;
 
   const existing = await prisma.workspace.findUnique({ where: { slug } });
-  if (existing) {
-    return NextResponse.json({ ok: false, error: "Slug already taken." }, { status: 409 });
-  }
+  if (existing) return apiConflict("Slug already taken.");
 
   const workspace = await prisma.workspace.create({
     data: {
       name,
       slug,
-      description: body?.description ?? null,
+      description: description ?? null,
       status: "ACTIVE",
     },
   });
@@ -73,5 +71,5 @@ export async function POST(req: Request) {
     targetId: workspace.id,
   });
 
-  return NextResponse.json({ ok: true, workspace }, { status: 201 });
+  return apiCreated(workspace);
 }

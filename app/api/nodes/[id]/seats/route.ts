@@ -1,34 +1,33 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { isAdminRole } from "@/lib/permissions";
+import { apiOk, apiCreated, apiUnauthorized, apiForbidden } from "@/lib/core/api-response";
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
 
   if (!isAdmin) {
     const node = await prisma.node.findUnique({ where: { id: params.id }, select: { ownerUserId: true } });
-    if (node?.ownerUserId !== auth.session.user!.id) {
-      return NextResponse.json({ ok: false, error: "Access denied." }, { status: 403 });
-    }
+    if (node?.ownerUserId !== auth.session.user!.id) return apiForbidden();
   }
 
   const seats = await prisma.nodeSeat.findMany({
     where: { nodeId: params.id },
-    orderBy: { createdAt: "desc" }
+    orderBy: { createdAt: "desc" },
   });
 
-  return NextResponse.json({ ok: true, seats });
+  return apiOk(seats);
 }
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
@@ -37,7 +36,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   const status = body?.status ? String(body.status) : "ACTIVE";
 
   const seat = await prisma.nodeSeat.create({
-    data: { nodeId: params.id, level, status }
+    data: { nodeId: params.id, level, status },
   });
 
   await writeAudit({
@@ -45,8 +44,8 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     action: AuditAction.NODE_SEAT_CREATE,
     targetType: "NODE_SEAT",
     targetId: seat.id,
-    metadata: { nodeId: params.id, level, status }
+    metadata: { nodeId: params.id, level, status },
   });
 
-  return NextResponse.json({ ok: true, seat });
+  return apiCreated(seat);
 }

@@ -38,14 +38,14 @@ export function UsersConsole({ initial, currentUserId }: { initial: UserRow[]; c
       return;
     }
     setUsers((prev) =>
-      prev.map((u) => (u.id === userId ? { ...u, role: data.user.role } : u))
+      prev.map((u) => (u.id === userId ? { ...u, role: data.data.role } : u))
     );
   }
 
   async function refresh() {
     const res = await fetch("/api/users", { cache: "no-store" });
     const data = await res.json().catch(() => null);
-    if (data?.ok) setUsers(data.users);
+    if (data?.ok) setUsers(data.data ?? []);
   }
 
   return (

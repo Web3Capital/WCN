@@ -32,7 +32,7 @@ export function ApprovalsUI() {
     setLoading(true);
     fetch(`/api/approvals?status=${filter}`)
       .then((r) => r.json())
-      .then((d) => { if (d.ok) setApprovals(d.approvals); })
+      .then((d) => { if (d.ok) setApprovals(d.data ?? []); })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [filter]);

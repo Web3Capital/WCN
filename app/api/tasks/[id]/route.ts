@@ -1,14 +1,16 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
-import { isAdminRole } from "@/lib/permissions";
 import { canTransitionTask } from "@/lib/state-machines/task";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 import type { TaskStatus } from "@prisma/client";
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const task = await prisma.task.findUnique({
@@ -24,20 +26,20 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
     },
   });
 
-  if (!task) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!task) return apiNotFound("Task");
 
-  return NextResponse.json({ ok: true, task });
+  return apiOk(task);
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
-  const existing = await prisma.task.findUnique({ where: { id: params.id }, select: { id: true, status: true } });
-  if (!existing) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  const existing = await prisma.task.findUnique({ where: { id: params.id }, select: { id: true, status: true, dealId: true } });
+  if (!existing) return apiNotFound("Task");
 
   const data: Record<string, unknown> = {};
   if (body?.title !== undefined) data.title = String(body.title).trim();
@@ -55,19 +57,14 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (body?.type !== undefined) {
     const type = String(body.type);
     const allowedTypes = new Set(["FUNDRAISING", "GROWTH", "RESOURCE", "LIQUIDITY", "RESEARCH", "EXECUTION", "OTHER"]);
-    if (!allowedTypes.has(type)) {
-      return NextResponse.json({ ok: false, error: "Invalid task type." }, { status: 400 });
-    }
+    if (!allowedTypes.has(type)) return apiValidationError([{ path: "type", message: "Invalid task type." }]);
     data.type = type;
   }
 
   if (body?.status !== undefined) {
     const newStatus = String(body.status) as TaskStatus;
     if (!canTransitionTask(existing.status, newStatus)) {
-      return NextResponse.json({
-        ok: false,
-        error: `Cannot transition from ${existing.status} to ${newStatus}.`,
-      }, { status: 400 });
+      return apiValidationError([{ path: "status", message: `Cannot transition from ${existing.status} to ${newStatus}.` }]);
     }
     data.status = newStatus;
   }
@@ -93,7 +90,14 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       targetId: params.id,
       metadata: { previousStatus: existing.status, newStatus: data.status },
     });
+
+    if (data.status === "DONE") {
+      await eventBus.emit(Events.TASK_COMPLETED, {
+        taskId: params.id,
+        dealId: existing.dealId ?? undefined,
+      }, { actorId: admin.session.user?.id });
+    }
   }
 
-  return NextResponse.json({ ok: true, task });
+  return apiOk(task);
 }

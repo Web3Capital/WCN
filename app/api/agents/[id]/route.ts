@@ -1,12 +1,13 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const agent = await prisma.agent.findUnique({
@@ -19,25 +20,25 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
     },
   });
 
-  if (!agent) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!agent) return apiNotFound("Agent");
 
   const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
   if (!isAdmin) {
     (agent as any).endpoint = null;
   }
 
-  return NextResponse.json({ ok: true, agent });
+  return apiOk(agent);
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const existing = await prisma.agent.findUnique({ where: { id: params.id }, select: { id: true, status: true, freezeLevel: true } });
-  if (!existing) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!existing) return apiNotFound("Agent");
 
   const data: Record<string, unknown> = {};
   if (body?.name !== undefined) data.name = String(body.name).trim();
@@ -47,14 +48,14 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (body?.status !== undefined) {
     const status = String(body.status);
     const allowed = new Set(["ACTIVE", "DISABLED", "SUSPENDED"]);
-    if (!allowed.has(status)) return NextResponse.json({ ok: false, error: "Invalid status." }, { status: 400 });
+    if (!allowed.has(status)) return apiValidationError([{ path: "status", message: "Invalid status." }]);
     data.status = status;
   }
 
   if (body?.freezeLevel !== undefined) {
     const level = body.freezeLevel;
     const allowed = new Set(["L1_TASK", "L2_INSTANCE", "L3_CLASS", null]);
-    if (!allowed.has(level)) return NextResponse.json({ ok: false, error: "Invalid freeze level." }, { status: 400 });
+    if (!allowed.has(level)) return apiValidationError([{ path: "freezeLevel", message: "Invalid freeze level." }]);
     data.freezeLevel = level;
 
     if (level) {
@@ -85,5 +86,5 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     });
   }
 
-  return NextResponse.json({ ok: true, agent });
+  return apiOk(agent);
 }

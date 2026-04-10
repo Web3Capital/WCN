@@ -1,28 +1,29 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiNotFound, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, updateUserRoleSchema } from "@/lib/core/validation";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 import type { Role } from "@prisma/client";
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(updateUserRoleSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-
   const existing = await prisma.user.findUnique({ where: { id: params.id }, select: { id: true, role: true } });
-  if (!existing) return NextResponse.json({ ok: false, error: "User not found." }, { status: 404 });
-
-  const role = body?.role ? String(body.role) : null;
-  if (!role || !["USER", "ADMIN"].includes(role)) {
-    return NextResponse.json({ ok: false, error: "Invalid role. Must be USER or ADMIN." }, { status: 400 });
-  }
+  if (!existing) return apiNotFound("User");
 
   const updated = await prisma.user.update({
     where: { id: params.id },
-    data: { role: role as Role },
-    select: { id: true, name: true, email: true, role: true, createdAt: true }
+    data: { role: parsed.data.role as Role },
+    select: { id: true, name: true, email: true, role: true, createdAt: true },
   });
 
   await writeAudit({
@@ -30,8 +31,15 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     action: AuditAction.USER_ROLE_CHANGE,
     targetType: "USER",
     targetId: params.id,
-    metadata: { previousRole: existing.role, newRole: role }
+    metadata: { previousRole: existing.role, newRole: parsed.data.role },
   });
 
-  return NextResponse.json({ ok: true, user: updated });
+  await eventBus.emit(Events.USER_ROLE_CHANGED, {
+    userId: params.id,
+    oldRole: existing.role,
+    newRole: parsed.data.role,
+    changedBy: admin.session.user?.id ?? "system",
+  }, { actorId: admin.session.user?.id });
+
+  return apiOk(updated);
 }

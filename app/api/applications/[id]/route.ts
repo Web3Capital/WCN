@@ -1,8 +1,12 @@
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { NextResponse } from "next/server";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiNotFound, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, reviewApplicationSchema } from "@/lib/core/validation";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 
 function statusToDecision(s: string) {
   if (s === "APPROVED") return "APPROVE" as const;
@@ -11,42 +15,45 @@ function statusToDecision(s: string) {
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  const prisma = getPrisma();
   const session = await getServerSession(authOptions);
-  if (session?.user?.role !== "ADMIN") {
-    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
-  }
-
-  const existing = await prisma.application.findUnique({ where: { id: params.id }, select: { id: true, status: true } });
-  if (!existing) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (session?.user?.role !== "ADMIN") return apiUnauthorized();
 
   const body = await req.json().catch(() => ({}));
-  const status = body?.status;
-  const notes = body?.notes;
+  const parsed = parseBody(reviewApplicationSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
-  const allowed = new Set(["PENDING", "REVIEWING", "APPROVED", "REJECTED"]);
+  const prisma = getPrisma();
+  const existing = await prisma.application.findUnique({ where: { id: params.id }, select: { id: true, status: true } });
+  if (!existing) return apiNotFound("Application");
+
   const data: { status?: any; notes?: string | null } = {};
-  if (status && allowed.has(String(status))) data.status = String(status);
-  if (notes !== undefined) data.notes = notes ? String(notes) : null;
+  data.status = parsed.data.status;
+  if (parsed.data.reviewNote !== undefined) data.notes = parsed.data.reviewNote ?? null;
 
   const updated = await prisma.application.update({
     where: { id: params.id },
-    data
+    data,
   });
 
-  const statusChanged = data.status && data.status !== existing.status;
-
-  if (statusChanged) {
+  if (data.status !== existing.status) {
     await prisma.review.create({
       data: {
         targetType: "APPLICATION",
         targetId: params.id,
         decision: statusToDecision(data.status),
-        notes: notes !== undefined ? (notes ? String(notes) : null) : null,
+        notes: parsed.data.reviewNote ?? null,
         status: "RESOLVED",
-        reviewerId: session.user?.id ?? null
-      }
+        reviewerId: session.user?.id ?? null,
+      },
     });
+
+    if (data.status === "APPROVED") {
+      await eventBus.emit(Events.APPLICATION_APPROVED, {
+        applicationId: params.id,
+        nodeId: "",
+        approvedBy: session.user?.id ?? "system",
+      }, { actorId: session.user?.id });
+    }
   }
 
   await writeAudit({
@@ -54,9 +61,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     action: AuditAction.APPLICATION_STATUS_CHANGE,
     targetType: "APPLICATION",
     targetId: params.id,
-    metadata: { previousStatus: existing.status, newStatus: updated.status, notes: data.notes }
+    metadata: { previousStatus: existing.status, newStatus: updated.status, notes: data.notes },
   });
 
-  return NextResponse.json({ ok: true, application: updated });
+  return apiOk(updated);
 }
-

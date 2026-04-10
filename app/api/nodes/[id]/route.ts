@@ -1,15 +1,18 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
 import { canTransitionNode } from "@/lib/state-machines/node";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { redactNodeForMember } from "@/lib/member-redact";
+import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 import type { NodeStatus } from "@prisma/client";
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
@@ -28,24 +31,24 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
     },
   });
 
-  if (!node) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!node) return apiNotFound("Node");
 
   if (!isAdmin && node.ownerUserId !== auth.session.user?.id) {
-    return NextResponse.json({ ok: true, node: redactNodeForMember(node) });
+    return apiOk(redactNodeForMember(node));
   }
 
-  return NextResponse.json({ ok: true, node });
+  return apiOk(node);
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const existing = await prisma.node.findUnique({ where: { id: params.id }, select: { id: true, status: true } });
-  if (!existing) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!existing) return apiNotFound("Node");
 
   const data: Record<string, unknown> = {};
 
@@ -73,19 +76,14 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (body?.type !== undefined) {
     const type = String(body.type);
     const allowedTypes = new Set(["GLOBAL", "REGION", "CITY", "INDUSTRY", "FUNCTIONAL", "AGENT"]);
-    if (!allowedTypes.has(type)) {
-      return NextResponse.json({ ok: false, error: "Invalid node type." }, { status: 400 });
-    }
+    if (!allowedTypes.has(type)) return apiValidationError([{ path: "type", message: "Invalid node type." }]);
     data.type = type;
   }
 
   if (body?.status !== undefined) {
     const newStatus = String(body.status) as NodeStatus;
     if (!canTransitionNode(existing.status, newStatus)) {
-      return NextResponse.json({
-        ok: false,
-        error: `Cannot transition from ${existing.status} to ${newStatus}.`
-      }, { status: 400 });
+      return apiValidationError([{ path: "status", message: `Cannot transition from ${existing.status} to ${newStatus}.` }]);
     }
     data.status = newStatus;
 
@@ -115,7 +113,21 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       targetId: params.id,
       metadata: { previousStatus: existing.status, newStatus: data.status, notes: body?.notes },
     });
+
+    await eventBus.emit(Events.NODE_STATUS_CHANGED, {
+      nodeId: params.id,
+      oldStatus: existing.status,
+      newStatus: String(data.status),
+      changedBy: admin.session.user?.id ?? "system",
+    }, { actorId: admin.session.user?.id });
+
+    if (data.status === "LIVE") {
+      await eventBus.emit(Events.NODE_ACTIVATED, {
+        nodeId: params.id,
+        activatedBy: admin.session.user?.id ?? "system",
+      }, { actorId: admin.session.user?.id });
+    }
   }
 
-  return NextResponse.json({ ok: true, node });
+  return apiOk(node);
 }

@@ -1,22 +1,23 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { canTransitionSettlement } from "@/lib/state-machines/settlement";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
 
 export async function POST(_req: Request, { params }: { params: { id: string } }) {
   const auth = await requirePermission("export", "settlement");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const cycle = await prisma.settlementCycle.findUnique({
     where: { id: params.id },
     include: { lines: { include: { node: { select: { id: true, name: true } } } } },
   });
-  if (!cycle) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!cycle) return apiNotFound("SettlementCycle");
 
   if (!canTransitionSettlement(cycle.status, "EXPORTED")) {
-    return NextResponse.json({ ok: false, error: `Cannot export from ${cycle.status}.` }, { status: 400 });
+    return apiValidationError([{ path: "status", message: `Cannot export from ${cycle.status}.` }]);
   }
 
   const updated = await prisma.settlementCycle.update({
@@ -37,5 +38,5 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
     metadata: { lineCount: cycle.lines.length },
   });
 
-  return NextResponse.json({ ok: true, cycle: updated, csv: csvLines.join("\n") });
+  return apiOk({ cycle: updated, csv: csvLines.join("\n") });
 }

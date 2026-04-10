@@ -41,13 +41,14 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
       });
       const data = await res.json();
       if (!data.ok) { setError(data.error || "Failed."); return; }
-      setLastToken(data.invite.token);
+      const inv = data.data;
+      setLastToken(inv.token);
       setInvites([{
-        id: data.invite.id,
-        email: data.invite.email,
-        tokenHash: data.invite.tokenHash?.slice(0, 8) + "…" || "—",
-        role: data.invite.role,
-        expiresAt: data.invite.expiresAt,
+        id: inv.id,
+        email: inv.email,
+        tokenHash: inv.tokenHash?.slice(0, 8) + "…" || "—",
+        role: inv.role,
+        expiresAt: inv.expiresAt,
         activatedAt: null,
         revokedAt: null,
         createdBy: "You",

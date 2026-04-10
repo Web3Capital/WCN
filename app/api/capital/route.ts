@@ -1,12 +1,14 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission, requireSignedIn } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, createCapitalSchema } from "@/lib/core/validation";
 
 export async function GET(req: Request) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
@@ -31,34 +33,35 @@ export async function GET(req: Request) {
     include: { node: { select: { id: true, name: true } } },
   });
 
-  return NextResponse.json({ ok: true, profiles });
+  return apiOk(profiles);
 }
 
 export async function POST(req: Request) {
   const auth = await requirePermission("create", "capital");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(createCapitalSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-
-  const name = String(body?.name ?? "").trim();
-  if (!name) return NextResponse.json({ ok: false, error: "Name required." }, { status: 400 });
+  const d = parsed.data;
 
   const profile = await prisma.capitalProfile.create({
     data: {
-      name,
-      entity: body?.entity ? String(body.entity) : null,
-      investmentFocus: Array.isArray(body?.investmentFocus) ? body.investmentFocus.map((s: unknown) => String(s)) : [],
-      ticketMin: body?.ticketMin != null ? Number(body.ticketMin) : null,
-      ticketMax: body?.ticketMax != null ? Number(body.ticketMax) : null,
-      jurisdictionLimit: Array.isArray(body?.jurisdictionLimit) ? body.jurisdictionLimit.map((s: unknown) => String(s)) : [],
-      structurePref: Array.isArray(body?.structurePref) ? body.structurePref.map((s: unknown) => String(s)) : [],
-      blacklist: Array.isArray(body?.blacklist) ? body.blacklist.map((s: unknown) => String(s)) : [],
-      restrictions: body?.restrictions ? String(body.restrictions) : null,
-      contactName: body?.contactName ? String(body.contactName) : null,
-      contactEmail: body?.contactEmail ? String(body.contactEmail) : null,
-      notes: body?.notes ? String(body.notes) : null,
-      nodeId: body?.nodeId ? String(body.nodeId) : null,
+      name: d.name,
+      entity: d.entity ?? null,
+      investmentFocus: d.investmentFocus,
+      ticketMin: d.ticketMin ?? null,
+      ticketMax: d.ticketMax ?? null,
+      jurisdictionLimit: d.jurisdictionLimit,
+      structurePref: d.structurePref,
+      blacklist: d.blacklist,
+      restrictions: d.restrictions ?? null,
+      contactName: d.contactName ?? null,
+      contactEmail: d.contactEmail ?? null,
+      notes: d.notes ?? null,
+      nodeId: d.nodeId ?? null,
     },
   });
 
@@ -67,8 +70,8 @@ export async function POST(req: Request) {
     action: AuditAction.CAPITAL_CREATE,
     targetType: "CAPITAL",
     targetId: profile.id,
-    metadata: { name },
+    metadata: { name: d.name },
   });
 
-  return NextResponse.json({ ok: true, profile });
+  return apiCreated(profile);
 }

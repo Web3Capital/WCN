@@ -51,7 +51,7 @@ export function DealsConsole({ initialDeals, nodes, projects, isAdmin }: {
       });
       const data = await res.json();
       if (data.ok) {
-        setDeals([{ ...data.deal, _count: { participants: 0, milestones: 0, tasks: 0 }, capital: null, updatedAt: new Date().toISOString() }, ...deals]);
+        setDeals([{ ...data.data, _count: { participants: 0, milestones: 0, tasks: 0 }, capital: null, updatedAt: new Date().toISOString() }, ...deals]);
         setShowForm(false);
         setTitle("");
       }

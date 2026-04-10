@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { getApiErrorMessageFromJson } from "@/lib/api-error";
 
 type NodeRow = { id: string; name: string; type: string };
 type ProjectRow = { id: string; name: string };
@@ -53,9 +54,9 @@ export function TasksConsole({
   async function refresh() {
     const res = await fetch("/api/tasks", { cache: "no-store" });
     const data = await res.json();
-    if (!data?.ok) throw new Error(data?.error ?? "Failed to load tasks.");
-    setRows(data.tasks);
-    if (!selectedId && data.tasks?.[0]?.id) setSelectedId(data.tasks[0].id);
+    if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
+    setRows(data.data);
+    if (!selectedId && data.data?.[0]?.id) setSelectedId(data.data[0].id);
   }
 
   async function onCreate() {
@@ -75,7 +76,7 @@ export function TasksConsole({
         })
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Create failed.");
+      if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
       await refresh();
       setCreate({ title: "", type: "EXECUTION", status: "OPEN", projectId: "", ownerNodeId: "", assignNodeIds: [] });
     } catch (e: any) {
@@ -96,7 +97,7 @@ export function TasksConsole({
         body: JSON.stringify(patch)
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Save failed.");
+      if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
       await refresh();
     } catch (e: any) {
       setError(e?.message ?? "Save failed.");

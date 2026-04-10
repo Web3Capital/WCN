@@ -1,19 +1,21 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireSignedIn } from "@/lib/admin";
+import { apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, createDealNoteSchema } from "@/lib/core/validation";
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(createDealNoteSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-  const content = String(body?.content ?? "").trim();
-  if (!content) return NextResponse.json({ ok: false, error: "Content required." }, { status: 400 });
-
   const note = await prisma.dealNote.create({
-    data: { dealId: params.id, authorId: auth.session.user!.id, content },
+    data: { dealId: params.id, authorId: auth.session.user!.id, content: parsed.data.content },
   });
 
-  return NextResponse.json({ ok: true, note });
+  return apiCreated(note);
 }

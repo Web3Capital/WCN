@@ -1,11 +1,15 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, createApprovalSchema } from "@/lib/core/validation";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 
 export async function GET(req: Request) {
   const auth = await requirePermission("read", "settlement");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const url = new URL(req.url);
@@ -22,31 +26,28 @@ export async function GET(req: Request) {
     take: 200,
   });
 
-  return NextResponse.json({ ok: true, approvals });
+  return apiOk(approvals);
 }
 
 export async function POST(req: Request) {
   const auth = await requirePermission("create", "settlement");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(createApprovalSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-
-  const { workspaceId, entityType, entityId, actionType, reason, expiresAt } = body;
-
-  if (!workspaceId || !entityType || !entityId || !actionType) {
-    return NextResponse.json({ ok: false, error: "Missing required fields." }, { status: 400 });
-  }
+  const { workspaceId, entityType, entityId, actionType, reason } = parsed.data;
 
   const approval = await prisma.approvalAction.create({
     data: {
       workspaceId,
       entityType,
       entityId,
-      actionType,
+      actionType: actionType as any,
       requestedById: auth.session.user!.id,
       reason: reason ?? null,
-      expiresAt: expiresAt ? new Date(expiresAt) : null,
     },
   });
 
@@ -59,5 +60,13 @@ export async function POST(req: Request) {
     metadata: { entityType, entityId, actionType },
   });
 
-  return NextResponse.json({ ok: true, approval }, { status: 201 });
+  await eventBus.emit(Events.APPROVAL_REQUESTED, {
+    approvalId: approval.id,
+    action: actionType,
+    entityType,
+    entityId,
+    requestedBy: auth.session.user!.id,
+  }, { actorId: auth.session.user?.id });
+
+  return apiCreated(approval);
 }

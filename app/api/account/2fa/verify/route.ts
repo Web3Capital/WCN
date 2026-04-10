@@ -1,21 +1,22 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireSignedIn } from "@/lib/admin";
 import { TOTPVerify } from "@/lib/totp";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiConflict, apiValidationError, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, verify2FASchema } from "@/lib/core/validation";
 
 export async function POST(req: Request) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(verify2FASchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
   const prisma = getPrisma();
   const userId = auth.session.user!.id;
-  const body = await req.json().catch(() => ({}));
-  const code = String(body?.code ?? "").trim();
-
-  if (!code || code.length !== 6) {
-    return NextResponse.json({ ok: false, error: "6-digit code required." }, { status: 400 });
-  }
+  const { code } = parsed.data;
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -23,14 +24,14 @@ export async function POST(req: Request) {
   });
 
   if (!user?.twoFactorSecret) {
-    return NextResponse.json({ ok: false, error: "Run 2FA setup first." }, { status: 400 });
+    return apiValidationError([{ path: "code", message: "Run 2FA setup first." }]);
   }
   if (user.twoFactorEnabled) {
-    return NextResponse.json({ ok: false, error: "2FA already enabled." }, { status: 409 });
+    return apiConflict("2FA already enabled.");
   }
 
   if (!TOTPVerify(user.twoFactorSecret, code)) {
-    return NextResponse.json({ ok: false, error: "Invalid code." }, { status: 401 });
+    return apiUnauthorized("Invalid code.");
   }
 
   await prisma.user.update({
@@ -49,5 +50,5 @@ export async function POST(req: Request) {
     metadata: {},
   });
 
-  return NextResponse.json({ ok: true, message: "2FA enabled successfully." });
+  return apiOk({ message: "2FA enabled successfully." });
 }

@@ -1,12 +1,14 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, addWorkspaceMemberSchema } from "@/lib/core/validation";
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const auth = await requirePermission("read", "invite");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const members = await prisma.workspaceMembership.findMany({
@@ -18,29 +20,25 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     orderBy: { createdAt: "asc" },
   });
 
-  return NextResponse.json({ ok: true, members });
+  return apiOk(members);
 }
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id: workspaceId } = await params;
   const auth = await requirePermission("create", "invite");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(addWorkspaceMemberSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-  const userId = String(body?.userId ?? "");
-  const role = String(body?.role ?? "USER");
-  const territory = body?.territory ?? null;
-  const region = body?.region ?? null;
-
-  if (!userId) {
-    return NextResponse.json({ ok: false, error: "userId required." }, { status: 400 });
-  }
+  const { userId, role, territory, region } = parsed.data;
 
   const membership = await prisma.workspaceMembership.upsert({
     where: { userId_workspaceId: { userId, workspaceId } },
-    create: { userId, workspaceId, territory, region, isPrimary: false, status: "ACTIVE" },
-    update: { territory, region },
+    create: { userId, workspaceId, territory: territory ?? null, region: region ?? null, isPrimary: false, status: "ACTIVE" },
+    update: { territory: territory ?? null, region: region ?? null },
   });
 
   await prisma.roleAssignment.create({
@@ -60,5 +58,5 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     metadata: { userId, role },
   });
 
-  return NextResponse.json({ ok: true, membership }, { status: 201 });
+  return apiCreated(membership);
 }

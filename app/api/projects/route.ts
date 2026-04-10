@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { ProjectStatus } from "@prisma/client";
@@ -6,10 +6,14 @@ import { getOwnedNodeIds, memberProjectsWhere } from "@/lib/member-data-scope";
 import { redactProjectForMember } from "@/lib/member-redact";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { isAdminRole } from "@/lib/permissions";
+import { apiOk, apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, createProjectSchema } from "@/lib/core/validation";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 
 export async function GET() {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
@@ -21,48 +25,39 @@ export async function GET() {
     where,
     orderBy: { createdAt: "desc" },
     take: 200,
-    include: { node: true }
+    include: { node: true },
   });
 
-  return NextResponse.json({
-    ok: true,
-    projects: isAdmin ? projects : projects.map((p) => redactProjectForMember(p, userId))
+  return apiOk({
+    projects: isAdmin ? projects : projects.map((p) => redactProjectForMember(p, userId)),
   });
 }
 
 export async function POST(req: Request) {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(createProjectSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
-  const name = String(body?.name ?? "").trim();
-  if (!name) {
-    return NextResponse.json({ ok: false, error: "Missing name." }, { status: 400 });
-  }
-
-  const stage = body?.stage ? String(body.stage) : "OTHER";
-  const allowedStages = new Set(["IDEA", "SEED", "SERIES_A", "SERIES_B", "SERIES_C", "GROWTH", "PUBLIC", "OTHER"]);
-  if (!allowedStages.has(stage)) {
-    return NextResponse.json({ ok: false, error: "Invalid stage." }, { status: 400 });
-  }
-
+  const d = parsed.data;
   const project = await prisma.project.create({
     data: {
-      name,
-      status: body?.status ? (String(body.status) as ProjectStatus) : undefined,
-      stage: stage as any,
-      sector: body?.sector ? String(body.sector) : null,
-      website: body?.website ? String(body.website) : null,
-      pitchUrl: body?.pitchUrl ? String(body.pitchUrl) : null,
-      fundraisingNeed: body?.fundraisingNeed ? String(body.fundraisingNeed) : null,
-      contactName: body?.contactName ? String(body.contactName) : null,
-      contactEmail: body?.contactEmail ? String(body.contactEmail) : null,
-      contactTelegram: body?.contactTelegram ? String(body.contactTelegram) : null,
-      description: body?.description ? String(body.description) : null,
-      nodeId: body?.nodeId ? String(body.nodeId) : null
-    }
+      name: d.name,
+      status: d.status ? (d.status as ProjectStatus) : undefined,
+      stage: d.stage as any,
+      sector: d.sector ?? null,
+      website: d.website ?? null,
+      pitchUrl: d.pitchUrl ?? null,
+      fundraisingNeed: d.fundraisingNeed ?? null,
+      contactName: d.contactName ?? null,
+      contactEmail: d.contactEmail ?? null,
+      contactTelegram: d.contactTelegram ?? null,
+      description: d.description ?? null,
+      nodeId: d.nodeId ?? null,
+    },
   });
 
   await writeAudit({
@@ -70,9 +65,20 @@ export async function POST(req: Request) {
     action: AuditAction.PROJECT_CREATE,
     targetType: "PROJECT",
     targetId: project.id,
-    metadata: { name, stage }
+    metadata: { name: d.name, stage: d.stage },
   });
 
-  return NextResponse.json({ ok: true, project });
-}
+  await eventBus.emit(
+    Events.PROJECT_CREATED,
+    {
+      projectId: project.id,
+      nodeId: project.nodeId ?? undefined,
+      name: project.name,
+      sector: project.sector ?? undefined,
+      stage: project.stage,
+    },
+    { actorId: admin.session.user?.id },
+  );
 
+  return apiCreated(project);
+}

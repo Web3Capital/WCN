@@ -1,11 +1,12 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
+import { apiOk, apiUnauthorized } from "@/lib/core/api-response";
 import type { Prisma } from "@prisma/client";
 
 export async function GET(req: Request) {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) return apiUnauthorized();
 
   const url = new URL(req.url);
   const targetType = url.searchParams.get("targetType");
@@ -20,8 +21,8 @@ export async function GET(req: Request) {
     where,
     orderBy: { createdAt: "desc" },
     take: 100,
-    include: { reviewer: { select: { id: true, name: true, email: true } } }
+    include: { reviewer: { select: { id: true, name: true, email: true } } },
   });
 
-  return NextResponse.json({ ok: true, reviews });
+  return apiOk(reviews);
 }

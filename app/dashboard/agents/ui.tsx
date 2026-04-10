@@ -38,8 +38,9 @@ export function AgentsConsole({
     const res = await fetch("/api/agents", { cache: "no-store" });
     const data = await res.json();
     if (!data?.ok) throw new Error(data?.error ?? "Failed to load agents.");
-    setRows(data.agents);
-    if (!selectedId && data.agents?.[0]?.id) setSelectedId(data.agents[0].id);
+    const list = data.data ?? [];
+    setRows(list);
+    if (!selectedId && list[0]?.id) setSelectedId(list[0].id);
   }
 
   async function onCreate() {

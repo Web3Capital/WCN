@@ -1,17 +1,18 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
 import { randomBytes } from "crypto";
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const auth = await requirePermission("create", "file");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const file = await prisma.file.findUnique({ where: { id } });
-  if (!file) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!file) return apiNotFound("File");
 
   const storageKey = `uploads/${file.entityType}/${file.entityId}/${randomBytes(8).toString("hex")}/${file.filename}`;
 
@@ -28,8 +29,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     workspaceId: file.workspaceId,
   });
 
-  return NextResponse.json({
-    ok: true,
+  return apiOk({
     presignedUrl: `/api/files/${id}/upload`,
     storageKey,
     expiresIn: 3600,

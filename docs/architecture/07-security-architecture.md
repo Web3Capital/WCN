@@ -1,0 +1,237 @@
+# 07 — Security Architecture
+
+> Zero-trust model, RBAC + ABAC, encryption, compliance, and threat model.
+
+---
+
+## Security Principles
+
+1. **Zero Trust**: Every request is untrusted until authenticated and authorized. No implicit trust between layers.
+2. **Least Privilege**: Every user, node, and agent gets the minimum permissions needed. Access is additive, not subtractive.
+3. **Defense in Depth**: Multiple security layers — no single point of failure.
+4. **Audit Everything**: Security-relevant events are immutably logged.
+5. **Fail Closed**: On ambiguity, deny access. Better to block a legitimate request than allow an illegitimate one.
+
+---
+
+## Authentication Architecture
+
+### Authentication Stack
+
+```
+┌──────────────────────────────────────────────────┐
+│                    Request                        │
+├──────────────────────────────────────────────────┤
+│  Layer 1: middleware.ts                           │
+│  ─ JWT validation (fast path)                     │
+│  ─ Public path whitelist check                    │
+│  ─ Rate limiting (per IP/user)                    │
+│  ─ CORS enforcement                              │
+├──────────────────────────────────────────────────┤
+│  Layer 2: API Route / Server Component            │
+│  ─ getServerSession() (full session validation)   │
+│  ─ Account status check (active? suspended?)      │
+│  ─ 2FA requirement check                         │
+├──────────────────────────────────────────────────┤
+│  Layer 3: Permission Middleware                   │
+│  ─ Role check (ADMIN / MEMBER / OBSERVER)         │
+│  ─ Node scope check (does user belong to node?)   │
+│  ─ Entity access check (AccessGrant records)      │
+│  ─ Entity freeze check (is entity frozen?)        │
+├──────────────────────────────────────────────────┤
+│  Layer 4: Data Scoping                           │
+│  ─ Query filtered by user's accessible nodes      │
+│  ─ Sensitive fields redacted for non-owners       │
+│  ─ Confidential entities hidden from non-grantees │
+└──────────────────────────────────────────────────┘
+```
+
+### Authentication Methods
+
+| Method | Flow | Strength |
+|--------|------|----------|
+| **Email + Password** | Bcrypt hash (cost 12), account lock after 10 failures | Medium |
+| **OAuth** (Google, Microsoft, Apple, GitHub) | Provider handles credential, we get token | High |
+| **2FA (TOTP)** | RFC 6238, 30-second codes, backup codes | Very High |
+| **Invite Token** | SHA-256 hashed token, single-use, expirable | Medium (one-time) |
+| **Future: WebAuthn** | Hardware key / biometric | Maximum |
+
+### Session Management
+
+```
+Strategy: JWT (stateless)
+  Token contents: { userId, role, accountStatus, nodeId, provider }
+  Expiry: 24 hours (configurable)
+  Refresh: Sliding window — new token on each authenticated request
+  Storage: httpOnly cookie (not localStorage — XSS protection)
+  Revocation: Check accountStatus on critical operations (not cached)
+```
+
+---
+
+## Authorization Architecture
+
+### Three-Layer Permission Model
+
+```
+Layer 1: RBAC (Role-Based)
+  ─ ADMIN: Full platform access
+  ─ MEMBER: Scoped to own node(s) + participated deals
+  ─ OBSERVER: Read-only access to assigned entities
+
+Layer 2: ABAC (Attribute-Based)
+  ─ Node ownership: Can only modify own node's resources
+  ─ Deal participation: Can only access deals they're a participant in
+  ─ Entity confidentiality: Confidential entities require explicit grant
+
+Layer 3: Grant-Based (Explicit)
+  ─ AccessGrant records: Temporary or permanent access to specific entities
+  ─ Use case: External advisor needs access to one specific deal
+```
+
+### Permission Resolution
+
+```typescript
+function hasPermission(user: User, resource: string, action: string, entityId?: string): boolean {
+  // 1. Check if entity is frozen
+  if (entityId && isEntityFrozen(entityId)) return false;
+
+  // 2. Admin has full access (except frozen entities)
+  if (user.role === "ADMIN") return true;
+
+  // 3. Check role-based permission matrix
+  if (!ROLE_PERMISSIONS[user.role]?.[resource]?.includes(action)) return false;
+
+  // 4. Check scope (node ownership / deal participation)
+  if (entityId && !isEntityInUserScope(user, resource, entityId)) return false;
+
+  // 5. Check explicit grants (overrides scope for specific entities)
+  if (entityId && hasExplicitGrant(user, resource, entityId, action)) return true;
+
+  return true; // Passed all checks
+}
+```
+
+### Permission Matrix
+
+| Resource | ADMIN | MEMBER | OBSERVER |
+|----------|-------|--------|----------|
+| Users | CRUD | Read self | Read self |
+| Nodes | CRUD | Read all, write own | Read assigned |
+| Applications | CRUD | Read own, create | — |
+| Projects | CRUD | Read scoped, write own | Read scoped |
+| Capital | CRUD | Read scoped, write own | Read scoped |
+| Deals | CRUD | Read participated, create | Read assigned |
+| Tasks | CRUD | Read scoped, write assigned | Read scoped |
+| Agents | CRUD | Read scoped | Read scoped |
+| Evidence | CRUD | Read scoped, create own | Read scoped |
+| PoB | CRUD | Read scoped | Read scoped |
+| Settlement | CRUD | Read own | Read own |
+| Risk | CRUD | — | — |
+| Audit | Read | — | — |
+| Notifications | CRUD | Read/write own | Read own |
+
+---
+
+## Data Security
+
+### Encryption
+
+| Data Category | At Rest | In Transit | Key Management |
+|---|---|---|---|
+| Passwords | Bcrypt (cost 12) | HTTPS/TLS 1.3 | N/A (one-way hash) |
+| 2FA secrets | AES-256 encrypted column | HTTPS/TLS 1.3 | Application-level key |
+| OAuth tokens | AES-256 encrypted column | HTTPS/TLS 1.3 | Application-level key |
+| Session tokens | Signed JWT (HS256/RS256) | HTTPS/TLS 1.3 | NEXTAUTH_SECRET |
+| Database | Provider-managed encryption | TLS connection | Provider-managed |
+| File uploads | S3 server-side encryption | HTTPS | Provider-managed (SSE-S3) |
+| Audit logs | Database encryption | TLS | Provider-managed |
+
+### Data Redaction
+
+Non-admin users get redacted responses for sensitive data:
+
+```typescript
+function redactForMember(entity: any, userNodeIds: string[]): any {
+  // Hide financial details of other nodes
+  if (!userNodeIds.includes(entity.nodeId)) {
+    delete entity.financialTerms;
+    delete entity.valuationRange;
+    delete entity.settlementAmount;
+  }
+  // Always hide internal admin fields
+  delete entity.reviewNotes;
+  delete entity.riskScore;
+  return entity;
+}
+```
+
+---
+
+## Threat Model
+
+### Top Threats and Mitigations
+
+| Threat | Risk Level | Mitigation |
+|--------|-----------|------------|
+| **Credential stuffing** | HIGH | Rate limiting (10/min), account lockout (10 failures), 2FA |
+| **Session hijacking** | HIGH | httpOnly cookies, secure flag, SameSite=Lax, short expiry |
+| **CSRF** | MEDIUM | SameSite cookies, NextAuth CSRF token |
+| **XSS** | MEDIUM | React auto-escaping, CSP headers, no dangerouslySetInnerHTML |
+| **SQL injection** | LOW | Prisma ORM parameterized queries (no raw SQL without sanitization) |
+| **Unauthorized data access** | HIGH | 4-layer permission model, query-level scoping |
+| **PoB fraud** | HIGH | Anti-gaming checks, reviewer rotation, circular deal detection |
+| **Settlement manipulation** | CRITICAL | Dual-path calculation, admin approval, audit trail |
+| **Agent misuse** | MEDIUM | Permission levels (READ→ACT), human approval gate, full audit |
+| **Insider threat** | MEDIUM | Principle of least privilege, all admin actions audited |
+| **Data exfiltration** | MEDIUM | File access logging, rate limiting on bulk reads |
+| **DDoS** | MEDIUM | Vercel edge network, rate limiting, request throttling |
+
+### Security Headers
+
+```
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; ...
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: camera=(), microphone=(), geolocation=()
+```
+
+---
+
+## Compliance Framework
+
+| Regulation | Applicability | Requirements | Implementation |
+|---|---|---|---|
+| **GDPR** | EU users | Right to erasure, data portability, consent | PII pseudonymization in audit logs, export API |
+| **MiCA** | EU crypto | Transaction records, conflict management | AuditLog, PoB records, dispute system |
+| **SEC** | US operations | Record retention (6yr), accredited investor checks | 7-year audit retention, future KYC integration |
+| **SOC 2** | SaaS platform | Access logging, change management, encryption | AuditLog, permission system, TLS everywhere |
+| **CCPA** | California users | Disclosure, opt-out, deletion | Privacy center (future), data export API |
+
+---
+
+## Security Operations
+
+### Incident Response Plan
+
+```
+1. DETECT   — Risk module alert, audit log anomaly, user report
+2. ASSESS   — Severity classification (P0/P1/P2/P3)
+3. CONTAIN  — Entity freeze, account suspension, API key revocation
+4. ERADICATE — Fix vulnerability, rotate credentials
+5. RECOVER  — Restore service, verify integrity
+6. REVIEW   — Post-mortem, update threat model, improve detection
+```
+
+### Security Review Cadence
+
+| Activity | Frequency |
+|----------|-----------|
+| Dependency audit (`npm audit`) | Weekly (automated) |
+| Permission model review | Monthly |
+| Penetration testing | Quarterly |
+| Security architecture review | Bi-annual |
+| Compliance audit | Annual |

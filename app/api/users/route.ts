@@ -1,10 +1,11 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
+import { apiOk, apiUnauthorized } from "@/lib/core/api-response";
 
 export async function GET() {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const users = await prisma.user.findMany({
@@ -15,9 +16,9 @@ export async function GET() {
       email: true,
       role: true,
       createdAt: true,
-      _count: { select: { nodes: true, applications: true } }
-    }
+      _count: { select: { nodes: true, applications: true } },
+    },
   });
 
-  return NextResponse.json({ ok: true, users });
+  return apiOk(users);
 }

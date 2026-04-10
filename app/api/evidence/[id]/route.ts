@@ -1,13 +1,16 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireSignedIn, requirePermission } from "@/lib/admin";
 import { canTransitionEvidence } from "@/lib/state-machines/evidence-pob";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 import type { EvidenceReviewStatus } from "@prisma/client";
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const evidence = await prisma.evidence.findUnique({
@@ -20,20 +23,20 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
     },
   });
 
-  if (!evidence) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!evidence) return apiNotFound("Evidence");
 
-  return NextResponse.json({ ok: true, evidence });
+  return apiOk(evidence);
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const auth = await requirePermission("update", "evidence");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
-  const existing = await prisma.evidence.findUnique({ where: { id: params.id }, select: { id: true, reviewStatus: true } });
-  if (!existing) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  const existing = await prisma.evidence.findUnique({ where: { id: params.id }, select: { id: true, reviewStatus: true, dealId: true } });
+  if (!existing) return apiNotFound("Evidence");
 
   const data: Record<string, unknown> = {};
 
@@ -44,10 +47,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (body?.reviewStatus !== undefined) {
     const newStatus = String(body.reviewStatus) as EvidenceReviewStatus;
     if (!canTransitionEvidence(existing.reviewStatus, newStatus)) {
-      return NextResponse.json({
-        ok: false,
-        error: `Cannot transition from ${existing.reviewStatus} to ${newStatus}.`,
-      }, { status: 400 });
+      return apiValidationError([{ path: "reviewStatus", message: `Cannot transition from ${existing.reviewStatus} to ${newStatus}.` }]);
     }
     data.reviewStatus = newStatus;
 
@@ -81,7 +81,21 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       targetId: params.id,
       metadata: { previousStatus: existing.reviewStatus, newStatus: data.reviewStatus, notes: body?.notes },
     });
+
+    if (data.reviewStatus === "APPROVED") {
+      await eventBus.emit(Events.EVIDENCE_APPROVED, {
+        evidenceId: params.id,
+        dealId: existing.dealId ?? undefined,
+        reviewerId: auth.session.user?.id ?? "system",
+      }, { actorId: auth.session.user?.id });
+    } else if (data.reviewStatus === "REJECTED") {
+      await eventBus.emit(Events.EVIDENCE_REJECTED, {
+        evidenceId: params.id,
+        reason: body?.notes ?? "Rejected",
+        reviewerId: auth.session.user?.id ?? "system",
+      }, { actorId: auth.session.user?.id });
+    }
   }
 
-  return NextResponse.json({ ok: true, evidence });
+  return apiOk(evidence);
 }

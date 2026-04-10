@@ -1,29 +1,28 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiNotFound, apiForbidden, apiValidationError } from "@/lib/core/api-response";
+import { parseBody, updateApprovalSchema } from "@/lib/core/validation";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const auth = await requirePermission("update", "settlement");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(updateApprovalSchema, body);
+  if (!parsed.ok) return apiValidationError(parsed.error.issues.map(i => ({ path: i.path.join("."), message: i.message })));
 
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-  const decision = String(body?.decision ?? "");
-
-  if (!["APPROVED", "REJECTED"].includes(decision)) {
-    return NextResponse.json({ ok: false, error: "Invalid decision." }, { status: 400 });
-  }
-
   const approval = await prisma.approvalAction.findUnique({ where: { id } });
-  if (!approval) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
-  if (approval.status !== "PENDING") {
-    return NextResponse.json({ ok: false, error: "Approval is not pending." }, { status: 400 });
-  }
-  if (approval.requestedById === auth.session.user!.id) {
-    return NextResponse.json({ ok: false, error: "Cannot approve your own request (dual control)." }, { status: 403 });
-  }
+  if (!approval) return apiNotFound("Approval");
+  if (approval.status !== "PENDING") return apiValidationError([{ path: "id", message: "Approval is not pending." }]);
+  if (approval.requestedById === auth.session.user!.id) return apiForbidden("Cannot approve your own request (dual control).");
+
+  const { decision } = parsed.data;
 
   const updated = await prisma.approvalAction.update({
     where: { id },
@@ -46,5 +45,12 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     metadata: { decision, entityType: approval.entityType, entityId: approval.entityId, actionType: approval.actionType },
   });
 
-  return NextResponse.json({ ok: true, approval: updated });
+  if (decision === "APPROVED") {
+    await eventBus.emit(Events.APPROVAL_GRANTED, {
+      approvalId: id,
+      grantedBy: auth.session.user!.id,
+    }, { actorId: auth.session.user?.id });
+  }
+
+  return apiOk(updated);
 }

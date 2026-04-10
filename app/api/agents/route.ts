@@ -1,14 +1,15 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { getOwnedNodeIds, memberAgentsWhere } from "@/lib/member-data-scope";
 import { redactAgentForMember } from "@/lib/member-redact";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { isAdminRole } from "@/lib/permissions";
+import { apiOk, apiCreated, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
 
 export async function GET() {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
@@ -20,18 +21,15 @@ export async function GET() {
     where,
     orderBy: { createdAt: "desc" },
     take: 200,
-    include: { ownerNode: true, permissions: true }
+    include: { ownerNode: true, permissions: true },
   });
 
-  return NextResponse.json({
-    ok: true,
-    agents: isAdmin ? agents : agents.map(redactAgentForMember)
-  });
+  return apiOk(isAdmin ? agents : agents.map(redactAgentForMember));
 }
 
 export async function POST(req: Request) {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
@@ -40,12 +38,12 @@ export async function POST(req: Request) {
   const type = String(body?.type ?? "").trim();
   const ownerNodeId = String(body?.ownerNodeId ?? "").trim();
   if (!name || !type || !ownerNodeId) {
-    return NextResponse.json({ ok: false, error: "Missing name/type/ownerNodeId." }, { status: 400 });
+    return apiValidationError([{ path: "name", message: "Missing name/type/ownerNodeId." }]);
   }
 
   const allowedTypes = new Set(["DEAL", "RESEARCH", "GROWTH", "EXECUTION", "LIQUIDITY"]);
   if (!allowedTypes.has(type)) {
-    return NextResponse.json({ ok: false, error: "Invalid agent type." }, { status: 400 });
+    return apiValidationError([{ path: "type", message: "Invalid agent type." }]);
   }
 
   const agent = await prisma.agent.create({
@@ -53,9 +51,9 @@ export async function POST(req: Request) {
       name,
       type: type as any,
       endpoint: body?.endpoint ? String(body.endpoint) : null,
-      ownerNodeId
+      ownerNodeId,
     },
-    include: { ownerNode: true, permissions: true }
+    include: { ownerNode: true, permissions: true },
   });
 
   await writeAudit({
@@ -63,9 +61,8 @@ export async function POST(req: Request) {
     action: AuditAction.AGENT_CREATE,
     targetType: "AGENT",
     targetId: agent.id,
-    metadata: { name, type, ownerNodeId }
+    metadata: { name, type, ownerNodeId },
   });
 
-  return NextResponse.json({ ok: true, agent });
+  return apiCreated(agent);
 }
-

@@ -1,28 +1,29 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { canTransitionSettlement } from "@/lib/state-machines/settlement";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const auth = await requirePermission("update", "settlement");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
   const dualControl = body?.dualControl === true;
 
   const cycle = await prisma.settlementCycle.findUnique({ where: { id } });
-  if (!cycle) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!cycle) return apiNotFound("SettlementCycle");
 
   if (cycle.status === "LOCKED" || cycle.status === "EXPORTED" || cycle.status === "FINALIZED") {
-    return NextResponse.json({ ok: true, idempotent: true, cycle });
+    return apiOk({ idempotent: true, cycle });
   }
 
   if (dualControl) {
     if (!canTransitionSettlement(cycle.status, "LOCK_PENDING_APPROVAL")) {
-      return NextResponse.json({ ok: false, error: `Cannot request lock from ${cycle.status}.` }, { status: 400 });
+      return apiValidationError([{ path: "status", message: `Cannot request lock from ${cycle.status}.` }]);
     }
 
     const approval = await prisma.approvalAction.create({
@@ -49,11 +50,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       metadata: { approvalId: approval.id, previousStatus: cycle.status },
     });
 
-    return NextResponse.json({ ok: true, pendingApproval: true, approvalId: approval.id });
+    return apiOk({ pendingApproval: true, approvalId: approval.id });
   }
 
   if (!canTransitionSettlement(cycle.status, "LOCKED")) {
-    return NextResponse.json({ ok: false, error: `Cannot lock from ${cycle.status}. Must be RECONCILED.` }, { status: 400 });
+    return apiValidationError([{ path: "status", message: `Cannot lock from ${cycle.status}. Must be RECONCILED.` }]);
   }
 
   const updated = await prisma.settlementCycle.update({
@@ -69,5 +70,5 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     metadata: { previousStatus: cycle.status },
   });
 
-  return NextResponse.json({ ok: true, idempotent: false, cycle: updated });
+  return apiOk({ idempotent: false, cycle: updated });
 }

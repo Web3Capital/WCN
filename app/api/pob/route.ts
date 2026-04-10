@@ -1,11 +1,13 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
-import { ApplicationStatus } from "@prisma/client";
-import { ApiCode, apiError } from "@/lib/api-error";
 import { getOwnedNodeIds, memberPoBWhere } from "@/lib/member-data-scope";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { isAdminRole } from "@/lib/permissions";
+import { apiOk, apiCreated, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
+import { ApplicationStatus } from "@prisma/client";
 
 function computeScore(input: {
   baseValue: number;
@@ -24,7 +26,7 @@ function computeScore(input: {
 
 export async function GET(req: Request) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
@@ -50,20 +52,18 @@ export async function GET(req: Request) {
     },
   });
 
-  return NextResponse.json({ ok: true, pob });
+  return apiOk(pob);
 }
 
 export async function POST(req: Request) {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const businessType = String(body?.businessType ?? "").trim();
-  if (!businessType) {
-    return NextResponse.json({ ok: false, error: "Missing businessType." }, { status: 400 });
-  }
+  if (!businessType) return apiValidationError([{ path: "businessType", message: "Missing businessType." }]);
 
   const baseValue = Number(body?.baseValue ?? 0);
   const weight = Number(body?.weight ?? 1);
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
   if (body?.status !== undefined && body?.status !== null && String(body.status).trim() !== "") {
     const s = String(body.status).trim();
     if (s !== "PENDING" && s !== "REVIEWING") {
-      return apiError(ApiCode.VALIDATION_ERROR, "New PoB may only start as PENDING or REVIEWING.", 400);
+      return apiValidationError([{ path: "status", message: "New PoB may only start as PENDING or REVIEWING." }]);
     }
     initialStatus = s as ApplicationStatus;
   }
@@ -111,5 +111,12 @@ export async function POST(req: Request) {
     metadata: { businessType, score, nodeId: record.nodeId, dealId: record.dealId },
   });
 
-  return NextResponse.json({ ok: true, record });
+  await eventBus.emit(Events.POB_CREATED, {
+    pobId: record.id,
+    dealId: record.dealId ?? undefined,
+    totalValue: score,
+    attributions: [],
+  }, { actorId: admin.session.user?.id });
+
+  return apiCreated(record);
 }

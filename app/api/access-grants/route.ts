@@ -1,11 +1,13 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, createAccessGrantSchema } from "@/lib/core/validation";
 
 export async function GET(req: Request) {
   const auth = await requirePermission("read", "file");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const url = new URL(req.url);
@@ -24,31 +26,29 @@ export async function GET(req: Request) {
     take: 200,
   });
 
-  return NextResponse.json({ ok: true, grants });
+  return apiOk(grants);
 }
 
 export async function POST(req: Request) {
   const auth = await requirePermission("create", "file");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(createAccessGrantSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-
-  const { workspaceId, entityType, entityId, grantedToType, grantedToId, grantType, scope, expiresAt } = body;
-
-  if (!workspaceId || !entityType || !entityId || !grantedToType || !grantedToId || !grantType) {
-    return NextResponse.json({ ok: false, error: "Missing required fields." }, { status: 400 });
-  }
+  const { workspaceId, entityType, entityId, grantedToType, grantedToId, grantType, scope, expiresAt } = parsed.data;
 
   const grant = await prisma.accessGrant.create({
     data: {
       workspaceId,
       entityType,
       entityId,
-      grantedToType,
+      grantedToType: grantedToType as any,
       grantedToId,
-      grantType,
-      scope: scope ?? "FULL",
+      grantType: grantType as any,
+      scope: scope as any,
       expiresAt: expiresAt ? new Date(expiresAt) : null,
       grantedById: auth.session.user!.id,
     },
@@ -63,5 +63,5 @@ export async function POST(req: Request) {
     metadata: { entityType, entityId, grantedToType, grantedToId, grantType },
   });
 
-  return NextResponse.json({ ok: true, grant }, { status: 201 });
+  return apiCreated(grant);
 }

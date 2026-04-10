@@ -1,48 +1,64 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { redactSettlementCycleForMember } from "@/lib/member-redact";
 import { isAdminRole } from "@/lib/permissions";
+import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, createSettlementCycleSchema } from "@/lib/core/validation";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 
 export async function GET() {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
 
   const cycles = await prisma.settlementCycle.findMany({ orderBy: { startAt: "desc" }, take: 50 });
 
-  return NextResponse.json({
-    ok: true,
-    cycles: isAdmin ? cycles : cycles.map(redactSettlementCycleForMember)
-  });
+  return apiOk(isAdmin ? cycles : cycles.map(redactSettlementCycleForMember));
 }
 
 export async function POST(req: Request) {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) return apiUnauthorized();
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
+  const rawBody = await req.json().catch(() => ({}));
+  const o = typeof rawBody === "object" && rawBody !== null ? (rawBody as Record<string, unknown>) : {};
+  const body = { ...o, kind: o.kind ?? "MONTH" };
 
-  const kind = String(body?.kind ?? "MONTH").trim();
-  const startAt = body?.startAt ? new Date(String(body.startAt)) : null;
-  const endAt = body?.endAt ? new Date(String(body.endAt)) : null;
-  const pool = Number(body?.pool ?? 0);
-  if (!startAt || !endAt || !Number.isFinite(pool)) {
-    return NextResponse.json({ ok: false, error: "Missing/invalid kind/startAt/endAt/pool." }, { status: 400 });
-  }
-  const allowed = new Set(["WEEK", "MONTH"]);
-  if (!allowed.has(kind)) return NextResponse.json({ ok: false, error: "Invalid kind." }, { status: 400 });
+  const parsed = parseBody(createSettlementCycleSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
+  const { kind, startAt, endAt, pool } = parsed.data;
   const cycle = await prisma.settlementCycle.create({
     data: {
-      kind: kind as any,
-      startAt,
-      endAt,
+      kind,
+      startAt: new Date(startAt),
+      endAt: new Date(endAt),
       pool
     }
   });
-  return NextResponse.json({ ok: true, cycle });
-}
 
+  await writeAudit({
+    actorUserId: admin.session.user?.id ?? null,
+    action: AuditAction.SETTLEMENT_CYCLE_CREATE,
+    targetType: "SETTLEMENT_CYCLE",
+    targetId: cycle.id,
+    metadata: { kind, pool, startAt, endAt },
+  });
+
+  await eventBus.emit(
+    Events.SETTLEMENT_CYCLE_CREATED,
+    {
+      cycleId: cycle.id,
+      periodStart: cycle.startAt.toISOString(),
+      periodEnd: cycle.endAt.toISOString(),
+    },
+    { actorId: admin.session.user?.id }
+  );
+
+  return apiCreated({ cycle });
+}

@@ -1,15 +1,16 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireSignedIn } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
+import { apiOk, apiUnauthorized } from "@/lib/core/api-response";
 
 export async function GET(req: Request) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const { searchParams } = new URL(req.url);
   const q = (searchParams.get("q") ?? "").trim();
-  if (q.length < 2) return NextResponse.json({ ok: true, results: [] });
+  if (q.length < 2) return apiOk([]);
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
@@ -60,5 +61,5 @@ export async function GET(req: Request) {
   for (const c of capital) results.push({ type: "Capital", id: c.id, label: c.name, href: `/dashboard/capital/${c.id}`, badge: c.status });
   for (const a of agents) results.push({ type: "Agent", id: a.id, label: a.name, href: `/dashboard/agents`, badge: a.status });
 
-  return NextResponse.json({ ok: true, results });
+  return apiOk(results);
 }

@@ -761,6 +761,7 @@ model Project {
   pobRecords PoBRecord[]
   evidence   Evidence[]
   deals      Deal[]
+  matches    Match[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -795,7 +796,8 @@ model CapitalProfile {
   nodeId String?
   node   Node?   @relation(fields: [nodeId], references: [id], onDelete: SetNull)
 
-  deals Deal[]
+  deals   Deal[]
+  matches Match[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1411,4 +1413,44 @@ model RiskFlag {
   @@index([severity, createdAt])
   @@index([resolvedAt])
   @@index([workspaceId])
+}
+
+// ─── Match (Phase 2 Matching Engine) ──────────────────────────
+
+enum MatchStatus {
+  GENERATED
+  INTEREST_EXPRESSED
+  DECLINED
+  CONVERTED_TO_DEAL
+  EXPIRED
+}
+
+model Match {
+  id              String      @id @default(cuid())
+  projectId       String
+  capitalProfileId String
+  capitalNodeId   String
+
+  score           Float       @default(0)
+  sectorScore     Float       @default(0)
+  stageScore      Float       @default(0)
+  ticketScore     Float       @default(0)
+  jurisdictionScore Float     @default(0)
+
+  status          MatchStatus @default(GENERATED)
+  interestAt      DateTime?
+  declinedAt      DateTime?
+  convertedDealId String?
+  expiresAt       DateTime?
+
+  project         Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  capitalProfile  CapitalProfile @relation(fields: [capitalProfileId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@unique([projectId, capitalProfileId])
+  @@index([capitalNodeId])
+  @@index([status])
+  @@index([score(sort: Desc)])
 }

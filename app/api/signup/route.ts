@@ -1,39 +1,33 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import bcrypt from "bcryptjs";
 import { getPrisma } from "@/lib/prisma";
+import { apiOk, apiConflict, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, signupSchema } from "@/lib/core/validation";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 
 export async function POST(req: Request) {
-  const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(signupSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
-  const name = body?.name ? String(body.name).trim() : null;
-  const emailRaw = String(body?.email ?? "");
-  const email = emailRaw.toLowerCase().trim();
-  const password = String(body?.password ?? "");
-
-  if (!email || !email.includes("@")) {
-    return NextResponse.json({ ok: false, error: "Invalid email." }, { status: 400 });
-  }
-  if (!password || password.length < 8) {
-    return NextResponse.json({ ok: false, error: "Password must be at least 8 characters." }, { status: 400 });
-  }
+  const prisma = getPrisma();
+  const { name, email, password } = parsed.data;
 
   const exists = await prisma.user.findUnique({ where: { email }, select: { id: true } });
-  if (exists) {
-    return NextResponse.json({ ok: false, error: "Email already registered." }, { status: 409 });
-  }
+  if (exists) return apiConflict("Email already registered.");
 
   const passwordHash = await bcrypt.hash(password, 12);
   const user = await prisma.user.create({
-    data: {
-      email,
-      name,
-      passwordHash,
-      role: "USER"
-    },
-    select: { id: true, email: true, name: true }
+    data: { email, name: name ?? null, passwordHash, role: "USER" },
+    select: { id: true, email: true, name: true },
   });
 
-  return NextResponse.json({ ok: true, user });
-}
+  await eventBus.emit(Events.USER_CREATED, {
+    userId: user.id,
+    email: user.email,
+    role: "USER",
+  });
 
+  return apiOk(user);
+}

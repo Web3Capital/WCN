@@ -34,8 +34,8 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
     const res = await fetch("/api/settlement/cycles", { cache: "no-store" });
     const data = await res.json();
     if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
-    setRows(data.cycles);
-    if (!selectedId && data.cycles?.[0]?.id) setSelectedId(data.cycles[0].id);
+    setRows(data.data);
+    if (!selectedId && data.data?.[0]?.id) setSelectedId(data.data[0].id);
   }
 
   async function onCreate() {
@@ -77,7 +77,7 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
       const res = await fetch(`/api/settlement/cycles/${selected.id}/generate`, { method: "POST" });
       const data = await res.json();
       if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
-      setLines(data.lines ?? null);
+      setLines(data.data?.lines ?? null);
       await refresh();
     } catch (e: any) {
       setError(e?.message ?? "Generate failed.");

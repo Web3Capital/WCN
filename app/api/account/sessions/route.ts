@@ -1,11 +1,12 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireSignedIn } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized } from "@/lib/core/api-response";
 
 export async function GET() {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const sessions = await prisma.session.findMany({
@@ -14,12 +15,12 @@ export async function GET() {
     select: { id: true, expires: true, deviceInfo: true, ipAddress: true },
   });
 
-  return NextResponse.json({ ok: true, sessions });
+  return apiOk(sessions);
 }
 
 export async function DELETE() {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const userId = auth.session.user!.id;
@@ -34,5 +35,5 @@ export async function DELETE() {
     metadata: { sessionsRevoked: count },
   });
 
-  return NextResponse.json({ ok: true, revoked: count });
+  return apiOk({ revoked: count });
 }

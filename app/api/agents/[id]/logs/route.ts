@@ -1,10 +1,11 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireSignedIn } from "@/lib/admin";
+import { apiOk, apiCreated, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const logs = await prisma.agentLog.findMany({
@@ -13,18 +14,18 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
     take: 100,
   });
 
-  return NextResponse.json({ ok: true, logs });
+  return apiOk(logs);
 }
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const agent = await prisma.agent.findUnique({ where: { id: params.id }, select: { ownerNodeId: true } });
-  if (!agent) return NextResponse.json({ ok: false, error: "Agent not found." }, { status: 404 });
+  if (!agent) return apiNotFound("Agent");
 
   const log = await prisma.agentLog.create({
     data: {
@@ -41,5 +42,5 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     },
   });
 
-  return NextResponse.json({ ok: true, log });
+  return apiCreated(log);
 }

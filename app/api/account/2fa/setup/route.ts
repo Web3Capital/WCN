@@ -1,18 +1,19 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireSignedIn } from "@/lib/admin";
 import { TOTPGenerate } from "@/lib/totp";
+import { apiOk, apiUnauthorized, apiConflict } from "@/lib/core/api-response";
 
 export async function POST() {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const userId = auth.session.user!.id;
   const user = await prisma.user.findUnique({ where: { id: userId }, select: { twoFactorEnabled: true } });
 
   if (user?.twoFactorEnabled) {
-    return NextResponse.json({ ok: false, error: "2FA already enabled." }, { status: 409 });
+    return apiConflict("2FA already enabled.");
   }
 
   const { secret, otpauthUrl } = TOTPGenerate();
@@ -22,5 +23,5 @@ export async function POST() {
     data: { twoFactorSecret: secret },
   });
 
-  return NextResponse.json({ ok: true, secret, otpauthUrl });
+  return apiOk({ secret, otpauthUrl });
 }

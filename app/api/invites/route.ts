@@ -1,7 +1,9 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiConflict, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, createInviteSchema } from "@/lib/core/validation";
 import { createHash, randomBytes } from "crypto";
 
 function hashToken(raw: string): string {
@@ -10,7 +12,7 @@ function hashToken(raw: string): string {
 
 export async function GET() {
   const auth = await requirePermission("read", "invite");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const invites = await prisma.invite.findMany({
@@ -19,30 +21,24 @@ export async function GET() {
     include: { createdBy: { select: { name: true, email: true } } },
   });
 
-  return NextResponse.json({ ok: true, invites });
+  return apiOk(invites);
 }
 
 export async function POST(req: Request) {
   const auth = await requirePermission("create", "invite");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(createInviteSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-
-  const email = String(body?.email ?? "").toLowerCase().trim();
-  const role = String(body?.role ?? "NODE_OWNER");
-  const expiresInDays = Number(body?.expiresInDays) || 7;
-
-  if (!email || !email.includes("@")) {
-    return NextResponse.json({ ok: false, error: "Valid email required." }, { status: 400 });
-  }
+  const { email, role, expiresInDays, workspaceId } = parsed.data;
 
   const existing = await prisma.invite.findFirst({
     where: { email, activatedAt: null, revokedAt: null, expiresAt: { gt: new Date() } },
   });
-  if (existing) {
-    return NextResponse.json({ ok: false, error: "Active invite already exists for this email." }, { status: 409 });
-  }
+  if (existing) return apiConflict("Active invite already exists for this email.");
 
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + expiresInDays);
@@ -57,7 +53,7 @@ export async function POST(req: Request) {
       role: role as any,
       expiresAt,
       createdById: auth.session.user!.id,
-      workspaceId: body?.workspaceId ?? null,
+      workspaceId: workspaceId ?? null,
     },
   });
 
@@ -69,5 +65,5 @@ export async function POST(req: Request) {
     metadata: { email, role, expiresAt: expiresAt.toISOString() },
   });
 
-  return NextResponse.json({ ok: true, invite: { ...invite, token: rawToken } });
+  return apiOk({ ...invite, token: rawToken });
 }

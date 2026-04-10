@@ -1,11 +1,15 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, createEntityFreezeSchema } from "@/lib/core/validation";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 
 export async function GET(req: Request) {
   const auth = await requirePermission("read", "risk");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const url = new URL(req.url);
@@ -24,21 +28,19 @@ export async function GET(req: Request) {
     take: 200,
   });
 
-  return NextResponse.json({ ok: true, freezes });
+  return apiOk(freezes);
 }
 
 export async function POST(req: Request) {
   const auth = await requirePermission("freeze", "risk");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(createEntityFreezeSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-
-  const { workspaceId, entityType, entityId, freezeLevel, reason, expiresAt } = body;
-
-  if (!workspaceId || !entityType || !entityId || !freezeLevel || !reason) {
-    return NextResponse.json({ ok: false, error: "Missing required fields." }, { status: 400 });
-  }
+  const { workspaceId, entityType, entityId, freezeLevel, reason, expiresAt } = parsed.data;
 
   const freeze = await prisma.entityFreeze.create({
     data: {
@@ -61,5 +63,12 @@ export async function POST(req: Request) {
     metadata: { freezeId: freeze.id, freezeLevel, reason },
   });
 
-  return NextResponse.json({ ok: true, freeze }, { status: 201 });
+  await eventBus.emit(Events.ENTITY_FROZEN, {
+    entityType,
+    entityId,
+    frozenBy: auth.session.user!.id,
+    reason,
+  }, { actorId: auth.session.user?.id });
+
+  return apiCreated(freeze);
 }

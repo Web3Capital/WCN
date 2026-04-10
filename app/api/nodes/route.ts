@@ -1,13 +1,17 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { redactNodeForMember } from "@/lib/member-redact";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { isAdminRole } from "@/lib/permissions";
+import { apiOk, apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, createNodeSchema } from "@/lib/core/validation";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 
 export async function GET(req: Request) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
@@ -28,53 +32,41 @@ export async function GET(req: Request) {
     include: { owner: { select: { id: true, name: true, email: true } } },
   });
 
-  return NextResponse.json({
-    ok: true,
+  return apiOk({
     nodes: isAdmin ? nodes : nodes.map(redactNodeForMember),
   });
 }
 
 export async function POST(req: Request) {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(createNodeSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
-  const name = String(body?.name ?? "").trim();
-  const type = String(body?.type ?? "").trim();
-  if (!name || !type) {
-    return NextResponse.json({ ok: false, error: "Missing name/type." }, { status: 400 });
-  }
-
-  const allowedTypes = new Set(["GLOBAL", "REGION", "CITY", "INDUSTRY", "FUNCTIONAL", "AGENT"]);
-  if (!allowedTypes.has(type)) {
-    return NextResponse.json({ ok: false, error: "Invalid node type." }, { status: 400 });
-  }
-
-  const tags = Array.isArray(body?.tags) ? body.tags.map((t: unknown) => String(t).trim()).filter(Boolean) : [];
-  const allowedServices = Array.isArray(body?.allowedServices) ? body.allowedServices.map((s: unknown) => String(s).trim()).filter(Boolean) : [];
-
+  const d = parsed.data;
   const node = await prisma.node.create({
     data: {
-      name,
-      type: type as any,
-      description: body?.description ? String(body.description) : null,
-      tags,
-      region: body?.region ? String(body.region) : null,
-      city: body?.city ? String(body.city) : null,
-      jurisdiction: body?.jurisdiction ? String(body.jurisdiction) : null,
-      level: body?.level ? Number(body.level) : 1,
-      ownerUserId: body?.ownerUserId ? String(body.ownerUserId) : null,
-      entityName: body?.entityName ? String(body.entityName) : null,
-      entityType: body?.entityType ? String(body.entityType) : null,
-      contactName: body?.contactName ? String(body.contactName) : null,
-      contactEmail: body?.contactEmail ? String(body.contactEmail) : null,
-      resourcesOffered: body?.resourcesOffered ? String(body.resourcesOffered) : null,
-      pastCases: body?.pastCases ? String(body.pastCases) : null,
-      recommendation: body?.recommendation ? String(body.recommendation) : null,
-      allowedServices,
-      riskLevel: body?.riskLevel ? String(body.riskLevel) : null,
+      name: d.name,
+      type: d.type as any,
+      description: d.description ?? null,
+      tags: d.tags,
+      region: d.region ?? null,
+      city: d.city ?? null,
+      jurisdiction: d.jurisdiction ?? null,
+      level: d.level,
+      ownerUserId: d.ownerUserId ?? null,
+      entityName: d.entityName ?? null,
+      entityType: d.entityType ?? null,
+      contactName: d.contactName ?? null,
+      contactEmail: d.contactEmail ?? null,
+      resourcesOffered: d.resourcesOffered ?? null,
+      pastCases: d.pastCases ?? null,
+      recommendation: d.recommendation ?? null,
+      allowedServices: d.allowedServices,
+      riskLevel: d.riskLevel ?? null,
     },
   });
 
@@ -83,8 +75,19 @@ export async function POST(req: Request) {
     action: AuditAction.NODE_CREATE,
     targetType: "NODE",
     targetId: node.id,
-    metadata: { name, type },
+    metadata: { name: d.name, type: d.type },
   });
 
-  return NextResponse.json({ ok: true, node });
+  await eventBus.emit(
+    Events.NODE_CREATED,
+    {
+      nodeId: node.id,
+      type: node.type,
+      name: node.name,
+      ownerId: node.ownerUserId ?? undefined,
+    },
+    { actorId: admin.session.user?.id },
+  );
+
+  return apiCreated(node);
 }

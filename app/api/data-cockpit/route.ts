@@ -1,14 +1,15 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireSignedIn } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
+import { apiOk, apiUnauthorized, apiForbidden } from "@/lib/core/api-response";
 
 export async function GET() {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
-  if (!isAdmin) return NextResponse.json({ ok: false, error: "Admin only." }, { status: 403 });
+  if (!isAdmin) return apiForbidden("Admin only.");
 
   const prisma = getPrisma();
 
@@ -39,8 +40,7 @@ export async function GET() {
     prisma.settlementCycle.count({ where: { status: { in: ["LOCKED", "EXPORTED", "FINALIZED"] } } }),
   ]);
 
-  return NextResponse.json({
-    ok: true,
+  return apiOk({
     summary: { activeNodes, activeProjects, activeDeals, totalTasks, totalEvidence, totalPoB, totalCapital, totalAgents, totalDisputes, openDisputes, settledCycles },
     distributions: {
       nodesByStatus: nodesByStatus.map((g) => ({ status: g.status, count: g._count })),

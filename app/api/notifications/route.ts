@@ -1,10 +1,12 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireSignedIn } from "@/lib/admin";
+import { apiOk, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, notificationActionSchema } from "@/lib/core/validation";
 
 export async function GET(req: Request) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const userId = auth.session.user!.id;
@@ -22,33 +24,29 @@ export async function GET(req: Request) {
 
   const unreadCount = await prisma.notification.count({ where: { userId, readAt: null } });
 
-  return NextResponse.json({ ok: true, notifications, unreadCount });
+  return apiOk({ notifications, unreadCount });
 }
 
 export async function POST(req: Request) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(notificationActionSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
-  const action = String(body?.action ?? "");
-
-  if (action === "markAllRead") {
+  if (parsed.data.action === "markAllRead") {
     await prisma.notification.updateMany({
       where: { userId: auth.session.user!.id, readAt: null },
       data: { readAt: new Date() },
     });
-    return NextResponse.json({ ok: true });
+    return apiOk({ marked: "all" });
   }
 
-  if (action === "markRead" && body?.id) {
-    await prisma.notification.update({
-      where: { id: String(body.id) },
-      data: { readAt: new Date() },
-    });
-    return NextResponse.json({ ok: true });
-  }
-
-  return NextResponse.json({ ok: false, error: "Invalid action." }, { status: 400 });
+  await prisma.notification.update({
+    where: { id: parsed.data.id },
+    data: { readAt: new Date() },
+  });
+  return apiOk({ marked: parsed.data.id });
 }

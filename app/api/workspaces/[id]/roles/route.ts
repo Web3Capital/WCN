@@ -1,12 +1,14 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiCreated, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
+import { parseBody, assignWorkspaceRoleSchema, revokeWorkspaceRoleSchema } from "@/lib/core/validation";
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id: workspaceId } = await params;
   const auth = await requirePermission("read", "invite");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const assignments = await prisma.roleAssignment.findMany({
@@ -24,29 +26,25 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     orderBy: { grantedAt: "desc" },
   });
 
-  return NextResponse.json({ ok: true, assignments });
+  return apiOk(assignments);
 }
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id: workspaceId } = await params;
   const auth = await requirePermission("create", "invite");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(assignWorkspaceRoleSchema, body);
+  if (!parsed.ok) return apiValidationError(parsed.error.issues.map(i => ({ path: i.path.join("."), message: i.message })));
 
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-  const membershipId = String(body?.membershipId ?? "");
-  const role = String(body?.role ?? "");
-
-  if (!membershipId || !role) {
-    return NextResponse.json({ ok: false, error: "membershipId and role required." }, { status: 400 });
-  }
+  const { membershipId, role } = parsed.data;
 
   const membership = await prisma.workspaceMembership.findFirst({
     where: { id: membershipId, workspaceId },
   });
-  if (!membership) {
-    return NextResponse.json({ ok: false, error: "Membership not found in this workspace." }, { status: 404 });
-  }
+  if (!membership) return apiNotFound("Membership in this workspace");
 
   const assignment = await prisma.roleAssignment.create({
     data: {
@@ -65,28 +63,25 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     metadata: { membershipId, role },
   });
 
-  return NextResponse.json({ ok: true, assignment }, { status: 201 });
+  return apiCreated(assignment);
 }
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id: workspaceId } = await params;
   const auth = await requirePermission("delete", "invite");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(revokeWorkspaceRoleSchema, body);
+  if (!parsed.ok) return apiValidationError(parsed.error.issues.map(i => ({ path: i.path.join("."), message: i.message })));
 
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-  const assignmentId = String(body?.assignmentId ?? "");
-
-  if (!assignmentId) {
-    return NextResponse.json({ ok: false, error: "assignmentId required." }, { status: 400 });
-  }
+  const { assignmentId } = parsed.data;
 
   const assignment = await prisma.roleAssignment.findFirst({
     where: { id: assignmentId, membership: { workspaceId }, revokedAt: null },
   });
-  if (!assignment) {
-    return NextResponse.json({ ok: false, error: "Assignment not found." }, { status: 404 });
-  }
+  if (!assignment) return apiNotFound("RoleAssignment");
 
   await prisma.roleAssignment.update({
     where: { id: assignmentId },
@@ -101,5 +96,5 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     workspaceId,
   });
 
-  return NextResponse.json({ ok: true });
+  return apiOk({ revoked: true });
 }

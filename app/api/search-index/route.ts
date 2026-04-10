@@ -1,11 +1,13 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { apiOk, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, createSearchDocumentSchema } from "@/lib/core/validation";
 
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!session?.user?.id) return apiUnauthorized();
 
   const prisma = getPrisma();
   const url = new URL(req.url);
@@ -14,9 +16,7 @@ export async function GET(req: Request) {
   const entityType = url.searchParams.get("entityType");
   const limit = Math.min(Number(url.searchParams.get("limit")) || 20, 50);
 
-  if (!q || q.length < 2) {
-    return NextResponse.json({ ok: true, results: [] });
-  }
+  if (!q || q.length < 2) return apiOk([]);
 
   const where: Record<string, unknown> = {};
   if (workspaceId) where.workspaceId = workspaceId;
@@ -35,20 +35,19 @@ export async function GET(req: Request) {
     orderBy: { updatedAt: "desc" },
   });
 
-  return NextResponse.json({ ok: true, results });
+  return apiOk(results);
 }
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!session?.user?.id) return apiUnauthorized();
+
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(createSearchDocumentSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
   const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-  const { workspaceId, entityType, entityId, title, subtitle, bodyText, tags } = body;
-
-  if (!workspaceId || !entityType || !entityId || !title) {
-    return NextResponse.json({ ok: false, error: "Missing required fields." }, { status: 400 });
-  }
+  const { workspaceId, entityType, entityId, title, subtitle, bodyText, tags } = parsed.data;
 
   const doc = await prisma.searchDocument.upsert({
     where: { workspaceId_entityType_entityId: { workspaceId, entityType, entityId } },
@@ -59,15 +58,15 @@ export async function POST(req: Request) {
       title,
       subtitle: subtitle ?? null,
       body: bodyText ?? null,
-      tags: tags ?? [],
+      tags,
     },
     update: {
       title,
       subtitle: subtitle ?? null,
       body: bodyText ?? null,
-      tags: tags ?? [],
+      tags,
     },
   });
 
-  return NextResponse.json({ ok: true, doc });
+  return apiOk(doc);
 }

@@ -1,14 +1,17 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { AgentRunStatus } from "@prisma/client";
 import { getOwnedNodeIds, memberAgentRunsWhere } from "@/lib/member-data-scope";
 import { redactAgentForMember } from "@/lib/member-redact";
 import { isAdminRole } from "@/lib/permissions";
+import { apiOk, apiCreated, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 
 export async function GET() {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
@@ -20,23 +23,21 @@ export async function GET() {
     where,
     orderBy: { startedAt: "desc" },
     take: 200,
-    include: { agent: true, task: true }
+    include: { agent: true, task: true },
   });
 
-  return NextResponse.json({
-    ok: true,
-    runs: isAdmin ? runs : runs.map((r) => ({ ...r, agent: r.agent ? redactAgentForMember(r.agent) : r.agent }))
-  });
+  return apiOk(isAdmin ? runs : runs.map((r) => ({ ...r, agent: r.agent ? redactAgentForMember(r.agent) : r.agent })));
 }
 
 export async function POST(req: Request) {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) return apiUnauthorized();
+
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const agentId = String(body?.agentId ?? "").trim();
-  if (!agentId) return NextResponse.json({ ok: false, error: "Missing agentId." }, { status: 400 });
+  if (!agentId) return apiValidationError([{ path: "agentId", message: "Missing agentId." }]);
 
   const run = await prisma.agentRun.create({
     data: {
@@ -46,10 +47,17 @@ export async function POST(req: Request) {
       inputs: body?.inputs ?? null,
       outputs: body?.outputs ?? null,
       cost: body?.cost !== undefined ? Number(body.cost) : null,
-      finishedAt: body?.finishedAt ? new Date(String(body.finishedAt)) : null
+      finishedAt: body?.finishedAt ? new Date(String(body.finishedAt)) : null,
     },
-    include: { agent: true, task: true }
+    include: { agent: true, task: true },
   });
-  return NextResponse.json({ ok: true, run });
-}
 
+  await eventBus.emit(Events.AGENT_RUN_STARTED, {
+    runId: run.id,
+    agentId,
+    agentType: run.agent?.type ?? "",
+    triggeredBy: admin.session.user?.id ?? "system",
+  }, { actorId: admin.session.user?.id });
+
+  return apiCreated(run);
+}

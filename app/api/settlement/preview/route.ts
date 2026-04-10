@@ -1,10 +1,12 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireSignedIn } from "@/lib/admin";
+import { apiOk, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
 
 export async function POST(req: Request) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
+
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
@@ -12,15 +14,15 @@ export async function POST(req: Request) {
   const endAt = body?.endAt ? new Date(String(body.endAt)) : null;
   const pool = Number(body?.pool ?? 0);
   if (!startAt || !endAt || !Number.isFinite(pool)) {
-    return NextResponse.json({ ok: false, error: "Missing/invalid startAt/endAt/pool." }, { status: 400 });
+    return apiValidationError([{ path: "startAt", message: "Missing/invalid startAt/endAt/pool." }]);
   }
 
   const approved = await prisma.poBRecord.findMany({
     where: {
       status: "APPROVED",
-      createdAt: { gte: startAt, lte: endAt }
+      createdAt: { gte: startAt, lte: endAt },
     },
-    include: { attributions: true }
+    include: { attributions: true },
   });
 
   const totals = new Map<string, number>();
@@ -34,10 +36,9 @@ export async function POST(req: Request) {
   const out = Array.from(totals.entries()).map(([nodeId, scoreTotal]) => ({
     nodeId,
     scoreTotal,
-    allocation: networkScore > 0 ? (scoreTotal / networkScore) * pool : 0
+    allocation: networkScore > 0 ? (scoreTotal / networkScore) * pool : 0,
   }));
   out.sort((a, b) => b.allocation - a.allocation);
 
-  return NextResponse.json({ ok: true, networkScore, lines: out });
+  return apiOk({ networkScore, lines: out });
 }
-

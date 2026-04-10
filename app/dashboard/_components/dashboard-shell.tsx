@@ -175,7 +175,7 @@ function GlobalSearch({ ui }: { ui: DashboardStrings }) {
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(value)}`);
         const data = await res.json();
-        if (data.ok) setResults(data.results);
+        if (data.ok) setResults(data.data ?? []);
       } catch { /* ignore */ }
     }, 300);
   }, []);
@@ -309,9 +309,9 @@ function NotificationBell({ ui, lang }: { ui: DashboardStrings; lang: DashboardL
     fetch("/api/notifications?unread=false")
       .then((r) => r.json())
       .then((d) => {
-        if (d.ok) {
-          setCount(d.unreadCount ?? 0);
-          setItems(d.notifications ?? []);
+        if (d.ok && d.data) {
+          setCount(d.data.unreadCount ?? 0);
+          setItems(d.data.notifications ?? []);
         }
       })
       .catch(() => {});

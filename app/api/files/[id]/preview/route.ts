@@ -1,19 +1,20 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { apiOk, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!session?.user?.id) return apiUnauthorized();
 
   const prisma = getPrisma();
   const file = await prisma.file.findUnique({ where: { id } });
-  if (!file) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!file) return apiNotFound("File");
 
   if (file.previewStatus !== "READY") {
-    return NextResponse.json({ ok: false, error: "Preview not available." }, { status: 404 });
+    return apiNotFound("Preview not available");
   }
 
   await prisma.fileAccessLog.create({
@@ -25,12 +26,9 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     },
   });
 
-  return NextResponse.json({
-    ok: true,
-    preview: {
-      filename: file.filename,
-      mimeType: file.mimeType,
-      storageKey: file.storageKey,
-    },
+  return apiOk({
+    filename: file.filename,
+    mimeType: file.mimeType,
+    storageKey: file.storageKey,
   });
 }

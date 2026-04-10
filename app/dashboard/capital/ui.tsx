@@ -52,7 +52,7 @@ export function CapitalConsole({ initialProfiles, nodes, isAdmin }: {
       });
       const data = await res.json();
       if (data.ok) {
-        setProfiles([{ ...data.profile, node: nodes.find((n) => n.id === nodeId) ?? null }, ...profiles]);
+        setProfiles([{ ...data.data, node: nodes.find((n) => n.id === nodeId) ?? null }, ...profiles]);
         setShowForm(false);
         setName(""); setEntity(""); setNodeId(""); setTicketMin(""); setTicketMax("");
       }

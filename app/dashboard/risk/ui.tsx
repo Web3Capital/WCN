@@ -42,7 +42,7 @@ export function RiskConsole({ initialFlags }: { initialFlags: RiskFlagRow[] }) {
       });
       const data = await res.json();
       if (data.ok) {
-        setFlags([{ ...data.flag, createdAt: new Date().toISOString() }, ...flags]);
+        setFlags([{ ...data.data, createdAt: new Date().toISOString() }, ...flags]);
         setShowForm(false);
         setEntityId("");
         setReason("");

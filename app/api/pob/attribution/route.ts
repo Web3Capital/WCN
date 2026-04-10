@@ -1,21 +1,20 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
-import { ApiCode, apiError } from "@/lib/api-error";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
 
 export async function POST(req: Request) {
   const admin = await requireAdmin();
-  if (!admin.ok) {
-    return apiError(ApiCode.UNAUTHORIZED, "Unauthorized.", 401);
-  }
+  if (!admin.ok) return apiUnauthorized();
+
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const pobId = String(body?.pobId ?? "").trim();
   const items = Array.isArray(body?.items) ? body.items : null;
   if (!pobId || !items) {
-    return apiError(ApiCode.VALIDATION_ERROR, "Missing pobId or items.", 400);
+    return apiValidationError([{ path: "pobId", message: "Missing pobId or items." }]);
   }
 
   const cleaned = items
@@ -23,13 +22,13 @@ export async function POST(req: Request) {
       nodeId: String(it?.nodeId ?? "").trim(),
       shareBps: Number(it?.shareBps ?? 0),
       role: String(it?.role ?? "COLLAB").trim(),
-      evidenceRefs: Array.isArray(it?.evidenceRefs) ? it.evidenceRefs.map((x: any) => String(x)) : []
+      evidenceRefs: Array.isArray(it?.evidenceRefs) ? it.evidenceRefs.map((x: any) => String(x)) : [],
     }))
     .filter((it: any) => it.nodeId && Number.isFinite(it.shareBps) && it.shareBps > 0);
 
   const total = cleaned.reduce((sum: number, it: any) => sum + it.shareBps, 0);
   if (total !== 10000) {
-    return apiError(ApiCode.VALIDATION_ERROR, "shareBps total must equal 10000.", 400, { total });
+    return apiValidationError([{ path: "items", message: `shareBps total must equal 10000, got ${total}.` }]);
   }
 
   await prisma.attribution.deleteMany({ where: { pobId } });
@@ -39,8 +38,8 @@ export async function POST(req: Request) {
       nodeId: it.nodeId,
       shareBps: Math.floor(it.shareBps),
       role: it.role === "LEAD" ? "LEAD" : "COLLAB",
-      evidenceRefs: it.evidenceRefs
-    }))
+      evidenceRefs: it.evidenceRefs,
+    })),
   });
 
   const attributions = await prisma.attribution.findMany({ where: { pobId }, include: { node: true } });
@@ -50,9 +49,8 @@ export async function POST(req: Request) {
     action: AuditAction.POB_ATTRIBUTION_SET,
     targetType: "POB",
     targetId: pobId,
-    metadata: { nodeCount: attributions.length, shareBpsTotal: total }
+    metadata: { nodeCount: attributions.length, shareBpsTotal: total },
   });
 
-  return NextResponse.json({ ok: true, attributions });
+  return apiOk(attributions);
 }
-

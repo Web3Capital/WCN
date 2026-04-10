@@ -1,25 +1,26 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const auth = await requirePermission("update", "dispute");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const existing = await prisma.dispute.findUnique({ where: { id } });
-  if (!existing) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!existing) return apiNotFound("Dispute");
 
   const data: Record<string, unknown> = {};
 
   if (body?.status !== undefined) {
     const status = String(body.status);
     const allowed = new Set(["OPEN", "UNDER_REVIEW", "RESOLVED", "DISMISSED", "ESCALATED"]);
-    if (!allowed.has(status)) return NextResponse.json({ ok: false, error: "Invalid status." }, { status: 400 });
+    if (!allowed.has(status)) return apiValidationError([{ path: "status", message: "Invalid status." }]);
     data.status = status;
     if (status === "RESOLVED" || status === "DISMISSED") {
       data.resolvedAt = new Date();
@@ -41,5 +42,5 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     });
   }
 
-  return NextResponse.json({ ok: true, dispute });
+  return apiOk(dispute);
 }

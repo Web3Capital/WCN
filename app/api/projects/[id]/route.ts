@@ -1,9 +1,12 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
 import { redactProjectForMember } from "@/lib/member-redact";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 import type { ProjectStatus } from "@prisma/client";
 
 const VALID_STATUSES = new Set([
@@ -13,7 +16,7 @@ const VALID_STATUSES = new Set([
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
   const auth = await requireSignedIn();
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
@@ -29,23 +32,20 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
     },
   });
 
-  if (!project) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!project) return apiNotFound("Project");
 
-  return NextResponse.json({
-    ok: true,
-    project: isAdmin ? project : redactProjectForMember(project, auth.session.user?.id ?? ""),
-  });
+  return apiOk(isAdmin ? project : redactProjectForMember(project, auth.session.user?.id ?? ""));
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const admin = await requireAdmin();
-  if (!admin.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!admin.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const existing = await prisma.project.findUnique({ where: { id: params.id }, select: { id: true, status: true } });
-  if (!existing) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!existing) return apiNotFound("Project");
 
   const data: Record<string, unknown> = {};
 
@@ -68,9 +68,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   if (body?.status !== undefined) {
     const newStatus = String(body.status);
-    if (!VALID_STATUSES.has(newStatus)) {
-      return NextResponse.json({ ok: false, error: "Invalid project status." }, { status: 400 });
-    }
+    if (!VALID_STATUSES.has(newStatus)) return apiValidationError([{ path: "status", message: "Invalid project status." }]);
     data.status = newStatus;
   }
 
@@ -84,7 +82,13 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       targetId: params.id,
       metadata: { previousStatus: existing.status, newStatus: data.status },
     });
+
+    await eventBus.emit(Events.PROJECT_STATUS_CHANGED, {
+      projectId: params.id,
+      oldStatus: existing.status,
+      newStatus: String(data.status),
+    }, { actorId: admin.session.user?.id });
   }
 
-  return NextResponse.json({ ok: true, project });
+  return apiOk(project);
 }

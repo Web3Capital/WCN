@@ -1,17 +1,18 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
+import { apiOk, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const auth = await requirePermission("create", "file");
-  if (!auth.ok) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const file = await prisma.file.findUnique({ where: { id } });
-  if (!file) return NextResponse.json({ ok: false, error: "Not found." }, { status: 404 });
+  if (!file) return apiNotFound("File");
 
   const updated = await prisma.file.update({
     where: { id },
@@ -24,5 +25,5 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     },
   });
 
-  return NextResponse.json({ ok: true, file: updated });
+  return apiOk(updated);
 }

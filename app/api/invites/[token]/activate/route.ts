@@ -1,9 +1,13 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { createHash } from "crypto";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { requiresTwoFactor } from "@/lib/permissions";
+import { apiOk, apiNotFound, apiValidationError, apiConflict } from "@/lib/core/api-response";
+import { parseBody, activateInviteSchema } from "@/lib/core/validation";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
 
 function hashToken(raw: string): string {
   return createHash("sha256").update(raw).digest("hex");
@@ -11,30 +15,20 @@ function hashToken(raw: string): string {
 
 export async function POST(req: Request, { params }: { params: Promise<{ token: string }> }) {
   const { token: rawToken } = await params;
-  const prisma = getPrisma();
+
   const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(activateInviteSchema, body);
+  if (!parsed.ok) return apiValidationError(parsed.error.issues.map(i => ({ path: i.path.join("."), message: i.message })));
 
-  const password = String(body?.password ?? "");
-  const name = String(body?.name ?? "").trim();
-
-  if (password.length < 8) {
-    return NextResponse.json({ ok: false, error: "Password must be at least 8 characters." }, { status: 400 });
-  }
+  const prisma = getPrisma();
+  const { name, password } = parsed.data;
 
   const tokenHash = hashToken(rawToken);
   const invite = await prisma.invite.findUnique({ where: { tokenHash } });
-  if (!invite) {
-    return NextResponse.json({ ok: false, error: "Invalid invite." }, { status: 404 });
-  }
-  if (invite.activatedAt) {
-    return NextResponse.json({ ok: false, error: "Invite already activated." }, { status: 410 });
-  }
-  if (invite.revokedAt) {
-    return NextResponse.json({ ok: false, error: "Invite has been revoked." }, { status: 410 });
-  }
-  if (invite.expiresAt < new Date()) {
-    return NextResponse.json({ ok: false, error: "Invite expired." }, { status: 410 });
-  }
+  if (!invite) return apiNotFound("Invite");
+  if (invite.activatedAt) return apiConflict("Invite already activated.");
+  if (invite.revokedAt) return apiConflict("Invite has been revoked.");
+  if (invite.expiresAt < new Date()) return apiConflict("Invite expired.");
 
   const existingUser = await prisma.user.findUnique({ where: { email: invite.email } });
   const passwordHash = await bcrypt.hash(password, 12);
@@ -60,6 +54,12 @@ export async function POST(req: Request, { params }: { params: Promise<{ token: 
       },
     });
     userId = user.id;
+
+    await eventBus.emit(Events.USER_CREATED, {
+      userId,
+      email: invite.email,
+      role: invite.role,
+    });
   }
 
   if (invite.workspaceId) {
@@ -95,8 +95,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ token: 
     metadata: { email: invite.email, role: invite.role, needs2FA },
   });
 
-  return NextResponse.json({
-    ok: true,
+  return apiOk({
     needs2FA,
     message: needs2FA
       ? "Account created. Please set up two-factor authentication."

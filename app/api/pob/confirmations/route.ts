@@ -1,14 +1,13 @@
-import { NextResponse } from "next/server";
+import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
-import { ApiCode, apiError } from "@/lib/api-error";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { apiCreated, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
 
 export async function POST(req: Request) {
   const admin = await requireAdmin();
-  if (!admin.ok) {
-    return apiError(ApiCode.UNAUTHORIZED, "Unauthorized.", 401);
-  }
+  if (!admin.ok) return apiUnauthorized();
+
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
@@ -16,12 +15,12 @@ export async function POST(req: Request) {
   const decision = String(body?.decision ?? "").trim();
   const partyType = String(body?.partyType ?? "").trim();
   if (!pobId || !decision || !partyType) {
-    return apiError(ApiCode.VALIDATION_ERROR, "Missing pobId, decision, or partyType.", 400);
+    return apiValidationError([{ path: "pobId", message: "Missing pobId, decision, or partyType." }]);
   }
   const allowedDecision = new Set(["CONFIRM", "REJECT"]);
   const allowedParty = new Set(["USER", "NODE"]);
   if (!allowedDecision.has(decision) || !allowedParty.has(partyType)) {
-    return apiError(ApiCode.VALIDATION_ERROR, "Invalid decision or partyType.", 400);
+    return apiValidationError([{ path: "decision", message: "Invalid decision or partyType." }]);
   }
 
   const confirmation = await prisma.confirmation.create({
@@ -33,8 +32,8 @@ export async function POST(req: Request) {
       notes: body?.notes ? String(body.notes) : null,
       partyType: partyType as any,
       partyUserId: body?.partyUserId ? String(body.partyUserId) : null,
-      partyNodeId: body?.partyNodeId ? String(body.partyNodeId) : null
-    }
+      partyNodeId: body?.partyNodeId ? String(body.partyNodeId) : null,
+    },
   });
 
   await writeAudit({
@@ -47,10 +46,9 @@ export async function POST(req: Request) {
       decision,
       partyType,
       partyUserId: confirmation.partyUserId,
-      partyNodeId: confirmation.partyNodeId
-    }
+      partyNodeId: confirmation.partyNodeId,
+    },
   });
 
-  return NextResponse.json({ ok: true, confirmation });
+  return apiCreated(confirmation);
 }
-
