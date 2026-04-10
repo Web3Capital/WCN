@@ -5159,6 +5159,45 @@ html[data-theme="dark"] .pob-formula-specbar {
   border-color: #6e5494;
   background: color-mix(in oklab, #6e5494 5%, var(--bg-soft));
 }
+.oauth-btn-wechat:hover {
+  border-color: #07C160;
+  background: color-mix(in oklab, #07C160 5%, var(--bg-soft));
+}
+.oauth-btn-wallet:hover {
+  border-color: var(--accent, #00d4ff);
+  background: color-mix(in oklab, var(--accent, #00d4ff) 5%, var(--bg-soft));
+}
+
+/* Auth Tabs */
+.auth-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: color-mix(in oklab, var(--bg-soft) 60%, transparent);
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+.auth-tab {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.auth-tab:hover {
+  color: var(--text);
+  background: color-mix(in oklab, var(--bg-soft) 80%, transparent);
+}
+.auth-tab-active {
+  color: var(--text);
+  background: var(--bg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
 
 /* Divider */
 .auth-divider {

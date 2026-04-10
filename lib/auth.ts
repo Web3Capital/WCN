@@ -7,22 +7,21 @@ import GitHubProvider from "next-auth/providers/github";
 import AppleProvider from "next-auth/providers/apple";
 import AzureADProvider from "next-auth/providers/azure-ad";
 import bcrypt from "bcryptjs";
+import { SiweMessage } from "siwe";
 
 /*
  * OAuth Environment Variables (add to Vercel / .env.local):
  *
- * GOOGLE_CLIENT_ID=...
- * GOOGLE_CLIENT_SECRET=...
+ * GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET
+ * AZURE_AD_CLIENT_ID / AZURE_AD_CLIENT_SECRET / AZURE_AD_TENANT_ID
+ * APPLE_ID / APPLE_SECRET
+ * GITHUB_ID / GITHUB_SECRET
  *
- * AZURE_AD_CLIENT_ID=...
- * AZURE_AD_CLIENT_SECRET=...
- * AZURE_AD_TENANT_ID=common          (use "common" for multi-tenant)
+ * WeChat:
+ * WECHAT_APP_ID / WECHAT_APP_SECRET
  *
- * APPLE_ID=...
- * APPLE_SECRET=...                    (JWT — see Apple docs)
- *
- * GITHUB_ID=...
- * GITHUB_SECRET=...
+ * SMS (Twilio):
+ * TWILIO_ACCOUNT_SID / TWILIO_AUTH_TOKEN / TWILIO_PHONE_NUMBER
  */
 
 const MAX_FAILED_ATTEMPTS = 10;
@@ -63,6 +62,52 @@ export const authOptions: NextAuthOptions = (() => {
           allowDangerousEmailAccountLinking: true,
         })
       : null,
+
+    process.env.WECHAT_APP_ID && process.env.WECHAT_APP_SECRET
+      ? {
+          id: "wechat",
+          name: "WeChat",
+          type: "oauth" as const,
+          authorization: {
+            url: "https://open.weixin.qq.com/connect/qrconnect",
+            params: {
+              appid: process.env.WECHAT_APP_ID,
+              response_type: "code",
+              scope: "snsapi_login",
+            },
+          },
+          token: {
+            url: "https://api.weixin.qq.com/sns/oauth2/access_token",
+            async request({ params }: { params: { code?: string } }) {
+              const res = await fetch(
+                `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${process.env.WECHAT_APP_ID}&secret=${process.env.WECHAT_APP_SECRET}&code=${params.code}&grant_type=authorization_code`
+              );
+              const data = await res.json();
+              return { tokens: { access_token: data.access_token, id_token: data.openid } };
+            },
+          },
+          userinfo: {
+            url: "https://api.weixin.qq.com/sns/userinfo",
+            async request({ tokens }: { tokens: { access_token?: string; id_token?: string } }) {
+              const res = await fetch(
+                `https://api.weixin.qq.com/sns/userinfo?access_token=${tokens.access_token}&openid=${tokens.id_token}&lang=zh_CN`
+              );
+              return await res.json();
+            },
+          },
+          profile(profile: any) {
+            return {
+              id: profile.unionid || profile.openid,
+              name: profile.nickname,
+              image: profile.headimgurl,
+              email: null,
+            };
+          },
+          clientId: process.env.WECHAT_APP_ID,
+          clientSecret: process.env.WECHAT_APP_SECRET,
+          allowDangerousEmailAccountLinking: true,
+        }
+      : null,
   ].filter(Boolean) as NonNullable<NextAuthOptions["providers"][number]>[];
 
   return {
@@ -75,7 +120,10 @@ export const authOptions: NextAuthOptions = (() => {
     },
     providers: [
       ...oauthProviders,
+
+      // ── Email + Password ───────────────────────────────────────────
       CredentialsProvider({
+        id: "credentials",
         name: "Credentials",
         credentials: {
           email: { label: "Email", type: "email" },
@@ -146,7 +194,99 @@ export const authOptions: NextAuthOptions = (() => {
             image: user.image
           };
         }
-      })
+      }),
+
+      // ── Wallet Login (SIWE — Sign In With Ethereum) ────────────────
+      CredentialsProvider({
+        id: "wallet",
+        name: "Wallet",
+        credentials: {
+          message: { label: "Message", type: "text" },
+          signature: { label: "Signature", type: "text" },
+        },
+        async authorize(credentials) {
+          if (!credentials?.message || !credentials?.signature) return null;
+
+          try {
+            const siweMessage = new SiweMessage(credentials.message);
+            const result = await siweMessage.verify({ signature: credentials.signature });
+            if (!result.success) return null;
+
+            const address = result.data.address.toLowerCase();
+
+            let user = await prisma.user.findUnique({ where: { walletAddress: address } });
+
+            if (!user) {
+              user = await prisma.user.create({
+                data: {
+                  walletAddress: address,
+                  name: `${address.slice(0, 6)}...${address.slice(-4)}`,
+                  accountStatus: "ACTIVE",
+                },
+              });
+            }
+
+            if (user.accountStatus === "LOCKED" || user.accountStatus === "OFFBOARDED" || user.accountStatus === "SUSPENDED") {
+              return null;
+            }
+
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { lastLoginAt: new Date() },
+            });
+
+            return { id: user.id, email: user.email, name: user.name, image: user.image };
+          } catch {
+            return null;
+          }
+        },
+      }),
+
+      // ── Phone Number Login (SMS OTP) ───────────────────────────────
+      CredentialsProvider({
+        id: "phone",
+        name: "Phone",
+        credentials: {
+          phone: { label: "Phone", type: "text" },
+          code: { label: "Code", type: "text" },
+        },
+        async authorize(credentials) {
+          const phone = credentials?.phone?.trim();
+          const code = credentials?.code?.trim();
+          if (!phone || !code) return null;
+
+          const { verifyOTP } = await import("@/lib/modules/sms/otp");
+          const valid = await verifyOTP(phone, code);
+          if (!valid) return null;
+
+          let user = await prisma.user.findUnique({ where: { phone } });
+
+          if (!user) {
+            user = await prisma.user.create({
+              data: {
+                phone,
+                phoneVerified: new Date(),
+                name: phone.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2"),
+                accountStatus: "ACTIVE",
+              },
+            });
+          } else {
+            if (user.accountStatus === "LOCKED" || user.accountStatus === "OFFBOARDED" || user.accountStatus === "SUSPENDED") {
+              return null;
+            }
+            if (!user.phoneVerified) {
+              await prisma.user.update({ where: { id: user.id }, data: { phoneVerified: new Date() } });
+            }
+          }
+
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { lastLoginAt: new Date() },
+          });
+
+          return { id: user.id, email: user.email, name: user.name, image: user.image };
+        },
+      }),
     ],
     callbacks: {
       async jwt({ token, user, account }) {

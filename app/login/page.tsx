@@ -2,8 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { LoginForm } from "./ui";
-import { OAuthButtons } from "./oauth-buttons";
+import { LoginTabs } from "./login-tabs";
 import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -42,13 +41,7 @@ export default async function LoginPage({
             </p>
           )}
 
-          <OAuthButtons />
-
-          <div className="auth-divider">
-            <span>or continue with email</span>
-          </div>
-
-          <LoginForm />
+          <LoginTabs />
 
           <p className="auth-footer-link">
             Don&apos;t have an account?{" "}

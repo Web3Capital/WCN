@@ -3,7 +3,9 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { SignupForm } from "./ui";
-import { OAuthButtons } from "../login/oauth-buttons";
+import { OAuthButtons, WalletLoginButton } from "../login/oauth-buttons";
+import { PhoneLoginForm } from "../login/phone-form";
+import { SignupTabs } from "./signup-tabs";
 import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -25,13 +27,7 @@ export default async function SignupPage() {
         </div>
 
         <div className="card auth-card">
-          <OAuthButtons />
-
-          <div className="auth-divider">
-            <span>or sign up with email</span>
-          </div>
-
-          <SignupForm />
+          <SignupTabs />
 
           <p className="auth-footer-link">
             Already have an account?{" "}

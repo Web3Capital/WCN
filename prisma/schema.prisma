@@ -404,6 +404,10 @@ model User {
   role          Role          @default(USER)
   accountStatus AccountStatus @default(ACTIVE)
 
+  phone         String?       @unique
+  phoneVerified DateTime?
+  walletAddress String?       @unique
+
   twoFactorSecret  String?
   twoFactorEnabled Boolean  @default(false)
   ndaAcceptedAt    DateTime?
