@@ -3,9 +3,16 @@ import { getPrisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
+function isValidSecret(secret: string | null): boolean {
+  if (!secret) return false;
+  if (process.env.CRON_SECRET && secret === process.env.CRON_SECRET) return true;
+  if (process.env.NEXTAUTH_SECRET && secret === process.env.NEXTAUTH_SECRET) return true;
+  return false;
+}
+
 export async function GET(req: NextRequest) {
   const secret = req.nextUrl.searchParams.get("secret");
-  if (secret !== process.env.CRON_SECRET) {
+  if (!isValidSecret(secret)) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
@@ -49,7 +56,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const secret = req.nextUrl.searchParams.get("secret");
-  if (secret !== process.env.CRON_SECRET) {
+  if (!isValidSecret(secret)) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
