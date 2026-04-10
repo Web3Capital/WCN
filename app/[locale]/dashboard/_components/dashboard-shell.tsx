@@ -451,23 +451,25 @@ export function DashboardShell({
 
       <aside id={navId} className="dashboard-sidebar" data-open={open ? "true" : "false"}>
         <div className="dashboard-sidebar-inner">
-          <div className="dashboard-sidebar-brand">
-            <span className="dashboard-sidebar-title">{t("brand")}</span>
-            <span className={`dashboard-role-pill ${isAdmin ? "dashboard-role-pill-admin" : ""}`}>
-              {roleLabelText}
-            </span>
-          </div>
-          <div className="sidebar-user-row">
+          <div className="dashboard-scope-switcher">
             <span className="user-avatar" style={{ width: 28, height: 28, fontSize: 11 }}>
               {(displayName || "?").charAt(0).toUpperCase()}
             </span>
-            <p className="dashboard-sidebar-user muted" title={email} style={{ margin: 0 }}>
-              {displayName}
-            </p>
+            <div className="dashboard-scope-info">
+              <span className="dashboard-scope-name">{displayName}</span>
+              <span className={`dashboard-role-pill ${isAdmin ? "dashboard-role-pill-admin" : ""}`}>
+                {roleLabelText}
+              </span>
+            </div>
+            <ChevronDown size={16} className="dashboard-scope-chevron" aria-hidden />
+          </div>
+
+          <div className="dashboard-sidebar-search">
+            <GlobalSearch />
           </div>
 
           <nav className="dashboard-nav" aria-label={tShell("navAria")}>
-            {GROUP_DEFS.map((group) => {
+            {GROUP_DEFS.map((group, groupIndex) => {
               const visibleItems = group.items.filter((item) => {
                 if (!item.roles) return true;
                 return item.roles.includes(role);
@@ -475,7 +477,7 @@ export function DashboardShell({
               if (visibleItems.length === 0) return null;
               return (
                 <div key={group.titleKey} className="dashboard-nav-group">
-                  <div className="dashboard-nav-heading">{tGroups(group.titleKey)}</div>
+                  {groupIndex > 0 && <div className="dashboard-nav-divider" />}
                   <ul className="dashboard-nav-list">
                     {visibleItems.map((item) => {
                       const active = pathMatches(pathname, item.href);
@@ -534,7 +536,6 @@ export function DashboardShell({
             )}
           </div>
           <div className="dashboard-topbar-right">
-            <GlobalSearch />
             <NotificationBell />
             <AccountMenu displayName={displayName} email={email} />
           </div>
