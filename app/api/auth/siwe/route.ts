@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { generateNonce } from "siwe";
 
 export async function GET() {
+  const { generateNonce } = await import("siwe");
   const nonce = generateNonce();
   return NextResponse.json({ nonce });
 }

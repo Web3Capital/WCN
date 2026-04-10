@@ -7,7 +7,6 @@ import GitHubProvider from "next-auth/providers/github";
 import AppleProvider from "next-auth/providers/apple";
 import AzureADProvider from "next-auth/providers/azure-ad";
 import bcrypt from "bcryptjs";
-import { SiweMessage } from "siwe";
 
 /*
  * OAuth Environment Variables (add to Vercel / .env.local):
@@ -208,6 +207,7 @@ export const authOptions: NextAuthOptions = (() => {
           if (!credentials?.message || !credentials?.signature) return null;
 
           try {
+            const { SiweMessage } = await import("siwe");
             const siweMessage = new SiweMessage(credentials.message);
             const result = await siweMessage.verify({ signature: credentials.signature });
             if (!result.success) return null;
