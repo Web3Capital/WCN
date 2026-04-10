@@ -7,10 +7,10 @@
 ## Current State Assessment (2026-04-10)
 
 ```
-Built:    ██████████████████████████░░░░░░  80%
+Built:    ████████████████████████████████░  88%
   ├── Database schema: 44 models, production-shaped
-  ├── API layer: 73+ endpoints, all standardized (apiOk/apiError + Zod)
-  ├── Dashboard: 35+ pages with CRUD consoles (inc. Matches, PoB detail, Disputes detail)
+  ├── API layer: 79+ endpoints, all standardized (apiOk/apiError + Zod)
+  ├── Dashboard: 37+ pages with CRUD consoles + review queues
   ├── Auth: Email + OAuth (Google/MS/Apple/GitHub) + 2FA
   ├── Wiki: 15 chapters, 91 pages, professionally written
   ├── State machines: Account, Deal, Node, Task, Evidence, Settlement, Match
@@ -23,11 +23,15 @@ Built:    ███████████████████████�
   ├── ✅ Email notifications (Resend + 8 templates, event-driven)
   ├── ✅ Anti-gaming engine v1 (self-dealing, circular deal, velocity)
   ├── ✅ Task review workflow (submit output + evidence + approve/reject)
-  ├── ✅ Test framework: Vitest, 70 tests, 7 test suites
-  └── ✅ Rate limiting: Upstash Redis sliding window (API/auth/admin tiers)
+  ├── ✅ Test framework: Vitest, 84 tests, 8 test suites
+  ├── ✅ Rate limiting: Upstash Redis sliding window (API/auth/admin tiers)
+  ├── ✅ Agent SDK: Vercel AI SDK (OpenAI + Anthropic multi-provider)
+  ├── ✅ 4 Agent types: Research, Deal, Execution, Growth with structured output
+  ├── ✅ Agent execution: POST /api/agents/:id/run + review workflow
+  └── ✅ Agent event triggers: PROJECT_CREATED → Research, MATCH_GENERATED → Deal Memo
 
-Missing:  ░░░░░░░░░░████████████████████░░  20%
-  ├── Agent LLM integration (all 4 agent types) — Phase 3
+Missing:  ░░░░░░░░░░░░░░████████████████░░  12%
+  ├── Scheduled Agent runs (cron) — Phase 3.5
   ├── Payment execution (crypto settlement) — Phase 4
   ├── Distribution system (whole module) — Phase 4
   ├── Reputation system (whole module) — Phase 4

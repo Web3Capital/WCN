@@ -54,7 +54,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   if (body?.freezeLevel !== undefined) {
     const level = body.freezeLevel;
-    const allowed = new Set(["L1_TASK", "L2_INSTANCE", "L3_CLASS", null]);
+    const allowed = new Set(["L1_PAUSE_TASK", "L2_PAUSE_INSTANCE", "L3_PAUSE_CLASS", null]);
     if (!allowed.has(level)) return apiValidationError([{ path: "freezeLevel", message: "Invalid freeze level." }]);
     data.freezeLevel = level;
 

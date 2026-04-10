@@ -19,7 +19,11 @@ export default async function AgentDetailPage({ params }: { params: Promise<{ id
       ownerNode: { select: { id: true, name: true } },
       permissions: { orderBy: { createdAt: "desc" } },
       logs: { orderBy: { createdAt: "desc" }, take: 50 },
-      runs: { orderBy: { startedAt: "desc" }, take: 50, include: { task: { select: { id: true, title: true } } } },
+      runs: {
+        orderBy: { startedAt: "desc" },
+        take: 50,
+        include: { task: { select: { id: true, title: true } } },
+      },
     },
   });
   if (!agent) redirect("/dashboard/agents");

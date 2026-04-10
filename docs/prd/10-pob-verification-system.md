@@ -104,18 +104,18 @@ Adjustment factors:
 ## 6. Feature Breakdown
 
 ### P0
-- [ ] PoB Event generation from approved Evidence Packets
-- [ ] Attribution calculation engine
-- [ ] PoB event list and detail views
-- [ ] Per-node PoB history
-- [ ] Basic anti-gaming checks (circular, self-dealing)
-- [ ] PoB flagging mechanism
+- [x] PoB Event generation from approved Evidence Packets
+- [x] Attribution calculation engine
+- [x] PoB event list and detail views
+- [x] Per-node PoB history
+- [x] Basic anti-gaming checks (circular, self-dealing)
+- [x] PoB flagging mechanism
 - [ ] PoB immutability (no edit after creation)
 
 ### P1
-- [ ] Advanced anti-gaming (velocity, value anomaly, reviewer rotation)
+- [x] Advanced anti-gaming (velocity, value anomaly, reviewer rotation)
 - [ ] PoB analytics dashboard (network-level PoB metrics)
-- [ ] Attribution dispute mechanism
+- [x] Attribution dispute mechanism
 - [ ] PoB-to-reputation score pipeline
 
 ### P2

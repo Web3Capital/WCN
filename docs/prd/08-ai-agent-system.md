@@ -113,27 +113,27 @@ AgentLog
 ## 5. Feature Breakdown
 
 ### P0 — Must Have
-- [ ] Agent registry (deploy, configure, manage instances)
+- [x] Agent registry (deploy, configure, manage instances)
 - [ ] Agent assignment to Deal Rooms
-- [ ] Research Agent: project summary generation
-- [ ] Execution Agent: meeting notes extraction, action item tracking
-- [ ] Agent output review workflow (approve/modify/reject)
-- [ ] Complete audit logging of all Agent actions
+- [x] Research Agent: project summary generation
+- [x] Execution Agent: meeting notes extraction, action item tracking
+- [x] Agent output review workflow (approve/modify/reject)
+- [x] Complete audit logging of all Agent actions
 - [ ] Permission level enforcement (READ/ANALYZE/SUGGEST/ACT)
-- [ ] Agent pause/disable mechanism
+- [x] Agent pause/disable mechanism
 
 ### P1 — Should Have
-- [ ] Deal Agent: project-capital matching with match memos
-- [ ] Growth Agent: content draft generation
+- [x] Deal Agent: project-capital matching with match memos
+- [x] Growth Agent: content draft generation
 - [ ] Agent performance dashboard (adoption rate, accuracy, speed)
-- [ ] Agent cost tracking per execution
+- [x] Agent cost tracking per execution
 - [ ] Scheduled Agent runs (daily research updates, weekly pipeline reports)
 - [ ] Agent output feeds into PoB attribution
 
 ### P2 — Nice to Have
 - [ ] Custom Agent creation (node builds own Agent with WCN SDK)
 - [ ] Agent marketplace (nodes share/sell Agent configurations)
-- [ ] Multi-model support (GPT-4, Claude, Gemini interchangeable)
+- [x] Multi-model support (GPT-4, Claude, Gemini interchangeable)
 - [ ] Agent A/B testing framework
 - [ ] Agent chain-of-thought transparency (show reasoning to reviewers)
 

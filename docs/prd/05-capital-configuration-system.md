@@ -89,10 +89,10 @@ CapitalDeployment
 ## 4. Feature Breakdown
 
 ### P0 — Must Have
-- [ ] Capital profile setup (preferences, ticket range, sectors, stages)
-- [ ] Project-capital matching engine (multi-factor scoring)
-- [ ] Match list view with scores and reasons
-- [ ] Express interest / Pass workflow
+- [x] Capital profile setup (preferences, ticket range, sectors, stages)
+- [x] Project-capital matching engine (multi-factor scoring)
+- [x] Match list view with scores and reasons
+- [x] Express interest / Pass workflow
 - [ ] Capital pipeline dashboard (New → Reviewing → In Deal → Funded → Passed)
 - [ ] Match memo generation (Research Agent)
 

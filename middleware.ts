@@ -72,7 +72,7 @@ export async function middleware(request: NextRequest) {
 
   if (!token) {
     if (pathname.startsWith("/api/")) {
-      return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ ok: false, error: { code: "UNAUTHORIZED", message: "Authentication required." } }, { status: 401 });
     }
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
@@ -81,7 +81,7 @@ export async function middleware(request: NextRequest) {
 
   if (token.accountStatus && BLOCKED_STATUSES.has(token.accountStatus as string)) {
     if (pathname.startsWith("/api/")) {
-      return NextResponse.json({ ok: false, error: "Account blocked" }, { status: 403 });
+      return NextResponse.json({ ok: false, error: { code: "FORBIDDEN", message: "Account is blocked." } }, { status: 403 });
     }
     if (pathname !== "/account" && !pathname.startsWith("/account/")) {
       return NextResponse.redirect(new URL("/login?error=blocked", request.url));

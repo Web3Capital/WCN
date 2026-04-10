@@ -245,9 +245,26 @@ enum AgentStatus {
 }
 
 enum AgentRunStatus {
+  RUNNING
   SUCCESS
   FAILED
   CANCELLED
+}
+
+enum AgentRunReviewStatus {
+  PENDING
+  APPROVED
+  MODIFIED
+  REJECTED
+}
+
+enum AgentOutputType {
+  REPORT
+  MATCH_MEMO
+  MEETING_NOTES
+  CONTENT_DRAFT
+  TASK_SUGGESTIONS
+  ALERT
 }
 
 enum AgentOverrideLevel {
@@ -405,6 +422,7 @@ model User {
   filesUploaded        File[]              @relation("FileUploader")
   termsAcceptances     TermsAcceptance[]
   roleAssignmentsGranted RoleAssignment[]  @relation("RoleGrantedBy")
+  agentRunsReviewed      AgentRun[]        @relation("AgentRunReviewer")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1191,21 +1209,31 @@ model AgentPermission {
 }
 
 model AgentRun {
-  id         String         @id @default(cuid())
-  workspaceId String?
-  agentId    String
-  agent      Agent          @relation(fields: [agentId], references: [id], onDelete: Cascade)
-  taskId     String?
-  task       Task?          @relation(fields: [taskId], references: [id], onDelete: SetNull)
-  status     AgentRunStatus @default(SUCCESS)
-  inputs     Json?
-  outputs    Json?
-  cost       Float?
-  startedAt  DateTime       @default(now())
-  finishedAt DateTime?
+  id              String                @id @default(cuid())
+  workspaceId     String?
+  agentId         String
+  agent           Agent                 @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  taskId          String?
+  task            Task?                 @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  status          AgentRunStatus        @default(RUNNING)
+  inputs          Json?
+  outputs         Json?
+  outputType      AgentOutputType?
+  reviewStatus    AgentRunReviewStatus?
+  reviewedById    String?
+  reviewedBy      User?                 @relation("AgentRunReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewNotes     String?
+  tokenCount      Int?
+  executionTimeMs Int?
+  modelId         String?
+  cost            Float?
+  triggeredBy     String?
+  startedAt       DateTime              @default(now())
+  finishedAt      DateTime?
 
   @@index([agentId, startedAt])
   @@index([taskId])
+  @@index([reviewStatus])
 }
 
 model AgentLog {

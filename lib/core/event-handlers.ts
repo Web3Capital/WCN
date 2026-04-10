@@ -29,6 +29,7 @@ import type {
   EntityFrozenEvent,
   ApprovalRequestedEvent,
   ApprovalGrantedEvent,
+  AgentOutputGeneratedEvent,
 } from "./event-types";
 import { writeAudit } from "@/lib/audit";
 import { createNotification, notifyMany } from "@/lib/notifications";
@@ -489,6 +490,66 @@ export function initEventHandlers(): void {
         entityType: "Dispute",
         entityId: payload.disputeId,
       });
+    }
+  });
+
+  // ─── Project Created → Auto-trigger Research Agent ──────────
+  eventBus.on<ProjectCreatedEvent>(Events.PROJECT_CREATED, async (payload) => {
+    try {
+      const prisma = getPrisma();
+      const researchAgent = await prisma.agent.findFirst({
+        where: { type: "RESEARCH", status: "ACTIVE" },
+        select: { id: true },
+      });
+      if (!researchAgent) return;
+
+      const { runResearchAgent } = await import("@/lib/modules/agents/executor");
+      await runResearchAgent(researchAgent.id, payload.projectId, "system:event");
+      console.log(`[Agent] Research Agent auto-triggered for project ${payload.projectId}`);
+    } catch (e) {
+      console.error("[Agent] Research Agent auto-trigger failed:", e);
+    }
+  });
+
+  // ─── Match Generated → Auto-trigger Deal Agent memo ────────
+  eventBus.on<MatchGeneratedEvent>(Events.MATCH_GENERATED, async (payload) => {
+    try {
+      const prisma = getPrisma();
+      const dealAgent = await prisma.agent.findFirst({
+        where: { type: "DEAL", status: "ACTIVE" },
+        select: { id: true },
+      });
+      if (!dealAgent) return;
+
+      const { runDealAgent } = await import("@/lib/modules/agents/executor");
+      await runDealAgent(dealAgent.id, payload.matchId, "system:event");
+      console.log(`[Agent] Deal Agent auto-triggered for match ${payload.matchId}`);
+    } catch (e) {
+      console.error("[Agent] Deal Agent auto-trigger failed:", e);
+    }
+  });
+
+  // ─── Agent Output Generated → Notify reviewers ────────────
+  eventBus.on<AgentOutputGeneratedEvent>(Events.AGENT_OUTPUT_GENERATED, async (payload) => {
+    try {
+      const prisma = getPrisma();
+      const admins = await prisma.user.findMany({
+        where: { role: "ADMIN", accountStatus: "ACTIVE" },
+        select: { id: true },
+        take: 10,
+      });
+      if (admins.length === 0) return;
+      await notifyMany(
+        admins.map((a) => a.id),
+        {
+          type: "GENERAL",
+          title: `Agent output ready for review (${payload.outputType})`,
+          entityType: "AgentRun",
+          entityId: payload.runId,
+        },
+      );
+    } catch (e) {
+      console.error("[Agent] Output notification failed:", e);
     }
   });
 

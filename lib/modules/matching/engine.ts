@@ -252,7 +252,7 @@ export async function regenerateMatchesForCapital(
 
   const projects = await prisma.project.findMany({
     where: { status: { in: ["SUBMITTED", "SCREENED", "CURATED", "IN_DEAL_ROOM", "ACTIVE"] } },
-    select: { id: true, sector: true, stage: true, fundraisingNeed: true, workspaceId: true },
+    select: { id: true, sector: true, stage: true, fundraisingNeed: true, workspaceId: true, nodeId: true },
   });
 
   let matchCount = 0;
@@ -260,6 +260,14 @@ export async function regenerateMatchesForCapital(
   for (const project of projects) {
     const scored = scoreProjectCapital(project, capital, weights);
     if (!scored || scored.score < MATCH_THRESHOLD) {
+      await prisma.match.deleteMany({
+        where: { projectId: project.id, capitalProfileId },
+      });
+      continue;
+    }
+
+    const selfDeal = await checkSelfDealing(project.nodeId, scored.capitalNodeId);
+    if (selfDeal) {
       await prisma.match.deleteMany({
         where: { projectId: project.id, capitalProfileId },
       });

@@ -173,52 +173,56 @@ export async function calculateAttribution(dealId: string): Promise<AttributionR
     select: { id: true },
   });
 
-  let pobId: string;
+  const pobId = await prisma.$transaction(async (tx) => {
+    let id: string;
 
-  if (existingPob) {
-    await prisma.poBRecord.update({
-      where: { id: existingPob.id },
-      data: {
-        baseValue,
-        qualityMult,
-        timeMult,
-        score: finalScore,
-        version: { increment: 1 },
-      },
-    });
-    await prisma.attribution.deleteMany({ where: { pobId: existingPob.id } });
-    pobId = existingPob.id;
-  } else {
-    const pob = await prisma.poBRecord.create({
-      data: {
-        businessType: "DEAL_CLOSE",
-        baseValue,
-        qualityMult,
-        timeMult,
-        score: finalScore,
-        dealId,
-        projectId: deal.projectId,
-        nodeId: deal.leadNodeId,
-        leadNodeId: deal.leadNodeId,
-        supportingNodeIds: collabNodes,
-        pobEventStatus: "EFFECTIVE",
-        status: "APPROVED",
-      },
-    });
-    pobId = pob.id;
-  }
+    if (existingPob) {
+      await tx.poBRecord.update({
+        where: { id: existingPob.id },
+        data: {
+          baseValue,
+          qualityMult,
+          timeMult,
+          score: finalScore,
+          version: { increment: 1 },
+        },
+      });
+      await tx.attribution.deleteMany({ where: { pobId: existingPob.id } });
+      id = existingPob.id;
+    } else {
+      const pob = await tx.poBRecord.create({
+        data: {
+          businessType: "DEAL_CLOSE",
+          baseValue,
+          qualityMult,
+          timeMult,
+          score: finalScore,
+          dealId,
+          projectId: deal.projectId,
+          nodeId: deal.leadNodeId,
+          leadNodeId: deal.leadNodeId,
+          supportingNodeIds: collabNodes,
+          pobEventStatus: "EFFECTIVE",
+          status: "APPROVED",
+        },
+      });
+      id = pob.id;
+    }
 
-  for (const attr of attributions) {
-    await prisma.attribution.create({
-      data: {
-        pobId,
-        nodeId: attr.nodeId,
-        role: attr.role,
-        shareBps: attr.shareBps,
-        evidenceRefs: attr.evidenceIds,
-      },
-    });
-  }
+    for (const attr of attributions) {
+      await tx.attribution.create({
+        data: {
+          pobId: id,
+          nodeId: attr.nodeId,
+          role: attr.role,
+          shareBps: attr.shareBps,
+          evidenceRefs: attr.evidenceIds,
+        },
+      });
+    }
+
+    return id;
+  });
 
   await eventBus.emit<PoBCreatedEvent>(Events.POB_CREATED, {
     pobId,

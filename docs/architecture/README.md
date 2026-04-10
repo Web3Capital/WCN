@@ -10,7 +10,7 @@
 
 WCN (World Collaboration Network) is a **permissioned, AI-augmented business coordination network** for the Web3 industry. It connects capital, projects, services, and distribution resources through a structured pipeline backed by a novel consensus mechanism — Proof of Business (PoB).
 
-This document defines the **master architecture** for the WCN platform: how the 18 systems decompose into layers, how they communicate, how data flows, how the system scales, and how it evolves from its current state (50% built) to a fully operational ecosystem.
+This document defines the **master architecture** for the WCN platform: how the 18 systems decompose into layers, how they communicate, how data flows, how the system scales, and how it evolves from its current state (~88% built) to a fully operational ecosystem.
 
 ---
 
@@ -188,13 +188,15 @@ Write path and read path are separated for:
 ```
 CURRENT (2026-04)                         TARGET (2027-Q2)
 ─────────────────                         ────────────────
-Monolith Next.js app          →           Modular monolith with extractable domains
-44 Prisma models              →           44+ models with clear ownership boundaries
-73 API routes (CRUD-level)    →           73+ routes + event-driven side effects
-UI framework (CRUD consoles)  →           Full workflow UIs with real-time updates
-No Agent AI integration       →           4 Agent types with LLM backends
-No matching engine            →           Multi-factor matching with Agent memos
-No payment execution          →           Crypto + fiat settlement execution
-No email delivery             →           Multi-channel notification delivery
-Manual PoB                    →           Semi-automated PoB with anti-gaming
+Modular monolith (Next.js)    →           Extractable domain microservices
+44 Prisma models (owned)      →           44+ models with clear ownership boundaries
+77+ API routes (event-driven) →           77+ routes + real-time subscriptions
+Event bus + state machines    →           Distributed event bus (Redis Streams)
+Multi-factor matching engine  →           + Agent-generated match memos
+PoB attribution engine        →           + on-chain anchoring
+Anti-gaming v1 (self-dealing) →           + ML-based anomaly detection
+Settlement pipeline (full)    →           + crypto/fiat payment execution
+Email notifications (Resend)  →           Multi-channel (email + push + in-app)
+Rate limiting (Upstash Redis) →           + DDoS protection at edge
+Agent SDK + 4 Agent types     →           Scheduled runs + Agent marketplace
 ```

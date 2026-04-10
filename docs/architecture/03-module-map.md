@@ -165,8 +165,8 @@ Cross-cutting (L4, connect to everything):
 | **Key interfaces** | `getCapitalProfile()`, `runMatching()`, `getMatchResults()` |
 | **Events OUT** | `match.generated`, `match.interest_expressed`, `capital.profile_updated` |
 | **Events IN** | `project.created` → trigger matching; `deal.closed` → update deployment stats |
-| **Core algorithm** | Multi-factor matching: sector(0.30) + stage(0.25) + ticket(0.20) + instrument(0.15) + region(0.10) |
-| **Build status** | 50% — Profile CRUD exists; matching engine NOT built |
+| **Core algorithm** | Multi-factor matching: sector(0.35) + stage(0.25) + ticket(0.25) + jurisdiction(0.15) |
+| **Build status** | 85% — Profile CRUD + matching engine (`lib/modules/matching/engine.ts`) + Match dashboard + event triggers + anti-gaming. Missing: jurisdiction impl, per-workspace weights |
 
 ---
 
@@ -183,7 +183,7 @@ Cross-cutting (L4, connect to everything):
 | **Key interfaces** | `createDeal()`, `transitionDeal()`, `addParticipant()`, `getDealTimeline()` |
 | **Events OUT** | `deal.created`, `deal.stage_changed`, `deal.closed`, `deal.participant_added` |
 | **Events IN** | `match.interest_expressed` → auto-create deal; `task.completed` → update milestone |
-| **Build status** | 60% — CRUD + participants; missing: real-time timeline, evidence marking |
+| **Build status** | 75% — CRUD + participants + milestones + notes + state machine + event-driven. Missing: real-time timeline |
 
 ---
 
@@ -199,7 +199,7 @@ Cross-cutting (L4, connect to everything):
 | **State machine** | Task: TODO → IN_PROGRESS → IN_REVIEW → DONE / CANCELLED / BLOCKED |
 | **Events OUT** | `task.created`, `task.assigned`, `task.completed`, `task.overdue` |
 | **Events IN** | `deal.created` → auto-generate DD tasks; `agent.output_generated` → create review task |
-| **Build status** | 55% — CRUD + assignment; missing: review workflow, Agent auto-creation |
+| **Build status** | 75% — CRUD + assignment + submit output + evidence + review workflow (approve/reject). Missing: Agent auto-creation |
 
 ---
 
@@ -217,7 +217,7 @@ Cross-cutting (L4, connect to everything):
 | **Integration pattern** | Agent SDK → LLM Router → Provider → Output → Human Review Queue |
 | **Events OUT** | `agent.run_started`, `agent.output_generated`, `agent.output_reviewed` |
 | **Events IN** | `project.created` → trigger Research Agent; `deal.created` → assign Execution Agent |
-| **Build status** | 45% — Framework complete; NO LLM integration |
+| **Build status** | 85% — Full Agent SDK (Vercel AI SDK) + LLM Router (OpenAI/Anthropic) + 4 agent types with prompts + structured output schemas + execution endpoint + review queue + event-driven triggers (PROJECT_CREATED → Research, MATCH_GENERATED → Deal Memo) + review dashboard. Missing: scheduled runs, Agent marketplace |
 
 ---
 
@@ -233,7 +233,7 @@ Cross-cutting (L4, connect to everything):
 | **Key flow** | Deal closes → Evidence Packet auto-created → Items assembled → Reviewer assigned → Reviewed |
 | **Events OUT** | `evidence.submitted`, `evidence.approved`, `evidence.rejected` |
 | **Events IN** | `deal.closed` → create packet; `task.completed` → add evidence item |
-| **Build status** | 40% — Evidence CRUD; missing: packet assembly, completeness checking, [id] detail page |
+| **Build status** | 75% — Evidence CRUD + packet assembly (`lib/modules/evidence/assembly.ts`) + completeness checker + event-driven auto-assembly on deal.closed. Missing: reviewer assignment automation |
 
 ---
 
@@ -249,7 +249,7 @@ Cross-cutting (L4, connect to everything):
 | **Key flow** | Evidence approved → Anti-gaming checks → Attribution calculated → PoB event created (immutable) |
 | **Events OUT** | `pob.created`, `pob.flagged`, `pob.dispute_raised` |
 | **Events IN** | `evidence.approved` → generate PoB |
-| **Build status** | 40% — Records + attribution models; missing: calculation engine, anti-gaming, [id] detail page |
+| **Build status** | 80% — Records + attribution engine (`lib/modules/pob/attribution.ts`) + anti-gaming v1 (`lib/modules/risk/anti-gaming.ts`) + [id] detail page + confirmations + disputes. Missing: on-chain anchoring |
 
 ---
 
@@ -265,7 +265,7 @@ Cross-cutting (L4, connect to everything):
 | **Key flow** | Period closes → Aggregate PoB → Calculate per-node → Admin review → Distribute |
 | **Events OUT** | `settlement.calculated`, `settlement.approved`, `settlement.distributed` |
 | **Events IN** | `pob.created` → include in next cycle |
-| **Build status** | 55% — Cycle management; missing: payment execution, multi-currency |
+| **Build status** | 70% — Cycle management + line generation + PoB aggregation + lock/export/reopen flow + event pipeline (CALCULATED/APPROVED/DISTRIBUTED). Missing: payment execution, multi-currency |
 
 ---
 

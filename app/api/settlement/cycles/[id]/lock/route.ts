@@ -4,6 +4,9 @@ import { requirePermission } from "@/lib/admin";
 import { canTransitionSettlement } from "@/lib/state-machines/settlement";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
+import type { SettlementApprovedEvent } from "@/lib/core/event-types";
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -69,6 +72,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     targetId: updated.id,
     metadata: { previousStatus: cycle.status },
   });
+
+  await eventBus.emit<SettlementApprovedEvent>(Events.SETTLEMENT_APPROVED, {
+    cycleId: id,
+    approvedBy: auth.session.user?.id ?? "system",
+  }, { actorId: auth.session.user?.id });
 
   return apiOk({ idempotent: false, cycle: updated });
 }

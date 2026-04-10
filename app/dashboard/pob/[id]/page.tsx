@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
+import { getOwnedNodeIds, memberPoBWhere } from "@/lib/member-data-scope";
 import { PobDetail } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +14,15 @@ export default async function PobDetailPage({ params }: { params: { id: string }
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(session.user.role);
+
+  if (!isAdmin) {
+    const ownedNodeIds = await getOwnedNodeIds(prisma, session.user.id);
+    const allowed = await prisma.poBRecord.findFirst({
+      where: { id: params.id, ...memberPoBWhere(ownedNodeIds) },
+      select: { id: true },
+    });
+    if (!allowed) redirect("/dashboard/pob");
+  }
 
   const record = await prisma.poBRecord.findUnique({
     where: { id: params.id },

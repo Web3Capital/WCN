@@ -4,6 +4,9 @@ import { requirePermission } from "@/lib/admin";
 import { canTransitionSettlement } from "@/lib/state-machines/settlement";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
+import { eventBus } from "@/lib/core/event-bus";
+import { Events } from "@/lib/core/event-types";
+import type { SettlementDistributedEvent } from "@/lib/core/event-types";
 
 export async function POST(_req: Request, { params }: { params: { id: string } }) {
   const auth = await requirePermission("export", "settlement");
@@ -37,6 +40,13 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
     targetId: params.id,
     metadata: { lineCount: cycle.lines.length },
   });
+
+  const totalDistributed = cycle.lines.reduce((sum, l) => sum + l.allocation, 0);
+  await eventBus.emit<SettlementDistributedEvent>(Events.SETTLEMENT_DISTRIBUTED, {
+    cycleId: cycle.id,
+    totalDistributed,
+    nodeCount: cycle.lines.length,
+  }, { actorId: auth.session.user?.id });
 
   return apiOk({ cycle: updated, csv: csvLines.join("\n") });
 }

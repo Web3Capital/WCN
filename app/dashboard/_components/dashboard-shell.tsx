@@ -30,7 +30,8 @@ import {
   ShieldCheck,
   User,
   Users,
-  X
+  X,
+  ScanEye,
 } from "lucide-react";
 import type { Role } from "@prisma/client";
 import { signOut } from "next-auth/react";
@@ -66,6 +67,7 @@ const GROUP_DEFS: NavDef[] = [
     items: [
       { href: "/dashboard/tasks", labelKey: "tasks", icon: <ListTodo size={18} strokeWidth={2} /> },
       { href: "/dashboard/agents", labelKey: "agents", icon: <Bot size={18} strokeWidth={2} /> },
+      { href: "/dashboard/agents/review", labelKey: "agentReview", icon: <ScanEye size={18} strokeWidth={2} /> },
     ],
   },
   {

@@ -17,6 +17,7 @@ export const DASHBOARD_UI: Record<
       | "matches"
       | "tasks"
       | "agents"
+      | "agentReview"
       | "evidenceDesk"
       | "pobRecords"
       | "disputes"
@@ -80,6 +81,7 @@ export const DASHBOARD_UI: Record<
       matches: "Matches",
       tasks: "Tasks",
       agents: "Agents",
+      agentReview: "Agent Review",
       evidenceDesk: "Evidence Desk",
       pobRecords: "PoB records",
       disputes: "Disputes",
@@ -182,6 +184,7 @@ export const DASHBOARD_UI: Record<
       matches: "匹配",
       tasks: "任务",
       agents: "智能体",
+      agentReview: "智能体审核",
       evidenceDesk: "证据台",
       pobRecords: "PoB 记录",
       disputes: "争议",
