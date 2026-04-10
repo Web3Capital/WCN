@@ -30,6 +30,7 @@ function isPublicPath(pathname: string): boolean {
   if (pathname.startsWith("/api/v1/")) return true;
   if (pathname === "/api/health") return true;
   if (pathname === "/api/cron") return true;
+  if (pathname === "/api/admin/account-status") return true;
   return false;
 }
 

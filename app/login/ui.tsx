@@ -37,6 +37,16 @@ export function LoginForm() {
       return;
     }
 
+    if (res?.error === "ACCOUNT_LOCKED") {
+      setError("Your account has been locked due to too many failed login attempts. Please contact support to unlock your account.");
+      return;
+    }
+
+    if (res?.error === "ACCOUNT_SUSPENDED") {
+      setError("Your account has been suspended. Please contact support for assistance.");
+      return;
+    }
+
     if (res?.error) {
       setError("Invalid email or password.");
       return;

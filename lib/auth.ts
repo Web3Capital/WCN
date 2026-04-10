@@ -137,8 +137,11 @@ export const authOptions: NextAuthOptions = (() => {
           const user = await prisma.user.findUnique({ where: { email } });
           if (!user?.passwordHash) return null;
 
-          if (user.accountStatus === "LOCKED" || user.accountStatus === "OFFBOARDED" || user.accountStatus === "SUSPENDED") {
-            return null;
+          if (user.accountStatus === "LOCKED") {
+            throw new Error("ACCOUNT_LOCKED");
+          }
+          if (user.accountStatus === "SUSPENDED" || user.accountStatus === "OFFBOARDED") {
+            throw new Error("ACCOUNT_SUSPENDED");
           }
 
           if (user.failedLoginCount >= MAX_FAILED_ATTEMPTS) {
@@ -146,7 +149,7 @@ export const authOptions: NextAuthOptions = (() => {
               where: { id: user.id },
               data: { accountStatus: "LOCKED", lockedAt: new Date(), lockReason: "max_failed_attempts" }
             });
-            return null;
+            throw new Error("ACCOUNT_LOCKED");
           }
 
           const ok = await bcrypt.compare(password, user.passwordHash);
