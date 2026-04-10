@@ -15,6 +15,7 @@ export interface RateLimitResult {
 }
 
 const noopResult: RateLimitResult = { success: true, limit: 0, remaining: 0, reset: 0 };
+const failClosedResult: RateLimitResult = { success: false, limit: 0, remaining: 0, reset: 0 };
 
 let _apiLimiter: Ratelimit | null = null;
 let _authLimiter: Ratelimit | null = null;
@@ -57,7 +58,10 @@ function getAdminLimiter(): Ratelimit | null {
 }
 
 async function check(limiter: Ratelimit | null, identifier: string): Promise<RateLimitResult> {
-  if (!limiter) return noopResult;
+  if (!limiter) {
+    if (process.env.NODE_ENV === "production") return failClosedResult;
+    return noopResult;
+  }
   try {
     const result = await limiter.limit(identifier);
     return {
@@ -67,6 +71,7 @@ async function check(limiter: Ratelimit | null, identifier: string): Promise<Rat
       reset: result.reset,
     };
   } catch {
+    if (process.env.NODE_ENV === "production") return failClosedResult;
     return noopResult;
   }
 }

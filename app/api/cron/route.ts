@@ -89,7 +89,22 @@ export async function GET(req: NextRequest) {
     results.agents = { error: e instanceof Error ? e.message : "Failed" };
   }
 
-  // 3. Cleanup expired matches
+  // 3. Process outbox events
+  try {
+    const { processOutbox, cleanupOutbox } = await import("@/lib/core/outbox");
+    const processed = await processOutbox();
+    results.outbox = { processed };
+
+    // Weekly cleanup (run on Sundays)
+    if (new Date().getDay() === 0) {
+      const cleaned = await cleanupOutbox();
+      results.outboxCleanup = { cleaned };
+    }
+  } catch (e) {
+    results.outbox = { error: (e as Error).message };
+  }
+
+  // 4. Cleanup expired matches
   try {
     const prisma = getPrisma();
     const expired = await prisma.match.updateMany({

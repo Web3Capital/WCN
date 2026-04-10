@@ -1,8 +1,9 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireSignedIn } from "@/lib/admin";
-import { apiOk, apiUnauthorized, apiValidationError, apiNotFound } from "@/lib/core/api-response";
+import { apiOk, apiUnauthorized, apiValidationError, apiNotFound, apiForbidden } from "@/lib/core/api-response";
 import { createApiKey, revokeApiKey } from "@/lib/modules/apikeys/service";
+import { isAdminRole } from "@/lib/permissions";
 import { z } from "zod";
 
 const createSchema = z.object({
@@ -38,11 +39,32 @@ export async function POST(req: Request) {
   }
 
   const prisma = getPrisma();
+  const userId = auth.session.user!.id;
+  const userRole = (auth.session.user as any).role ?? "USER";
+  const scopes = parsed.data.scopes ?? ["read"];
+
+  if (scopes.includes("*") && !isAdminRole(userRole)) {
+    return apiForbidden("Wildcard scope requires ADMIN role.");
+  }
+
+  if (parsed.data.nodeId) {
+    const node = await prisma.node.findUnique({
+      where: { id: parsed.data.nodeId },
+      select: { ownerUserId: true },
+    });
+    if (!node) {
+      return apiNotFound("Node");
+    }
+    if (node.ownerUserId !== userId && !isAdminRole(userRole)) {
+      return apiForbidden("You can only create API keys for nodes you own.");
+    }
+  }
+
   const result = await createApiKey(prisma, {
     name: parsed.data.name,
-    userId: auth.session.user!.id,
+    userId,
     nodeId: parsed.data.nodeId,
-    scopes: parsed.data.scopes ?? ["read"],
+    scopes,
     rateLimit: parsed.data.rateLimit,
     expiresInDays: parsed.data.expiresInDays,
   });

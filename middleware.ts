@@ -62,8 +62,16 @@ function rateLimitResponse(result: { limit: number; remaining: number; reset: nu
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Inject request ID for correlation — attached to every response
+  const requestId = request.headers.get("x-request-id") || `req_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+
+  function withRequestId(response: NextResponse): NextResponse {
+    response.headers.set("x-request-id", requestId);
+    return response;
+  }
+
   if (isPublicPath(pathname)) {
-    return NextResponse.next();
+    return withRequestId(NextResponse.next());
   }
 
   const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
@@ -72,24 +80,24 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith("/api/") && AUTH_PATHS.some((p) => pathname.startsWith(p))) {
     const ip = getClientIp(request);
     const rl = await rateLimitAuth(ip);
-    if (!rl.success) return rateLimitResponse(rl);
+    if (!rl.success) return withRequestId(rateLimitResponse(rl));
   }
 
   if (!token) {
     if (pathname.startsWith("/api/")) {
-      return NextResponse.json({ ok: false, error: { code: "UNAUTHORIZED", message: "Authentication required." } }, { status: 401 });
+      return withRequestId(NextResponse.json({ ok: false, error: { code: "UNAUTHORIZED", message: "Authentication required." } }, { status: 401 }));
     }
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(loginUrl);
+    return withRequestId(NextResponse.redirect(loginUrl));
   }
 
   if (token.accountStatus && BLOCKED_STATUSES.has(token.accountStatus as string)) {
     if (pathname.startsWith("/api/")) {
-      return NextResponse.json({ ok: false, error: { code: "FORBIDDEN", message: "Account is blocked." } }, { status: 403 });
+      return withRequestId(NextResponse.json({ ok: false, error: { code: "FORBIDDEN", message: "Account is blocked." } }, { status: 403 }));
     }
     if (pathname !== "/account" && !pathname.startsWith("/account/")) {
-      return NextResponse.redirect(new URL("/login?error=blocked", request.url));
+      return withRequestId(NextResponse.redirect(new URL("/login?error=blocked", request.url)));
     }
   }
 
@@ -98,9 +106,9 @@ export async function middleware(request: NextRequest) {
     const isAllowed = allowed2faPaths.some((p) => pathname === p || pathname.startsWith(`${p}/`));
     if (!isAllowed) {
       if (pathname.startsWith("/api/")) {
-        return NextResponse.json({ ok: false, error: { code: "2FA_SETUP_REQUIRED", message: "Complete 2FA setup to continue." } }, { status: 403 });
+        return withRequestId(NextResponse.json({ ok: false, error: { code: "2FA_SETUP_REQUIRED", message: "Complete 2FA setup to continue." } }, { status: 403 }));
       }
-      return NextResponse.redirect(new URL("/account/2fa", request.url));
+      return withRequestId(NextResponse.redirect(new URL("/account/2fa", request.url)));
     }
   }
 
@@ -110,14 +118,14 @@ export async function middleware(request: NextRequest) {
 
     if (ADMIN_PATHS.some((p) => pathname.startsWith(p))) {
       const rl = await rateLimitAdmin(userId);
-      if (!rl.success) return rateLimitResponse(rl);
+      if (!rl.success) return withRequestId(rateLimitResponse(rl));
     } else {
       const rl = await rateLimit(userId);
-      if (!rl.success) return rateLimitResponse(rl);
+      if (!rl.success) return withRequestId(rateLimitResponse(rl));
     }
   }
 
-  return NextResponse.next();
+  return withRequestId(NextResponse.next());
 }
 
 export const config = {

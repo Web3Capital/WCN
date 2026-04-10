@@ -201,3 +201,41 @@ export const SettlementMachine = new StateMachine<SettlementCycleStatus>({
   entityType: "Settlement",
   eventName: "settlement.status_changed",
 });
+
+// ─── Backward-compatible function wrappers ──────────────────────
+// These match the signatures previously exported from lib/state-machines/*.ts.
+
+export const canTransitionAccount = (from: AccountStatus, to: AccountStatus) =>
+  AccountMachine.canTransition(from, to);
+export const validNextAccountStatuses = (from: AccountStatus) =>
+  AccountMachine.validNext(from);
+
+export const canTransitionDeal = (from: DealStage, to: DealStage) =>
+  DealMachine.canTransition(from, to);
+export const validNextDealStages = (from: DealStage) =>
+  DealMachine.validNext(from);
+
+export const canTransitionNode = (from: NodeStatus, to: NodeStatus) =>
+  NodeMachine.canTransition(from, to);
+export const validNextNodeStatuses = (from: NodeStatus) =>
+  NodeMachine.validNext(from);
+
+export const canTransitionTask = (from: TaskStatus, to: TaskStatus) =>
+  TaskMachine.canTransition(from, to);
+export const validNextTaskStatuses = (from: TaskStatus) =>
+  TaskMachine.validNext(from);
+
+export const canTransitionEvidence = (from: EvidenceReviewStatus, to: EvidenceReviewStatus) =>
+  EvidenceMachine.canTransition(from, to);
+export const validNextEvidenceStatuses = (from: EvidenceReviewStatus) =>
+  EvidenceMachine.validNext(from);
+
+export const canTransitionPoB = (from: PoBEventStatus, to: PoBEventStatus) =>
+  PoBMachine.canTransition(from, to);
+export const validNextPoBStatuses = (from: PoBEventStatus) =>
+  PoBMachine.validNext(from);
+
+export const canTransitionSettlement = (from: SettlementCycleStatus, to: SettlementCycleStatus) =>
+  SettlementMachine.canTransition(from, to);
+export const validNextSettlementStatuses = (from: SettlementCycleStatus) =>
+  SettlementMachine.validNext(from);

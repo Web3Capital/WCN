@@ -8,8 +8,8 @@ import { z } from "zod";
 const schema = z.object({ sourceId: z.string().min(1) });
 
 export async function POST(req: Request) {
-  const auth = await requirePermission("manage", "Node" as any);
-  if (!auth) return apiUnauthorized();
+  const auth = await requirePermission("manage", "node");
+  if (!auth.ok) return apiUnauthorized();
 
   const body = await req.json().catch(() => ({}));
   const parsed = schema.safeParse(body);

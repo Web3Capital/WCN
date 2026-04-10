@@ -14,8 +14,8 @@ const createSchema = z.object({
 });
 
 export async function GET() {
-  const auth = await requirePermission("manage", "Node" as any);
-  if (!auth) return apiUnauthorized();
+  const auth = await requirePermission("manage", "node");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const sources = await prisma.ingestionSource.findMany({
@@ -27,8 +27,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const auth = await requirePermission("manage", "Node" as any);
-  if (!auth) return apiUnauthorized();
+  const auth = await requirePermission("manage", "node");
+  if (!auth.ok) return apiUnauthorized();
 
   const body = await req.json().catch(() => ({}));
   const parsed = createSchema.safeParse(body);
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
       config: (parsed.data.config as any) ?? {},
       schedule: parsed.data.schedule ?? null,
       enabled: parsed.data.enabled ?? true,
-      createdById: (auth as any).session?.user?.id ?? null,
+      createdById: auth.ok ? auth.session.user?.id ?? null : null,
     },
   });
 

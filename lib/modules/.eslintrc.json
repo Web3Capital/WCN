@@ -1,0 +1,20 @@
+{
+  "rules": {
+    "no-restricted-imports": ["error", {
+      "patterns": [
+        {
+          "group": ["@/lib/modules/*/service*", "@/lib/modules/*/engine*", "@/lib/modules/*/calculator*", "@/lib/modules/*/attribution*", "@/lib/modules/*/assembly*", "@/lib/modules/*/anti-gaming*", "@/lib/modules/*/rule-engine*", "@/lib/modules/*/scoring*", "@/lib/modules/*/executor*", "@/lib/modules/*/context*", "@/lib/modules/*/prompts*", "@/lib/modules/*/router*"],
+          "message": "Import module internals through the barrel export (index.ts) or ports.ts instead."
+        }
+      ]
+    }]
+  },
+  "overrides": [
+    {
+      "files": ["**/handlers.ts", "**/__tests__/**"],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ]
+}
