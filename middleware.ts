@@ -16,7 +16,6 @@ const PUBLIC_PATHS = new Set([
 
 function isPublicPath(pathname: string): boolean {
   if (PUBLIC_PATHS.has(pathname)) return true;
-  // Subroutes like /login/2fa-challenge are not in PUBLIC_PATHS; they must stay public for unauthenticated 2FA flows.
   if (pathname.startsWith("/login/")) return true;
   if (pathname.startsWith("/wiki")) return true;
   if (pathname.startsWith("/docs")) return true;
@@ -28,6 +27,8 @@ function isPublicPath(pathname: string): boolean {
   if (pathname.startsWith("/invite/")) return true;
   if (pathname.startsWith("/_next")) return true;
   if (pathname.startsWith("/favicon")) return true;
+  // Open API v1 routes use their own API key auth — skip session check here
+  if (pathname.startsWith("/api/v1/")) return true;
   return false;
 }
 

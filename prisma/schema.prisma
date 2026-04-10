@@ -1759,3 +1759,67 @@ model Council {
   termEnd   DateTime?
   createdAt DateTime @default(now())
 }
+
+// ─── API KEYS (Phase 5: Agent-Native Platform) ────────────────────────
+
+model ApiKey {
+  id          String    @id @default(cuid())
+  name        String
+  keyHash     String    @unique
+  keyPrefix   String
+  userId      String?
+  nodeId      String?
+  scopes      String[]  @default(["read"])
+  rateLimit   Int       @default(60)
+  expiresAt   DateTime?
+  lastUsedAt  DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([keyHash])
+  @@index([userId])
+  @@index([nodeId])
+}
+
+// ─── DATA INGESTION (Phase 5: Agent-Native Platform) ──────────────────
+
+enum IngestionStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model IngestionSource {
+  id          String  @id @default(cuid())
+  name        String
+  type        String
+  config      Json?
+  enabled     Boolean @default(true)
+  schedule    String?
+  lastRunAt   DateTime?
+  createdById String?
+
+  runs IngestionRun[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type, enabled])
+}
+
+model IngestionRun {
+  id          String          @id @default(cuid())
+  sourceId    String
+  source      IngestionSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  status      IngestionStatus @default(PENDING)
+  itemsFound  Int             @default(0)
+  itemsNew    Int             @default(0)
+  itemsUpdated Int            @default(0)
+  itemsSkipped Int            @default(0)
+  errorMsg    String?
+  startedAt   DateTime        @default(now())
+  completedAt DateTime?
+
+  @@index([sourceId, status])
+}

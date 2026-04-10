@@ -5,7 +5,7 @@ export const DASHBOARD_UI: Record<
   {
     brand: string;
     groups: Record<
-      "overview" | "network" | "work" | "verification" | "intelligence" | "admin" | "ecosystem",
+      "overview" | "network" | "work" | "verification" | "intelligence" | "admin" | "ecosystem" | "platform",
       string
     >;
     items: Record<
@@ -30,7 +30,9 @@ export const DASHBOARD_UI: Record<
       | "invites"
       | "auditLog"
       | "campaigns"
-      | "proposals",
+      | "proposals"
+      | "apiKeys"
+      | "ingestion",
       string
     >;
     account: {
@@ -74,6 +76,7 @@ export const DASHBOARD_UI: Record<
       intelligence: "Intelligence",
       admin: "Admin",
       ecosystem: "Ecosystem",
+      platform: "Platform",
     },
     items: {
       myWorkspace: "Workspace",
@@ -98,6 +101,8 @@ export const DASHBOARD_UI: Record<
       auditLog: "Audit Log",
       proposals: "Governance",
       campaigns: "Campaigns",
+      apiKeys: "API Keys",
+      ingestion: "Data Ingestion",
     },
     account: {
       menuAria: "Account menu",
@@ -173,6 +178,8 @@ export const DASHBOARD_UI: Record<
       reputation: "Reputation",
       campaigns: "Campaigns",
       governance: "Governance",
+      "api-keys": "API Keys",
+      ingestion: "Data Ingestion",
     },
   },
   zh: {
@@ -185,6 +192,7 @@ export const DASHBOARD_UI: Record<
       intelligence: "情报",
       admin: "管理",
       ecosystem: "生态",
+      platform: "平台",
     },
     items: {
       myWorkspace: "工作台",
@@ -209,6 +217,8 @@ export const DASHBOARD_UI: Record<
       auditLog: "审计日志",
       proposals: "治理",
       campaigns: "推广活动",
+      apiKeys: "API 密钥",
+      ingestion: "数据采集",
     },
     account: {
       menuAria: "账户菜单",
@@ -284,6 +294,8 @@ export const DASHBOARD_UI: Record<
       reputation: "声誉",
       campaigns: "推广活动",
       governance: "治理",
+      "api-keys": "API 密钥",
+      ingestion: "数据采集",
     },
   },
 };

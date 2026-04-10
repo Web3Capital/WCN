@@ -10,12 +10,14 @@ import {
   Bot,
   ChevronDown,
   ClipboardList,
+  Database,
   FolderKanban,
   Gavel,
   GitCompareArrows,
   Handshake,
   Home,
   Inbox,
+  Key,
   Landmark,
   LayoutDashboard,
   ListChecks,
@@ -120,6 +122,13 @@ const GROUP_DEFS: NavDef[] = [
     items: [
       { href: "/dashboard/governance", labelKey: "proposals", icon: <Vote size={18} strokeWidth={2} /> },
       { href: "/dashboard/campaigns", labelKey: "campaigns", icon: <Megaphone size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN"] },
+    ],
+  },
+  {
+    titleKey: "platform",
+    items: [
+      { href: "/dashboard/api-keys", labelKey: "apiKeys", icon: <Key size={18} strokeWidth={2} /> },
+      { href: "/dashboard/ingestion", labelKey: "ingestion", icon: <Database size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN"] },
     ],
   },
 ];
