@@ -16,6 +16,8 @@ const PUBLIC_PATHS = new Set([
 
 function isPublicPath(pathname: string): boolean {
   if (PUBLIC_PATHS.has(pathname)) return true;
+  // Subroutes like /login/2fa-challenge are not in PUBLIC_PATHS; they must stay public for unauthenticated 2FA flows.
+  if (pathname.startsWith("/login/")) return true;
   if (pathname.startsWith("/wiki")) return true;
   if (pathname.startsWith("/docs")) return true;
   if (pathname.startsWith("/api/auth")) return true;

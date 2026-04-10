@@ -3,7 +3,7 @@ import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
-import crypto from "crypto";
+import { generatePresignedUpload, buildStorageKey } from "@/lib/modules/storage/service";
 
 export async function GET(req: Request) {
   const auth = await requirePermission("read", "file");
@@ -14,7 +14,7 @@ export async function GET(req: Request) {
   const entityType = searchParams.get("entityType");
   const entityId = searchParams.get("entityId");
 
-  const where: Record<string, unknown> = {};
+  const where: Record<string, unknown> = { deletedAt: null };
   if (entityType) where.entityType = entityType;
   if (entityId) where.entityId = entityId;
 
@@ -32,51 +32,38 @@ export async function POST(req: Request) {
   const auth = await requirePermission("create", "file");
   if (!auth.ok) return apiUnauthorized();
 
+  const body = await req.json().catch(() => null);
+  if (!body?.filename || !body?.entityType || !body?.entityId) {
+    return apiValidationError([{ path: "body", message: "filename, entityType, entityId required." }]);
+  }
+
   const prisma = getPrisma();
-
-  const formData = await req.formData().catch(() => null);
-  if (!formData) {
-    return apiValidationError([{ path: "body", message: "Form data required." }]);
-  }
-
-  const file = formData.get("file") as globalThis.File | null;
-  const entityType = formData.get("entityType") as string;
-  const entityId = formData.get("entityId") as string;
-  const confidentiality = (formData.get("confidentiality") as string) || "PUBLIC";
-
-  if (!file || !entityType || !entityId) {
-    return apiValidationError([{ path: "file", message: "file, entityType, entityId required." }]);
-  }
-
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const hash = crypto.createHash("sha256").update(buffer).digest("hex");
-
-  const storagePath = `uploads/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
-  const { writeFile, mkdir } = await import("fs/promises");
-  await mkdir("uploads", { recursive: true }).catch(() => {});
-  await writeFile(storagePath, buffer);
+  const storageKey = buildStorageKey(body.entityType, body.entityId, body.filename);
+  const contentType = body.contentType ?? "application/octet-stream";
 
   const record = await prisma.file.create({
     data: {
-      filename: file.name,
-      mimeType: file.type || null,
-      sizeBytes: buffer.length,
-      storagePath,
-      hash,
-      confidentiality: confidentiality as any,
+      filename: body.filename,
+      mimeType: contentType,
+      sizeBytes: body.sizeBytes ?? null,
+      storageKey,
+      confidentiality: (body.confidentiality as any) ?? "PUBLIC",
       uploaderUserId: auth.session.user!.id,
-      entityType,
-      entityId,
+      entityType: body.entityType,
+      entityId: body.entityId,
+      scanStatus: "PENDING",
     },
   });
+
+  const presigned = await generatePresignedUpload(storageKey, contentType);
 
   await writeAudit({
     actorUserId: auth.session.user!.id,
     action: AuditAction.FILE_UPLOAD,
     targetType: "FILE",
     targetId: record.id,
-    metadata: { filename: file.name, entityType, entityId, hash, sizeBytes: buffer.length },
+    metadata: { filename: body.filename, entityType: body.entityType, entityId: body.entityId },
   });
 
-  return apiOk(record);
+  return apiOk({ file: record, upload: presigned });
 }

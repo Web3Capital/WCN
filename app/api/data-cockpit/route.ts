@@ -3,6 +3,7 @@ import { getPrisma } from "@/lib/prisma";
 import { requireSignedIn } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
 import { apiOk, apiUnauthorized, apiForbidden } from "@/lib/core/api-response";
+import { getWeeklyTimeSeries, getFunnelData, detectAnomalies } from "@/lib/modules/cockpit/weekly-report";
 
 export async function GET() {
   const auth = await requireSignedIn();
@@ -20,6 +21,7 @@ export async function GET() {
     totalTasks, totalEvidence, totalPoB,
     totalCapital, totalAgents, totalDisputes,
     openDisputes, settledCycles,
+    timeSeries, funnel,
   ] = await Promise.all([
     prisma.node.groupBy({ by: ["status"], _count: true }),
     prisma.project.groupBy({ by: ["status"], _count: true }),
@@ -38,17 +40,29 @@ export async function GET() {
     prisma.dispute.count(),
     prisma.dispute.count({ where: { status: "OPEN" } }),
     prisma.settlementCycle.count({ where: { status: { in: ["LOCKED", "EXPORTED", "FINALIZED"] } } }),
+    getWeeklyTimeSeries(prisma),
+    getFunnelData(prisma),
   ]);
+
+  const anomalies = [
+    detectAnomalies(timeSeries.deals, "Deals"),
+    detectAnomalies(timeSeries.pob, "PoB Records"),
+    detectAnomalies(timeSeries.evidence, "Evidence"),
+    detectAnomalies(timeSeries.tasks, "Tasks"),
+  ].filter(Boolean);
 
   return apiOk({
     summary: { activeNodes, activeProjects, activeDeals, totalTasks, totalEvidence, totalPoB, totalCapital, totalAgents, totalDisputes, openDisputes, settledCycles },
     distributions: {
-      nodesByStatus: nodesByStatus.map((g) => ({ status: g.status, count: g._count })),
-      projectsByStatus: projectsByStatus.map((g) => ({ status: g.status, count: g._count })),
-      dealsByStage: dealsByStage.map((g) => ({ stage: g.stage, count: g._count })),
-      tasksByStatus: tasksByStatus.map((g) => ({ status: g.status, count: g._count })),
-      evidenceByStatus: evidenceByStatus.map((g) => ({ status: g.reviewStatus, count: g._count })),
-      pobByStatus: pobByStatus.map((g) => ({ status: g.pobEventStatus, count: g._count })),
+      nodesByStatus: nodesByStatus.map((g) => ({ label: g.status, count: g._count })),
+      projectsByStatus: projectsByStatus.map((g) => ({ label: g.status, count: g._count })),
+      dealsByStage: dealsByStage.map((g) => ({ label: g.stage, count: g._count })),
+      tasksByStatus: tasksByStatus.map((g) => ({ label: g.status, count: g._count })),
+      evidenceByStatus: evidenceByStatus.map((g) => ({ label: g.reviewStatus, count: g._count })),
+      pobByStatus: pobByStatus.map((g) => ({ label: g.pobEventStatus, count: g._count })),
     },
+    timeSeries,
+    funnel,
+    anomalies,
   });
 }

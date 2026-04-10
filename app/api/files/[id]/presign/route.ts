@@ -3,9 +3,9 @@ import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
-import { randomBytes } from "crypto";
+import { generatePresignedUpload } from "@/lib/modules/storage/service";
 
-export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const auth = await requirePermission("create", "file");
   if (!auth.ok) return apiUnauthorized();
@@ -13,13 +13,12 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const prisma = getPrisma();
   const file = await prisma.file.findUnique({ where: { id } });
   if (!file) return apiNotFound("File");
+  if (!file.storageKey) return apiNotFound("File has no storage key");
 
-  const storageKey = `uploads/${file.entityType}/${file.entityId}/${randomBytes(8).toString("hex")}/${file.filename}`;
-
-  await prisma.file.update({
-    where: { id },
-    data: { storageKey, scanStatus: "PENDING" },
-  });
+  const presigned = await generatePresignedUpload(
+    file.storageKey,
+    file.mimeType ?? "application/octet-stream",
+  );
 
   await writeAudit({
     actorUserId: auth.session.user!.id,
@@ -29,9 +28,5 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     workspaceId: file.workspaceId,
   });
 
-  return apiOk({
-    presignedUrl: `/api/files/${id}/upload`,
-    storageKey,
-    expiresIn: 3600,
-  });
+  return apiOk(presigned);
 }

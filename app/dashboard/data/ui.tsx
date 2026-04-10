@@ -1,6 +1,14 @@
 "use client";
 
+import {
+  AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
+  XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
+} from "recharts";
+
 type Distribution = { label: string; count: number }[];
+type TimeSeriesPoint = { week: string; count: number };
+type FunnelStage = { stage: string; count: number };
+type AnomalyAlert = { metric: string; current: number; average: number; deviation: number };
 
 type CockpitData = {
   summary: {
@@ -20,37 +28,55 @@ type CockpitData = {
     dealsByStage: Distribution;
     pobByStatus: Distribution;
   };
+  timeSeries?: {
+    deals: TimeSeriesPoint[];
+    pob: TimeSeriesPoint[];
+    evidence: TimeSeriesPoint[];
+    tasks: TimeSeriesPoint[];
+  };
+  funnel?: FunnelStage[];
+  anomalies?: AnomalyAlert[];
 };
 
-function DistributionBar({ items, colorMap }: { items: Distribution; colorMap?: Record<string, string> }) {
+const CHART_COLORS = ["#6366f1", "#8b5cf6", "#a78bfa", "#c4b5fd", "#e0e7ff"];
+
+const NODE_COLORS: Record<string, string> = {
+  LIVE: "#22c55e", APPROVED: "#22c55e", SUBMITTED: "#f59e0b", UNDER_REVIEW: "#f59e0b",
+  SUSPENDED: "#ef4444", OFFBOARDED: "#ef4444", REJECTED: "#ef4444", DRAFT: "#94a3b8",
+  CONTRACTING: "#a855f7", PROBATION: "#f59e0b", NEED_MORE_INFO: "#eab308",
+};
+
+const DEAL_COLORS: Record<string, string> = {
+  SOURCED: "#94a3b8", MATCHED: "#f59e0b", INTRO_SENT: "#f59e0b", MEETING_DONE: "#a855f7",
+  DD: "#a855f7", TERM_SHEET: "#a855f7", SIGNED: "#22c55e", FUNDED: "#22c55e",
+  PASSED: "#ef4444", PAUSED: "#94a3b8",
+};
+
+function DistributionPie({ items, colorMap }: { items: Distribution; colorMap?: Record<string, string> }) {
   const total = items.reduce((a, b) => a + b.count, 0);
-  if (total === 0) return <p className="muted distribution-empty">No data.</p>;
+  if (total === 0) return <p className="muted">No data.</p>;
 
   return (
-    <div>
-      <div className="distribution-bar">
-        {items.map((item) => (
-          <div
-            key={item.label}
-            title={`${item.label}: ${item.count}`}
-            className="distribution-segment"
-            style={{
-              width: `${(item.count / total) * 100}%`,
-              background: colorMap?.[item.label] ?? "var(--accent)",
-              minWidth: item.count > 0 ? 3 : 0,
-            }}
-          />
-        ))}
-      </div>
-      <div className="distribution-legend">
-        {items.map((item) => (
-          <div key={item.label}>
-            <span
-              className="distribution-legend-dot"
-              style={{ background: colorMap?.[item.label] ?? "var(--accent)" }}
-            />
-            <span className="muted">{item.label.replace(/_/g, " ")}:</span>
-            <span className="distribution-legend-value">{item.count}</span>
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <ResponsiveContainer width={140} height={140}>
+        <PieChart>
+          <Pie data={items} dataKey="count" nameKey="label" cx="50%" cy="50%" outerRadius={60} innerRadius={30}>
+            {items.map((item, i) => (
+              <Cell key={item.label} fill={colorMap?.[item.label] ?? CHART_COLORS[i % CHART_COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip />
+        </PieChart>
+      </ResponsiveContainer>
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        {items.map((item, i) => (
+          <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12 }}>
+            <span style={{
+              width: 10, height: 10, borderRadius: 2, flexShrink: 0,
+              background: colorMap?.[item.label] ?? CHART_COLORS[i % CHART_COLORS.length],
+            }} />
+            <span className="muted">{item.label.replace(/_/g, " ")}</span>
+            <span style={{ fontWeight: 600, marginLeft: "auto" }}>{item.count}</span>
           </div>
         ))}
       </div>
@@ -58,26 +84,60 @@ function DistributionBar({ items, colorMap }: { items: Distribution; colorMap?: 
   );
 }
 
-const NODE_COLORS: Record<string, string> = {
-  LIVE: "var(--green)", APPROVED: "var(--green)", SUBMITTED: "var(--amber)", UNDER_REVIEW: "var(--amber)",
-  SUSPENDED: "var(--red)", OFFBOARDED: "var(--red)", REJECTED: "var(--red)", DRAFT: "var(--muted)",
-  CONTRACTING: "var(--purple)", PROBATION: "var(--amber)", NEED_MORE_INFO: "var(--yellow)",
-};
-const DEAL_COLORS: Record<string, string> = {
-  SOURCED: "var(--muted)", MATCHED: "var(--amber)", INTRO_SENT: "var(--amber)", MEETING_DONE: "var(--purple)",
-  DD: "var(--purple)", TERM_SHEET: "var(--purple)", SIGNED: "var(--green)", FUNDED: "var(--green)",
-  PASSED: "var(--red)", PAUSED: "var(--muted)",
-};
-const POB_COLORS: Record<string, string> = {
-  CREATED: "var(--muted)", PENDING_REVIEW: "var(--amber)", EFFECTIVE: "var(--green)",
-  REJECTED: "var(--red)", FROZEN: "var(--purple)",
-};
+function TrendChart({ data, color = "#6366f1", label }: { data: TimeSeriesPoint[]; color?: string; label: string }) {
+  return (
+    <div className="card" style={{ padding: 18 }}>
+      <h3 style={{ marginBottom: 12 }}>{label} / Week</h3>
+      <ResponsiveContainer width="100%" height={180}>
+        <AreaChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+          <XAxis dataKey="week" tick={{ fontSize: 10 }} tickFormatter={(v) => v.slice(5)} />
+          <YAxis tick={{ fontSize: 10 }} allowDecimals={false} />
+          <Tooltip />
+          <Area type="monotone" dataKey="count" stroke={color} fill={color} fillOpacity={0.15} strokeWidth={2} />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function FunnelChart({ data }: { data: FunnelStage[] }) {
+  return (
+    <div className="card" style={{ padding: 18 }}>
+      <h3 style={{ marginBottom: 12 }}>Conversion Funnel</h3>
+      <ResponsiveContainer width="100%" height={200}>
+        <BarChart data={data} layout="vertical">
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+          <XAxis type="number" tick={{ fontSize: 10 }} />
+          <YAxis type="category" dataKey="stage" tick={{ fontSize: 12 }} width={80} />
+          <Tooltip />
+          <Bar dataKey="count" radius={[0, 4, 4, 0]}>
+            {data.map((_, i) => (
+              <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
 
 export function DataCockpit({ data }: { data: CockpitData }) {
   const s = data.summary;
 
   return (
     <div className="data-cockpit">
+      {data.anomalies && data.anomalies.length > 0 && (
+        <div className="card" style={{ padding: 16, borderLeft: "3px solid var(--red)", marginBottom: 16 }}>
+          <h3 style={{ color: "var(--red)", marginBottom: 8 }}>Anomaly Alerts</h3>
+          {data.anomalies.map((a) => (
+            <div key={a.metric} style={{ fontSize: 13, marginBottom: 4 }}>
+              <strong>{a.metric}</strong>: {a.current} (avg {a.average}, {a.deviation > 0 ? "+" : ""}{a.deviation}σ)
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="grid-5">
         {[
           { label: "Active Nodes", value: s.activeNodes },
@@ -98,21 +158,31 @@ export function DataCockpit({ data }: { data: CockpitData }) {
         ))}
       </div>
 
-      <div className="grid-2">
+      {data.timeSeries && (
+        <div className="grid-2" style={{ marginTop: 16 }}>
+          <TrendChart data={data.timeSeries.deals} color="#6366f1" label="Deals" />
+          <TrendChart data={data.timeSeries.pob} color="#8b5cf6" label="PoB Records" />
+          <TrendChart data={data.timeSeries.evidence} color="#22c55e" label="Evidence" />
+          <TrendChart data={data.timeSeries.tasks} color="#f59e0b" label="Tasks" />
+        </div>
+      )}
+
+      <div className="grid-2" style={{ marginTop: 16 }}>
         <div className="card" style={{ padding: 18 }}>
-          <h3>Nodes by Status</h3>
-          <DistributionBar items={data.distributions.nodesByStatus} colorMap={NODE_COLORS} />
+          <h3 style={{ marginBottom: 12 }}>Nodes by Status</h3>
+          <DistributionPie items={data.distributions.nodesByStatus} colorMap={NODE_COLORS} />
         </div>
         <div className="card" style={{ padding: 18 }}>
-          <h3>Deals by Stage</h3>
-          <DistributionBar items={data.distributions.dealsByStage} colorMap={DEAL_COLORS} />
+          <h3 style={{ marginBottom: 12 }}>Deals by Stage</h3>
+          <DistributionPie items={data.distributions.dealsByStage} colorMap={DEAL_COLORS} />
         </div>
       </div>
 
-      <div className="card" style={{ padding: 18 }}>
-        <h3>PoB Event Status</h3>
-        <DistributionBar items={data.distributions.pobByStatus} colorMap={POB_COLORS} />
-      </div>
+      {data.funnel && (
+        <div style={{ marginTop: 16 }}>
+          <FunnelChart data={data.funnel} />
+        </div>
+      )}
     </div>
   );
 }

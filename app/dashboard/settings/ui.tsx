@@ -1,7 +1,62 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+
+type NotifPref = { channel: string; enabled: boolean };
+
+function NotificationPreferences() {
+  const [prefs, setPrefs] = useState<NotifPref[]>([]);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/account/notifications").then((r) => r.json()).then((d) => {
+      if (d.ok) setPrefs(d.data);
+    });
+  }, []);
+
+  async function toggle(channel: string, enabled: boolean) {
+    setBusy(true);
+    const res = await fetch("/api/account/notifications", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ channel, enabled }),
+    });
+    const d = await res.json();
+    if (d.ok) {
+      setPrefs((p) => {
+        const exists = p.find((x) => x.channel === channel);
+        if (exists) return p.map((x) => (x.channel === channel ? { ...x, enabled } : x));
+        return [...p, { channel, enabled }];
+      });
+    }
+    setBusy(false);
+  }
+
+  const channels = ["EMAIL", "IN_APP", "TELEGRAM", "SLACK"];
+  return (
+    <div className="card" style={{ padding: 20 }}>
+      <h3 style={{ margin: "0 0 12px" }}>Notification Preferences</h3>
+      <div style={{ display: "grid", gap: 8 }}>
+        {channels.map((ch) => {
+          const pref = prefs.find((p) => p.channel === ch);
+          const enabled = pref?.enabled ?? (ch === "EMAIL" || ch === "IN_APP");
+          return (
+            <label key={ch} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
+              <input
+                type="checkbox"
+                checked={enabled}
+                onChange={(e) => toggle(ch, e.target.checked)}
+                disabled={busy}
+              />
+              {ch.replace(/_/g, " ")}
+            </label>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPassword: boolean }) {
   const [currentPw, setCurrentPw] = useState("");
@@ -117,6 +172,9 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
           </p>
         </div>
       )}
+
+      {/* Notification Preferences */}
+      <NotificationPreferences />
 
       {/* Sessions Section */}
       <div className="card" style={{ padding: 20 }}>

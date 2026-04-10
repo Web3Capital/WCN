@@ -416,6 +416,8 @@ model User {
 
   kycStatus          KYCStatus @default(NOT_STARTED)
   tokenInvalidatedAt DateTime?
+  telegramChatId     String?
+  slackWebhookUrl    String?
 
   activeWorkspaceId String?
   activeRole        Role?
@@ -775,6 +777,7 @@ model Node {
   capitalProfiles    CapitalProfile[]
   dealsAsLead        Deal[]             @relation("DealLeadNode")
   dealParticipations DealParticipant[]
+  reputationScore    ReputationScore?
 
   @@index([type, status, createdAt])
   @@index([ownerUserId])
@@ -1514,4 +1517,245 @@ model Match {
   @@index([capitalNodeId])
   @@index([status])
   @@index([score(sort: Desc)])
+}
+
+// ─── REPUTATION (Phase 4) ──────────────────────────────────────────────────
+
+enum ReputationTier {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+  DIAMOND
+}
+
+model ReputationScore {
+  id           String         @id @default(cuid())
+  nodeId       String         @unique
+  node         Node           @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  score        Float          @default(0)
+  tier         ReputationTier @default(BRONZE)
+  components   Json?
+  calculatedAt DateTime       @default(now())
+
+  @@index([tier, score(sort: Desc)])
+}
+
+model ReputationBadge {
+  id        String   @id @default(cuid())
+  nodeId    String
+  badgeType String
+  awardedAt DateTime @default(now())
+
+  @@unique([nodeId, badgeType])
+  @@index([nodeId])
+}
+
+model ReputationHistory {
+  id         String   @id @default(cuid())
+  nodeId     String
+  score      Float
+  tier       ReputationTier
+  snapshotAt DateTime @default(now())
+
+  @@index([nodeId, snapshotAt])
+}
+
+// ─── PAYMENT (Phase 4) ─────────────────────────────────────────────────────
+
+enum PaymentStatus {
+  PENDING
+  SUBMITTED
+  CONFIRMED
+  FAILED
+}
+
+model PaymentExecution {
+  id          String        @id @default(cuid())
+  cycleId     String
+  nodeId      String
+  amount      Float
+  chain       String
+  txHash      String?
+  status      PaymentStatus @default(PENDING)
+  submittedAt DateTime?
+  confirmedAt DateTime?
+  failedAt    DateTime?
+  errorMsg    String?
+  createdAt   DateTime      @default(now())
+
+  @@index([cycleId, status])
+  @@index([nodeId])
+}
+
+model PaymentConfig {
+  id            String  @id @default(cuid())
+  nodeId        String  @unique
+  walletAddress String
+  chain         String  @default("polygon")
+  isVerified    Boolean @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([nodeId])
+}
+
+// ─── SEARCH (Phase 4) ──────────────────────────────────────────────────────
+
+model SavedSearch {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  query       String
+  filters     Json?
+  notifyOnNew Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ─── NOTIFICATION PREFERENCES (Phase 4) ────────────────────────────────────
+
+enum NotificationChannel {
+  EMAIL
+  TELEGRAM
+  SLACK
+  IN_APP
+}
+
+model NotificationPreference {
+  id         String              @id @default(cuid())
+  userId     String
+  channel    NotificationChannel
+  eventTypes Json?
+  enabled    Boolean             @default(true)
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+
+  @@unique([userId, channel])
+}
+
+// ─── RISK RULES (Phase 4) ──────────────────────────────────────────────────
+
+model RiskRule {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  entityType  String
+  conditions  Json
+  severity    String  @default("MEDIUM")
+  action      String  @default("CREATE_FLAG")
+  enabled     Boolean @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([entityType, enabled])
+}
+
+// ─── CAMPAIGN / DISTRIBUTION (Phase 4) ─────────────────────────────────────
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+model Campaign {
+  id          String         @id @default(cuid())
+  title       String
+  description String?
+  status      CampaignStatus @default(DRAFT)
+  targetType  String?
+  budget      Float?
+  startAt     DateTime?
+  endAt       DateTime?
+  createdById String
+
+  channels CampaignChannel[]
+  metrics  CampaignMetric[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+}
+
+model CampaignChannel {
+  id           String         @id @default(cuid())
+  campaignId   String
+  campaign     Campaign       @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  nodeId       String
+  channel      String
+  deliverables Json?
+  status       CampaignStatus @default(DRAFT)
+  createdAt    DateTime       @default(now())
+
+  @@index([campaignId])
+  @@index([nodeId])
+}
+
+model CampaignMetric {
+  id         String   @id @default(cuid())
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  metricType String
+  value      Float    @default(0)
+  recordedAt DateTime @default(now())
+
+  @@index([campaignId, metricType])
+}
+
+// ─── GOVERNANCE (Phase 4) ──────────────────────────────────────────────────
+
+enum ProposalStatus {
+  DRAFT
+  ACTIVE
+  PASSED
+  REJECTED
+  EXECUTED
+  CANCELLED
+}
+
+model Proposal {
+  id          String         @id @default(cuid())
+  title       String
+  description String?
+  type        String
+  status      ProposalStatus @default(DRAFT)
+  options     Json
+  quorum      Int            @default(1)
+  deadline    DateTime?
+  createdById String
+  executedAt  DateTime?
+
+  votes Vote[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, deadline])
+}
+
+model Vote {
+  id         String   @id @default(cuid())
+  proposalId String
+  proposal   Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  voterId    String
+  option     String
+  weight     Float    @default(1)
+  castAt     DateTime @default(now())
+
+  @@unique([proposalId, voterId])
+  @@index([proposalId])
+}
+
+model Council {
+  id        String   @id @default(cuid())
+  name      String
+  memberIds String[] @default([])
+  termStart DateTime?
+  termEnd   DateTime?
+  createdAt DateTime @default(now())
 }
