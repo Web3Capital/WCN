@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { getApiErrorMessageFromJson } from "@/lib/api-error";
 
 type TinyRow = { id: string; name?: string; title?: string };
@@ -623,9 +624,14 @@ export function PobConsole({
               </div>
             ) : null}
 
-            <button className="button-secondary" type="button" disabled={busy} onClick={() => refresh()}>
-              {busy ? "Working..." : "Refresh"}
-            </button>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <Link href={`/dashboard/pob/${selected.id}`} className="button" style={{ fontSize: 12, textDecoration: "none" }}>
+                Full detail →
+              </Link>
+              <button className="button-secondary" type="button" disabled={busy} onClick={() => refresh()}>
+                {busy ? "Working..." : "Refresh"}
+              </button>
+            </div>
             {error ? <p className="form-error">{error}</p> : null}
           </div>
         ) : (

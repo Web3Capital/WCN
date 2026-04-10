@@ -33,7 +33,7 @@ function nextEventId(): string {
   return `evt_${Date.now()}_${++_idCounter}`;
 }
 
-class DomainEventBus {
+export class DomainEventBus {
   private handlers = new Map<string, HandlerEntry[]>();
   private wildcardHandlers: HandlerEntry[] = [];
 

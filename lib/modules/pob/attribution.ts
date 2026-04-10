@@ -18,6 +18,7 @@ import { getPrisma } from "@/lib/prisma";
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
 import type { PoBCreatedEvent } from "@/lib/core/event-types";
+import { assessPoBRisk } from "@/lib/modules/risk/anti-gaming";
 
 // ─── Configuration ──────────────────────────────────────────────
 
@@ -72,6 +73,20 @@ export async function calculateAttribution(dealId: string): Promise<AttributionR
   });
   if (!deal) return null;
   if (!deal.leadNodeId) return null;
+
+  const risk = await assessPoBRisk(dealId, deal.leadNodeId);
+  if (risk.blocked) {
+    const prisma2 = getPrisma();
+    await prisma2.riskFlag.create({
+      data: {
+        entityType: "Deal",
+        entityId: dealId,
+        severity: risk.level,
+        reason: risk.flags.map((f) => `[${f.rule}] ${f.message}`).join("; "),
+      },
+    }).catch(() => {});
+    return null;
+  }
 
   const evidenceByNode = new Map<string, string[]>();
   for (const ev of deal.evidence) {

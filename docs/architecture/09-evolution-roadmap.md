@@ -4,29 +4,35 @@
 
 ---
 
-## Current State Assessment (2026-04)
+## Current State Assessment (2026-04-10)
 
 ```
-Built:    ████████████████░░░░░░░░░░░░░░░░  50%
+Built:    ██████████████████████████░░░░░░  80%
   ├── Database schema: 44 models, production-shaped
-  ├── API layer: 73 endpoints, all connected to DB
-  ├── Dashboard: 30+ pages with CRUD consoles
-  ├── Auth: Email + OAuth + 2FA framework
+  ├── API layer: 73+ endpoints, all standardized (apiOk/apiError + Zod)
+  ├── Dashboard: 35+ pages with CRUD consoles (inc. Matches, PoB detail, Disputes detail)
+  ├── Auth: Email + OAuth (Google/MS/Apple/GitHub) + 2FA
   ├── Wiki: 15 chapters, 91 pages, professionally written
-  ├── State machines: Account, Deal, Node, Task, Evidence, Settlement
-  └── Marketing site: Home, About, How it Works, Nodes, PoB, Apply
+  ├── State machines: Account, Deal, Node, Task, Evidence, Settlement, Match
+  ├── Marketing site: Home, About, How it Works, Nodes, PoB, Apply
+  ├── ✅ Event bus + event-driven architecture (50+ event types)
+  ├── ✅ Matching engine (multi-factor weighted scoring + event triggers)
+  ├── ✅ PoB attribution engine (deterministic, multi-role, anti-gaming)
+  ├── ✅ Evidence packet assembly (auto on deal.closed, completeness checker)
+  ├── ✅ Settlement calculator (aggregate PoB, 5% fee, per-node lines)
+  ├── ✅ Email notifications (Resend + 8 templates, event-driven)
+  ├── ✅ Anti-gaming engine v1 (self-dealing, circular deal, velocity)
+  ├── ✅ Task review workflow (submit output + evidence + approve/reject)
+  ├── ✅ Test framework: Vitest, 70 tests, 7 test suites
+  └── ✅ Rate limiting: Upstash Redis sliding window (API/auth/admin tiers)
 
-Missing:  ░░░░░░░░░░░░░░░░████████████████  50%
-  ├── Event bus (module communication)
-  ├── Matching engine (capital ↔ project)
-  ├── Agent LLM integration (all 4 agent types)
-  ├── PoB attribution algorithm
-  ├── Anti-gaming engine
-  ├── Payment execution (settlement)
-  ├── Email delivery (notifications)
-  ├── Distribution system (whole module)
-  ├── Reputation system (whole module)
-  └── Real-time updates (WebSocket)
+Missing:  ░░░░░░░░░░████████████████████░░  20%
+  ├── Agent LLM integration (all 4 agent types) — Phase 3
+  ├── Payment execution (crypto settlement) — Phase 4
+  ├── Distribution system (whole module) — Phase 4
+  ├── Reputation system (whole module) — Phase 4
+  ├── Real-time updates (WebSocket) — Phase 4
+  └── On-chain anchoring (NFT, PoB hash) — Phase 5
 ```
 
 ---

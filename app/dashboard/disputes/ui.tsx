@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { ConfirmDialog } from "../_components/confirm-dialog";
 
 type Dispute = {
@@ -89,7 +90,7 @@ export function DisputesUI({ disputes: initialDisputes }: { disputes: Dispute[] 
                   <span className="badge" style={{ fontSize: 10 }}>{d.targetType}</span>
                 </td>
                 <td>
-                  <div style={{ fontSize: 13, fontWeight: 600 }}>{d.reason}</div>
+                  <Link href={`/dashboard/disputes/${d.id}`} style={{ fontSize: 13, fontWeight: 600, color: "var(--accent)" }}>{d.reason}</Link>
                   {d.resolution && <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{d.resolution}</div>}
                 </td>
                 <td className="muted" style={{ fontSize: 11 }}>{new Date(d.createdAt).toLocaleDateString()}</td>

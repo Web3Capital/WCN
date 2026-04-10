@@ -14,6 +14,7 @@ export const DASHBOARD_UI: Record<
       | "projects"
       | "capital"
       | "dealRoom"
+      | "matches"
       | "tasks"
       | "agents"
       | "evidenceDesk"
@@ -76,6 +77,7 @@ export const DASHBOARD_UI: Record<
       projects: "Projects",
       capital: "Capital",
       dealRoom: "Deal Room",
+      matches: "Matches",
       tasks: "Tasks",
       agents: "Agents",
       evidenceDesk: "Evidence Desk",
@@ -138,6 +140,7 @@ export const DASHBOARD_UI: Record<
       projects: "Projects",
       capital: "Capital",
       deals: "Deals",
+      matches: "Matches",
       tasks: "Tasks",
       agents: "Agents",
       pob: "PoB",
@@ -176,6 +179,7 @@ export const DASHBOARD_UI: Record<
       projects: "项目",
       capital: "资本",
       dealRoom: "交易协作",
+      matches: "匹配",
       tasks: "任务",
       agents: "智能体",
       evidenceDesk: "证据台",
@@ -238,6 +242,7 @@ export const DASHBOARD_UI: Record<
       projects: "项目",
       capital: "资本",
       deals: "交易",
+      matches: "匹配",
       tasks: "任务",
       agents: "智能体",
       pob: "PoB",

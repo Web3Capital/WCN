@@ -37,6 +37,7 @@ import { generateMatchesForProject, regenerateMatchesForCapital } from "@/lib/mo
 import { assembleEvidencePacket } from "@/lib/modules/evidence/assembly";
 import { calculateAttribution } from "@/lib/modules/pob/attribution";
 import { calculateSettlementForCycle } from "@/lib/modules/settlement/calculator";
+import { assessPoBRisk } from "@/lib/modules/risk/anti-gaming";
 
 let _initialized = false;
 
@@ -174,6 +175,27 @@ export function initEventHandlers(): void {
         entityType: "Evidence",
         entityId: payload.evidenceId,
       });
+    }
+  });
+
+  // ─── PoB Created → Anti-gaming scan ─────────────────────
+  eventBus.on<PoBCreatedEvent>(Events.POB_CREATED, async (payload) => {
+    if (!payload.dealId || !payload.nodeId) return;
+    try {
+      const risk = await assessPoBRisk(payload.dealId, payload.nodeId);
+      if (risk.flags.length > 0) {
+        const prisma = getPrisma();
+        await prisma.riskFlag.create({
+          data: {
+            entityType: "PoB",
+            entityId: payload.pobId,
+            severity: risk.level,
+            reason: risk.flags.map((f) => `[${f.rule}] ${f.message}`).join("; "),
+          },
+        }).catch(() => {});
+      }
+    } catch (e) {
+      console.error("[AntiGaming] PoB scan failed", payload.pobId, e);
     }
   });
 

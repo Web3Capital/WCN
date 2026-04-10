@@ -91,7 +91,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       metadata: { previousStatus: existing.status, newStatus: data.status },
     });
 
-    if (data.status === "DONE") {
+    if (data.status === "DONE" || data.status === "ACCEPTED" || data.status === "CLOSED") {
       await eventBus.emit(Events.TASK_COMPLETED, {
         taskId: params.id,
         dealId: existing.dealId ?? undefined,

@@ -14,6 +14,7 @@ import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
 import type { MatchGeneratedEvent, MatchDeclinedEvent, MatchConvertedEvent } from "@/lib/core/event-types";
 import type { MatchStatus, Project, CapitalProfile } from "@prisma/client";
+import { checkSelfDealing } from "@/lib/modules/risk/anti-gaming";
 
 // ─── Scoring Weights ─────────────────────────────────────────────
 
@@ -165,7 +166,7 @@ export async function generateMatchesForProject(
 
   const project = await prisma.project.findUnique({
     where: { id: projectId },
-    select: { id: true, sector: true, stage: true, fundraisingNeed: true, workspaceId: true, status: true },
+    select: { id: true, sector: true, stage: true, fundraisingNeed: true, workspaceId: true, status: true, nodeId: true },
   });
   if (!project || !["SUBMITTED", "SCREENED", "CURATED", "IN_DEAL_ROOM", "ACTIVE"].includes(project.status)) {
     return [];
@@ -184,6 +185,8 @@ export async function generateMatchesForProject(
   const created: ScoredMatch[] = [];
 
   for (const match of scored) {
+    const selfDeal = await checkSelfDealing(project.nodeId, match.capitalNodeId);
+    if (selfDeal) continue;
     const upserted = await prisma.match.upsert({
       where: {
         projectId_capitalProfileId: {

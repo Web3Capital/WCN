@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 type Application = {
   id: string;
@@ -171,6 +172,12 @@ export function ApplicationsTable({
                 {error ? <p className="form-error" style={{ marginTop: 10 }}>{error}</p> : null}
               </div>
             ) : null}
+
+            <div style={{ marginTop: 14 }}>
+              <Link href={`/dashboard/applications/${active.id}`} className="button" style={{ fontSize: 12, textDecoration: "none" }}>
+                Full detail →
+              </Link>
+            </div>
 
             {!readOnly && reviews.length > 0 ? (
               <div style={{ marginTop: 14 }}>

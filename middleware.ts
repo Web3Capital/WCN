@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { rateLimit, rateLimitAuth, rateLimitAdmin } from "./lib/rate-limit";
 
 const PUBLIC_PATHS = new Set([
   "/",
@@ -29,6 +30,29 @@ function isPublicPath(pathname: string): boolean {
 }
 
 const BLOCKED_STATUSES = new Set(["LOCKED", "OFFBOARDED", "SUSPENDED"]);
+const AUTH_PATHS = ["/api/signup", "/api/auth"];
+const ADMIN_PATHS = ["/api/settlement", "/api/approvals", "/api/entity-freeze"];
+
+function getClientIp(req: NextRequest): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    ?? req.headers.get("x-real-ip")
+    ?? "unknown";
+}
+
+function rateLimitResponse(result: { limit: number; remaining: number; reset: number }) {
+  return NextResponse.json(
+    { ok: false, error: { code: "RATE_LIMITED", message: "Too many requests. Please try again later." } },
+    {
+      status: 429,
+      headers: {
+        "X-RateLimit-Limit": String(result.limit),
+        "X-RateLimit-Remaining": String(result.remaining),
+        "X-RateLimit-Reset": String(result.reset),
+        "Retry-After": String(Math.ceil((result.reset - Date.now()) / 1000)),
+      },
+    },
+  );
+}
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -38,6 +62,13 @@ export async function middleware(request: NextRequest) {
   }
 
   const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+
+  // Rate limit auth endpoints by IP (10/min)
+  if (pathname.startsWith("/api/") && AUTH_PATHS.some((p) => pathname.startsWith(p))) {
+    const ip = getClientIp(request);
+    const rl = await rateLimitAuth(ip);
+    if (!rl.success) return rateLimitResponse(rl);
+  }
 
   if (!token) {
     if (pathname.startsWith("/api/")) {
@@ -54,6 +85,19 @@ export async function middleware(request: NextRequest) {
     }
     if (pathname !== "/account" && !pathname.startsWith("/account/")) {
       return NextResponse.redirect(new URL("/login?error=blocked", request.url));
+    }
+  }
+
+  // Rate limit API routes for authenticated users
+  if (pathname.startsWith("/api/")) {
+    const userId = token.sub ?? getClientIp(request);
+
+    if (ADMIN_PATHS.some((p) => pathname.startsWith(p))) {
+      const rl = await rateLimitAdmin(userId);
+      if (!rl.success) return rateLimitResponse(rl);
+    } else {
+      const rl = await rateLimit(userId);
+      if (!rl.success) return rateLimitResponse(rl);
     }
   }
 

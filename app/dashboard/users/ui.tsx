@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 
 type UserRow = {
   id: string;
@@ -115,7 +116,10 @@ export function UsersConsole({ initial, currentUserId }: { initial: UserRow[]; c
               </p>
             ) : null}
             {error ? <p className="form-error" style={{ marginTop: 10 }}>{error}</p> : null}
-            <div style={{ marginTop: 14 }}>
+            <div style={{ marginTop: 14, display: "flex", gap: 8 }}>
+              <Link href={`/dashboard/users/${selected.id}`} className="button" style={{ fontSize: 12, textDecoration: "none" }}>
+                Full profile →
+              </Link>
               <button className="button-secondary" type="button" onClick={refresh} disabled={saving}>
                 Refresh
               </button>
