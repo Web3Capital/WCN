@@ -5,7 +5,7 @@ export const DASHBOARD_UI: Record<
   {
     brand: string;
     groups: Record<
-      "overview" | "network" | "work" | "verification" | "intelligence" | "governance" | "roadmap",
+      "overview" | "network" | "work" | "verification" | "intelligence" | "governance" | "ecosystem",
       string
     >;
     items: Record<
@@ -29,7 +29,10 @@ export const DASHBOARD_UI: Record<
       | "users"
       | "invites"
       | "auditLog"
-      | "phase3Assets",
+      | "phase3Assets"
+      | "reputation"
+      | "campaigns"
+      | "proposals",
       string
     >;
     account: {
@@ -72,7 +75,7 @@ export const DASHBOARD_UI: Record<
       verification: "Verification",
       intelligence: "Intelligence",
       governance: "Governance",
-      roadmap: "Roadmap",
+      ecosystem: "Ecosystem",
     },
     items: {
       myWorkspace: "Workspace",
@@ -90,12 +93,15 @@ export const DASHBOARD_UI: Record<
       settlement: "Settlement",
       dataCockpit: "Data cockpit",
       riskConsole: "Risk console",
+      reputation: "Reputation",
       approvals: "Approvals",
       applications: "Applications",
       users: "Users",
+      proposals: "Proposals",
       invites: "Invites",
       auditLog: "Audit log",
       phase3Assets: "Phase 3 · Assets",
+      campaigns: "Campaigns",
     },
     account: {
       menuAria: "Account menu",
@@ -168,6 +174,9 @@ export const DASHBOARD_UI: Record<
       review: "Review",
       profile: "Profile",
       settings: "Settings",
+      reputation: "Reputation",
+      campaigns: "Campaigns",
+      governance: "Governance",
     },
   },
   zh: {
@@ -179,7 +188,7 @@ export const DASHBOARD_UI: Record<
       verification: "核验",
       intelligence: "情报",
       governance: "治理",
-      roadmap: "路线",
+      ecosystem: "生态",
     },
     items: {
       myWorkspace: "工作台",
@@ -197,12 +206,15 @@ export const DASHBOARD_UI: Record<
       settlement: "结算",
       dataCockpit: "数据驾驶舱",
       riskConsole: "风控台",
+      reputation: "声誉",
       approvals: "审批",
       applications: "申请",
       users: "用户",
+      proposals: "提案",
       invites: "邀请",
       auditLog: "审计日志",
       phase3Assets: "阶段 3 · 资产",
+      campaigns: "推广活动",
     },
     account: {
       menuAria: "账户菜单",
@@ -275,6 +287,9 @@ export const DASHBOARD_UI: Record<
       review: "审核",
       profile: "个人资料",
       settings: "设置",
+      reputation: "声誉",
+      campaigns: "推广活动",
+      governance: "治理",
     },
   },
 };

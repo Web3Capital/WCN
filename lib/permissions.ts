@@ -33,7 +33,8 @@ export type Action =
   | "review"
   | "export"
   | "freeze"
-  | "override";
+  | "override"
+  | "manage";
 
 type PolicyMap = Partial<Record<Resource, Action[]>>;
 
@@ -46,7 +47,7 @@ const ALL_READ: PolicyMap = {
   notification: ["read"],
 };
 
-const FULL_ACCESS: Action[] = ["read", "create", "update", "delete", "review", "export", "freeze", "override"];
+const FULL_ACCESS: Action[] = ["read", "create", "update", "delete", "review", "export", "freeze", "override", "manage"];
 
 const POLICIES: Record<string, PolicyMap> = {
   FOUNDER: {

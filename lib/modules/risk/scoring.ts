@@ -25,7 +25,7 @@ export async function calculateEntityRiskScore(
   factors.push({ name: "critical_flags", weight: 25, value: Math.min(criticalFlags, 3) / 3 });
 
   const disputes = await prisma.dispute.count({
-    where: { entityType, entityId },
+    where: { targetId: entityId },
   });
   factors.push({ name: "dispute_history", weight: 20, value: Math.min(disputes, 10) / 10 });
 

@@ -7,7 +7,7 @@ import { z } from "zod";
 const savedSearchSchema = z.object({
   name: z.string().min(1).max(100),
   query: z.string().min(1),
-  filters: z.record(z.string()).optional(),
+  filters: z.record(z.string(), z.string()).optional(),
   notifyOnNew: z.boolean().optional(),
 });
 
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       userId: auth.session.user!.id,
       name: parsed.data.name,
       query: parsed.data.query,
-      filters: parsed.data.filters ?? {},
+      filters: (parsed.data.filters ?? {}) as any,
       notifyOnNew: parsed.data.notifyOnNew ?? false,
     },
   });

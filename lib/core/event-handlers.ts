@@ -553,5 +553,50 @@ export function initEventHandlers(): void {
     }
   });
 
+  // ─── SSE Bridge: Forward key events to connected clients ──
+  const { sseManager } = require("@/lib/modules/realtime/sse");
+  eventBus.onAny(async (payload, meta) => {
+    const broadcastEvents: string[] = [
+      Events.DEAL_STAGE_CHANGED,
+      Events.TASK_COMPLETED,
+      Events.TASK_ASSIGNED,
+      Events.POB_CREATED,
+      Events.EVIDENCE_APPROVED,
+      Events.MATCH_GENERATED,
+    ];
+    if (broadcastEvents.includes(meta.eventName)) {
+      sseManager.broadcast("entity_update", { event: meta.eventName, ...payload });
+    }
+  });
+
+  // ─── Reputation recalculation on PoB, Deal, Evidence events ──
+  const { recalculateNodeReputation } = require("@/lib/modules/reputation/calculator");
+  const { evaluateBadges } = require("@/lib/modules/reputation/badges");
+
+  for (const evt of [Events.POB_CREATED, Events.DEAL_CLOSED, Events.EVIDENCE_APPROVED]) {
+    eventBus.on(evt, async (payload: any) => {
+      const nodeId = payload.nodeId;
+      if (!nodeId) return;
+      try {
+        const prisma = getPrisma();
+        await recalculateNodeReputation(prisma, nodeId);
+        await evaluateBadges(prisma, nodeId);
+      } catch (e) {
+        console.error("[Reputation] Recalculation failed:", e);
+      }
+    });
+  }
+
+  // ─── Risk auto-evaluation on entity changes ──────────────────
+  const { autoEvaluateEntity } = require("@/lib/modules/risk/rule-engine");
+  eventBus.on(Events.NODE_STATUS_CHANGED, async (payload: any) => {
+    try {
+      const prisma = getPrisma();
+      await autoEvaluateEntity(prisma, "NODE", payload.nodeId, payload);
+    } catch (e) {
+      console.error("[Risk] Auto-evaluate failed:", e);
+    }
+  });
+
   console.log("[WCN] Event handlers initialized — " + eventBus.listEvents().length + " event types registered");
 }

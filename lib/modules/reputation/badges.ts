@@ -71,7 +71,7 @@ export async function evaluateBadges(
       where: { stage: "FUNDED", OR: [{ leadNodeId: nodeId }, { participants: { some: { nodeId } } }] },
     }),
     prisma.poBRecord.count({ where: { nodeId } }),
-    prisma.dispute.count({ where: { raisedById: nodeId } }),
+    prisma.dispute.count({ where: { pob: { nodeId } } }),
     prisma.task.findMany({
       where: { assignments: { some: { nodeId } } },
       select: { status: true },
@@ -82,7 +82,7 @@ export async function evaluateBadges(
   const tenureMonths = node
     ? Math.floor((Date.now() - node.createdAt.getTime()) / (30 * 24 * 60 * 60 * 1000))
     : 0;
-  const completed = tasks.filter((t) => t.status === "COMPLETED").length;
+  const completed = tasks.filter((t) => t.status === "ACCEPTED" || t.status === "CLOSED").length;
   const taskCompletionRate = tasks.length > 0 ? completed / tasks.length : 0;
 
   const ctx: BadgeContext = {

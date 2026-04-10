@@ -16,7 +16,7 @@ const ERC20_TRANSFER_ABI = [
   },
 ] as const;
 
-const CHAIN_MAP = { polygon, base, ethereum: mainnet } as Record<string, typeof polygon>;
+const CHAIN_MAP: Record<string, any> = { polygon, base, ethereum: mainnet };
 
 function getWalletClient(chain: string) {
   const pk = process.env.PAYMENT_PRIVATE_KEY;
@@ -96,7 +96,8 @@ export async function executeSettlementPayout(
       const txHash = await walletClient.sendTransaction({
         to: config.usdcAddress,
         data,
-      });
+        chain: CHAIN_MAP[chain] ?? polygon,
+      } as any);
 
       await prisma.paymentExecution.update({
         where: { id: execution.id },

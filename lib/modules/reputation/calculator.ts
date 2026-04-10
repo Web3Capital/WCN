@@ -64,7 +64,7 @@ export async function recalculateNodeReputation(
       select: { reviewStatus: true },
     }),
     prisma.dispute.findMany({
-      where: { OR: [{ raisedById: nodeId }] },
+      where: { pob: { nodeId } },
       select: { id: true },
     }),
     prisma.deal.findMany({
@@ -78,7 +78,7 @@ export async function recalculateNodeReputation(
     : 0;
 
   const totalPobScore = pobRecords.reduce((sum, p) => sum + (p.score ?? 0), 0);
-  const completedTasks = tasks.filter((t) => t.status === "COMPLETED").length;
+  const completedTasks = tasks.filter((t) => t.status === "ACCEPTED" || t.status === "CLOSED").length;
   const taskCompletionRate = tasks.length > 0 ? completedTasks / tasks.length : 0;
   const approvedEvidence = evidences.filter((e) => e.reviewStatus === "APPROVED").length;
   const evidenceQuality = evidences.length > 0 ? approvedEvidence / evidences.length : 0;

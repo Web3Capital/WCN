@@ -34,6 +34,9 @@ import {
   Users,
   X,
   ScanEye,
+  Trophy,
+  Megaphone,
+  Vote,
 } from "lucide-react";
 import type { Role } from "@prisma/client";
 import { signOut } from "next-auth/react";
@@ -96,6 +99,7 @@ const GROUP_DEFS: NavDef[] = [
     items: [
       { href: "/dashboard/data", labelKey: "dataCockpit", icon: <BarChart3 size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN"] },
       { href: "/dashboard/risk", labelKey: "riskConsole", icon: <AlertTriangle size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "RISK_DESK"] },
+      { href: "/dashboard/reputation", labelKey: "reputation", icon: <Trophy size={18} strokeWidth={2} /> },
     ],
   },
   {
@@ -108,7 +112,13 @@ const GROUP_DEFS: NavDef[] = [
         roles: ["FOUNDER", "ADMIN", "FINANCE_ADMIN", "REVIEWER", "RISK_DESK"],
       },
       { href: "/dashboard/applications", labelKey: "applications", icon: <Inbox size={18} strokeWidth={2} /> },
-      { href: "/dashboard/users", labelKey: "users", icon: <Users size={18} strokeWidth={2} /> },
+      {
+        href: "/dashboard/users",
+        labelKey: "users",
+        icon: <Users size={18} strokeWidth={2} />,
+        roles: ["FOUNDER", "ADMIN"],
+      },
+      { href: "/dashboard/governance", labelKey: "proposals", icon: <Vote size={18} strokeWidth={2} /> },
       {
         href: "/dashboard/admin/invites",
         labelKey: "invites",
@@ -124,8 +134,11 @@ const GROUP_DEFS: NavDef[] = [
     ],
   },
   {
-    titleKey: "roadmap",
-    items: [{ href: "/dashboard/assets", labelKey: "phase3Assets", icon: <Rocket size={18} strokeWidth={2} /> }],
+    titleKey: "ecosystem",
+    items: [
+      { href: "/dashboard/campaigns", labelKey: "campaigns", icon: <Megaphone size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN"] },
+      { href: "/dashboard/assets", labelKey: "phase3Assets", icon: <Rocket size={18} strokeWidth={2} /> },
+    ],
   },
 ];
 
