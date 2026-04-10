@@ -317,7 +317,7 @@ export const verify2FASchema = z.object({
 });
 
 export const updateUserRoleSchema = z.object({
-  role: z.enum(["USER", "ADMIN"]),
+  role: z.enum(["USER", "ADMIN", "FOUNDER", "FINANCE_ADMIN", "NODE_OWNER", "PROJECT_OWNER", "CAPITAL_NODE", "SERVICE_NODE", "REVIEWER", "RISK_DESK", "AGENT_OWNER", "OBSERVER", "SYSTEM"]),
 });
 
 // ─── Dispute Schemas ────────────────────────────────────────────

@@ -7,11 +7,12 @@ import { signIn } from "next-auth/react";
 export default function TwoFactorChallengePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [email, setEmail] = useState(searchParams.get("email") ?? "");
+  const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  const email = searchParams.get("email") ?? "";
   const next = searchParams.get("next") ?? "/dashboard";
 
   async function handleSubmit(e: React.FormEvent) {
@@ -23,13 +24,19 @@ export default function TwoFactorChallengePage() {
     try {
       const res = await signIn("credentials", {
         email,
-        password: "__2fa_challenge__",
-        twoFactorCode: code,
+        password,
+        totpCode: code,
         redirect: false,
       });
 
-      if (res?.error) {
+      if (res?.error === "INVALID_2FA_CODE") {
         setError("Invalid code. Please try again.");
+        setCode("");
+        return;
+      }
+
+      if (res?.error) {
+        setError("Authentication failed. Check your credentials and try again.");
         return;
       }
 
@@ -48,10 +55,34 @@ export default function TwoFactorChallengePage() {
         <h1>Two-Factor Verification</h1>
         <div className="card" style={{ marginTop: 18 }}>
           <p className="muted" style={{ marginBottom: 20 }}>
-            Enter the 6-digit code from your authenticator app.
+            Enter your credentials and the 6-digit code from your authenticator app.
           </p>
 
           <form onSubmit={handleSubmit} className="form">
+            <label className="field">
+              <span className="label">Email</span>
+              <input
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="you@company.com"
+              />
+            </label>
+
+            <label className="field">
+              <span className="label">Password</span>
+              <input
+                type="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="Enter your password"
+              />
+            </label>
+
             <label className="field">
               <span className="label">Verification code</span>
               <input
@@ -76,7 +107,7 @@ export default function TwoFactorChallengePage() {
               disabled={busy || code.length !== 6}
               style={{ width: "100%" }}
             >
-              {busy ? "Verifying..." : "Verify"}
+              {busy ? "Verifying..." : "Verify & Sign in"}
             </button>
           </form>
 

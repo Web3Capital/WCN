@@ -82,7 +82,7 @@ export const authOptions: NextAuthOptions = (() => {
           password: { label: "Password", type: "password" },
           totpCode: { label: "2FA Code", type: "text" }
         },
-        async authorize(credentials) {
+        async authorize(credentials, req) {
           const email = credentials?.email?.toLowerCase().trim();
           const password = credentials?.password ?? "";
           if (!email || !password) return null;
@@ -114,20 +114,28 @@ export const authOptions: NextAuthOptions = (() => {
           if (user.twoFactorEnabled) {
             const totpCode = credentials?.totpCode?.trim();
             if (!totpCode || !user.twoFactorSecret) {
-              return null;
+              throw new Error("2FA_REQUIRED");
             }
             const { TOTPVerify } = await import("@/lib/totp");
             if (!TOTPVerify(user.twoFactorSecret, totpCode)) {
-              return null;
+              throw new Error("INVALID_2FA_CODE");
             }
           }
+
+          const headers = req?.headers;
+          const loginIp = (headers as any)?.["x-forwarded-for"]?.split(",")[0]?.trim()
+            ?? (headers as any)?.["x-real-ip"]
+            ?? null;
+          const loginDevice = (headers as any)?.["user-agent"] ?? null;
 
           await prisma.user.update({
             where: { id: user.id },
             data: {
               failedLoginCount: 0,
               lastLoginAt: new Date(),
-              accountStatus: user.accountStatus === "INVITED" ? "ACTIVE" : user.accountStatus === "PENDING_2FA" ? "ACTIVE" : user.accountStatus
+              lastLoginIp: loginIp,
+              lastLoginDevice: loginDevice,
+              accountStatus: user.accountStatus === "INVITED" ? "ACTIVE" : user.accountStatus === "PENDING_2FA" ? "ACTIVE" : user.accountStatus,
             }
           });
 
@@ -144,16 +152,36 @@ export const authOptions: NextAuthOptions = (() => {
       async jwt({ token, user, account }) {
         if (user) {
           token.id = user.id;
-          const dbUser = await prisma.user.findUnique({
-            where: { id: user.id },
-            select: { role: true, accountStatus: true }
-          });
-          token.role = dbUser?.role ?? "USER";
-          token.accountStatus = dbUser?.accountStatus ?? "ACTIVE";
         }
         if (account) {
           token.provider = account.provider;
         }
+
+        const REFRESH_MS = 5 * 60 * 1000;
+        const now = Date.now();
+        const lastRefresh = (token.refreshedAt as number) || 0;
+
+        if (user || now - lastRefresh > REFRESH_MS) {
+          const id = (token.id ?? user?.id) as string | undefined;
+          if (id) {
+            const dbUser = await prisma.user.findUnique({
+              where: { id },
+              select: { role: true, accountStatus: true, tokenInvalidatedAt: true },
+            });
+            if (dbUser) {
+              token.role = dbUser.role;
+              token.accountStatus = dbUser.accountStatus;
+              if (dbUser.tokenInvalidatedAt) {
+                const iat = token.iat as number | undefined;
+                if (iat && dbUser.tokenInvalidatedAt.getTime() / 1000 > iat) {
+                  return {} as any;
+                }
+              }
+            }
+            token.refreshedAt = now;
+          }
+        }
+
         return token;
       },
       async session({ session, token }) {

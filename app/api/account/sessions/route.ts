@@ -25,7 +25,13 @@ export async function DELETE() {
   const prisma = getPrisma();
   const userId = auth.session.user!.id;
 
-  const { count } = await prisma.session.deleteMany({ where: { userId } });
+  const [{ count }] = await prisma.$transaction([
+    prisma.session.deleteMany({ where: { userId } }),
+    prisma.user.update({
+      where: { id: userId },
+      data: { tokenInvalidatedAt: new Date() },
+    }),
+  ]);
 
   await writeAudit({
     actorUserId: userId,

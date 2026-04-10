@@ -27,8 +27,10 @@ import {
   Search,
   Rocket,
   Scale,
+  Settings,
   ShieldCheck,
   User,
+  UserCircle,
   Users,
   X,
   ScanEye,
@@ -67,7 +69,7 @@ const GROUP_DEFS: NavDef[] = [
     items: [
       { href: "/dashboard/tasks", labelKey: "tasks", icon: <ListTodo size={18} strokeWidth={2} /> },
       { href: "/dashboard/agents", labelKey: "agents", icon: <Bot size={18} strokeWidth={2} /> },
-      { href: "/dashboard/agents/review", labelKey: "agentReview", icon: <ScanEye size={18} strokeWidth={2} /> },
+      { href: "/dashboard/agents/review", labelKey: "agentReview", icon: <ScanEye size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN"] },
     ],
   },
   {
@@ -92,8 +94,8 @@ const GROUP_DEFS: NavDef[] = [
   {
     titleKey: "intelligence",
     items: [
-      { href: "/dashboard/data", labelKey: "dataCockpit", icon: <BarChart3 size={18} strokeWidth={2} /> },
-      { href: "/dashboard/risk", labelKey: "riskConsole", icon: <AlertTriangle size={18} strokeWidth={2} /> },
+      { href: "/dashboard/data", labelKey: "dataCockpit", icon: <BarChart3 size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN"] },
+      { href: "/dashboard/risk", labelKey: "riskConsole", icon: <AlertTriangle size={18} strokeWidth={2} />, roles: ["FOUNDER", "ADMIN", "RISK_DESK"] },
     ],
   },
   {
@@ -281,9 +283,13 @@ function AccountMenu({
             <LayoutDashboard size={16} strokeWidth={2} aria-hidden />
             {ui.account.workspace}
           </Link>
-          <Link href="/account" className="account-menu-link" onClick={() => setOpen(false)}>
-            <User size={16} strokeWidth={2} aria-hidden />
-            {ui.account.accountSettings}
+          <Link href="/dashboard/profile" className="account-menu-link" onClick={() => setOpen(false)}>
+            <UserCircle size={16} strokeWidth={2} aria-hidden />
+            {ui.account.profile}
+          </Link>
+          <Link href="/dashboard/settings" className="account-menu-link" onClick={() => setOpen(false)}>
+            <Settings size={16} strokeWidth={2} aria-hidden />
+            {ui.account.settings}
           </Link>
           <Link href="/" className="account-menu-link" onClick={() => setOpen(false)}>
             <Home size={16} strokeWidth={2} aria-hidden />

@@ -322,6 +322,7 @@ export const Events = {
   USER_LOGIN_FAILED: "user.login_failed",
   USER_ROLE_CHANGED: "user.role_changed",
   USER_SUSPENDED: "user.suspended",
+  USER_STATUS_CHANGED: "user.status_changed",
 
   // Nodes
   NODE_CREATED: "node.created",

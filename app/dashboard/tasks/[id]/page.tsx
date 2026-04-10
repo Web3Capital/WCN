@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
-import { isAdminRole } from "@/lib/permissions";
+import { isAdminRole, can } from "@/lib/permissions";
 import { TaskDetail } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -32,7 +32,7 @@ export default async function TaskDetailPage({ params }: { params: { id: string 
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <TaskDetail task={JSON.parse(JSON.stringify(task))} isAdmin={isAdmin} />
+        <TaskDetail task={JSON.parse(JSON.stringify(task))} isAdmin={isAdmin} canReviewEvidence={can(session.user.role, "review", "evidence")} />
       </div>
     </div>
   );

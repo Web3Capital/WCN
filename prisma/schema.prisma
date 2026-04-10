@@ -384,6 +384,14 @@ enum TermsDocumentType {
   CODE_OF_CONDUCT
 }
 
+enum KYCStatus {
+  NOT_STARTED
+  PENDING
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
 // ─── AUTH & IDENTITY ────────────────────────────────────────────────────────
 
 model User {
@@ -406,10 +414,14 @@ model User {
   lastLoginIp      String?
   lastLoginDevice  String?
 
+  kycStatus          KYCStatus @default(NOT_STARTED)
+  tokenInvalidatedAt DateTime?
+
   activeWorkspaceId String?
   activeRole        Role?
 
   accounts             Account[]
+  kycRecords           KYCRecord[]
   sessions             Session[]
   applications         Application[]
   nodes                Node[]              @relation("NodeOwner")
@@ -550,6 +562,27 @@ model TermsAcceptance {
   deviceInfo    String?
 
   @@index([userId, documentType, documentVer])
+}
+
+// ─── KYC ────────────────────────────────────────────────────────────────────
+
+model KYCRecord {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status          KYCStatus @default(PENDING)
+  provider        String?
+  externalId      String?
+  documents       Json?
+  submittedAt     DateTime  @default(now())
+  reviewedAt      DateTime?
+  expiresAt       DateTime?
+  rejectionReason String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, status])
+  @@index([status, submittedAt])
 }
 
 // ─── ACCESS GRANT ───────────────────────────────────────────────────────────

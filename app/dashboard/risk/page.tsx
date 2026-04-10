@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
-import { isAdminRole } from "@/lib/permissions";
+import { can } from "@/lib/permissions";
 import { RiskConsole } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -11,8 +11,7 @@ export default async function RiskPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
 
-  const isAdmin = isAdminRole(session.user.role);
-  if (!isAdmin) redirect("/dashboard");
+  if (!can(session.user.role, "read", "risk")) redirect("/dashboard");
 
   const prisma = getPrisma();
 

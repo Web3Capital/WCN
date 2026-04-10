@@ -42,7 +42,7 @@ const NEXT_STATUS: Record<string, { label: string; target: string; style?: strin
   DONE: [{ label: "Close", target: "CLOSED" }],
 };
 
-export function TaskDetail({ task, isAdmin }: { task: TaskData; isAdmin: boolean }) {
+export function TaskDetail({ task, isAdmin, canReviewEvidence = false }: { task: TaskData; isAdmin: boolean; canReviewEvidence?: boolean }) {
   const [status, setStatus] = useState(task.status);
   const [evidences, setEvidences] = useState(task.evidences);
   const [busy, setBusy] = useState(false);
@@ -125,7 +125,7 @@ export function TaskDetail({ task, isAdmin }: { task: TaskData; isAdmin: boolean
   }
 
   const canSubmitOutput = ["IN_PROGRESS", "REWORK"].includes(status);
-  const canReview = isAdmin && ["SUBMITTED", "WAITING_REVIEW"].includes(status);
+  const canReview = (isAdmin || canReviewEvidence) && ["SUBMITTED", "WAITING_REVIEW"].includes(status);
   const actions = NEXT_STATUS[status] ?? [];
 
   return (

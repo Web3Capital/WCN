@@ -35,6 +35,8 @@ export const DASHBOARD_UI: Record<
     account: {
       menuAria: string;
       workspace: string;
+      profile: string;
+      settings: string;
       accountSettings: string;
       siteHome: string;
       signOut: string;
@@ -98,6 +100,8 @@ export const DASHBOARD_UI: Record<
     account: {
       menuAria: "Account menu",
       workspace: "Workspace",
+      profile: "Profile",
+      settings: "Settings",
       accountSettings: "Account settings",
       siteHome: "Marketing site",
       signOut: "Sign out",
@@ -162,6 +166,8 @@ export const DASHBOARD_UI: Record<
       onboarding: "Onboarding",
       billing: "Billing",
       review: "Review",
+      profile: "Profile",
+      settings: "Settings",
     },
   },
   zh: {
@@ -201,6 +207,8 @@ export const DASHBOARD_UI: Record<
     account: {
       menuAria: "账户菜单",
       workspace: "工作台",
+      profile: "个人资料",
+      settings: "设置",
       accountSettings: "账户设置",
       siteHome: "官网首页",
       signOut: "退出登录",
@@ -265,6 +273,8 @@ export const DASHBOARD_UI: Record<
       onboarding: "入驻",
       billing: "账单",
       review: "审核",
+      profile: "个人资料",
+      settings: "设置",
     },
   },
 };

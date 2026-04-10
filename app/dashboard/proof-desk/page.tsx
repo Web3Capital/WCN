@@ -14,7 +14,7 @@ export default async function ProofDeskPage() {
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(session.user.role);
-  const isReviewer = ["FOUNDER", "ADMIN", "REVIEWER"].includes(session.user.role);
+  const isReviewer = ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK"].includes(session.user.role);
 
   let where: Record<string, unknown> = {};
   if (!isAdmin) {

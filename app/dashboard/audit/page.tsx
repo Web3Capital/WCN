@@ -3,24 +3,24 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { AuditConsole } from "./ui";
-import { isAdminRole } from "@/lib/permissions";
+import { can } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
 export default async function AuditPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
-  const isAdmin = isAdminRole(session.user.role);
+  const hasAccess = can(session.user.role, "read", "audit");
 
-  if (!isAdmin) {
+  if (!hasAccess) {
     return (
       <div className="dashboard-page section">
         <div className="container">
-          <span className="eyebrow">Admin</span>
+          <span className="eyebrow">Governance</span>
           <h1>Audit log</h1>
           <div className="card" style={{ marginTop: 18, padding: "14px 16px" }}>
             <p className="muted" style={{ margin: 0 }}>
-              The audit log is only available to administrators.
+              You do not have permission to view the audit log.
             </p>
           </div>
         </div>

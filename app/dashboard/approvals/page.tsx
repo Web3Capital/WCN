@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import { ApprovalsUI } from "./ui";
 
 export default async function ApprovalsPage() {
-  const auth = await requirePermission("read", "settlement");
-  if (!auth.ok) redirect("/login");
+  const auth = await requirePermission("read", "approval");
+  if (!auth.ok) redirect("/dashboard");
   return (
     <div className="dashboard-page section">
       <div className="container">

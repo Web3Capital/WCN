@@ -88,6 +88,17 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  if (token.accountStatus === "PENDING_2FA") {
+    const allowed2faPaths = ["/account", "/account/2fa", "/api/account/2fa", "/api/auth"];
+    const isAllowed = allowed2faPaths.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+    if (!isAllowed) {
+      if (pathname.startsWith("/api/")) {
+        return NextResponse.json({ ok: false, error: { code: "2FA_SETUP_REQUIRED", message: "Complete 2FA setup to continue." } }, { status: 403 });
+      }
+      return NextResponse.redirect(new URL("/account/2fa", request.url));
+    }
+  }
+
   // Rate limit API routes for authenticated users
   if (pathname.startsWith("/api/")) {
     const userId = token.sub ?? getClientIp(request);
