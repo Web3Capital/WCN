@@ -22,6 +22,9 @@ jobs:
       - name: Prisma Generate
         run: npx prisma generate
 
+      - name: Prisma Validate
+        run: npx prisma validate
+
       - name: TypeScript Check
         run: npx tsc --noEmit
 
