@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { DetailLayout, StatusBadge, EmptyState } from "../../../_components";
 
 type ReviewData = {
   id: string;
@@ -52,25 +52,19 @@ export function NodeReviewUI({ node, reviews }: { node: NodeData; reviews: Revie
   }
 
   return (
-    <div>
-      <div style={{ marginBottom: 16 }}>
-        <Link href={`/dashboard/nodes/${node.id}`} style={{ fontSize: 13, color: "var(--accent)" }}>
-          &larr; Back to {node.name}
-        </Link>
-      </div>
-
-      <div className="detail-header">
-        <div>
-          <h1 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 4px" }}>Review: {node.name}</h1>
-          <div className="detail-header-meta">
-            <span className="badge">{node.status}</span>
-            <span className="badge">{node.type}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="card" style={{ padding: 20, marginBottom: 20 }}>
-        <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Submit Review</h2>
+    <DetailLayout
+      backHref={`/dashboard/nodes/${node.id}`}
+      backLabel={`Back to ${node.name}`}
+      title={`Review: ${node.name}`}
+      badge={
+        <span className="flex items-center gap-6">
+          <StatusBadge status={node.status} />
+          <span className="badge">{node.type}</span>
+        </span>
+      }
+    >
+      <div className="card p-20">
+        <h2 className="text-lg font-semibold mb-12 mt-0">Submit Review</h2>
         <form onSubmit={handleSubmit} className="form">
           <label className="field">
             <span className="label">Decision</span>
@@ -90,10 +84,10 @@ export function NodeReviewUI({ node, reviews }: { node: NodeData; reviews: Revie
         </form>
       </div>
 
-      <div className="card" style={{ padding: 20 }}>
-        <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Review History ({reviews.length})</h2>
+      <div className="card p-20">
+        <h2 className="text-lg font-semibold mb-12 mt-0">Review History ({reviews.length})</h2>
         {reviews.length === 0 ? (
-          <div className="empty-state"><p>No reviews yet.</p></div>
+          <EmptyState message="No reviews yet." />
         ) : (
           <table className="data-table">
             <thead>
@@ -103,15 +97,15 @@ export function NodeReviewUI({ node, reviews }: { node: NodeData; reviews: Revie
               {reviews.map((r) => (
                 <tr key={r.id}>
                   <td><span className={`badge ${DECISION_BADGE[r.decision] ?? ""}`}>{r.decision}</span></td>
-                  <td style={{ fontSize: 12 }}>{r.reviewer?.name ?? r.reviewer?.email ?? "Unknown"}</td>
-                  <td className="muted" style={{ fontSize: 11 }}>{new Date(r.createdAt).toLocaleString()}</td>
-                  <td style={{ fontSize: 13 }}>{r.notes || "—"}</td>
+                  <td className="text-xs">{r.reviewer?.name ?? r.reviewer?.email ?? "Unknown"}</td>
+                  <td className="muted text-xs">{new Date(r.createdAt).toLocaleString()}</td>
+                  <td className="text-sm">{r.notes || "—"}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
       </div>
-    </div>
+    </DetailLayout>
   );
 }

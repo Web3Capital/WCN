@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { StatusBadge, FormCard, EmptyState } from "../_components";
 
 type NodeRow = { id: string; name: string; type: string; status: string };
 type ProjectRow = {
@@ -35,6 +36,7 @@ export function ProjectsConsole({
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
   const selected = useMemo(() => rows.find((r) => r.id === selectedId) ?? null, [rows, selectedId]);
 
+  const [showForm, setShowForm] = useState(false);
   const [create, setCreate] = useState({
     name: "",
     status: "SUBMITTED",
@@ -71,6 +73,7 @@ export function ProjectsConsole({
       if (!data?.ok) throw new Error(data?.error ?? "Create failed.");
       await refresh();
       setCreate({ name: "", status: "SUBMITTED", stage: "OTHER", nodeId: "" });
+      setShowForm(false);
     } catch (e: any) {
       setError(e?.message ?? "Create failed.");
     } finally {
@@ -102,16 +105,13 @@ export function ProjectsConsole({
     <div className="apps-layout">
       <div>
         {!readOnly ? (
-          <>
-            <div className="pill" style={{ marginBottom: 10 }}>
-              Create project
-            </div>
-            <div className="form" style={{ marginBottom: 14 }}>
+          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="Create project">
+            <div className="form mb-14">
               <label className="field">
                 <span className="label">Name</span>
                 <input value={create.name} onChange={(e) => setCreate((s) => ({ ...s, name: e.target.value }))} />
               </label>
-              <div className="grid-3" style={{ gap: 12 }}>
+              <div className="grid-3 gap-12">
                 <label className="field">
                   <span className="label">Status</span>
                   <select value={create.status} onChange={(e) => setCreate((s) => ({ ...s, status: e.target.value }))}>
@@ -149,10 +149,10 @@ export function ProjectsConsole({
               </button>
               {error ? <p className="form-error">{error}</p> : null}
             </div>
-          </>
+          </FormCard>
         ) : null}
 
-        <div className="pill" style={{ marginBottom: 10 }}>
+        <div className="pill mb-10">
           Projects ({rows.length})
         </div>
         <div className="apps-list">
@@ -166,14 +166,14 @@ export function ProjectsConsole({
                 data-active={active ? "true" : "false"}
                 onClick={() => setSelectedId(r.id)}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div className="flex items-center gap-10">
                   <span className={`status-dot ${r.status === "APPROVED" ? "status-dot-green" : r.status === "REJECTED" || r.status === "ARCHIVED" ? "status-dot-red" : r.status === "SUBMITTED" ? "status-dot-amber" : ""}`} />
                   <div>
-                    <div style={{ fontWeight: 800 }}>{r.name}</div>
-                    <div className="muted" style={{ fontSize: 13 }}>{r.stage} · {r.sector || "—"}</div>
+                    <div className="font-bold">{r.name}</div>
+                    <div className="muted text-sm">{r.stage} · {r.sector || "—"}</div>
                   </div>
                 </div>
-                <span className={`badge ${r.status === "APPROVED" ? "badge-green" : r.status === "REJECTED" || r.status === "ARCHIVED" ? "badge-red" : r.status === "SUBMITTED" ? "badge-amber" : ""}`}>{r.status}</span>
+                <StatusBadge status={r.status} />
               </button>
             );
           })}
@@ -181,7 +181,7 @@ export function ProjectsConsole({
       </div>
 
       <div>
-        <div className="pill" style={{ marginBottom: 10 }}>
+        <div className="pill mb-10">
           Details
         </div>
         {selected ? (
@@ -196,7 +196,7 @@ export function ProjectsConsole({
                 onBlur={readOnly ? undefined : (e) => onSave({ name: e.target.value })}
               />
             </label>
-            <div className="grid-2" style={{ gap: 12 }}>
+            <div className="grid-2 gap-12">
               <label className="field">
                 <span className="label">Status</span>
                 <select
@@ -268,7 +268,7 @@ export function ProjectsConsole({
                 onBlur={readOnly ? undefined : (e) => onSave({ fundraisingNeed: e.target.value })}
               />
             </label>
-            <div className="grid-3" style={{ gap: 12 }}>
+            <div className="grid-3 gap-12">
               <label className="field">
                 <span className="label">Contact name</span>
                 <input
@@ -332,10 +332,9 @@ export function ProjectsConsole({
             {error ? <p className="form-error">{error}</p> : null}
           </div>
         ) : (
-          <p className="muted">Select a project.</p>
+          <EmptyState message="Select a project." />
         )}
       </div>
     </div>
   );
 }
-

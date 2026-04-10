@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { EmptyState } from "../_components";
 
 type AuditRow = {
   id: string;
@@ -53,7 +54,7 @@ export function AuditConsole({ initial, actions }: { initial: AuditRow[]; action
 
   return (
     <div>
-      <div className="grid-3" style={{ gap: 12, marginBottom: 14 }}>
+      <div className="grid-3 gap-12 mb-14">
         <label className="field">
           <span className="label">Action</span>
           <select value={filterAction} onChange={(e) => setFilterAction(e.target.value)}>
@@ -76,7 +77,7 @@ export function AuditConsole({ initial, actions }: { initial: AuditRow[]; action
           <input type="date" value={since} onChange={(e) => setSince(e.target.value)} />
         </label>
       </div>
-      <div className="cta-row" style={{ marginBottom: 14 }}>
+      <div className="cta-row mb-14">
         <button className="button" type="button" disabled={loading} onClick={() => search()}>
           {loading ? "Loading..." : "Search"}
         </button>
@@ -93,15 +94,15 @@ export function AuditConsole({ initial, actions }: { initial: AuditRow[]; action
               onClick={() => setSelectedId(r.id)}
             >
               <div style={{ display: "grid", gap: 2 }}>
-                <div style={{ fontWeight: 800, color: "var(--text)" }}>{r.action}</div>
-                <div className="muted" style={{ fontSize: 13 }}>
+                <div className="font-bold" style={{ color: "var(--text)" }}>{r.action}</div>
+                <div className="muted text-sm">
                   {r.targetType}:{r.targetId.slice(0, 8)} · {r.actor?.name || r.actor?.email || "system"}
                 </div>
-                <div className="muted" style={{ fontSize: 12 }}>{fmtDate(r.createdAt)}</div>
+                <div className="muted text-xs">{fmtDate(r.createdAt)}</div>
               </div>
             </button>
           ))}
-          {rows.length === 0 && <p className="muted">No audit events found.</p>}
+          {rows.length === 0 && <EmptyState message="No audit events found." />}
         </div>
 
         <div className="apps-detail">
@@ -109,29 +110,28 @@ export function AuditConsole({ initial, actions }: { initial: AuditRow[]; action
             <>
               <div className="apps-detail-head">
                 <div>
-                  <h3 style={{ marginBottom: 6 }}>{selected.action}</h3>
+                  <h3 className="mb-6">{selected.action}</h3>
                   <p className="muted" style={{ margin: 0 }}>{fmtDate(selected.createdAt)}</p>
                 </div>
                 <span className="pill">{selected.targetType}</span>
               </div>
-              <div className="grid-2" style={{ marginTop: 14, gap: 12 }}>
+              <div className="grid-2 mt-14 gap-12">
                 <div className="kpi">
                   <strong>Actor</strong>
                   <span className="muted">{selected.actor?.name || selected.actor?.email || "system"}</span>
                 </div>
                 <div className="kpi">
                   <strong>Target ID</strong>
-                  <span className="muted" style={{ fontSize: 13, wordBreak: "break-all" }}>{selected.targetId}</span>
+                  <span className="muted text-sm" style={{ wordBreak: "break-all" }}>{selected.targetId}</span>
                 </div>
               </div>
               {selected.metadata ? (
-                <div style={{ marginTop: 14 }}>
+                <div className="mt-14">
                   <div className="label">Metadata</div>
                   <pre
-                    className="muted"
+                    className="muted text-xs"
                     style={{
                       margin: 0,
-                      fontSize: 12,
                       whiteSpace: "pre-wrap",
                       wordBreak: "break-all",
                       background: "var(--surface)",
@@ -145,13 +145,13 @@ export function AuditConsole({ initial, actions }: { initial: AuditRow[]; action
               ) : null}
             </>
           ) : (
-            <p className="muted" style={{ margin: 0 }}>Select an event to view details.</p>
+            <EmptyState message="Select an event to view details." />
           )}
         </div>
       </div>
 
       {cursor ? (
-        <div style={{ marginTop: 14, textAlign: "center" }}>
+        <div className="mt-14 text-center">
           <button className="button-secondary" type="button" disabled={loading} onClick={() => search(true)}>
             {loading ? "Loading..." : "Load more"}
           </button>

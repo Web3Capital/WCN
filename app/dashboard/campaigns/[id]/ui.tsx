@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { DetailLayout, StatusBadge, StatCard } from "../../_components";
 
 type Campaign = {
   id: string; title: string; description: string | null; status: string;
@@ -66,86 +66,81 @@ export function CampaignDetail({ campaign: initial }: { campaign: Campaign }) {
   const allowedTransitions = TRANSITIONS[campaign.status] ?? [];
 
   return (
-    <div>
-      <div style={{ marginBottom: 24 }}>
-        <Link href="/dashboard/campaigns" className="muted" style={{ fontSize: 13 }}>&larr; All Campaigns</Link>
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
-        <div>
-          <h1 style={{ margin: 0 }}>{campaign.title}</h1>
-          {campaign.description && <p className="muted" style={{ margin: "4px 0 0" }}>{campaign.description}</p>}
-        </div>
-        <span className="badge" style={{ fontSize: 14 }}>{campaign.status}</span>
-      </div>
-
-      <div className="grid-4" style={{ marginBottom: 20 }}>
-        <div className="stat-card"><div className="stat-number">{campaign.budget ? `$${campaign.budget.toLocaleString()}` : "—"}</div><div className="stat-label">Budget</div></div>
-        <div className="stat-card"><div className="stat-number">{campaign.channels.length}</div><div className="stat-label">Channels</div></div>
-        <div className="stat-card"><div className="stat-number">{campaign.metrics.length}</div><div className="stat-label">Metrics</div></div>
-        <div className="stat-card"><div className="stat-number">{campaign.startAt ? new Date(campaign.startAt).toLocaleDateString() : "—"}</div><div className="stat-label">Start Date</div></div>
+    <DetailLayout
+      backHref="/dashboard/campaigns"
+      backLabel="All Campaigns"
+      title={campaign.title}
+      subtitle={campaign.description || undefined}
+      badge={<StatusBadge status={campaign.status} />}
+    >
+      <div className="grid-4">
+        <StatCard label="Budget" value={campaign.budget ? `$${campaign.budget.toLocaleString()}` : "—"} />
+        <StatCard label="Channels" value={campaign.channels.length} />
+        <StatCard label="Metrics" value={campaign.metrics.length} />
+        <StatCard label="Start Date" value={campaign.startAt ? new Date(campaign.startAt).toLocaleDateString() : "—"} />
       </div>
 
       {allowedTransitions.length > 0 && (
-        <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+        <div className="flex gap-8">
           {allowedTransitions.map((s) => (
-            <button key={s} className="button" disabled={busy} onClick={() => transition(s)} style={{ fontSize: 12 }}>{s}</button>
+            <button key={s} className="button text-xs" disabled={busy} onClick={() => transition(s)}>{s}</button>
           ))}
         </div>
       )}
 
-      <div className="grid-2" style={{ gap: 20 }}>
-        <div className="card" style={{ padding: 18 }}>
-          <h3 style={{ marginBottom: 12 }}>Channels</h3>
+      <div className="grid-2 gap-20">
+        <div className="card p-18">
+          <h3 className="mb-12">Channels</h3>
           {campaign.channels.length > 0 && (
-            <table className="data-table" style={{ marginBottom: 12 }}>
+            <table className="data-table mb-12">
               <thead><tr><th>Node</th><th>Channel</th><th>Status</th></tr></thead>
               <tbody>
                 {campaign.channels.map((ch) => (
                   <tr key={ch.id}>
-                    <td style={{ fontSize: 12 }}>{ch.nodeId.slice(0, 8)}...</td>
+                    <td className="text-xs">{ch.nodeId.slice(0, 8)}...</td>
                     <td>{ch.channel}</td>
-                    <td><span className="badge">{ch.status}</span></td>
+                    <td><StatusBadge status={ch.status} /></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           )}
-          <form onSubmit={addChannel} style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
+          <form onSubmit={addChannel} className="flex gap-8 items-end">
             <input placeholder="Node ID" value={channelForm.nodeId} onChange={(e) => setChannelForm({ ...channelForm, nodeId: e.target.value })} style={{ flex: 1, padding: 8, borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg1)", fontSize: 12 }} required />
             <select value={channelForm.channel} onChange={(e) => setChannelForm({ ...channelForm, channel: e.target.value })} style={{ padding: 8, borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg1)", fontSize: 12 }} required>
               <option value="">Channel...</option>
               {["TWITTER", "LINKEDIN", "TELEGRAM", "NEWSLETTER", "EVENT", "REFERRAL", "OTHER"].map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
-            <button type="submit" className="button" style={{ fontSize: 12, padding: "8px 14px" }}>Add</button>
+            <button type="submit" className="button text-xs" style={{ padding: "8px 14px" }}>Add</button>
           </form>
         </div>
 
-        <div className="card" style={{ padding: 18 }}>
-          <h3 style={{ marginBottom: 12 }}>Metrics</h3>
+        <div className="card p-18">
+          <h3 className="mb-12">Metrics</h3>
           {campaign.metrics.length > 0 && (
-            <table className="data-table" style={{ marginBottom: 12 }}>
+            <table className="data-table mb-12">
               <thead><tr><th>Type</th><th>Value</th><th>Date</th></tr></thead>
               <tbody>
                 {campaign.metrics.slice(0, 20).map((m) => (
                   <tr key={m.id}>
                     <td>{m.metricType}</td>
-                    <td style={{ fontWeight: 600 }}>{m.value.toLocaleString()}</td>
-                    <td className="muted" style={{ fontSize: 11 }}>{new Date(m.recordedAt).toLocaleDateString()}</td>
+                    <td className="font-semibold">{m.value.toLocaleString()}</td>
+                    <td className="muted text-xs">{new Date(m.recordedAt).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           )}
-          <form onSubmit={recordMetric} style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
+          <form onSubmit={recordMetric} className="flex gap-8 items-end">
             <select value={metricForm.metricType} onChange={(e) => setMetricForm({ ...metricForm, metricType: e.target.value })} style={{ flex: 1, padding: 8, borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg1)", fontSize: 12 }} required>
               <option value="">Metric type...</option>
               {["IMPRESSIONS", "CLICKS", "LEADS", "CONVERSIONS", "REACH", "ENGAGEMENT"].map((t) => <option key={t} value={t}>{t}</option>)}
             </select>
             <input type="number" placeholder="Value" value={metricForm.value} onChange={(e) => setMetricForm({ ...metricForm, value: e.target.value })} style={{ width: 100, padding: 8, borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg1)", fontSize: 12 }} required />
-            <button type="submit" className="button" style={{ fontSize: 12, padding: "8px 14px" }}>Record</button>
+            <button type="submit" className="button text-xs" style={{ padding: "8px 14px" }}>Record</button>
           </form>
         </div>
       </div>
-    </div>
+    </DetailLayout>
   );
 }

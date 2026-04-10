@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { DetailLayout, StatusBadge } from "../../_components";
 
 type TaskData = {
   id: string;
@@ -23,11 +24,6 @@ type TaskData = {
 };
 
 const EVIDENCE_TYPES = ["CONTRACT", "TRANSFER", "REPORT", "SCREENSHOT", "LINK", "ONCHAIN_TX", "OTHER"] as const;
-const STATUS_COLOR: Record<string, string> = {
-  CLOSED: "badge-green", ACCEPTED: "badge-green",
-  CANCELLED: "badge-red", BLOCKED: "badge-red",
-  REWORK: "badge-amber", IN_PROGRESS: "badge-amber", SUBMITTED: "badge-purple",
-};
 
 const NEXT_STATUS: Record<string, { label: string; target: string; style?: string }[]> = {
   DRAFT: [{ label: "Assign", target: "ASSIGNED" }],
@@ -129,31 +125,35 @@ export function TaskDetail({ task, isAdmin, canReviewEvidence = false }: { task:
   const actions = NEXT_STATUS[status] ?? [];
 
   return (
-    <div>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-        <span className="eyebrow">Task</span>
-        <span className={`badge ${STATUS_COLOR[status] ?? ""}`}>{status}</span>
-        <span className="badge">{task.type}</span>
-      </div>
-      <h1 style={{ marginTop: 4 }}>{task.title}</h1>
-      <p className="muted" style={{ margin: "4px 0 0" }}>
-        {task.ownerNode ? <>Node: <Link href={`/dashboard/nodes/${task.ownerNode.id}`} style={{ color: "var(--accent)" }}>{task.ownerNode.name}</Link></> : null}
-        {task.project ? <> · Project: <Link href={`/dashboard/projects/${task.project.id}`} style={{ color: "var(--accent)" }}>{task.project.name}</Link></> : null}
-        {task.deal ? <> · Deal: <Link href={`/dashboard/deals/${task.deal.id}`} style={{ color: "var(--accent)" }}>{task.deal.title}</Link></> : null}
-        {task.dueAt ? <> · Due: {new Date(task.dueAt).toLocaleDateString()}</> : null}
-      </p>
-
+    <DetailLayout
+      backHref="/dashboard/tasks"
+      backLabel="All Tasks"
+      title={task.title}
+      badge={
+        <span className="flex items-center gap-6">
+          <StatusBadge status={status} />
+          <span className="badge">{task.type}</span>
+        </span>
+      }
+      meta={
+        <>
+          {task.ownerNode && <span>Node: <Link href={`/dashboard/nodes/${task.ownerNode.id}`} style={{ color: "var(--accent)" }}>{task.ownerNode.name}</Link></span>}
+          {task.project && <span>Project: <Link href={`/dashboard/projects/${task.project.id}`} style={{ color: "var(--accent)" }}>{task.project.name}</Link></span>}
+          {task.deal && <span>Deal: <Link href={`/dashboard/deals/${task.deal.id}`} style={{ color: "var(--accent)" }}>{task.deal.title}</Link></span>}
+          {task.dueAt && <span>Due: {new Date(task.dueAt).toLocaleDateString()}</span>}
+        </>
+      }
+    >
       {task.description && (
-        <div className="card" style={{ padding: 18, marginTop: 16 }}>
-          <h3 style={{ margin: "0 0 8px" }}>Description</h3>
-          <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{task.description}</p>
+        <div className="card p-18">
+          <h3 className="mt-0 mb-8">Description</h3>
+          <p className="mt-0 mb-0" style={{ whiteSpace: "pre-wrap" }}>{task.description}</p>
         </div>
       )}
 
-      {/* Workflow Actions */}
-      <div className="card" style={{ padding: 18, marginTop: 16 }}>
-        <h3 style={{ margin: "0 0 12px" }}>Actions</h3>
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+      <div className="card p-18">
+        <h3 className="mt-0 mb-12">Actions</h3>
+        <div className="flex flex-wrap gap-8 items-center">
           {actions.map((a) => (
             <button
               key={a.target}
@@ -171,18 +171,17 @@ export function TaskDetail({ task, isAdmin, canReviewEvidence = false }: { task:
             </button>
           )}
           {status !== "CANCELLED" && status !== "CLOSED" && (
-            <button className="button-secondary" style={{ fontSize: 12, opacity: 0.6 }} disabled={busy} onClick={() => transition("CANCELLED")}>
+            <button className="button-secondary text-xs" style={{ opacity: 0.6 }} disabled={busy} onClick={() => transition("CANCELLED")}>
               Cancel
             </button>
           )}
         </div>
-        {error && <p className="form-error" style={{ marginTop: 8 }}>{error}</p>}
+        {error && <p className="form-error mt-8">{error}</p>}
       </div>
 
-      {/* Submit Output Modal */}
       {showSubmit && (
-        <div className="card" style={{ padding: 20, marginTop: 16, border: "2px solid var(--accent)" }}>
-          <h3 style={{ margin: "0 0 12px" }}>Submit Task Output</h3>
+        <div className="card p-20" style={{ border: "2px solid var(--accent)" }}>
+          <h3 className="mt-0 mb-12">Submit Task Output</h3>
           <div className="form" style={{ gap: 12 }}>
             <label className="field">
               <span className="label">Evidence Title</span>
@@ -192,7 +191,7 @@ export function TaskDetail({ task, isAdmin, canReviewEvidence = false }: { task:
                 placeholder={`Output: ${task.title}`}
               />
             </label>
-            <div className="grid-2" style={{ gap: 12 }}>
+            <div className="grid-2 gap-12">
               <label className="field">
                 <span className="label">Evidence Type</span>
                 <select value={submitForm.type} onChange={(e) => setSubmitForm((s) => ({ ...s, type: e.target.value }))}>
@@ -217,7 +216,7 @@ export function TaskDetail({ task, isAdmin, canReviewEvidence = false }: { task:
                 style={{ minHeight: 80 }}
               />
             </label>
-            <div style={{ display: "flex", gap: 8 }}>
+            <div className="flex gap-8">
               <button className="button" disabled={busy || !submitForm.summary.trim()} onClick={submitOutput}>
                 {busy ? "Submitting..." : "Submit Output"}
               </button>
@@ -227,58 +226,57 @@ export function TaskDetail({ task, isAdmin, canReviewEvidence = false }: { task:
         </div>
       )}
 
-      <div className="grid-2" style={{ marginTop: 16, gap: 16 }}>
-        <div className="card" style={{ padding: 18 }}>
-          <h3 style={{ margin: "0 0 12px" }}>Assignments</h3>
+      <div className="grid-2 gap-16">
+        <div className="card p-18">
+          <h3 className="mt-0 mb-12">Assignments</h3>
           {task.assignments.length > 0 ? (
-            <div style={{ display: "grid", gap: 8 }}>
+            <div className="flex-col gap-8">
               {task.assignments.map((a) => (
-                <Link key={a.id} href={`/dashboard/nodes/${a.node.id}`} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14 }}>
+                <Link key={a.id} href={`/dashboard/nodes/${a.node.id}`} className="flex items-center gap-8 text-base">
                   <span className="status-dot status-dot-accent" />
-                  <span style={{ fontWeight: 600 }}>{a.node.name}</span>
+                  <span className="font-semibold">{a.node.name}</span>
                 </Link>
               ))}
             </div>
           ) : <p className="muted">No assignments.</p>}
-          {task.acceptanceOwner && <p className="muted" style={{ fontSize: 13, marginTop: 8 }}>Acceptance: {task.acceptanceOwner}</p>}
+          {task.acceptanceOwner && <p className="muted text-sm mt-8">Acceptance: {task.acceptanceOwner}</p>}
         </div>
 
-        <div className="card" style={{ padding: 18 }}>
-          <h3 style={{ margin: "0 0 12px" }}>Requirements</h3>
+        <div className="card p-18">
+          <h3 className="mt-0 mb-12">Requirements</h3>
           {task.evidenceRequired.length > 0 ? (
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-              {task.evidenceRequired.map((e) => <span key={e} className="badge badge-amber" style={{ fontSize: 11 }}>{e}</span>)}
+            <div className="flex flex-wrap gap-6">
+              {task.evidenceRequired.map((e) => <span key={e} className="badge badge-amber text-xs">{e}</span>)}
             </div>
           ) : <p className="muted">No specific evidence requirements.</p>}
         </div>
       </div>
 
-      {/* Evidence with Review */}
-      <div className="card" style={{ padding: 18, marginTop: 16 }}>
-        <h3 style={{ margin: "0 0 12px" }}>Evidence ({evidences.length})</h3>
+      <div className="card p-18">
+        <h3 className="mt-0 mb-12">Evidence ({evidences.length})</h3>
         {evidences.length > 0 ? (
-          <div style={{ display: "grid", gap: 12 }}>
+          <div className="flex-col gap-12">
             {evidences.map((e) => (
               <div key={e.id} style={{ padding: 12, background: "var(--bg-secondary, rgba(0,0,0,0.03))", borderRadius: 8 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14 }}>
+                <div className="flex items-center gap-8 text-base">
                   <span className={`status-dot ${e.reviewStatus === "APPROVED" ? "status-dot-green" : e.reviewStatus === "REJECTED" ? "status-dot-red" : "status-dot-amber"}`} />
-                  <span style={{ fontWeight: 600 }}>{e.title || e.type}</span>
-                  <span className="badge" style={{ fontSize: 11 }}>{e.type}</span>
-                  <span className={`badge ${e.reviewStatus === "APPROVED" ? "badge-green" : e.reviewStatus === "REJECTED" ? "badge-red" : "badge-amber"}`} style={{ fontSize: 11 }}>{e.reviewStatus}</span>
-                  <span className="muted" style={{ fontSize: 11, marginLeft: "auto" }}>{new Date(e.createdAt).toLocaleDateString()}</span>
+                  <span className="font-semibold">{e.title || e.type}</span>
+                  <span className="badge text-xs">{e.type}</span>
+                  <StatusBadge status={e.reviewStatus} className="text-xs" />
+                  <span className="muted text-xs" style={{ marginLeft: "auto" }}>{new Date(e.createdAt).toLocaleDateString()}</span>
                 </div>
                 {canReview && (e.reviewStatus === "SUBMITTED" || e.reviewStatus === "UNDER_REVIEW") && (
-                  <div style={{ marginTop: 10, display: "flex", gap: 8, alignItems: "center" }}>
+                  <div className="flex gap-8 items-center mt-8">
                     <input
                       placeholder="Review comment (optional)"
                       value={reviewComment}
                       onChange={(ev) => setReviewComment(ev.target.value)}
                       style={{ flex: 1, fontSize: 13 }}
                     />
-                    <button className="button" style={{ fontSize: 12, padding: "6px 14px" }} disabled={busy} onClick={() => reviewEvidence(e.id, "APPROVED")}>
+                    <button className="button text-xs" style={{ padding: "6px 14px" }} disabled={busy} onClick={() => reviewEvidence(e.id, "APPROVED")}>
                       Approve
                     </button>
-                    <button className="button-secondary" style={{ fontSize: 12, padding: "6px 14px" }} disabled={busy} onClick={() => reviewEvidence(e.id, "REJECTED")}>
+                    <button className="button-secondary text-xs" style={{ padding: "6px 14px" }} disabled={busy} onClick={() => reviewEvidence(e.id, "REJECTED")}>
                       Reject
                     </button>
                   </div>
@@ -290,15 +288,15 @@ export function TaskDetail({ task, isAdmin, canReviewEvidence = false }: { task:
       </div>
 
       {task.pobRecords.length > 0 && (
-        <div className="card" style={{ padding: 18, marginTop: 16 }}>
-          <h3 style={{ margin: "0 0 12px" }}>PoB Records ({task.pobRecords.length})</h3>
-          <div style={{ display: "grid", gap: 8 }}>
+        <div className="card p-18">
+          <h3 className="mt-0 mb-12">PoB Records ({task.pobRecords.length})</h3>
+          <div className="flex-col gap-8">
             {task.pobRecords.map((p) => (
-              <Link key={p.id} href={`/dashboard/pob/${p.id}`} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14 }}>
+              <Link key={p.id} href={`/dashboard/pob/${p.id}`} className="flex items-center gap-8 text-base">
                 <span className={`status-dot ${p.status === "APPROVED" ? "status-dot-green" : "status-dot-amber"}`} />
                 <span>{p.businessType}</span>
-                <span className="badge" style={{ fontSize: 11 }}>{p.status}</span>
-                <span className="muted" style={{ fontSize: 11 }}>Score: {p.score}</span>
+                <StatusBadge status={p.status} className="text-xs" />
+                <span className="muted text-xs">Score: {p.score}</span>
               </Link>
             ))}
           </div>
@@ -306,20 +304,20 @@ export function TaskDetail({ task, isAdmin, canReviewEvidence = false }: { task:
       )}
 
       {task.agentRuns.length > 0 && (
-        <div className="card" style={{ padding: 18, marginTop: 16 }}>
-          <h3 style={{ margin: "0 0 12px" }}>Agent Runs ({task.agentRuns.length})</h3>
-          <div style={{ display: "grid", gap: 8 }}>
+        <div className="card p-18">
+          <h3 className="mt-0 mb-12">Agent Runs ({task.agentRuns.length})</h3>
+          <div className="flex-col gap-8">
             {task.agentRuns.map((r) => (
-              <div key={r.id} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14 }}>
+              <div key={r.id} className="flex items-center gap-8 text-base">
                 <span className={`status-dot ${r.status === "SUCCESS" ? "status-dot-green" : r.status === "FAILED" ? "status-dot-red" : "status-dot-amber"}`} />
-                <span className="badge" style={{ fontSize: 11 }}>{r.status}</span>
-                {r.cost != null && <span className="muted" style={{ fontSize: 11 }}>${r.cost.toFixed(4)}</span>}
-                <span className="muted" style={{ fontSize: 11 }}>{new Date(r.startedAt).toLocaleString()}</span>
+                <StatusBadge status={r.status} className="text-xs" />
+                {r.cost != null && <span className="muted text-xs">${r.cost.toFixed(4)}</span>}
+                <span className="muted text-xs">{new Date(r.startedAt).toLocaleString()}</span>
               </div>
             ))}
           </div>
         </div>
       )}
-    </div>
+    </DetailLayout>
   );
 }

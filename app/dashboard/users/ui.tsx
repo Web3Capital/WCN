@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { EmptyState } from "../_components";
 
 type UserRow = {
   id: string;
@@ -61,8 +62,8 @@ export function UsersConsole({ initial, currentUserId }: { initial: UserRow[]; c
             onClick={() => setSelectedId(u.id)}
           >
             <div style={{ display: "grid", gap: 2 }}>
-              <div style={{ fontWeight: 800, color: "var(--text)" }}>{u.name || u.email || "—"}</div>
-              <div className="muted" style={{ fontSize: 13 }}>
+              <div className="font-bold" style={{ color: "var(--text)" }}>{u.name || u.email || "—"}</div>
+              <div className="muted text-sm">
                 {u.email ?? "—"} · {u._count.nodes} nodes
               </div>
             </div>
@@ -76,10 +77,10 @@ export function UsersConsole({ initial, currentUserId }: { initial: UserRow[]; c
           <>
             <div className="apps-detail-head">
               <div>
-                <h3 style={{ marginBottom: 6 }}>{selected.name || selected.email || "—"}</h3>
+                <h3 className="mb-6">{selected.name || selected.email || "—"}</h3>
                 <p className="muted" style={{ margin: 0 }}>Joined: {fmtDate(selected.createdAt)}</p>
               </div>
-              <div className="cta-row" style={{ marginTop: 0 }}>
+              <div className="cta-row mt-0">
                 <select
                   value={selected.role}
                   onChange={(e) => changeRole(selected.id, e.target.value)}
@@ -92,14 +93,14 @@ export function UsersConsole({ initial, currentUserId }: { initial: UserRow[]; c
                 </select>
               </div>
             </div>
-            <div className="grid-2" style={{ marginTop: 14, gap: 12 }}>
+            <div className="grid-2 mt-14 gap-12">
               <div className="kpi">
                 <strong>Email</strong>
                 <span className="muted">{selected.email ?? "—"}</span>
               </div>
               <div className="kpi">
                 <strong>User ID</strong>
-                <span className="muted" style={{ fontSize: 13, wordBreak: "break-all" }}>{selected.id}</span>
+                <span className="muted text-sm" style={{ wordBreak: "break-all" }}>{selected.id}</span>
               </div>
               <div className="kpi">
                 <strong>Owned nodes</strong>
@@ -111,13 +112,13 @@ export function UsersConsole({ initial, currentUserId }: { initial: UserRow[]; c
               </div>
             </div>
             {selected.id === currentUserId ? (
-              <p className="muted" style={{ marginTop: 14, marginBottom: 0, fontSize: 13 }}>
+              <p className="muted mt-14 mb-0 text-sm">
                 This is your account. Role changes must be made by another admin.
               </p>
             ) : null}
-            {error ? <p className="form-error" style={{ marginTop: 10 }}>{error}</p> : null}
-            <div style={{ marginTop: 14, display: "flex", gap: 8 }}>
-              <Link href={`/dashboard/users/${selected.id}`} className="button" style={{ fontSize: 12, textDecoration: "none" }}>
+            {error ? <p className="form-error mt-10">{error}</p> : null}
+            <div className="flex gap-8 mt-14">
+              <Link href={`/dashboard/users/${selected.id}`} className="button text-xs" style={{ textDecoration: "none" }}>
                 Full profile →
               </Link>
               <button className="button-secondary" type="button" onClick={refresh} disabled={saving}>
@@ -126,7 +127,7 @@ export function UsersConsole({ initial, currentUserId }: { initial: UserRow[]; c
             </div>
           </>
         ) : (
-          <p className="muted" style={{ margin: 0 }}>Select a user.</p>
+          <EmptyState message="Select a user." />
         )}
       </div>
     </div>

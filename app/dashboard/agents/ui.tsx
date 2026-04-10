@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { StatusBadge, FormCard, EmptyState } from "../_components";
 
 type NodeRow = { id: string; name: string; type: string };
 type PermissionRow = { id: string; scope: string; canWrite: boolean; auditLevel: number };
@@ -29,6 +30,7 @@ export function AgentsConsole({
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
   const selected = useMemo(() => rows.find((r) => r.id === selectedId) ?? null, [rows, selectedId]);
 
+  const [showForm, setShowForm] = useState(false);
   const [create, setCreate] = useState({ name: "", type: "EXECUTION", ownerNodeId: "", endpoint: "" });
   const [perm, setPerm] = useState({ scope: "tasks:read", canWrite: false, auditLevel: 1 });
   const [busy, setBusy] = useState(false);
@@ -61,6 +63,7 @@ export function AgentsConsole({
       if (!data?.ok) throw new Error(data?.error ?? "Create failed.");
       await refresh();
       setCreate({ name: "", type: "EXECUTION", ownerNodeId: "", endpoint: "" });
+      setShowForm(false);
     } catch (e: any) {
       setError(e?.message ?? "Create failed.");
     } finally {
@@ -132,16 +135,13 @@ export function AgentsConsole({
     <div className="apps-layout">
       <div>
         {!readOnly ? (
-          <>
-            <div className="pill" style={{ marginBottom: 10 }}>
-              Register agent
-            </div>
-            <div className="form" style={{ marginBottom: 14 }}>
+          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="Register agent">
+            <div className="form mb-14">
               <label className="field">
                 <span className="label">Name</span>
                 <input value={create.name} onChange={(e) => setCreate((s) => ({ ...s, name: e.target.value }))} />
               </label>
-              <div className="grid-2" style={{ gap: 12 }}>
+              <div className="grid-2 gap-12">
                 <label className="field">
                   <span className="label">Type</span>
                   <select value={create.type} onChange={(e) => setCreate((s) => ({ ...s, type: e.target.value }))}>
@@ -181,10 +181,10 @@ export function AgentsConsole({
               </button>
               {error ? <p className="form-error">{error}</p> : null}
             </div>
-          </>
+          </FormCard>
         ) : null}
 
-        <div className="pill" style={{ marginBottom: 10 }}>
+        <div className="pill mb-10">
           Agents ({rows.length})
         </div>
         <div className="apps-list">
@@ -198,14 +198,14 @@ export function AgentsConsole({
                 data-active={active ? "true" : "false"}
                 onClick={() => setSelectedId(a.id)}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div className="flex items-center gap-10">
                   <span className={`status-dot ${a.status === "ACTIVE" ? "status-dot-green" : a.status === "SUSPENDED" ? "status-dot-red" : "status-dot-amber"}`} />
                   <div>
-                    <div style={{ fontWeight: 800 }}>{a.name}</div>
-                    <div className="muted" style={{ fontSize: 13 }}>{a.type}</div>
+                    <div className="font-bold">{a.name}</div>
+                    <div className="muted text-sm">{a.type}</div>
                   </div>
                 </div>
-                <span className={`badge ${a.status === "ACTIVE" ? "badge-green" : a.status === "SUSPENDED" ? "badge-red" : "badge-amber"}`}>{a.status}</span>
+                <StatusBadge status={a.status} />
               </button>
             );
           })}
@@ -213,7 +213,7 @@ export function AgentsConsole({
       </div>
 
       <div>
-        <div className="pill" style={{ marginBottom: 10 }}>
+        <div className="pill mb-10">
           Agent details
         </div>
         {selected ? (
@@ -228,7 +228,7 @@ export function AgentsConsole({
                 onBlur={readOnly ? undefined : (e) => onSave({ name: e.target.value })}
               />
             </label>
-            <div className="grid-2" style={{ gap: 12 }}>
+            <div className="grid-2 gap-12">
               <label className="field">
                 <span className="label">Status</span>
                 <select
@@ -253,12 +253,12 @@ export function AgentsConsole({
               </label>
             </div>
 
-            <div className="pill" style={{ marginTop: 10 }}>
+            <div className="pill mt-10">
               Permissions
             </div>
             {!readOnly ? (
               <>
-                <div className="grid-3" style={{ gap: 12 }}>
+                <div className="grid-3 gap-12">
                   <label className="field">
                     <span className="label">Scope</span>
                     <input value={perm.scope} onChange={(e) => setPerm((s) => ({ ...s, scope: e.target.value }))} />
@@ -288,12 +288,12 @@ export function AgentsConsole({
               </>
             ) : null}
 
-            <div className="apps-list" style={{ marginTop: 10 }}>
+            <div className="apps-list mt-10">
               {(selected.permissions ?? []).map((p) => (
                 <div key={p.id} className="apps-row" style={{ cursor: "default" }}>
                   <div>
-                    <div style={{ fontWeight: 800 }}>{p.scope}</div>
-                    <div className="muted" style={{ fontSize: 13 }}>
+                    <div className="font-bold">{p.scope}</div>
+                    <div className="muted text-sm">
                       audit {p.auditLevel} · {p.canWrite ? "write" : "read"}
                     </div>
                   </div>
@@ -312,10 +312,9 @@ export function AgentsConsole({
             </button>
           </div>
         ) : (
-          <p className="muted">Select an agent.</p>
+          <EmptyState message="Select an agent." />
         )}
       </div>
     </div>
   );
 }
-

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { getApiErrorMessageFromJson } from "@/lib/api-error";
+import { StatusBadge, FormCard, EmptyState } from "../_components";
 
 type NodeRow = { id: string; name: string; type: string };
 type ProjectRow = { id: string; name: string };
@@ -40,6 +41,7 @@ export function TasksConsole({
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
   const selected = useMemo(() => rows.find((r) => r.id === selectedId) ?? null, [rows, selectedId]);
 
+  const [showForm, setShowForm] = useState(false);
   const [create, setCreate] = useState({
     title: "",
     type: "EXECUTION",
@@ -79,6 +81,7 @@ export function TasksConsole({
       if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
       await refresh();
       setCreate({ title: "", type: "EXECUTION", status: "OPEN", projectId: "", ownerNodeId: "", assignNodeIds: [] });
+      setShowForm(false);
     } catch (e: any) {
       setError(e?.message ?? "Create failed.");
     } finally {
@@ -115,16 +118,13 @@ export function TasksConsole({
     <div className="apps-layout">
       <div>
         {!readOnly ? (
-          <>
-            <div className="pill" style={{ marginBottom: 10 }}>
-              Create task
-            </div>
-            <div className="form" style={{ marginBottom: 14 }}>
+          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="Create task">
+            <div className="form mb-14">
               <label className="field">
                 <span className="label">Title</span>
                 <input value={create.title} onChange={(e) => setCreate((s) => ({ ...s, title: e.target.value }))} />
               </label>
-              <div className="grid-3" style={{ gap: 12 }}>
+              <div className="grid-3 gap-12">
                 <label className="field">
                   <span className="label">Type</span>
                   <select value={create.type} onChange={(e) => setCreate((s) => ({ ...s, type: e.target.value }))}>
@@ -199,10 +199,10 @@ export function TasksConsole({
               </button>
               {error ? <p className="form-error">{error}</p> : null}
             </div>
-          </>
+          </FormCard>
         ) : null}
 
-        <div className="pill" style={{ marginBottom: 10 }}>
+        <div className="pill mb-10">
           Tasks ({rows.length})
         </div>
         <div className="apps-list">
@@ -216,14 +216,14 @@ export function TasksConsole({
                 data-active={active ? "true" : "false"}
                 onClick={() => setSelectedId(r.id)}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div className="flex items-center gap-10">
                   <span className={`status-dot ${r.status === "CLOSED" || r.status === "ACCEPTED" || r.status === "DONE" ? "status-dot-green" : r.status === "IN_PROGRESS" || r.status === "SUBMITTED" || r.status === "REWORK" ? "status-dot-amber" : r.status === "CANCELLED" || r.status === "BLOCKED" ? "status-dot-red" : ""}`} />
                   <div>
-                    <Link href={`/dashboard/tasks/${r.id}`} style={{ fontWeight: 800, color: "var(--accent)" }} onClick={(e) => e.stopPropagation()}>{r.title}</Link>
-                    <div className="muted" style={{ fontSize: 13 }}>{r.type}</div>
+                    <Link href={`/dashboard/tasks/${r.id}`} className="font-bold" style={{ color: "var(--accent)" }} onClick={(e) => e.stopPropagation()}>{r.title}</Link>
+                    <div className="muted text-sm">{r.type}</div>
                   </div>
                 </div>
-                <span className={`badge ${r.status === "DONE" ? "badge-green" : r.status === "IN_PROGRESS" ? "badge-amber" : r.status === "CANCELLED" ? "badge-red" : ""}`}>{r.status}</span>
+                <StatusBadge status={r.status} />
               </button>
             );
           })}
@@ -231,7 +231,7 @@ export function TasksConsole({
       </div>
 
       <div>
-        <div className="pill" style={{ marginBottom: 10 }}>
+        <div className="pill mb-10">
           Details
         </div>
         {selected ? (
@@ -246,7 +246,7 @@ export function TasksConsole({
                 onBlur={readOnly ? undefined : (e) => onSave({ title: e.target.value })}
               />
             </label>
-            <div className="grid-2" style={{ gap: 12 }}>
+            <div className="grid-2 gap-12">
               <label className="field">
                 <span className="label">Type</span>
                 <select
@@ -351,10 +351,9 @@ export function TasksConsole({
             {error ? <p className="form-error">{error}</p> : null}
           </div>
         ) : (
-          <p className="muted">Select a task.</p>
+          <EmptyState message="Select a task." />
         )}
       </div>
     </div>
   );
 }
-

@@ -35,14 +35,14 @@ function NotificationPreferences() {
 
   const channels = ["EMAIL", "IN_APP", "TELEGRAM", "SLACK"];
   return (
-    <div className="card" style={{ padding: 20 }}>
-      <h3 style={{ margin: "0 0 12px" }}>Notification Preferences</h3>
-      <div style={{ display: "grid", gap: 8 }}>
+    <div className="card p-20">
+      <h3 className="mt-0 mb-12">Notification Preferences</h3>
+      <div className="flex-col gap-8">
         {channels.map((ch) => {
           const pref = prefs.find((p) => p.channel === ch);
           const enabled = pref?.enabled ?? (ch === "EMAIL" || ch === "IN_APP");
           return (
-            <label key={ch} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
+            <label key={ch} className="flex items-center gap-10" style={{ fontSize: 13 }}>
               <input
                 type="checkbox"
                 checked={enabled}
@@ -103,20 +103,19 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
   }
 
   return (
-    <div style={{ display: "grid", gap: 20, marginTop: 20 }}>
-      {/* 2FA Section */}
-      <div className="card" style={{ padding: 20 }}>
-        <h3 style={{ margin: "0 0 12px" }}>Two-Factor Authentication</h3>
+    <div className="flex-col gap-20 mt-20">
+      <div className="card p-20">
+        <h3 className="mt-0 mb-12">Two-Factor Authentication</h3>
         {has2FA ? (
           <div>
             <span className="badge badge-green">Enabled</span>
-            <p className="muted" style={{ margin: "8px 0 0", fontSize: 13 }}>
+            <p className="muted mt-8 mb-0" style={{ fontSize: 13 }}>
               Your account is protected with an authenticator app.
             </p>
           </div>
         ) : (
           <div>
-            <p className="muted" style={{ margin: "0 0 12px" }}>
+            <p className="muted mt-0 mb-12">
               Add an extra layer of security to your account.
             </p>
             <Link href="/account/2fa" className="button" style={{ display: "inline-block" }}>
@@ -126,10 +125,9 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
         )}
       </div>
 
-      {/* Password Section */}
       {hasPassword && (
-        <div className="card" style={{ padding: 20 }}>
-          <h3 style={{ margin: "0 0 12px" }}>Change Password</h3>
+        <div className="card p-20">
+          <h3 className="mt-0 mb-12">Change Password</h3>
           <form onSubmit={changePassword} className="form">
             <label className="field">
               <span className="label">Current password</span>
@@ -153,7 +151,7 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
               />
             </label>
             {pwMsg && (
-              <p style={{ color: pwMsg.includes("updated") ? "var(--green)" : "var(--red)", margin: 0, fontSize: 13 }} role="status">
+              <p className="mt-0 mb-0" style={{ color: pwMsg.includes("updated") ? "var(--green)" : "var(--red)", fontSize: 13 }} role="status">
                 {pwMsg}
               </p>
             )}
@@ -165,25 +163,23 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
       )}
 
       {!hasPassword && (
-        <div className="card" style={{ padding: 20 }}>
-          <h3 style={{ margin: "0 0 12px" }}>Password</h3>
-          <p className="muted" style={{ margin: 0, fontSize: 13 }}>
+        <div className="card p-20">
+          <h3 className="mt-0 mb-12">Password</h3>
+          <p className="muted mt-0 mb-0" style={{ fontSize: 13 }}>
             You signed up with a social account and do not have a password set.
           </p>
         </div>
       )}
 
-      {/* Notification Preferences */}
       <NotificationPreferences />
 
-      {/* Sessions Section */}
-      <div className="card" style={{ padding: 20 }}>
-        <h3 style={{ margin: "0 0 12px" }}>Active Sessions</h3>
-        <p className="muted" style={{ margin: "0 0 12px", fontSize: 13 }}>
+      <div className="card p-20">
+        <h3 className="mt-0 mb-12">Active Sessions</h3>
+        <p className="muted mt-0 mb-12" style={{ fontSize: 13 }}>
           Sign out of all devices. This will invalidate all active sessions including the current one.
         </p>
         {sessionMsg && (
-          <p role="status" style={{ color: "var(--amber)", margin: "0 0 8px", fontSize: 13 }}>
+          <p role="status" className="mt-0 mb-8" style={{ color: "var(--amber)", fontSize: 13 }}>
             {sessionMsg}
           </p>
         )}

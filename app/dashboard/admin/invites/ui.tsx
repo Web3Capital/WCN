@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { EmptyState } from "../../_components";
 
 type InviteRow = {
   id: string;
@@ -68,10 +69,10 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
   }
 
   return (
-    <div style={{ marginTop: 20 }}>
-      <div className="card" style={{ padding: 20, marginBottom: 20 }}>
+    <div className="mt-20">
+      <div className="card p-20 mb-20">
         <h3 style={{ margin: "0 0 14px" }}>Send new invite</h3>
-        <form onSubmit={createInvite} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "flex-end" }}>
+        <form onSubmit={createInvite} className="flex flex-wrap items-start gap-10" style={{ alignItems: "flex-end" }}>
           <label className="field" style={{ flex: 1, minWidth: 200, margin: 0 }}>
             <span className="label">Email address</span>
             <input
@@ -96,7 +97,7 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
         {lastToken && (
           <div role="status" aria-live="polite" style={{ marginTop: 12, padding: 12, background: "color-mix(in oklab, var(--green) 10%, transparent)", borderRadius: 8, fontSize: 13 }}>
             <strong>Invite created!</strong> Copy the link below (shown only once):
-            <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 6 }}>
+            <div className="flex items-center gap-8 mt-6">
               <code style={{ flex: 1, fontSize: 12, wordBreak: "break-all" }}>{`${typeof window !== 'undefined' ? window.location.origin : ''}/invite/${lastToken}`}</code>
               <button className="button" style={{ fontSize: 11, padding: "3px 10px", flexShrink: 0 }} onClick={copyLink}>
                 {copied ? "Copied!" : "Copy"}
@@ -126,18 +127,18 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
                 const badgeClass = inv.activatedAt ? "badge-green" : inv.revokedAt ? "badge-red" : expired ? "badge-red" : "badge-amber";
                 return (
                   <tr key={inv.id}>
-                    <td style={{ fontWeight: 600 }}>{inv.email}</td>
+                    <td className="font-semibold">{inv.email}</td>
                     <td><span className="badge">{inv.role.replace(/_/g, " ")}</span></td>
                     <td><span className={`badge ${badgeClass}`}>{status}</span></td>
                     <td className="muted">{inv.createdBy}</td>
                     <td className="muted">{new Date(inv.expiresAt).toLocaleDateString()}</td>
-                    <td className="muted" style={{ fontFamily: "monospace", fontSize: 11 }}>{inv.tokenHash}</td>
+                    <td className="muted font-mono text-xs">{inv.tokenHash}</td>
                   </tr>
                 );
               })}
               {invites.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="empty-state">No invites yet.</td>
+                  <td colSpan={6}><EmptyState message="No invites yet." /></td>
                 </tr>
               )}
             </tbody>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { StatusBadge, FilterToolbar, EmptyState } from "../../_components";
 
 type PendingRun = {
   id: string; status: string; outputType: string | null; outputs: any; inputs: any;
@@ -16,10 +17,6 @@ type ReviewedRun = {
   finishedAt: string | null;
   agent: { id: string; name: string; type: string };
   reviewedBy: { name: string | null } | null;
-};
-
-const REVIEW_COLORS: Record<string, string> = {
-  APPROVED: "badge-green", MODIFIED: "", REJECTED: "badge-red",
 };
 
 const AGENT_TYPES = ["ALL", "RESEARCH", "DEAL", "EXECUTION", "GROWTH"] as const;
@@ -54,48 +51,43 @@ export function ReviewQueueUI({ pendingRuns: initialPending, recentReviewed: ini
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+      <div className="flex-between items-center mb-20">
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Agent Review Queue</h1>
-          <p className="muted" style={{ fontSize: 13 }}>{pendingRuns.length} outputs awaiting review</p>
+          <p className="muted text-sm">{pendingRuns.length} outputs awaiting review</p>
         </div>
         <Link href="/dashboard/agents" className="button" style={{ fontSize: 12, padding: "6px 14px" }}>
           &larr; All Agents
         </Link>
       </div>
 
-      <div className="page-toolbar" style={{ marginBottom: 12 }}>
-        <div className="chip-group">
-          {AGENT_TYPES.map((t) => (
-            <button key={t} className={`chip ${typeFilter === t ? "chip-active" : ""}`} onClick={() => { setTypeFilter(t); setPage(0); }}>
-              {t === "ALL" ? `All (${pendingRuns.length})` : t}
-            </button>
-          ))}
-        </div>
-      </div>
+      <FilterToolbar
+        filters={AGENT_TYPES}
+        active={typeFilter}
+        onChange={(t) => { setTypeFilter(t); setPage(0); }}
+        totalCount={pendingRuns.length}
+      />
 
       {pagedPending.length === 0 ? (
-        <div className="card" style={{ padding: 40, textAlign: "center" }}>
-          <p className="muted">No pending reviews. All agent outputs have been processed.</p>
-        </div>
+        <EmptyState message="No pending reviews. All agent outputs have been processed." />
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div className="flex-col gap-12">
           {pagedPending.map((run) => {
             const isExpanded = expandedId === run.id;
             return (
-              <div key={run.id} className="card" style={{ padding: 16, border: "1px solid var(--border)" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
-                  <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-                    <Link href={`/dashboard/agents/${run.agent.id}`} style={{ fontWeight: 600, color: "var(--accent)", fontSize: 14 }}>
+              <div key={run.id} className="card p-16" style={{ border: "1px solid var(--border)" }}>
+                <div className="flex-between items-center flex-wrap gap-8">
+                  <div className="flex flex-wrap items-center gap-8">
+                    <Link href={`/dashboard/agents/${run.agent.id}`} className="font-semibold" style={{ color: "var(--accent)", fontSize: 14 }}>
                       {run.agent.name}
                     </Link>
-                    <span className="badge" style={{ fontSize: 10 }}>{run.agent.type}</span>
-                    {run.outputType && <span className="badge" style={{ fontSize: 10 }}>{run.outputType}</span>}
-                    <span className="muted" style={{ fontSize: 11 }}>
+                    <span className="badge text-xs">{run.agent.type}</span>
+                    {run.outputType && <span className="badge text-xs">{run.outputType}</span>}
+                    <span className="muted text-xs">
                       {run.tokenCount ?? 0} tokens | ${run.cost?.toFixed(4) ?? "0"} | {run.modelId ?? "unknown"}
                     </span>
                   </div>
-                  <div style={{ display: "flex", gap: 6 }}>
+                  <div className="flex gap-6">
                     <button className="button" style={{ fontSize: 10, padding: "3px 10px" }} onClick={() => setExpandedId(isExpanded ? null : run.id)}>
                       {isExpanded ? "Collapse" : "View Output"}
                     </button>
@@ -107,17 +99,17 @@ export function ReviewQueueUI({ pendingRuns: initialPending, recentReviewed: ini
                     </button>
                   </div>
                 </div>
-                <div className="muted" style={{ fontSize: 11, marginTop: 4 }}>
+                <div className="muted text-xs mt-4">
                   {run.finishedAt ? new Date(run.finishedAt).toLocaleString() : "Running..."}
                   {run.task && <> | Task: <Link href={`/dashboard/tasks/${run.task.id}`} style={{ color: "var(--accent)" }}>{run.task.title}</Link></>}
                 </div>
                 {isExpanded && run.outputs && (
-                  <pre style={{ marginTop: 10, padding: 12, borderRadius: 6, background: "var(--surface)", border: "1px solid var(--border)", fontSize: 11, overflow: "auto", maxHeight: 400, whiteSpace: "pre-wrap" }}>
+                  <pre className="mt-10" style={{ padding: 12, borderRadius: 6, background: "var(--surface)", border: "1px solid var(--border)", fontSize: 11, overflow: "auto", maxHeight: 400, whiteSpace: "pre-wrap" }}>
                     {JSON.stringify(run.outputs, null, 2)}
                   </pre>
                 )}
                 {rejectNoteId === run.id && (
-                  <div style={{ marginTop: 10, display: "flex", gap: 8, alignItems: "flex-end" }}>
+                  <div className="flex mt-10 gap-8" style={{ alignItems: "flex-end" }}>
                     <textarea
                       autoFocus
                       placeholder="Rejection reason (optional)"
@@ -143,7 +135,7 @@ export function ReviewQueueUI({ pendingRuns: initialPending, recentReviewed: ini
       )}
 
       {totalPages > 1 && (
-        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 12 }}>
+        <div className="flex-center gap-8 mt-12">
           <button className="button-secondary" style={{ fontSize: 11, padding: "4px 12px" }} disabled={page === 0} onClick={() => setPage(page - 1)}>← Prev</button>
           <span className="muted" style={{ fontSize: 12, lineHeight: "28px" }}>Page {page + 1} of {totalPages}</span>
           <button className="button-secondary" style={{ fontSize: 11, padding: "4px 12px" }} disabled={page >= totalPages - 1} onClick={() => setPage(page + 1)}>Next →</button>
@@ -151,7 +143,7 @@ export function ReviewQueueUI({ pendingRuns: initialPending, recentReviewed: ini
       )}
 
       {recentReviewed.length > 0 && (
-        <div style={{ marginTop: 32 }}>
+        <div className="mt-20">
           <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Recently Reviewed</h2>
           <table className="data-table">
             <thead><tr><th>Agent</th><th>Type</th><th>Output</th><th>Status</th><th>Reviewer</th><th>Cost</th><th>Date</th></tr></thead>
@@ -160,11 +152,11 @@ export function ReviewQueueUI({ pendingRuns: initialPending, recentReviewed: ini
                 <tr key={r.id}>
                   <td><Link href={`/dashboard/agents/${r.agent.id}`} style={{ color: "var(--accent)" }}>{r.agent.name}</Link></td>
                   <td className="muted">{r.agent.type}</td>
-                  <td><span className="badge" style={{ fontSize: 10 }}>{r.outputType ?? "—"}</span></td>
-                  <td><span className={`badge ${REVIEW_COLORS[r.reviewStatus] ?? ""}`} style={{ fontSize: 10 }}>{r.reviewStatus}</span></td>
+                  <td><span className="badge text-xs">{r.outputType ?? "—"}</span></td>
+                  <td><StatusBadge status={r.reviewStatus} /></td>
                   <td className="muted">{r.reviewedBy?.name ?? "—"}</td>
                   <td className="muted">${r.cost?.toFixed(4) ?? "0"}</td>
-                  <td className="muted" style={{ fontSize: 11 }}>{r.finishedAt ? new Date(r.finishedAt).toLocaleString() : "—"}</td>
+                  <td className="muted text-xs">{r.finishedAt ? new Date(r.finishedAt).toLocaleString() : "—"}</td>
                 </tr>
               ))}
             </tbody>

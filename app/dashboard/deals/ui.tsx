@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { StatusBadge, FilterToolbar, EmptyState, FormCard } from "../_components";
 
 type DealRow = {
   id: string;
@@ -14,12 +15,6 @@ type DealRow = {
   leadNode: { id: string; name: string };
   _count: { participants: number; milestones: number; tasks: number };
   updatedAt: string;
-};
-
-const STAGE_BADGE: Record<string, string> = {
-  SOURCED: "", MATCHED: "badge-amber", INTRO_SENT: "badge-amber",
-  MEETING_DONE: "badge-accent", DD: "badge-purple", TERM_SHEET: "badge-purple",
-  SIGNED: "badge-green", FUNDED: "badge-green", PASSED: "badge-red", PAUSED: "",
 };
 
 const STAGES = ["ALL", "SOURCED", "MATCHED", "DD", "TERM_SHEET", "SIGNED", "FUNDED", "PASSED", "PAUSED"] as const;
@@ -59,31 +54,17 @@ export function DealsConsole({ initialDeals, nodes, projects, isAdmin }: {
   }
 
   return (
-    <div style={{ marginTop: 20 }}>
-      <div className="page-toolbar">
-        <div className="chip-group">
-          {STAGES.map((s) => (
-            <button key={s} className={`chip ${filter === s ? "chip-active" : ""}`} onClick={() => setFilter(s)}>
-              {s === "ALL" ? `All (${deals.length})` : s.replace(/_/g, " ")}
-            </button>
-          ))}
-        </div>
-        {isAdmin && (
-          <>
-            <div className="page-toolbar-spacer" />
-            <button className="button" onClick={() => setShowForm(!showForm)}>{showForm ? "Cancel" : "New deal"}</button>
-          </>
-        )}
-      </div>
+    <div className="mt-20">
+      <FilterToolbar filters={STAGES} active={filter} onChange={setFilter} totalCount={deals.length} />
 
-      {isAdmin && showForm && (
-        <div className="card" style={{ padding: 18, marginBottom: 16 }}>
+      {isAdmin && (
+        <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="New deal">
           <form onSubmit={createDeal} className="form">
             <label className="field">
               <span className="label">Deal title</span>
               <input placeholder="Deal title *" value={title} onChange={(e) => setTitle(e.target.value)} required />
             </label>
-            <div className="grid-2" style={{ gap: 12 }}>
+            <div className="grid-2 gap-12">
               <label className="field">
                 <span className="label">Lead node</span>
                 <select value={leadNodeId} onChange={(e) => setLeadNodeId(e.target.value)} required>
@@ -99,16 +80,16 @@ export function DealsConsole({ initialDeals, nodes, projects, isAdmin }: {
                 </select>
               </label>
             </div>
-            <div style={{ display: "flex", gap: 8 }}>
+            <div className="flex gap-8">
               <button type="submit" className="button" disabled={busy}>{busy ? "Creating..." : "Create"}</button>
               <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>Cancel</button>
             </div>
           </form>
-        </div>
+        </FormCard>
       )}
 
       {filtered.length === 0 ? (
-        <div className="empty-state"><p>No deals found.</p></div>
+        <EmptyState message="No deals found." />
       ) : (
         <table className="data-table">
           <thead>
@@ -128,18 +109,18 @@ export function DealsConsole({ initialDeals, nodes, projects, isAdmin }: {
                   <span className={`status-dot ${d.stage === "SIGNED" || d.stage === "FUNDED" ? "status-dot-green" : d.stage === "PASSED" ? "status-dot-red" : "status-dot-amber"}`} />
                 </td>
                 <td>
-                  <Link href={`/dashboard/deals/${d.id}`} style={{ fontWeight: 700, fontSize: 13, color: "var(--accent)" }}>
+                  <Link href={`/dashboard/deals/${d.id}`} className="font-bold text-sm" style={{ color: "var(--accent)" }}>
                     {d.title}
                   </Link>
-                  {d.nextAction && <div className="muted" style={{ fontSize: 11 }}>Next: {d.nextAction}</div>}
+                  {d.nextAction && <div className="muted text-xs">Next: {d.nextAction}</div>}
                 </td>
                 <td>
-                  <div style={{ fontSize: 13 }}>{d.leadNode.name}</div>
-                  {d.project && <div className="muted" style={{ fontSize: 11 }}>{d.project.name}</div>}
+                  <div className="text-sm">{d.leadNode.name}</div>
+                  {d.project && <div className="muted text-xs">{d.project.name}</div>}
                 </td>
-                <td><span className={`badge ${STAGE_BADGE[d.stage] ?? ""}`}>{d.stage.replace(/_/g, " ")}</span></td>
-                <td className="muted" style={{ fontSize: 11 }}>{d._count.tasks}T · {d._count.milestones}M · {d._count.participants}P</td>
-                <td className="muted" style={{ fontSize: 11 }}>{new Date(d.updatedAt).toLocaleDateString()}</td>
+                <td><StatusBadge status={d.stage} /></td>
+                <td className="muted text-xs">{d._count.tasks}T · {d._count.milestones}M · {d._count.participants}P</td>
+                <td className="muted text-xs">{new Date(d.updatedAt).toLocaleDateString()}</td>
               </tr>
             ))}
           </tbody>

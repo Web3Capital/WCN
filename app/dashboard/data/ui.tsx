@@ -4,6 +4,7 @@ import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from "recharts";
+import { StatCard } from "../_components";
 
 type Distribution = { label: string; count: number }[];
 type TimeSeriesPoint = { week: string; count: number };
@@ -57,7 +58,7 @@ function DistributionPie({ items, colorMap }: { items: Distribution; colorMap?: 
   if (total === 0) return <p className="muted">No data.</p>;
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+    <div className="flex items-center gap-16">
       <ResponsiveContainer width={140} height={140}>
         <PieChart>
           <Pie data={items} dataKey="count" nameKey="label" cx="50%" cy="50%" outerRadius={60} innerRadius={30}>
@@ -68,15 +69,15 @@ function DistributionPie({ items, colorMap }: { items: Distribution; colorMap?: 
           <Tooltip />
         </PieChart>
       </ResponsiveContainer>
-      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+      <div className="flex-col gap-4">
         {items.map((item, i) => (
-          <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12 }}>
+          <div key={item.label} className="flex items-center gap-6 text-xs">
             <span style={{
               width: 10, height: 10, borderRadius: 2, flexShrink: 0,
               background: colorMap?.[item.label] ?? CHART_COLORS[i % CHART_COLORS.length],
             }} />
             <span className="muted">{item.label.replace(/_/g, " ")}</span>
-            <span style={{ fontWeight: 600, marginLeft: "auto" }}>{item.count}</span>
+            <span className="font-semibold" style={{ marginLeft: "auto" }}>{item.count}</span>
           </div>
         ))}
       </div>
@@ -86,8 +87,8 @@ function DistributionPie({ items, colorMap }: { items: Distribution; colorMap?: 
 
 function TrendChart({ data, color = "#6366f1", label }: { data: TimeSeriesPoint[]; color?: string; label: string }) {
   return (
-    <div className="card" style={{ padding: 18 }}>
-      <h3 style={{ marginBottom: 12 }}>{label} / Week</h3>
+    <div className="card p-18">
+      <h3 className="mb-12">{label} / Week</h3>
       <ResponsiveContainer width="100%" height={180}>
         <AreaChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
@@ -103,8 +104,8 @@ function TrendChart({ data, color = "#6366f1", label }: { data: TimeSeriesPoint[
 
 function FunnelChart({ data }: { data: FunnelStage[] }) {
   return (
-    <div className="card" style={{ padding: 18 }}>
-      <h3 style={{ marginBottom: 12 }}>Conversion Funnel</h3>
+    <div className="card p-18">
+      <h3 className="mb-12">Conversion Funnel</h3>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
@@ -128,10 +129,10 @@ export function DataCockpit({ data }: { data: CockpitData }) {
   return (
     <div className="data-cockpit">
       {data.anomalies && data.anomalies.length > 0 && (
-        <div className="card" style={{ padding: 16, borderLeft: "3px solid var(--red)", marginBottom: 16 }}>
-          <h3 style={{ color: "var(--red)", marginBottom: 8 }}>Anomaly Alerts</h3>
+        <div className="card p-16 mb-16" style={{ borderLeft: "3px solid var(--red)" }}>
+          <h3 className="mb-8" style={{ color: "var(--red)" }}>Anomaly Alerts</h3>
           {data.anomalies.map((a) => (
-            <div key={a.metric} style={{ fontSize: 13, marginBottom: 4 }}>
+            <div key={a.metric} className="mb-4" style={{ fontSize: 13 }}>
               <strong>{a.metric}</strong>: {a.current} (avg {a.average}, {a.deviation > 0 ? "+" : ""}{a.deviation}σ)
             </div>
           ))}
@@ -151,15 +152,12 @@ export function DataCockpit({ data }: { data: CockpitData }) {
           { label: "Open Disputes", value: s.openDisputes },
           { label: "Settled Cycles", value: s.settledCycles },
         ].map((m) => (
-          <div key={m.label} className="stat-card">
-            <div className="stat-number">{m.value}</div>
-            <div className="stat-label">{m.label}</div>
-          </div>
+          <StatCard key={m.label} label={m.label} value={m.value} />
         ))}
       </div>
 
       {data.timeSeries && (
-        <div className="grid-2" style={{ marginTop: 16 }}>
+        <div className="grid-2 mt-16">
           <TrendChart data={data.timeSeries.deals} color="#6366f1" label="Deals" />
           <TrendChart data={data.timeSeries.pob} color="#8b5cf6" label="PoB Records" />
           <TrendChart data={data.timeSeries.evidence} color="#22c55e" label="Evidence" />
@@ -167,19 +165,19 @@ export function DataCockpit({ data }: { data: CockpitData }) {
         </div>
       )}
 
-      <div className="grid-2" style={{ marginTop: 16 }}>
-        <div className="card" style={{ padding: 18 }}>
-          <h3 style={{ marginBottom: 12 }}>Nodes by Status</h3>
+      <div className="grid-2 mt-16">
+        <div className="card p-18">
+          <h3 className="mb-12">Nodes by Status</h3>
           <DistributionPie items={data.distributions.nodesByStatus} colorMap={NODE_COLORS} />
         </div>
-        <div className="card" style={{ padding: 18 }}>
-          <h3 style={{ marginBottom: 12 }}>Deals by Stage</h3>
+        <div className="card p-18">
+          <h3 className="mb-12">Deals by Stage</h3>
           <DistributionPie items={data.distributions.dealsByStage} colorMap={DEAL_COLORS} />
         </div>
       </div>
 
       {data.funnel && (
-        <div style={{ marginTop: 16 }}>
+        <div className="mt-16">
           <FunnelChart data={data.funnel} />
         </div>
       )}

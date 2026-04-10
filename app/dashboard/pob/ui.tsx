@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { getApiErrorMessageFromJson } from "@/lib/api-error";
+import { StatusBadge, FormCard, EmptyState } from "../_components";
 
 type TinyRow = { id: string; name?: string; title?: string };
 type EvidenceRow = { id: string; title: string | null; type: string; url: string | null; onchainTx: string | null; taskId: string | null; projectId: string | null; nodeId: string | null };
@@ -49,6 +50,7 @@ export function PobConsole({
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
   const selected = useMemo(() => rows.find((r) => r.id === selectedId) ?? null, [rows, selectedId]);
 
+  const [showForm, setShowForm] = useState(false);
   const [create, setCreate] = useState({
     businessType: "fundraising",
     baseValue: 0,
@@ -103,6 +105,7 @@ export function PobConsole({
       const data = await res.json();
       if (!data?.ok) throw new Error(data?.error ?? "Create failed.");
       await refresh();
+      setShowForm(false);
     } catch (e: any) {
       setError(e?.message ?? "Create failed.");
     } finally {
@@ -230,11 +233,8 @@ export function PobConsole({
     <div className="apps-layout">
       <div>
         {!readOnly ? (
-          <>
-            <div className="pill" style={{ marginBottom: 10 }}>
-              Create PoB record
-            </div>
-            <div className="form" style={{ marginBottom: 14 }}>
+          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="Create PoB record">
+            <div className="form mb-14">
               <label className="field">
                 <span className="label">Business type</span>
                 <input
@@ -242,7 +242,7 @@ export function PobConsole({
                   onChange={(e) => setCreate((s) => ({ ...s, businessType: e.target.value }))}
                 />
               </label>
-              <div className="grid-3" style={{ gap: 12 }}>
+              <div className="grid-3 gap-12">
                 <label className="field">
                   <span className="label">Base value</span>
                   <input
@@ -270,7 +270,7 @@ export function PobConsole({
                   </select>
                 </label>
               </div>
-              <div className="grid-3" style={{ gap: 12 }}>
+              <div className="grid-3 gap-12">
                 <label className="field">
                   <span className="label">Quality</span>
                   <input
@@ -337,10 +337,10 @@ export function PobConsole({
               </button>
               {error ? <p className="form-error">{error}</p> : null}
             </div>
-          </>
+          </FormCard>
         ) : null}
 
-        <div className="pill" style={{ marginBottom: 10 }}>
+        <div className="pill mb-10">
           Records ({rows.length})
         </div>
         <div className="apps-list">
@@ -354,14 +354,14 @@ export function PobConsole({
                 data-active={active ? "true" : "false"}
                 onClick={() => setSelectedId(r.id)}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div className="flex items-center gap-10">
                   <span className={`status-dot ${r.status === "APPROVED" ? "status-dot-green" : r.status === "REJECTED" ? "status-dot-red" : r.status === "REVIEWING" ? "status-dot-amber" : ""}`} />
                   <div>
-                    <div style={{ fontWeight: 800 }}>{r.businessType}</div>
-                    <div className="muted" style={{ fontSize: 13 }}>score {Math.round((r.score ?? 0) * 100) / 100}</div>
+                    <div className="font-bold">{r.businessType}</div>
+                    <div className="muted text-sm">score {Math.round((r.score ?? 0) * 100) / 100}</div>
                   </div>
                 </div>
-                <span className={`badge ${r.status === "APPROVED" ? "badge-green" : r.status === "REJECTED" ? "badge-red" : r.status === "REVIEWING" ? "badge-amber" : ""}`}>{r.status}</span>
+                <StatusBadge status={r.status} />
               </button>
             );
           })}
@@ -369,12 +369,12 @@ export function PobConsole({
       </div>
 
       <div>
-        <div className="pill" style={{ marginBottom: 10 }}>
+        <div className="pill mb-10">
           {readOnly ? "Record details" : "Review / update"}
         </div>
         {selected ? (
           <div className="form">
-            <div className="grid-2" style={{ gap: 12 }}>
+            <div className="grid-2 gap-12">
               <label className="field">
                 <span className="label">Status</span>
                 <select
@@ -406,8 +406,8 @@ export function PobConsole({
               />
             </label>
 
-            <div className="card" style={{ padding: 14 }}>
-              <div className="pill" style={{ marginBottom: 10 }}>
+            <div className="card p-14">
+              <div className="pill mb-10">
                 Evidence (linked)
               </div>
               <div className="apps-list">
@@ -417,8 +417,8 @@ export function PobConsole({
                   .map((ev) => (
                     <div key={ev.id} className="apps-row" style={{ cursor: "default" }}>
                       <div>
-                        <div style={{ fontWeight: 800 }}>{ev.title || ev.type}</div>
-                        <div className="muted" style={{ fontSize: 13 }}>
+                        <div className="font-bold">{ev.title || ev.type}</div>
+                        <div className="muted text-sm">
                           {ev.url ? ev.url : ev.onchainTx ? ev.onchainTx : "—"}
                         </div>
                       </div>
@@ -426,18 +426,18 @@ export function PobConsole({
                     </div>
                   ))}
               </div>
-              <p className="muted" style={{ marginTop: 10 }}>
+              <p className="muted mt-10">
                 For uploads, use the Evidence module/API and link by task/project/node.
               </p>
             </div>
 
-            <div className="card" style={{ padding: 14 }}>
-              <div className="pill" style={{ marginBottom: 10 }}>
+            <div className="card p-14">
+              <div className="pill mb-10">
                 Attribution (shareBps total = 10000)
               </div>
               {!readOnly ? (
                 <>
-                  <p className="muted" style={{ marginTop: 0 }}>
+                  <p className="muted mt-0">
                     Enter one per line: nodeId,shareBps,role(LEAD|COLLAB)
                   </p>
                   <textarea
@@ -455,12 +455,12 @@ export function PobConsole({
                   </button>
                 </>
               ) : null}
-              <div className="apps-list" style={{ marginTop: 10 }}>
+              <div className="apps-list mt-10">
                 {(selected.attributions ?? []).map((a) => (
                   <div key={a.id} className="apps-row" style={{ cursor: "default" }}>
                     <div>
-                      <div style={{ fontWeight: 800 }}>{a.node?.name ?? a.nodeId}</div>
-                      <div className="muted" style={{ fontSize: 13 }}>
+                      <div className="font-bold">{a.node?.name ?? a.nodeId}</div>
+                      <div className="muted text-sm">
                         {a.role} · {a.shareBps} bps
                       </div>
                     </div>
@@ -470,13 +470,13 @@ export function PobConsole({
               </div>
             </div>
 
-            <div className="card" style={{ padding: 14 }}>
-              <div className="pill" style={{ marginBottom: 10 }}>
+            <div className="card p-14">
+              <div className="pill mb-10">
                 Confirmations
               </div>
               {!readOnly ? (
                 <>
-                  <div className="grid-2" style={{ gap: 12 }}>
+                  <div className="grid-2 gap-12">
                     <label className="field">
                       <span className="label">Decision</span>
                       <select
@@ -536,12 +536,12 @@ export function PobConsole({
                   </button>
                 </>
               ) : null}
-              <div className="apps-list" style={{ marginTop: 10 }}>
+              <div className="apps-list mt-10">
                 {(selected.confirmations ?? []).map((c) => (
                   <div key={c.id} className="apps-row" style={{ cursor: "default" }}>
                     <div>
-                      <div style={{ fontWeight: 800 }}>{c.decision}</div>
-                      <div className="muted" style={{ fontSize: 13 }}>
+                      <div className="font-bold">{c.decision}</div>
+                      <div className="muted text-sm">
                         {c.partyType} · {c.partyNodeId ?? c.partyUserId ?? "—"}
                       </div>
                     </div>
@@ -551,11 +551,11 @@ export function PobConsole({
               </div>
             </div>
 
-            <div className="card" style={{ padding: 14 }}>
-              <div className="pill" style={{ marginBottom: 10 }}>Disputes</div>
+            <div className="card p-14">
+              <div className="pill mb-10">Disputes</div>
               {!readOnly ? (
                 <>
-                  <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+                  <div className="flex gap-8 mb-10">
                     <input
                       value={disputeReason}
                       onChange={(e) => setDisputeReason(e.target.value)}
@@ -576,22 +576,22 @@ export function PobConsole({
               <div className="apps-list">
                 {(selected.disputes ?? []).map((d) => (
                   <div key={d.id} className="apps-row" style={{ cursor: "default", flexDirection: "column", alignItems: "stretch", gap: 6 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div className="flex-between items-center">
                       <div>
-                        <span className={`badge ${d.status === "OPEN" ? "badge-red" : d.status === "RESOLVED" ? "badge-green" : ""}`}>{d.status}</span>
-                        <div className="muted" style={{ fontSize: 13, marginTop: 4 }}>{d.reason}</div>
-                        {d.resolution ? <div className="muted" style={{ fontSize: 12 }}>Resolution: {d.resolution}</div> : null}
+                        <StatusBadge status={d.status} />
+                        <div className="muted text-sm mt-4">{d.reason}</div>
+                        {d.resolution ? <div className="muted text-xs">Resolution: {d.resolution}</div> : null}
                       </div>
-                      <span className="muted" style={{ fontSize: 12, whiteSpace: "nowrap" }}>
+                      <span className="muted text-xs no-wrap">
                         {new Date(d.createdAt as any).toLocaleDateString()}
                       </span>
                     </div>
                     {!readOnly && d.status === "OPEN" ? (
-                      <div style={{ display: "flex", gap: 6 }}>
-                        <button className="button-secondary" type="button" disabled={busy} onClick={() => resolveDispute(d.id, "RESOLVED", prompt("Resolution note:") || undefined)} style={{ fontSize: 12 }}>
+                      <div className="flex gap-6">
+                        <button className="button-secondary text-xs" type="button" disabled={busy} onClick={() => resolveDispute(d.id, "RESOLVED", prompt("Resolution note:") || undefined)}>
                           Resolve
                         </button>
-                        <button className="button-secondary" type="button" disabled={busy} onClick={() => resolveDispute(d.id, "REJECTED")} style={{ fontSize: 12 }}>
+                        <button className="button-secondary text-xs" type="button" disabled={busy} onClick={() => resolveDispute(d.id, "REJECTED")}>
                           Reject
                         </button>
                       </div>
@@ -603,19 +603,19 @@ export function PobConsole({
             </div>
 
             {!readOnly && pobReviews.length > 0 ? (
-              <div className="card" style={{ padding: 14 }}>
-                <div className="pill" style={{ marginBottom: 10 }}>Review history</div>
+              <div className="card p-14">
+                <div className="pill mb-10">Review history</div>
                 <div className="apps-list">
                   {pobReviews.map((r) => (
                     <div key={r.id} className="apps-row" style={{ cursor: "default" }}>
                       <div style={{ display: "grid", gap: 2 }}>
-                        <div style={{ fontWeight: 800, color: "var(--text)" }}>{r.decision}</div>
-                        <div className="muted" style={{ fontSize: 13 }}>
+                        <div className="font-bold" style={{ color: "var(--text)" }}>{r.decision}</div>
+                        <div className="muted text-sm">
                           {r.reviewer?.name || r.reviewer?.email || "system"}
                           {r.notes ? ` — ${r.notes}` : ""}
                         </div>
                       </div>
-                      <span className="muted" style={{ fontSize: 12, whiteSpace: "nowrap" }}>
+                      <span className="muted text-xs no-wrap">
                         {new Date(r.createdAt as any).toLocaleString()}
                       </span>
                     </div>
@@ -624,8 +624,8 @@ export function PobConsole({
               </div>
             ) : null}
 
-            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <Link href={`/dashboard/pob/${selected.id}`} className="button" style={{ fontSize: 12, textDecoration: "none" }}>
+            <div className="flex gap-8 items-center">
+              <Link href={`/dashboard/pob/${selected.id}`} className="button text-xs" style={{ textDecoration: "none" }}>
                 Full detail →
               </Link>
               <button className="button-secondary" type="button" disabled={busy} onClick={() => refresh()}>
@@ -635,10 +635,9 @@ export function PobConsole({
             {error ? <p className="form-error">{error}</p> : null}
           </div>
         ) : (
-          <p className="muted">Select a record.</p>
+          <EmptyState message="Select a record." />
         )}
       </div>
     </div>
   );
 }
-

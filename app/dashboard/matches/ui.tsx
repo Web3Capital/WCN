@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { StatusBadge, FilterToolbar, EmptyState } from "../_components";
 
 type MatchRow = {
   id: string;
@@ -21,14 +22,6 @@ type MatchRow = {
   createdAt: string;
   project: { id: string; name: string; sector: string | null; stage: string; status: string };
   capitalProfile: { id: string; name: string; status: string; investmentFocus: string[] };
-};
-
-const STATUS_BADGE: Record<string, string> = {
-  GENERATED: "badge-amber",
-  INTEREST_EXPRESSED: "badge-accent",
-  CONVERTED_TO_DEAL: "badge-green",
-  DECLINED: "badge-red",
-  EXPIRED: "",
 };
 
 const STATUSES = ["ALL", "GENERATED", "INTEREST_EXPRESSED", "CONVERTED_TO_DEAL", "DECLINED", "EXPIRED"] as const;
@@ -81,32 +74,24 @@ export function MatchesConsole({
   function scoreBar(label: string, value: number) {
     const pct = Math.round(value * 100);
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12 }}>
-        <span style={{ width: 80, fontWeight: 600 }}>{label}</span>
+      <div className="flex items-center gap-8" style={{ fontSize: 12 }}>
+        <span className="font-semibold" style={{ width: 80 }}>{label}</span>
         <div style={{ flex: 1, height: 6, background: "var(--surface-2)", borderRadius: 3, overflow: "hidden" }}>
           <div style={{ width: `${pct}%`, height: "100%", background: "var(--accent)", borderRadius: 3, transition: "width 0.3s" }} />
         </div>
-        <span className="muted" style={{ width: 36, textAlign: "right" }}>{pct}%</span>
+        <span className="muted text-right" style={{ width: 36 }}>{pct}%</span>
       </div>
     );
   }
 
   return (
-    <div style={{ marginTop: 20 }}>
-      <div className="page-toolbar">
-        <div className="chip-group">
-          {STATUSES.map((s) => (
-            <button key={s} className={`chip ${filter === s ? "chip-active" : ""}`} onClick={() => setFilter(s)}>
-              {s === "ALL" ? `All (${matches.length})` : s.replace(/_/g, " ")}
-            </button>
-          ))}
-        </div>
-      </div>
+    <div className="mt-20">
+      <FilterToolbar filters={STATUSES} active={filter} onChange={setFilter} totalCount={matches.length} />
 
-      {error && <p className="form-error" style={{ marginTop: 8 }}>{error}</p>}
+      {error && <p className="form-error mt-8">{error}</p>}
 
       {filtered.length === 0 ? (
-        <div className="empty-state"><p>No matches found.</p></div>
+        <EmptyState message="No matches found." />
       ) : (
         <table className="data-table">
           <thead>
@@ -128,23 +113,23 @@ export function MatchesConsole({
                     <span className={`status-dot ${m.status === "CONVERTED_TO_DEAL" ? "status-dot-green" : m.status === "DECLINED" || m.status === "EXPIRED" ? "status-dot-red" : "status-dot-amber"}`} />
                   </td>
                   <td>
-                    <Link href={`/dashboard/projects/${m.project.id}`} style={{ fontWeight: 700, fontSize: 13, color: "var(--accent)" }}>
+                    <Link href={`/dashboard/projects/${m.project.id}`} className="font-bold text-sm" style={{ color: "var(--accent)" }}>
                       {m.project.name}
                     </Link>
-                    <div className="muted" style={{ fontSize: 11 }}>
+                    <div className="muted text-xs">
                       {m.project.sector ?? "—"} · {m.project.stage}
                     </div>
                   </td>
                   <td>
-                    <div style={{ fontSize: 13, fontWeight: 600 }}>{m.capitalProfile.name}</div>
-                    <div className="muted" style={{ fontSize: 11 }}>
+                    <div className="text-sm font-semibold">{m.capitalProfile.name}</div>
+                    <div className="muted text-xs">
                       {m.capitalProfile.investmentFocus.slice(0, 3).join(", ") || "—"}
                     </div>
                   </td>
                   <td>
                     <button
-                      className="badge badge-accent"
-                      style={{ cursor: "pointer", fontWeight: 700, fontSize: 13, border: "none", background: "var(--accent-alpha)" }}
+                      className="badge badge-accent font-bold text-sm"
+                      style={{ cursor: "pointer", border: "none", background: "var(--accent-alpha)" }}
                       onClick={() => setExpandedId(expandedId === m.id ? null : m.id)}
                       title="Click to see score breakdown"
                     >
@@ -152,12 +137,12 @@ export function MatchesConsole({
                     </button>
                   </td>
                   <td>
-                    <span className={`badge ${STATUS_BADGE[m.status] ?? ""}`}>{m.status.replace(/_/g, " ")}</span>
+                    <StatusBadge status={m.status} />
                   </td>
-                  <td className="muted" style={{ fontSize: 11 }}>{new Date(m.createdAt).toLocaleDateString()}</td>
+                  <td className="muted text-xs">{new Date(m.createdAt).toLocaleDateString()}</td>
                   <td>
                     {m.status === "GENERATED" && (
-                      <div style={{ display: "flex", gap: 4 }}>
+                      <div className="flex gap-4">
                         <button
                           className="button"
                           style={{ fontSize: 10, padding: "3px 8px" }}
@@ -177,7 +162,7 @@ export function MatchesConsole({
                       </div>
                     )}
                     {m.status === "INTEREST_EXPRESSED" && (
-                      <div style={{ display: "flex", gap: 4 }}>
+                      <div className="flex gap-4">
                         <button
                           className="button"
                           style={{ fontSize: 10, padding: "3px 8px" }}
@@ -207,14 +192,14 @@ export function MatchesConsole({
                   <tr key={`${m.id}-detail`}>
                     <td></td>
                     <td colSpan={6}>
-                      <div className="card" style={{ padding: 14, margin: "4px 0 8px" }}>
+                      <div className="card p-14" style={{ margin: "4px 0 8px" }}>
                         <div style={{ display: "grid", gap: 6 }}>
                           {scoreBar("Sector", m.sectorScore)}
                           {scoreBar("Stage", m.stageScore)}
                           {scoreBar("Ticket", m.ticketScore)}
                           {scoreBar("Jurisdiction", m.jurisdictionScore)}
                         </div>
-                        <div className="muted" style={{ fontSize: 11, marginTop: 8 }}>
+                        <div className="muted text-xs mt-8">
                           Composite: {m.score.toFixed(2)} / 100
                           {m.expiresAt && <> · Expires: {new Date(m.expiresAt).toLocaleDateString()}</>}
                         </div>
@@ -229,7 +214,7 @@ export function MatchesConsole({
       )}
 
       {totalPages > 1 && (
-        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 16 }}>
+        <div className="flex-center gap-8 mt-16">
           <button className="button-secondary" style={{ fontSize: 11, padding: "4px 12px" }} disabled={page === 0} onClick={() => setPage(page - 1)}>← Prev</button>
           <span className="muted" style={{ fontSize: 12, lineHeight: "28px" }}>Page {page + 1} of {totalPages}</span>
           <button className="button-secondary" style={{ fontSize: 11, padding: "4px 12px" }} disabled={page >= totalPages - 1} onClick={() => setPage(page + 1)}>Next →</button>
@@ -237,18 +222,19 @@ export function MatchesConsole({
       )}
 
       {convertModalId && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999 }} onClick={() => setConvertModalId(null)}>
-          <div className="card" style={{ padding: 24, width: 400, maxWidth: "90vw" }} onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ marginBottom: 12 }}>Convert to Deal</h3>
-            <p className="muted" style={{ fontSize: 13, marginBottom: 16 }}>Enter the Deal ID to link this match.</p>
+        <div className="flex-center" style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 999 }} onClick={() => setConvertModalId(null)}>
+          <div className="card p-24" style={{ width: 400, maxWidth: "90vw" }} onClick={(e) => e.stopPropagation()}>
+            <h3 className="mb-12">Convert to Deal</h3>
+            <p className="muted text-sm mb-16">Enter the Deal ID to link this match.</p>
             <input
               autoFocus
               placeholder="Deal ID"
               value={convertDealId}
               onChange={(e) => setConvertDealId(e.target.value)}
-              style={{ width: "100%", padding: 10, borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg1)", fontSize: 13, marginBottom: 12 }}
+              className="w-full mb-12"
+              style={{ padding: 10, borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg1)", fontSize: 13 }}
             />
-            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+            <div className="flex-end gap-8">
               <button className="button-secondary" onClick={() => setConvertModalId(null)}>Cancel</button>
               <button
                 className="button"

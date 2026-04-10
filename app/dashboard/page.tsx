@@ -58,20 +58,20 @@ export default async function DashboardIndex() {
         </p>
 
         {!isAdmin && memberCounts ? (
-          <div className="card profile-bar" style={{ marginTop: 18 }}>
+          <div className="card profile-bar mt-18">
             <div className="user-avatar" style={{ width: 40, height: 40, fontSize: 16, flexShrink: 0 }}>
               {(session.user.name || session.user.email || "?").charAt(0).toUpperCase()}
             </div>
             <div>
-              <p className="profile-name" style={{ margin: 0 }}>{session.user.name || session.user.email}</p>
-              <p className="muted profile-meta" style={{ margin: 0 }}>
+              <p className="profile-name mt-0 mb-0">{session.user.name || session.user.email}</p>
+              <p className="muted profile-meta mt-0 mb-0">
                 Nodes: {memberCounts.ownedNodes} · Projects: {memberCounts.scopedProjects} · Tasks: {memberCounts.scopedTasks} · PoB: {memberCounts.scopedPoB}
               </p>
             </div>
           </div>
         ) : null}
 
-        <div className="grid-4 card-grid-animated" style={{ marginTop: 18 }}>
+        <div className="grid-4 card-grid-animated mt-18">
           <div className="card kpi-card">
             <div className="kpi-header">
               <span className="badge badge-accent">Registry</span>
@@ -110,7 +110,7 @@ export default async function DashboardIndex() {
         </div>
 
         {isAdmin ? (
-          <div className="grid-4" style={{ marginTop: 14 }}>
+          <div className="grid-4 mt-14">
             <Link href="/dashboard/nodes" className="quick-action">
               <div className="quick-action-icon"><Plus size={18} /></div>
               <div>
@@ -142,10 +142,10 @@ export default async function DashboardIndex() {
           </div>
         ) : null}
 
-        <div className="grid-2" style={{ marginTop: 14 }}>
+        <div className="grid-2 mt-14">
           <div className="card">
             <h3>My work</h3>
-            <div style={{ display: "grid", gap: 10 }}>
+            <div className="flex-col gap-10">
               <Link href="/dashboard/tasks" className="module-link">
                 <span className="status-dot status-dot-accent" /> Tasks
                 {isAdmin ? <span className="muted"> · {taskCount} total</span> : <span className="muted"> · scoped to your nodes</span>}
@@ -163,7 +163,7 @@ export default async function DashboardIndex() {
           </div>
           <div className="card">
             <h3>All modules</h3>
-            <div style={{ display: "grid", gap: 10 }}>
+            <div className="flex-col gap-10">
               <Link href="/dashboard/nodes" className="module-link">
                 <span className="status-dot status-dot-green" /> Node registry
               </Link>
@@ -186,7 +186,7 @@ export default async function DashboardIndex() {
         </div>
 
         {isAdmin && recentAudit.length > 0 ? (
-          <div className="card" style={{ marginTop: 14 }}>
+          <div className="card mt-14">
             <div className="card-header">
               <h3>Recent activity</h3>
               <Link href="/dashboard/audit" className="card-header-link">View all →</Link>

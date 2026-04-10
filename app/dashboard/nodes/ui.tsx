@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Network } from "lucide-react";
+import { StatusBadge, FormCard, EmptyState } from "../_components";
 
 type NodeRow = {
   id: string;
@@ -30,6 +30,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
   const selected = useMemo(() => rows.find((r) => r.id === selectedId) ?? null, [rows, selectedId]);
 
+  const [showForm, setShowForm] = useState(false);
   const [creating, setCreating] = useState(false);
   const [create, setCreate] = useState({
     name: "",
@@ -78,6 +79,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
       if (!data?.ok) throw new Error(data?.error ?? "Create failed.");
       await refresh();
       setCreate({ name: "", type: "CITY", status: "SUBMITTED", tags: "", region: "", city: "", jurisdiction: "" });
+      setShowForm(false);
     } catch (e: any) {
       setError(e?.message ?? "Create failed.");
     } finally {
@@ -109,16 +111,13 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
     <div className="apps-layout">
       <div>
         {!readOnly ? (
-          <>
-            <div className="pill" style={{ marginBottom: 10 }}>
-              Create node
-            </div>
-            <div className="form" style={{ marginBottom: 14 }}>
+          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="Create node">
+            <div className="form mb-14">
               <label className="field">
                 <span className="label">Name</span>
                 <input value={create.name} onChange={(e) => setCreate((s) => ({ ...s, name: e.target.value }))} />
               </label>
-              <div className="grid-2" style={{ gap: 12 }}>
+              <div className="grid-2 gap-12">
                 <label className="field">
                   <span className="label">Type</span>
                   <select value={create.type} onChange={(e) => setCreate((s) => ({ ...s, type: e.target.value }))}>
@@ -144,7 +143,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
                 <span className="label">Tags (comma separated)</span>
                 <input value={create.tags} onChange={(e) => setCreate((s) => ({ ...s, tags: e.target.value }))} />
               </label>
-              <div className="grid-3" style={{ gap: 12 }}>
+              <div className="grid-3 gap-12">
                 <label className="field">
                   <span className="label">Region</span>
                   <input value={create.region} onChange={(e) => setCreate((s) => ({ ...s, region: e.target.value }))} />
@@ -166,10 +165,10 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
               </button>
               {error ? <p className="form-error">{error}</p> : null}
             </div>
-          </>
+          </FormCard>
         ) : null}
 
-        <div className="pill" style={{ marginBottom: 10 }}>
+        <div className="pill mb-10">
           Nodes ({rows.length})
         </div>
         <div className="apps-list">
@@ -183,18 +182,18 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
                 data-active={active ? "true" : "false"}
                 onClick={() => setSelectedId(r.id)}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div className="flex items-center gap-10">
                   <span className={`status-dot ${r.status === "LIVE" || r.status === "APPROVED" ? "status-dot-green" : r.status === "SUSPENDED" || r.status === "REJECTED" || r.status === "OFFBOARDED" ? "status-dot-red" : r.status === "SUBMITTED" || r.status === "UNDER_REVIEW" || r.status === "CONTRACTING" || r.status === "PROBATION" ? "status-dot-amber" : ""}`} />
                   <div>
-                    <Link href={`/dashboard/nodes/${r.id}`} style={{ fontWeight: 800, color: "var(--accent)" }} onClick={(e) => e.stopPropagation()}>
+                    <Link href={`/dashboard/nodes/${r.id}`} className="font-bold" style={{ color: "var(--accent)" }} onClick={(e) => e.stopPropagation()}>
                       {r.name}
                     </Link>
-                    <div className="muted" style={{ fontSize: 13 }}>
+                    <div className="muted text-sm">
                       {r.type} · L{r.level}
                     </div>
                   </div>
                 </div>
-                <span className={`badge ${r.status === "LIVE" || r.status === "APPROVED" ? "badge-green" : r.status === "SUSPENDED" || r.status === "REJECTED" || r.status === "OFFBOARDED" ? "badge-red" : r.status === "SUBMITTED" || r.status === "UNDER_REVIEW" || r.status === "CONTRACTING" || r.status === "PROBATION" ? "badge-amber" : ""}`}>{r.status}</span>
+                <StatusBadge status={r.status} />
               </button>
             );
           })}
@@ -202,7 +201,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
       </div>
 
       <div>
-        <div className="pill" style={{ marginBottom: 10 }}>
+        <div className="pill mb-10">
           Details
         </div>
         {selected ? (
@@ -217,7 +216,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
                 onBlur={readOnly ? undefined : (e) => onSave({ name: e.target.value })}
               />
             </label>
-            <div className="grid-2" style={{ gap: 12 }}>
+            <div className="grid-2 gap-12">
               <label className="field">
                 <span className="label">Type</span>
                 <select
@@ -259,7 +258,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
                 onBlur={readOnly ? undefined : (e) => onSave({ description: e.target.value })}
               />
             </label>
-            <div className="grid-3" style={{ gap: 12 }}>
+            <div className="grid-3 gap-12">
               <label className="field">
                 <span className="label">Region</span>
                 <input
@@ -308,10 +307,9 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
             {error ? <p className="form-error">{error}</p> : null}
           </div>
         ) : (
-          <p className="muted">Select a node.</p>
+          <EmptyState message="Select a node." />
         )}
       </div>
     </div>
   );
 }
-

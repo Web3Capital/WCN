@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { DetailLayout, StatCard } from "../../../_components";
 
 type NodeData = {
   id: string;
@@ -15,7 +15,7 @@ type NodeData = {
 
 function CheckItem({ label, done }: { label: string; done: boolean }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid var(--line)" }}>
+    <div className="flex items-center gap-10 border-b" style={{ padding: "8px 0" }}>
       <span style={{
         width: 22, height: 22, borderRadius: "50%",
         display: "flex", alignItems: "center", justifyContent: "center",
@@ -47,57 +47,39 @@ export function NodeOnboardingUI({ node, isAdmin }: { node: NodeData; isAdmin: b
   const progress = Math.round((completedCount / steps.length) * 100);
 
   return (
-    <div>
-      <div style={{ marginBottom: 16 }}>
-        <Link href={`/dashboard/nodes/${node.id}`} style={{ fontSize: 13, color: "var(--accent)" }}>
-          &larr; Back to {node.name}
-        </Link>
-      </div>
-
-      <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 4 }}>Onboarding: {node.name}</h1>
-      <p className="muted" style={{ marginBottom: 20 }}>
-        Track onboarding progress for the first 14 days.
-      </p>
-
-      <div className="card" style={{ padding: 20, marginBottom: 20 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Progress</h2>
+    <DetailLayout
+      backHref={`/dashboard/nodes/${node.id}`}
+      backLabel={`Back to ${node.name}`}
+      title={`Onboarding: ${node.name}`}
+      subtitle="Track onboarding progress for the first 14 days."
+    >
+      <div className="card p-20">
+        <div className="flex-between mb-12">
+          <h2 className="text-lg font-semibold mt-0 mb-0">Progress</h2>
           <span className="stat-number" style={{ fontSize: 24 }}>{progress}%</span>
         </div>
 
-        <div className="progress-bar" style={{ marginBottom: 16 }}>
+        <div className="progress-bar mb-16">
           <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
         </div>
 
         {node.onboardingScore != null && (
-          <p className="muted" style={{ fontSize: 12, marginBottom: 12 }}>
+          <p className="muted text-xs mb-12">
             Onboarding Score: <strong>{node.onboardingScore}/100</strong>
           </p>
         )}
 
-        <div style={{ display: "grid", gap: 0 }}>
+        <div>
           {steps.map((s) => <CheckItem key={s.label} label={s.label} done={s.done} />)}
         </div>
       </div>
 
       <div className="grid-4">
-        <div className="stat-card">
-          <div className="stat-label">Projects</div>
-          <div className="stat-number" style={{ marginTop: 4 }}>{node.projects.length}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Tasks Owned</div>
-          <div className="stat-number" style={{ marginTop: 4 }}>{node.tasksAsOwner.length}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Contract</div>
-          <span className="badge" style={{ fontSize: 11, marginTop: 6 }}>{hasContract ? "Sent" : "Pending"}</span>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Go Live</div>
-          <span className="badge" style={{ fontSize: 11, marginTop: 6 }}>{node.goLiveAt ? new Date(node.goLiveAt).toLocaleDateString() : "Not yet"}</span>
-        </div>
+        <StatCard label="Projects" value={node.projects.length} />
+        <StatCard label="Tasks Owned" value={node.tasksAsOwner.length} />
+        <StatCard label="Contract" value={hasContract ? "Sent" : "Pending"} />
+        <StatCard label="Go Live" value={node.goLiveAt ? new Date(node.goLiveAt).toLocaleDateString() : "Not yet"} />
       </div>
-    </div>
+    </DetailLayout>
   );
 }

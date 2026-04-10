@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { LoadingState, EmptyState, FormCard } from "../_components";
 
 interface IngestionSource {
   id: string;
@@ -87,70 +88,69 @@ export function IngestionUI() {
 
   return (
     <div style={{ maxWidth: 900, margin: "0 auto" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-        <div>
-          <h2 style={{ margin: 0 }}>Data Ingestion</h2>
-          <p style={{ color: "var(--muted)", margin: "4px 0 0" }}>
-            Configure external data sources that agents use to import projects and investors.
-          </p>
-        </div>
-        <button className="btn btn-primary" onClick={() => setShowCreate(true)}>+ New Source</button>
+      <div className="mb-24">
+        <h2 style={{ margin: 0 }}>Data Ingestion</h2>
+        <p style={{ color: "var(--muted)", margin: "4px 0 0" }}>
+          Configure external data sources that agents use to import projects and investors.
+        </p>
       </div>
 
-      {showCreate && (
-        <div style={{ background: "var(--bg2, #1a1a2e)", borderRadius: 12, padding: 24, marginBottom: 20, border: "1px solid var(--border)" }}>
-          <h3 style={{ margin: "0 0 16px" }}>Add Ingestion Source</h3>
-          <div style={{ marginBottom: 12 }}>
-            <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Name</label>
+      <FormCard open={showCreate} onToggle={() => setShowCreate(!showCreate)} triggerLabel="+ New Source">
+        <h3 style={{ margin: "0 0 16px" }}>Add Ingestion Source</h3>
+        <div className="mb-12">
+          <label className="field">
+            <span className="label">Name</span>
             <input
               type="text"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="e.g. DeFi Protocols Crawler"
-              style={{ width: "100%", padding: 10, borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg1)" }}
             />
-          </div>
-          <div style={{ marginBottom: 12 }}>
-            <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Adapter</label>
+          </label>
+        </div>
+        <div className="mb-12">
+          <label className="field">
+            <span className="label">Adapter</span>
             <select
               value={form.type}
               onChange={(e) => setForm({ ...form, type: e.target.value })}
-              style={{ width: "100%", padding: 10, borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg1)" }}
             >
               {adapters.map((a) => (
                 <option key={a.type} value={a.type}>{a.name} ({a.type})</option>
               ))}
             </select>
-          </div>
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Config (JSON)</label>
+          </label>
+        </div>
+        <div className="mb-16">
+          <label className="field">
+            <span className="label">Config (JSON)</span>
             <textarea
               value={form.config}
               onChange={(e) => setForm({ ...form, config: e.target.value })}
               rows={5}
               placeholder='{"minTvl": 1000000, "category": "Dexes"}'
-              style={{ width: "100%", padding: 10, borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg1)", fontFamily: "monospace", fontSize: 13 }}
+              className="font-mono text-sm"
             />
-          </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <button className="btn btn-primary" onClick={handleCreate} disabled={!form.name}>Create</button>
-            <button className="btn" onClick={() => setShowCreate(false)}>Cancel</button>
-          </div>
+          </label>
         </div>
-      )}
+        <div className="flex gap-8">
+          <button className="btn btn-primary" onClick={handleCreate} disabled={!form.name}>Create</button>
+          <button className="btn" onClick={() => setShowCreate(false)}>Cancel</button>
+        </div>
+      </FormCard>
 
       {loading ? (
-        <p>Loading...</p>
+        <LoadingState />
       ) : sources.length === 0 ? (
-        <p style={{ color: "var(--muted)", textAlign: "center", padding: 40 }}>No ingestion sources configured yet.</p>
+        <EmptyState message="No ingestion sources configured yet." />
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div className="flex-col gap-16">
           {sources.map((s) => (
-            <div key={s.id} style={{ padding: 20, background: "var(--bg2, #1a1a2e)", borderRadius: 12, border: "1px solid var(--border)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div key={s.id} className="card p-20">
+              <div className="flex-between items-center">
                 <div>
                   <h3 style={{ margin: 0 }}>{s.name}</h3>
-                  <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 4 }}>
+                  <div className="muted text-sm" style={{ marginTop: 4 }}>
                     Type: {s.type} · {s.enabled ? "Active" : "Disabled"}
                     {s.lastRunAt && ` · Last run: ${new Date(s.lastRunAt).toLocaleString()}`}
                   </div>
@@ -165,16 +165,16 @@ export function IngestionUI() {
               </div>
 
               {s.runs.length > 0 && (
-                <div style={{ marginTop: 12 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Recent Runs:</div>
+                <div className="mt-12">
+                  <div className="text-sm font-semibold mb-6">Recent Runs:</div>
                   {s.runs.map((r) => (
-                    <div key={r.id} style={{ display: "flex", gap: 16, fontSize: 13, padding: "4px 0", borderTop: "1px solid var(--border)" }}>
+                    <div key={r.id} className="flex gap-16 text-sm border-t" style={{ padding: "4px 0" }}>
                       <span style={{ color: statusColor[r.status] ?? "var(--muted)" }}>{r.status}</span>
                       <span>Found: {r.itemsFound}</span>
                       <span style={{ color: "var(--success, #4caf50)" }}>New: {r.itemsNew}</span>
                       <span>Updated: {r.itemsUpdated}</span>
                       <span>Skipped: {r.itemsSkipped}</span>
-                      <span style={{ color: "var(--muted)" }}>{new Date(r.startedAt).toLocaleString()}</span>
+                      <span className="muted">{new Date(r.startedAt).toLocaleString()}</span>
                       {r.errorMsg && <span style={{ color: "var(--error)" }}>{r.errorMsg}</span>}
                     </div>
                   ))}

@@ -2333,7 +2333,7 @@ html[data-dashboard="true"] .footer {
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
-.stat-number {
+.stat-number, .stat-value {
   font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -5052,7 +5052,7 @@ html[data-theme="dark"] .pob-formula-specbar {
   .footer-grid { grid-template-columns: 1fr; }
   .chip-group { gap: 4px; }
   .chip { padding: 4px 10px; font-size: 11px; }
-  .stat-number { font-size: 22px; }
+  .stat-number, .stat-value { font-size: 22px; }
   .tab-nav { gap: 2px; }
   .tab-btn { padding: 6px 10px; font-size: 12px; }
   .badge { font-size: 10px; padding: 2px 7px; }
@@ -5527,7 +5527,7 @@ html[data-theme="dark"] .pob-formula-specbar {
   .data-table th, .data-table td { padding: 8px 10px; font-size: 12px; }
 
   .stat-card { padding: 12px; }
-  .stat-number { font-size: 20px; }
+  .stat-number, .stat-value { font-size: 20px; }
   .stat-label { font-size: 11px; }
 
   .card { padding: 14px !important; }
@@ -5564,6 +5564,111 @@ html[data-theme="dark"] .pob-formula-specbar {
 
   .topbar-search { display: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHARED UI PRIMITIVES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* — PageHeader — */
+.page-header-block { margin-bottom: 20px; }
+.page-header-back { font-size: 13px; color: var(--accent); text-decoration: none; display: inline-block; margin-bottom: 8px; }
+.page-header-back:hover { text-decoration: underline; }
+.page-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.page-header-title { font-size: clamp(22px, 3vw, 32px); font-weight: 700; letter-spacing: -0.02em; margin: 0; }
+.page-header-subtitle { margin: 4px 0 0; font-size: 14px; }
+.page-header-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+/* — DetailLayout — */
+.detail-layout { max-width: 960px; }
+.detail-back { font-size: 13px; color: var(--accent); text-decoration: none; display: inline-block; margin-bottom: 12px; }
+.detail-back:hover { text-decoration: underline; }
+.detail-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.detail-header-main { flex: 1; min-width: 0; }
+.detail-title { font-size: 24px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.detail-subtitle { margin: 4px 0 0; font-size: 14px; }
+.detail-badge-inline { flex-shrink: 0; }
+.detail-meta { display: flex; gap: 16px; margin-top: 8px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+.detail-actions { display: flex; gap: 8px; align-items: flex-start; flex-shrink: 0; }
+.detail-body { display: grid; gap: 20px; }
+
+/* — EmptyState — */
+.empty-state-icon { font-size: 32px; margin-bottom: 8px; color: var(--muted); }
+.empty-state-action { margin-top: 12px; }
+
+/* — LoadingState — */
+.loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 16px; gap: 12px; }
+.loading-spinner {
+  width: 28px; height: 28px;
+  border: 3px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* — FormCard — */
+.form-card-trigger { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+.form-card { padding: 18px; margin-bottom: 16px; }
+
+/* — DataTable enhancements — */
+.data-table-wrap { overflow-x: auto; }
+.data-table-clickable { cursor: pointer; }
+.data-table-clickable:hover { background: var(--bg-elev); }
+.data-table-footer { display: flex; justify-content: center; gap: 8px; padding: 12px 0; }
+
+/* — StatCard enhancements — */
+.stat-icon { color: var(--accent); margin-bottom: 4px; }
+.stat-sub { font-size: 12px; margin-top: 2px; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Flex */
+.flex { display: flex; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-end { display: flex; justify-content: flex-end; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.items-start { align-items: flex-start; }
+.items-center { align-items: center; }
+
+/* Gaps */
+.gap-4 { gap: 4px; } .gap-6 { gap: 6px; } .gap-8 { gap: 8px; }
+.gap-10 { gap: 10px; } .gap-12 { gap: 12px; } .gap-16 { gap: 16px; }
+.gap-20 { gap: 20px; } .gap-24 { gap: 24px; }
+
+/* Margins */
+.mt-0 { margin-top: 0; } .mt-4 { margin-top: 4px; } .mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; } .mt-16 { margin-top: 16px; } .mt-20 { margin-top: 20px; }
+.mb-0 { margin-bottom: 0; } .mb-4 { margin-bottom: 4px; } .mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; } .mb-16 { margin-bottom: 16px; } .mb-20 { margin-bottom: 20px; }
+
+/* Padding */
+.p-12 { padding: 12px; } .p-14 { padding: 14px; } .p-16 { padding: 16px; }
+.p-18 { padding: 18px; } .p-20 { padding: 20px; }
+
+/* Width */
+.w-full { width: 100%; }
+
+/* Text */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-xs { font-size: 11px; } .text-sm { font-size: 13px; } .text-base { font-size: 14px; }
+.text-lg { font-size: 16px; } .text-xl { font-size: 20px; }
+.font-mono { font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace; }
+.font-bold { font-weight: 700; } .font-semibold { font-weight: 600; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.no-wrap { white-space: nowrap; }
+
+/* Border */
+.border-t { border-top: 1px solid var(--line); }
+.border-b { border-bottom: 1px solid var(--line); }
+
+/* Responsive hide */
+@media (max-width: 768px) { .hide-mobile { display: none !important; } }
+@media (min-width: 769px) { .show-mobile-only { display: none !important; } }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

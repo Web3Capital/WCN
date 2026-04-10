@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { StatusBadge, FilterToolbar, EmptyState, FormCard } from "../_components";
 
 type Vote = { id: string; voterId: string; option: string; weight: number };
 type OptionItem = string | { id: string; label: string };
@@ -23,10 +24,6 @@ function optionLabel(opt: OptionItem): string {
 function optionKey(opt: OptionItem): string {
   return typeof opt === "string" ? opt : opt.id;
 }
-
-const STATUS_BADGE: Record<string, string> = {
-  DRAFT: "", ACTIVE: "badge-green", PASSED: "badge-green", REJECTED: "badge-red", EXECUTED: "badge-green", CANCELLED: "badge-red",
-};
 
 const STATUS_LIST = ["ALL", "DRAFT", "ACTIVE", "PASSED", "REJECTED", "EXECUTED", "CANCELLED"] as const;
 
@@ -96,59 +93,47 @@ export function GovernanceDashboard({ proposals: initial, userId }: { proposals:
     }
   }
 
+  const shown = filter === "ALL" ? proposals : proposals.filter((p) => p.status === filter);
+
   return (
-    <div style={{ marginTop: 20 }}>
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
-        <button className="button" onClick={() => setShowForm(!showForm)}>New Proposal</button>
-      </div>
-
-      {showForm && (
-        <div className="card" style={{ padding: 18, marginBottom: 16 }}>
-          <form onSubmit={create} className="form">
+    <div className="mt-20">
+      <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="New Proposal">
+        <form onSubmit={create} className="form">
+          <label className="field">
+            <span className="label">Title</span>
+            <input value={title} onChange={(e) => setTitle(e.target.value)} required />
+          </label>
+          <label className="field">
+            <span className="label">Description</span>
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
+          </label>
+          <div className="grid-3 gap-12">
             <label className="field">
-              <span className="label">Title</span>
-              <input value={title} onChange={(e) => setTitle(e.target.value)} required />
+              <span className="label">Type</span>
+              <select value={type} onChange={(e) => setType(e.target.value)}>
+                {["GENERAL", "PARAMETER_CHANGE", "BUDGET", "POLICY"].map((t) => <option key={t} value={t}>{t}</option>)}
+              </select>
             </label>
             <label className="field">
-              <span className="label">Description</span>
-              <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
+              <span className="label">Options (comma-separated)</span>
+              <input value={options} onChange={(e) => setOptions(e.target.value)} required />
             </label>
-            <div className="grid-3" style={{ gap: 12 }}>
-              <label className="field">
-                <span className="label">Type</span>
-                <select value={type} onChange={(e) => setType(e.target.value)}>
-                  {["GENERAL", "PARAMETER_CHANGE", "BUDGET", "POLICY"].map((t) => <option key={t} value={t}>{t}</option>)}
-                </select>
-              </label>
-              <label className="field">
-                <span className="label">Options (comma-separated)</span>
-                <input value={options} onChange={(e) => setOptions(e.target.value)} required />
-              </label>
-              <label className="field">
-                <span className="label">Quorum</span>
-                <input type="number" value={quorum} onChange={(e) => setQuorum(e.target.value)} min={1} />
-              </label>
-            </div>
-            <div style={{ display: "flex", gap: 8 }}>
-              <button type="submit" className="button" disabled={busy}>{busy ? "Creating..." : "Create Proposal"}</button>
-              <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>Cancel</button>
-            </div>
-          </form>
-        </div>
-      )}
+            <label className="field">
+              <span className="label">Quorum</span>
+              <input type="number" value={quorum} onChange={(e) => setQuorum(e.target.value)} min={1} />
+            </label>
+          </div>
+          <div className="flex gap-8">
+            <button type="submit" className="button" disabled={busy}>{busy ? "Creating..." : "Create Proposal"}</button>
+            <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+          </div>
+        </form>
+      </FormCard>
 
-      <div className="page-toolbar" style={{ marginBottom: 12 }}>
-        <div className="chip-group">
-          {STATUS_LIST.map((s) => (
-            <button key={s} className={`chip ${filter === s ? "chip-active" : ""}`} onClick={() => setFilter(s)}>
-              {s === "ALL" ? `All (${proposals.length})` : s}
-            </button>
-          ))}
-        </div>
-      </div>
+      <FilterToolbar filters={STATUS_LIST} active={filter} onChange={setFilter} totalCount={proposals.length} />
 
-      {(() => { const shown = filter === "ALL" ? proposals : proposals.filter((p) => p.status === filter); return shown.length === 0 ? (
-        <div className="empty-state"><p>No proposals found.</p></div>
+      {shown.length === 0 ? (
+        <EmptyState message="No proposals found." />
       ) : (
         <div style={{ display: "grid", gap: 16 }}>
           {shown.map((p) => {
@@ -158,16 +143,16 @@ export function GovernanceDashboard({ proposals: initial, userId }: { proposals:
             for (const v of p.votes) voteCounts[v.option] = (voteCounts[v.option] ?? 0) + 1;
 
             return (
-              <div key={p.id} className="card" style={{ padding: 18 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div key={p.id} className="card p-18">
+                <div className="flex-between items-start">
                   <div>
                     <h3 style={{ margin: 0 }}>{p.title}</h3>
-                    {p.description && <p className="muted" style={{ margin: "4px 0 0", fontSize: 13 }}>{p.description}</p>}
+                    {p.description && <p className="muted text-sm" style={{ margin: "4px 0 0" }}>{p.description}</p>}
                   </div>
-                  <span className={`badge ${STATUS_BADGE[p.status] ?? ""}`}>{p.status}</span>
+                  <StatusBadge status={p.status} />
                 </div>
 
-                <div style={{ display: "flex", gap: 12, marginTop: 12, flexWrap: "wrap" }}>
+                <div className="flex flex-wrap gap-12 mt-12">
                   {p.options.map((opt) => {
                     const key = optionKey(opt);
                     const label = optionLabel(opt);
@@ -184,12 +169,12 @@ export function GovernanceDashboard({ proposals: initial, userId }: { proposals:
                   })}
                 </div>
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
-                  <div className="muted" style={{ fontSize: 12 }}>
+                <div className="flex-between items-center mt-8">
+                  <div className="muted text-xs">
                     {p.votes.length} vote{p.votes.length !== 1 ? "s" : ""} · Quorum: {p.quorum}
                     {p.deadline && ` · Deadline: ${new Date(p.deadline).toLocaleDateString()}`}
                   </div>
-                  <div style={{ display: "flex", gap: 6 }}>
+                  <div className="flex gap-6">
                     {p.status === "DRAFT" && (
                       <button className="button" style={{ fontSize: 10, padding: "3px 10px" }} onClick={() => transitionProposal(p.id, "ACTIVE")}>Activate</button>
                     )}
@@ -202,7 +187,7 @@ export function GovernanceDashboard({ proposals: initial, userId }: { proposals:
             );
           })}
         </div>
-      ); })()}
+      )}
     </div>
   );
 }

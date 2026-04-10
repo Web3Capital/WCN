@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { EmptyState } from "../_components";
 
 type Badge = { id: string; badge: string; awardedAt: string };
 
@@ -51,18 +52,18 @@ export function ReputationLeaderboard({ entries, history }: { entries: Entry[]; 
 
   if (entries.length === 0) {
     return (
-      <div className="empty-state">
-        <p>No reputation scores calculated yet.</p>
-        <p className="muted">Scores are calculated based on PoB, task completion, evidence quality, and more.</p>
-      </div>
+      <EmptyState
+        message="No reputation scores calculated yet."
+        action={<p className="muted">Scores are calculated based on PoB, task completion, evidence quality, and more.</p>}
+      />
     );
   }
 
   return (
     <div>
       {history && history.length > 1 && (
-        <div className="card" style={{ padding: 18, marginBottom: 16 }}>
-          <h3 style={{ marginBottom: 12 }}>Network Reputation Trend</h3>
+        <div className="card p-18 mb-16">
+          <h3 className="mb-12">Network Reputation Trend</h3>
           <ResponsiveContainer width="100%" height={160}>
             <BarChart data={history}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
@@ -75,7 +76,7 @@ export function ReputationLeaderboard({ entries, history }: { entries: Entry[]; 
         </div>
       )}
 
-      <div className="page-toolbar" style={{ marginBottom: 12 }}>
+      <div className="page-toolbar mb-12">
         <div className="chip-group">
           {TIERS.map((t) => (
             <button key={t} className={`chip ${filter === t ? "chip-active" : ""}`} onClick={() => setFilter(t)}>
@@ -101,12 +102,12 @@ export function ReputationLeaderboard({ entries, history }: { entries: Entry[]; 
           {filtered.map((e, i) => (
             <>
               <tr key={e.id} style={{ cursor: "pointer" }} onClick={() => setExpandedId(expandedId === e.id ? null : e.id)}>
-                <td style={{ fontWeight: 700, color: i < 3 ? "var(--accent)" : undefined }}>{i + 1}</td>
+                <td className="font-bold" style={{ color: i < 3 ? "var(--accent)" : undefined }}>{i + 1}</td>
                 <td>
                   <Link href={`/dashboard/nodes/${e.node.id}`} className="link" onClick={(ev) => ev.stopPropagation()}>{e.node.name}</Link>
                 </td>
                 <td><span className="badge">{e.node.type}</span></td>
-                <td style={{ fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>{e.score.toFixed(1)}</td>
+                <td className="font-bold" style={{ fontVariantNumeric: "tabular-nums" }}>{e.score.toFixed(1)}</td>
                 <td>
                   <span className={`badge ${TIER_BADGE[e.tier] ?? ""}`}>
                     {TIER_EMOJI[e.tier] ?? ""} {e.tier}
@@ -114,10 +115,10 @@ export function ReputationLeaderboard({ entries, history }: { entries: Entry[]; 
                 </td>
                 <td>
                   {e.node.badges?.length > 0
-                    ? e.node.badges.map((b) => <span key={b.id} className="badge" style={{ marginRight: 4, fontSize: 10 }}>{b.badge}</span>)
+                    ? e.node.badges.map((b) => <span key={b.id} className="badge text-xs" style={{ marginRight: 4 }}>{b.badge}</span>)
                     : <span className="muted">—</span>}
                 </td>
-                <td className="muted" style={{ fontSize: 12 }}>{new Date(e.calculatedAt).toLocaleDateString()}</td>
+                <td className="muted text-xs">{new Date(e.calculatedAt).toLocaleDateString()}</td>
               </tr>
               {expandedId === e.id && e.breakdown && (
                 <tr key={`${e.id}-bd`}>

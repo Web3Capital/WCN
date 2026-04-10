@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { StatusBadge } from "../_components";
 
 type UserProfile = {
   id: string;
@@ -45,26 +46,26 @@ export function ProfilePage({ user }: { user: UserProfile }) {
   }
 
   return (
-    <div style={{ display: "grid", gap: 20, marginTop: 20 }}>
-      <div className="card" style={{ padding: 20 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+    <div className="flex-col gap-20 mt-20">
+      <div className="card p-20">
+        <div className="flex items-center gap-16 mb-20">
           <span className="user-avatar" style={{ width: 56, height: 56, fontSize: 22 }}>
             {(user.name || user.email || "?").charAt(0).toUpperCase()}
           </span>
           <div>
-            <h3 style={{ margin: 0 }}>{user.name || "Unnamed"}</h3>
-            <p className="muted" style={{ margin: "2px 0 0", fontSize: 13 }}>{user.email}</p>
+            <h3 className="mt-0 mb-0">{user.name || "Unnamed"}</h3>
+            <p className="muted mt-0 mb-0" style={{ fontSize: 13 }}>{user.email}</p>
           </div>
         </div>
 
-        <div className="grid-2" style={{ gap: 12, marginBottom: 20 }}>
+        <div className="grid-2 gap-12 mb-20">
           <div className="kpi">
             <strong>Role</strong>
             <span className="badge badge-accent">{user.role}</span>
           </div>
           <div className="kpi">
             <strong>Status</strong>
-            <span className={`badge ${user.accountStatus === "ACTIVE" ? "badge-green" : "badge-amber"}`}>{user.accountStatus}</span>
+            <StatusBadge status={user.accountStatus} />
           </div>
           <div className="kpi">
             <strong>2FA</strong>
@@ -86,13 +87,13 @@ export function ProfilePage({ user }: { user: UserProfile }) {
           </div>
         </div>
 
-        <p className="muted" style={{ fontSize: 12, margin: 0 }}>
+        <p className="muted text-xs mt-0 mb-0">
           Joined {new Date(user.createdAt).toLocaleDateString()}
         </p>
       </div>
 
-      <div className="card" style={{ padding: 20 }}>
-        <h3 style={{ margin: "0 0 16px" }}>Edit Profile</h3>
+      <div className="card p-20">
+        <h3 className="mt-0 mb-16">Edit Profile</h3>
         <form onSubmit={save} className="form">
           <label className="field">
             <span className="label">Display name</span>
@@ -115,7 +116,7 @@ export function ProfilePage({ user }: { user: UserProfile }) {
             />
           </label>
           {msg && (
-            <p style={{ color: msg.includes("updated") ? "var(--green)" : "var(--amber)", margin: 0, fontSize: 13 }} role="status">
+            <p className="mt-0 mb-0" style={{ color: msg.includes("updated") ? "var(--green)" : "var(--amber)", fontSize: 13 }} role="status">
               {msg}
             </p>
           )}

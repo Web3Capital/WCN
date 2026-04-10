@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { DetailLayout, StatusBadge } from "../../_components";
 
 type Attribution = {
   id: string;
@@ -43,14 +44,6 @@ type AuditEntry = {
   actorUserId: string | null;
 };
 
-const STATUS_COLOR: Record<string, string> = {
-  OPEN: "badge-red",
-  UNDER_REVIEW: "badge-amber",
-  RESOLVED: "badge-green",
-  DISMISSED: "badge-red",
-  ESCALATED: "badge-purple",
-};
-
 export function DisputeDetail({
   dispute,
   auditLogs,
@@ -87,31 +80,35 @@ export function DisputeDetail({
   }
 
   return (
-    <div>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-        <span className="eyebrow">Dispute</span>
-        <span className={`badge ${STATUS_COLOR[status] ?? ""}`}>{status}</span>
-        <span className="badge" style={{ fontSize: 11 }}>{dispute.targetType}</span>
-      </div>
-      <h1 style={{ marginTop: 4, fontSize: 20 }}>{dispute.reason}</h1>
-      <p className="muted" style={{ margin: "4px 0 0" }}>
-        Filed: {new Date(dispute.createdAt).toLocaleString()}
-        {dispute.resolvedAt && <> · Resolved: {new Date(dispute.resolvedAt).toLocaleString()}</>}
-        {dispute.windowEndsAt && <> · Window ends: {new Date(dispute.windowEndsAt).toLocaleDateString()}</>}
-      </p>
-
+    <DetailLayout
+      backHref="/dashboard/disputes"
+      backLabel="All Disputes"
+      title={dispute.reason}
+      badge={
+        <span className="flex items-center gap-6">
+          <StatusBadge status={status} />
+          <span className="badge text-xs">{dispute.targetType}</span>
+        </span>
+      }
+      meta={
+        <>
+          <span>Filed: {new Date(dispute.createdAt).toLocaleString()}</span>
+          {dispute.resolvedAt && <span>Resolved: {new Date(dispute.resolvedAt).toLocaleString()}</span>}
+          {dispute.windowEndsAt && <span>Window ends: {new Date(dispute.windowEndsAt).toLocaleDateString()}</span>}
+        </>
+      }
+    >
       {dispute.resolution && (
-        <div className="card" style={{ padding: 18, marginTop: 16, borderLeft: "3px solid var(--green)" }}>
-          <h3 style={{ margin: "0 0 4px" }}>Resolution</h3>
-          <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{dispute.resolution}</p>
+        <div className="card p-18" style={{ borderLeft: "3px solid var(--green)" }}>
+          <h3 className="mt-0 mb-4">Resolution</h3>
+          <p className="mt-0 mb-0" style={{ whiteSpace: "pre-wrap" }}>{dispute.resolution}</p>
         </div>
       )}
 
-      {/* Related PoB */}
       {dispute.pob && (
-        <div className="card" style={{ padding: 18, marginTop: 16 }}>
-          <h3 style={{ margin: "0 0 12px" }}>Related PoB Record</h3>
-          <div className="grid-2" style={{ gap: 12 }}>
+        <div className="card p-18">
+          <h3 className="mt-0 mb-12">Related PoB Record</h3>
+          <div className="grid-2 gap-12">
             <div className="kpi">
               <strong>Business Type</strong>
               <Link href={`/dashboard/pob/${dispute.pob.id}`} style={{ color: "var(--accent)" }}>{dispute.pob.businessType}</Link>
@@ -122,7 +119,7 @@ export function DisputeDetail({
             </div>
             <div className="kpi">
               <strong>Status</strong>
-              <span className="badge">{dispute.pob.status}</span>
+              <StatusBadge status={dispute.pob.status} />
             </div>
             {dispute.pob.node && (
               <div className="kpi">
@@ -146,14 +143,14 @@ export function DisputeDetail({
 
           {dispute.pob.attributions.length > 0 && (
             <>
-              <h4 style={{ margin: "14px 0 8px" }}>Attribution</h4>
-              <div style={{ display: "grid", gap: 6 }}>
+              <h4 className="mt-16 mb-8">Attribution</h4>
+              <div className="flex-col gap-6">
                 {dispute.pob.attributions.map((a) => (
-                  <div key={a.id} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14 }}>
+                  <div key={a.id} className="flex items-center gap-8 text-base">
                     <span className="status-dot status-dot-accent" />
-                    <span style={{ fontWeight: 600 }}>{a.node?.name ?? a.nodeId}</span>
-                    <span className="badge" style={{ fontSize: 11 }}>{a.role}</span>
-                    <span className="badge badge-accent" style={{ fontSize: 11 }}>{a.shareBps} bps</span>
+                    <span className="font-semibold">{a.node?.name ?? a.nodeId}</span>
+                    <span className="badge text-xs">{a.role}</span>
+                    <span className="badge badge-accent text-xs">{a.shareBps} bps</span>
                   </div>
                 ))}
               </div>
@@ -162,10 +159,9 @@ export function DisputeDetail({
         </div>
       )}
 
-      {/* Admin actions */}
       {isAdmin && status === "OPEN" && (
-        <div className="card" style={{ padding: 18, marginTop: 16 }}>
-          <h3 style={{ margin: "0 0 12px" }}>Actions</h3>
+        <div className="card p-18">
+          <h3 className="mt-0 mb-12">Actions</h3>
           <label className="field">
             <span className="label">Resolution note</span>
             <textarea
@@ -174,7 +170,7 @@ export function DisputeDetail({
               placeholder="Enter resolution note..."
             />
           </label>
-          <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+          <div className="flex gap-8 mt-8">
             <button className="button" disabled={busy || !resolution.trim()} onClick={() => updateDispute("RESOLVED")}>
               {busy ? "Working..." : "Resolve"}
             </button>
@@ -185,21 +181,20 @@ export function DisputeDetail({
               Escalate
             </button>
           </div>
-          {error && <p className="form-error" style={{ marginTop: 8 }}>{error}</p>}
+          {error && <p className="form-error mt-8">{error}</p>}
         </div>
       )}
 
-      {/* Audit Log */}
       {auditLogs.length > 0 && (
-        <div className="card" style={{ padding: 18, marginTop: 16 }}>
-          <h3 style={{ margin: "0 0 12px" }}>Audit Trail</h3>
+        <div className="card p-18">
+          <h3 className="mt-0 mb-12">Audit Trail</h3>
           <div className="timeline">
             {auditLogs.map((log) => (
               <div key={log.id} className="timeline-item">
                 <span className="timeline-dot" />
                 <div className="timeline-content">
-                  <div style={{ fontSize: 14 }}>
-                    <span style={{ fontWeight: 700 }}>{log.action}</span>
+                  <div className="text-base">
+                    <span className="font-bold">{log.action}</span>
                     {log.metadata && (log.metadata as Record<string, string>).previousStatus && (
                       <span className="muted" style={{ marginLeft: 8 }}>
                         {String((log.metadata as Record<string, string>).previousStatus)} → {String((log.metadata as Record<string, string>).newStatus)}
@@ -213,6 +208,6 @@ export function DisputeDetail({
           </div>
         </div>
       )}
-    </div>
+    </DetailLayout>
   );
 }

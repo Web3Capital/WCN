@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { DetailLayout, StatusBadge } from "../../_components";
 
 type ApplicationData = {
   id: string;
@@ -27,13 +28,6 @@ type Review = {
   notes: string | null;
   createdAt: string;
   reviewer: { name: string | null; email: string | null } | null;
-};
-
-const STATUS_COLOR: Record<string, string> = {
-  APPROVED: "badge-green",
-  REJECTED: "badge-red",
-  REVIEWING: "badge-amber",
-  PENDING: "",
 };
 
 const STATUSES = ["PENDING", "REVIEWING", "APPROVED", "REJECTED"];
@@ -74,24 +68,28 @@ export function ApplicationDetail({
   }
 
   return (
-    <div>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-        <span className="eyebrow">Application</span>
-        <span className={`badge ${STATUS_COLOR[status] ?? ""}`}>{status}</span>
-        {application.nodeType && <span className="badge">{application.nodeType}</span>}
-      </div>
-      <h1 style={{ marginTop: 4 }}>{application.applicantName}</h1>
-      <p className="muted" style={{ margin: "4px 0 0" }}>
-        Submitted {new Date(application.createdAt).toLocaleString()}
-        {application.user && (
-          <> · User: <Link href={`/dashboard/users/${application.user.id}`} style={{ color: "var(--accent)" }}>{application.user.name || application.user.email || application.user.id}</Link></>
-        )}
-      </p>
-
-      {/* Contact & Profile Info */}
-      <div className="card" style={{ padding: 18, marginTop: 16 }}>
-        <h3 style={{ margin: "0 0 12px" }}>Applicant Information</h3>
-        <div className="grid-2" style={{ gap: 12 }}>
+    <DetailLayout
+      backHref="/dashboard/applications"
+      backLabel="All Applications"
+      title={application.applicantName}
+      badge={
+        <span className="flex items-center gap-6">
+          <StatusBadge status={status} />
+          {application.nodeType && <span className="badge">{application.nodeType}</span>}
+        </span>
+      }
+      meta={
+        <>
+          <span>Submitted {new Date(application.createdAt).toLocaleString()}</span>
+          {application.user && (
+            <span>User: <Link href={`/dashboard/users/${application.user.id}`} style={{ color: "var(--accent)" }}>{application.user.name || application.user.email || application.user.id}</Link></span>
+          )}
+        </>
+      }
+    >
+      <div className="card p-18">
+        <h3 className="mt-0 mb-12">Applicant Information</h3>
+        <div className="grid-2 gap-12">
           <div className="kpi">
             <strong>Contact</strong>
             <span className="muted">{application.contact}</span>
@@ -117,30 +115,28 @@ export function ApplicationDetail({
         </div>
       </div>
 
-      {/* Detailed Responses */}
-      <div className="card" style={{ padding: 18, marginTop: 16 }}>
-        <h3 style={{ margin: "0 0 12px" }}>Application Details</h3>
-        <div style={{ display: "grid", gap: 14 }}>
+      <div className="card p-18">
+        <h3 className="mt-0 mb-12">Application Details</h3>
+        <div className="flex-col gap-16">
           <div>
             <div className="label">Resources & Expertise</div>
-            <p style={{ margin: "4px 0 0", whiteSpace: "pre-wrap" }}>{application.resources ?? "—"}</p>
+            <p className="mt-4 mb-0" style={{ whiteSpace: "pre-wrap" }}>{application.resources ?? "—"}</p>
           </div>
           <div>
             <div className="label">Looking For</div>
-            <p style={{ margin: "4px 0 0", whiteSpace: "pre-wrap" }}>{application.lookingFor ?? "—"}</p>
+            <p className="mt-4 mb-0" style={{ whiteSpace: "pre-wrap" }}>{application.lookingFor ?? "—"}</p>
           </div>
           <div>
             <div className="label">Why WCN</div>
-            <p style={{ margin: "4px 0 0", whiteSpace: "pre-wrap" }}>{application.whyWcn ?? "—"}</p>
+            <p className="mt-4 mb-0" style={{ whiteSpace: "pre-wrap" }}>{application.whyWcn ?? "—"}</p>
           </div>
         </div>
       </div>
 
-      {/* Admin Actions */}
       {isAdmin && (
-        <div className="card" style={{ padding: 18, marginTop: 16 }}>
-          <h3 style={{ margin: "0 0 12px" }}>Review Actions</h3>
-          <div className="grid-2" style={{ gap: 12 }}>
+        <div className="card p-18">
+          <h3 className="mt-0 mb-12">Review Actions</h3>
+          <div className="grid-2 gap-12">
             <label className="field">
               <span className="label">Status</span>
               <select
@@ -152,7 +148,7 @@ export function ApplicationDetail({
               </select>
             </label>
           </div>
-          <label className="field" style={{ marginTop: 10 }}>
+          <label className="field mt-8">
             <span className="label">Internal Notes</span>
             <textarea
               value={notes}
@@ -161,22 +157,21 @@ export function ApplicationDetail({
               placeholder="Add review notes..."
             />
           </label>
-          <p className="muted" style={{ marginTop: 4, fontSize: 12 }}>Notes auto-save on blur.</p>
-          {error && <p className="form-error" style={{ marginTop: 8 }}>{error}</p>}
+          <p className="muted mt-4 text-xs">Notes auto-save on blur.</p>
+          {error && <p className="form-error mt-8">{error}</p>}
         </div>
       )}
 
-      {/* Review History */}
       {reviews.length > 0 && (
-        <div className="card" style={{ padding: 18, marginTop: 16 }}>
-          <h3 style={{ margin: "0 0 12px" }}>Review History</h3>
+        <div className="card p-18">
+          <h3 className="mt-0 mb-12">Review History</h3>
           <div className="timeline">
             {reviews.map((r) => (
               <div key={r.id} className="timeline-item">
                 <span className="timeline-dot" />
                 <div className="timeline-content">
-                  <div style={{ fontSize: 14 }}>
-                    <span style={{ fontWeight: 700 }}>{r.decision}</span>
+                  <div className="text-base">
+                    <span className="font-bold">{r.decision}</span>
                     {r.notes && <> — {r.notes}</>}
                   </div>
                   <div className="timeline-meta">
@@ -188,6 +183,6 @@ export function ApplicationDetail({
           </div>
         </div>
       )}
-    </div>
+    </DetailLayout>
   );
 }

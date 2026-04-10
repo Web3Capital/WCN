@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { LoadingState, EmptyState, FormCard } from "../_components";
 
 interface ApiKey {
   id: string;
@@ -67,94 +68,92 @@ export function ApiKeysUI() {
 
   return (
     <div style={{ maxWidth: 900, margin: "0 auto" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-        <div>
-          <h2 style={{ margin: 0 }}>API Keys</h2>
-          <p style={{ color: "var(--muted)", margin: "4px 0 0" }}>
-            Create API keys for agents and external systems to access WCN.
-          </p>
-        </div>
-        <button className="btn btn-primary" onClick={() => setShowCreate(true)}>+ New Key</button>
+      <div className="mb-24">
+        <h2 style={{ margin: 0 }}>API Keys</h2>
+        <p style={{ color: "var(--muted)", margin: "4px 0 0" }}>
+          Create API keys for agents and external systems to access WCN.
+        </p>
       </div>
 
       {newKey && (
         <div style={{ background: "var(--success-bg, #e8f5e9)", border: "1px solid var(--success, #4caf50)", borderRadius: 8, padding: 16, marginBottom: 20 }}>
-          <p style={{ fontWeight: 600, margin: "0 0 8px" }}>API key created — copy it now, it will not be shown again:</p>
-          <code style={{ display: "block", padding: 12, background: "var(--bg2, #1a1a2e)", color: "var(--accent, #00d4ff)", borderRadius: 6, wordBreak: "break-all", fontSize: 13 }}>
+          <p className="font-semibold" style={{ margin: "0 0 8px" }}>API key created — copy it now, it will not be shown again:</p>
+          <code className="font-mono text-sm" style={{ display: "block", padding: 12, background: "var(--bg2, #1a1a2e)", color: "var(--accent, #00d4ff)", borderRadius: 6, wordBreak: "break-all" }}>
             {newKey}
           </code>
-          <button className="btn" style={{ marginTop: 12 }} onClick={() => { navigator.clipboard.writeText(newKey); }}>
+          <button className="btn mt-12" onClick={() => { navigator.clipboard.writeText(newKey); }}>
             Copy to Clipboard
           </button>
           <button className="btn" style={{ marginTop: 12, marginLeft: 8 }} onClick={() => setNewKey(null)}>Dismiss</button>
         </div>
       )}
 
-      {showCreate && (
-        <div style={{ background: "var(--bg2, #1a1a2e)", borderRadius: 12, padding: 24, marginBottom: 20, border: "1px solid var(--border)" }}>
-          <h3 style={{ margin: "0 0 16px" }}>Create API Key</h3>
-          <div style={{ marginBottom: 12 }}>
-            <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Name</label>
+      <FormCard open={showCreate} onToggle={() => setShowCreate(!showCreate)} triggerLabel="+ New Key">
+        <h3 style={{ margin: "0 0 16px" }}>Create API Key</h3>
+        <div className="mb-12">
+          <label className="field">
+            <span className="label">Name</span>
             <input
               type="text"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="e.g. Research Agent, CrunchBase Crawler"
-              style={{ width: "100%", padding: 10, borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg1)" }}
             />
+          </label>
+        </div>
+        <div className="mb-12">
+          <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Scopes</label>
+          <div className="flex flex-wrap gap-8">
+            {SCOPE_OPTIONS.map((s) => (
+              <label key={s.value} className="flex items-center gap-4" style={{ cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={form.scopes.includes(s.value)}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      scopes: e.target.checked
+                        ? [...form.scopes, s.value]
+                        : form.scopes.filter((x) => x !== s.value),
+                    });
+                  }}
+                />
+                <span className="text-sm">{s.label}</span>
+              </label>
+            ))}
           </div>
-          <div style={{ marginBottom: 12 }}>
-            <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Scopes</label>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {SCOPE_OPTIONS.map((s) => (
-                <label key={s.value} style={{ display: "flex", alignItems: "center", gap: 4, cursor: "pointer" }}>
-                  <input
-                    type="checkbox"
-                    checked={form.scopes.includes(s.value)}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        scopes: e.target.checked
-                          ? [...form.scopes, s.value]
-                          : form.scopes.filter((x) => x !== s.value),
-                      });
-                    }}
-                  />
-                  <span style={{ fontSize: 13 }}>{s.label}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Expires in (days)</label>
+        </div>
+        <div className="mb-16">
+          <label className="field">
+            <span className="label">Expires in (days)</span>
             <input
               type="number"
               value={form.expiresInDays}
               onChange={(e) => setForm({ ...form, expiresInDays: Number(e.target.value) })}
-              style={{ width: 120, padding: 10, borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg1)" }}
+              style={{ width: 120 }}
             />
-          </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <button className="btn btn-primary" onClick={handleCreate} disabled={!form.name}>Create</button>
-            <button className="btn" onClick={() => setShowCreate(false)}>Cancel</button>
-          </div>
+          </label>
         </div>
-      )}
+        <div className="flex gap-8">
+          <button className="btn btn-primary" onClick={handleCreate} disabled={!form.name}>Create</button>
+          <button className="btn" onClick={() => setShowCreate(false)}>Cancel</button>
+        </div>
+      </FormCard>
 
       {loading ? (
-        <p>Loading...</p>
+        <LoadingState />
       ) : keys.length === 0 ? (
-        <p style={{ color: "var(--muted)", textAlign: "center", padding: 40 }}>No API keys yet. Create one to get started.</p>
+        <EmptyState message="No API keys yet. Create one to get started." />
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div className="flex-col gap-12">
           {keys.map((k) => (
-            <div key={k.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16, background: "var(--bg2, #1a1a2e)", borderRadius: 10, border: "1px solid var(--border)" }}>
+            <div key={k.id} className="flex-between items-center card p-16">
               <div>
-                <div style={{ fontWeight: 600 }}>{k.name}</div>
-                <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 4 }}>
+                <div className="font-semibold">{k.name}</div>
+                <div className="text-sm muted" style={{ marginTop: 4 }}>
                   <code>{k.keyPrefix}...</code> · Scopes: {k.scopes.join(", ")} · Rate: {k.rateLimit}/min
                 </div>
-                <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>
+                <div className="text-xs muted" style={{ marginTop: 2 }}>
                   Created: {new Date(k.createdAt).toLocaleDateString()}
                   {k.lastUsedAt && ` · Last used: ${new Date(k.lastUsedAt).toLocaleDateString()}`}
                   {k.expiresAt && ` · Expires: ${new Date(k.expiresAt).toLocaleDateString()}`}

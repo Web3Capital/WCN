@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { StatusBadge, EmptyState } from "../_components";
 
 type Notification = {
   id: string;
@@ -11,12 +12,6 @@ type Notification = {
   entityId: string | null;
   readAt: string | null;
   createdAt: string;
-};
-
-const TYPE_BADGE: Record<string, string> = {
-  TASK_ASSIGNED: "badge-accent", EVIDENCE_SUBMITTED: "badge-amber",
-  APPROVAL_PENDING: "badge-purple", FREEZE_APPLIED: "badge-red",
-  REVIEW_DECISION: "badge-green", DISPUTE_CREATED: "badge-yellow",
 };
 
 export function NotificationsUI({ notifications }: { notifications: Notification[] }) {
@@ -51,7 +46,7 @@ export function NotificationsUI({ notifications }: { notifications: Notification
       </div>
 
       {items.length === 0 ? (
-        <div className="empty-state card"><p>No notifications.</p></div>
+        <EmptyState message="No notifications." />
       ) : (
         <div className="notif-list">
           {items.map((n) => (
@@ -61,7 +56,7 @@ export function NotificationsUI({ notifications }: { notifications: Notification
             >
               <div className="notif-card-head">
                 <div className="notif-card-title-row">
-                  <span className={`badge ${TYPE_BADGE[n.type] ?? ""}`}>{n.type.replace(/_/g, " ")}</span>
+                  <StatusBadge status={n.type} />
                   <strong className="notif-card-title">{n.title}</strong>
                 </div>
                 <span className="muted notif-card-time">{new Date(n.createdAt).toLocaleString()}</span>

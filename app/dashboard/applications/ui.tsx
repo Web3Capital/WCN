@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { StatusBadge, EmptyState } from "../_components";
 
 type Application = {
   id: string;
@@ -82,14 +83,14 @@ export function ApplicationsTable({
             data-active={a.id === activeId ? "true" : "false"}
             onClick={() => setActiveId(a.id)}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div className="flex items-center gap-10">
               <span className={`status-dot ${a.status === "APPROVED" ? "status-dot-green" : a.status === "REJECTED" ? "status-dot-red" : a.status === "REVIEWING" ? "status-dot-amber" : ""}`} />
               <div>
-                <div style={{ fontWeight: 800, color: "var(--text)" }}>{a.applicantName}</div>
-                <div className="muted" style={{ fontSize: 13 }}>{a.organization ?? "—"} · {a.nodeType ?? "—"}</div>
+                <div className="font-bold" style={{ color: "var(--text)" }}>{a.applicantName}</div>
+                <div className="muted text-sm">{a.organization ?? "—"} · {a.nodeType ?? "—"}</div>
               </div>
             </div>
-            <span className={`badge ${a.status === "APPROVED" ? "badge-green" : a.status === "REJECTED" ? "badge-red" : a.status === "REVIEWING" ? "badge-amber" : ""}`}>{a.status}</span>
+            <StatusBadge status={a.status} />
           </button>
         ))}
       </div>
@@ -99,15 +100,15 @@ export function ApplicationsTable({
           <>
             <div className="apps-detail-head">
               <div>
-                <h3 style={{ marginBottom: 6 }}>{active.applicantName}</h3>
+                <h3 className="mb-6">{active.applicantName}</h3>
                 <p className="muted" style={{ margin: 0 }}>
                   Submitted: {formatDate(active.createdAt)}
                 </p>
               </div>
               {readOnly ? (
-                <span className="pill">{active.status}</span>
+                <StatusBadge status={active.status} />
               ) : (
-                <div className="cta-row" style={{ marginTop: 0 }}>
+                <div className="cta-row mt-0">
                   <select
                     value={active.status}
                     onChange={(e) => updateApplication(active.id, { status: e.target.value as any })}
@@ -123,7 +124,7 @@ export function ApplicationsTable({
               )}
             </div>
 
-            <div className="grid-2" style={{ marginTop: 14 }}>
+            <div className="grid-2 mt-14">
               <div className="kpi">
                 <strong>Contact</strong>
                 <span className="muted">{active.contact}</span>
@@ -142,7 +143,7 @@ export function ApplicationsTable({
               </div>
             </div>
 
-            <div style={{ marginTop: 14, display: "grid", gap: 12 }}>
+            <div className="mt-14" style={{ display: "grid", gap: 12 }}>
               <div>
                 <div className="label">Resources</div>
                 <p className="muted" style={{ margin: 0 }}>{active.resources ?? "—"}</p>
@@ -158,7 +159,7 @@ export function ApplicationsTable({
             </div>
 
             {!readOnly ? (
-              <div style={{ marginTop: 14 }}>
+              <div className="mt-14">
                 <div className="label">Internal notes</div>
                 <textarea
                   defaultValue={active.notes ?? ""}
@@ -166,33 +167,33 @@ export function ApplicationsTable({
                   placeholder="Add review notes here…"
                   disabled={saving}
                 />
-                <p className="muted" style={{ marginTop: 10, marginBottom: 0, fontSize: 13 }}>
+                <p className="muted mt-10 mb-0 text-sm">
                   Notes auto-save on blur.
                 </p>
-                {error ? <p className="form-error" style={{ marginTop: 10 }}>{error}</p> : null}
+                {error ? <p className="form-error mt-10">{error}</p> : null}
               </div>
             ) : null}
 
-            <div style={{ marginTop: 14 }}>
-              <Link href={`/dashboard/applications/${active.id}`} className="button" style={{ fontSize: 12, textDecoration: "none" }}>
+            <div className="mt-14">
+              <Link href={`/dashboard/applications/${active.id}`} className="button text-xs" style={{ textDecoration: "none" }}>
                 Full detail →
               </Link>
             </div>
 
             {!readOnly && reviews.length > 0 ? (
-              <div style={{ marginTop: 14 }}>
+              <div className="mt-14">
                 <div className="label">Review history</div>
-                <div className="apps-list" style={{ marginTop: 6 }}>
+                <div className="apps-list mt-6">
                   {reviews.map((r) => (
                     <div key={r.id} className="apps-row" style={{ cursor: "default" }}>
                       <div style={{ display: "grid", gap: 2 }}>
-                        <div style={{ fontWeight: 800, color: "var(--text)" }}>{r.decision}</div>
-                        <div className="muted" style={{ fontSize: 13 }}>
+                        <div className="font-bold" style={{ color: "var(--text)" }}>{r.decision}</div>
+                        <div className="muted text-sm">
                           {r.reviewer?.name || r.reviewer?.email || "system"}
                           {r.notes ? ` — ${r.notes}` : ""}
                         </div>
                       </div>
-                      <span className="muted" style={{ fontSize: 12, whiteSpace: "nowrap" }}>
+                      <span className="muted text-xs no-wrap">
                         {formatDate(r.createdAt)}
                       </span>
                     </div>
@@ -202,10 +203,9 @@ export function ApplicationsTable({
             ) : null}
           </>
         ) : (
-          <p className="muted" style={{ margin: 0 }}>No applications.</p>
+          <EmptyState message="No applications." />
         )}
       </div>
     </div>
   );
 }
-
