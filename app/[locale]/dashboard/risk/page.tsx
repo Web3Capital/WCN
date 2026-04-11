@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { can } from "@/lib/permissions";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { RiskConsole } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -26,8 +27,8 @@ export default async function RiskPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Intelligence</span>
-        <h1>Risk & Compliance</h1>
+        <span className="eyebrow"><T>Intelligence</T></span>
+        <h1><T>Risk & Compliance</T></h1>
         <p className="muted">
           {openCount} open flags · {criticalCount} critical
         </p>

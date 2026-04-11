@@ -1,6 +1,7 @@
 "use client";
 
 import { DetailLayout, StatCard, EmptyState } from "../../../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Seat = { id: string; level: number; status: string; createdAt: string };
 type StakeEntry = { id: string; action: string; amount: number; notes: string | null; createdAt: string };
@@ -15,27 +16,28 @@ type NodeData = {
 };
 
 export function NodeBillingUI({ node, isAdmin }: { node: NodeData; isAdmin: boolean }) {
+  const { t } = useAutoTranslate();
   return (
     <DetailLayout
       backHref={`/dashboard/nodes/${node.id}`}
-      backLabel={`Back to ${node.name}`}
-      title={`Billing & Contract: ${node.name}`}
+      backLabel={t(`Back to ${node.name}`)}
+      title={t(`Billing & Contract: ${node.name}`)}
     >
       <div className="grid-4">
-        <StatCard label="Billing Status" value={node.billingStatus ?? "N/A"} />
-        <StatCard label="Deposit Status" value={node.depositStatus ?? "N/A"} />
-        <StatCard label="Seat Fee Status" value={node.seatFeeStatus ?? "N/A"} />
-        <StatCard label="Active Seats" value={node.seats.filter(s => s.status === "ACTIVE").length} />
+        <StatCard label={t("Billing Status")} value={node.billingStatus ?? t("N/A")} />
+        <StatCard label={t("Deposit Status")} value={node.depositStatus ?? t("N/A")} />
+        <StatCard label={t("Seat Fee Status")} value={node.seatFeeStatus ?? t("N/A")} />
+        <StatCard label={t("Active Seats")} value={node.seats.filter(s => s.status === "ACTIVE").length} />
       </div>
 
       <div className="card p-20">
-        <h2 className="text-lg font-semibold mb-12 mt-0">Seats ({node.seats.length})</h2>
+        <h2 className="text-lg font-semibold mb-12 mt-0">{t("Seats")} ({node.seats.length})</h2>
         {node.seats.length === 0 ? (
-          <EmptyState message="No seats." />
+          <EmptyState message={t("No seats.")} />
         ) : (
           <table className="data-table">
             <thead>
-              <tr><th>Level</th><th>Status</th><th>Created</th></tr>
+              <tr><th>{t("Level")}</th><th>{t("Status")}</th><th>{t("Created")}</th></tr>
             </thead>
             <tbody>
               {node.seats.map((s) => (
@@ -51,13 +53,13 @@ export function NodeBillingUI({ node, isAdmin }: { node: NodeData; isAdmin: bool
       </div>
 
       <div className="card p-20">
-        <h2 className="text-lg font-semibold mb-12 mt-0">Stake Ledger ({node.stakeLedger.length})</h2>
+        <h2 className="text-lg font-semibold mb-12 mt-0">{t("Stake Ledger")} ({node.stakeLedger.length})</h2>
         {node.stakeLedger.length === 0 ? (
-          <EmptyState message="No stake entries." />
+          <EmptyState message={t("No stake entries.")} />
         ) : (
           <table className="data-table">
             <thead>
-              <tr><th>Action</th><th>Amount</th><th>Notes</th><th>Date</th></tr>
+              <tr><th>{t("Action")}</th><th>{t("Amount")}</th><th>{t("Notes")}</th><th>{t("Date")}</th></tr>
             </thead>
             <tbody>
               {node.stakeLedger.map((e) => (

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { StatusBadge, FormCard, EmptyState } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type NodeRow = {
   id: string;
@@ -26,6 +27,7 @@ const NODE_STATUS = [
 ] as const;
 
 export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]; readOnly?: boolean }) {
+  const { t } = useAutoTranslate();
   const [rows, setRows] = useState<NodeRow[]>(initial);
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
   const selected = useMemo(() => rows.find((r) => r.id === selectedId) ?? null, [rows, selectedId]);
@@ -48,7 +50,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
   async function refresh() {
     const res = await fetch("/api/nodes", { cache: "no-store" });
     const data = await res.json();
-    if (!data?.ok) throw new Error(data?.error ?? "Failed to load nodes.");
+    if (!data?.ok) throw new Error(data?.error ?? t("Failed to load nodes."));
     const list = data.data ?? [];
     setRows(list);
     if (!selectedId && list[0]?.id) setSelectedId(list[0].id);
@@ -60,7 +62,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
     try {
       const tags = create.tags
         .split(",")
-        .map((t) => t.trim())
+        .map((s) => s.trim())
         .filter(Boolean);
       const res = await fetch("/api/nodes", {
         method: "POST",
@@ -76,12 +78,12 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
         })
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Create failed.");
+      if (!data?.ok) throw new Error(data?.error ?? t("Create failed."));
       await refresh();
       setCreate({ name: "", type: "CITY", status: "SUBMITTED", tags: "", region: "", city: "", jurisdiction: "" });
       setShowForm(false);
     } catch (e: any) {
-      setError(e?.message ?? "Create failed.");
+      setError(e?.message ?? t("Create failed."));
     } finally {
       setCreating(false);
     }
@@ -98,10 +100,10 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
         body: JSON.stringify(patch)
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Save failed.");
+      if (!data?.ok) throw new Error(data?.error ?? t("Save failed."));
       await refresh();
     } catch (e: any) {
-      setError(e?.message ?? "Save failed.");
+      setError(e?.message ?? t("Save failed."));
     } finally {
       setSaving(false);
     }
@@ -111,49 +113,49 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
     <div className="apps-layout">
       <div>
         {!readOnly ? (
-          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="Create node">
+          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("Create node")}>
             <div className="form mb-14">
               <label className="field">
-                <span className="label">Name</span>
+                <span className="label">{t("Name")}</span>
                 <input value={create.name} onChange={(e) => setCreate((s) => ({ ...s, name: e.target.value }))} />
               </label>
               <div className="grid-2 gap-12">
                 <label className="field">
-                  <span className="label">Type</span>
+                  <span className="label">{t("Type")}</span>
                   <select value={create.type} onChange={(e) => setCreate((s) => ({ ...s, type: e.target.value }))}>
-                    {NODE_TYPES.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
+                    {NODE_TYPES.map((v) => (
+                      <option key={v} value={v}>
+                        {v}
                       </option>
                     ))}
                   </select>
                 </label>
                 <label className="field">
-                  <span className="label">Status</span>
+                  <span className="label">{t("Status")}</span>
                   <select value={create.status} onChange={(e) => setCreate((s) => ({ ...s, status: e.target.value }))}>
-                    {NODE_STATUS.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
+                    {NODE_STATUS.map((v) => (
+                      <option key={v} value={v}>
+                        {v}
                       </option>
                     ))}
                   </select>
                 </label>
               </div>
               <label className="field">
-                <span className="label">Tags (comma separated)</span>
+                <span className="label">{t("Tags (comma separated)")}</span>
                 <input value={create.tags} onChange={(e) => setCreate((s) => ({ ...s, tags: e.target.value }))} />
               </label>
               <div className="grid-3 gap-12">
                 <label className="field">
-                  <span className="label">Region</span>
+                  <span className="label">{t("Region")}</span>
                   <input value={create.region} onChange={(e) => setCreate((s) => ({ ...s, region: e.target.value }))} />
                 </label>
                 <label className="field">
-                  <span className="label">City</span>
+                  <span className="label">{t("City")}</span>
                   <input value={create.city} onChange={(e) => setCreate((s) => ({ ...s, city: e.target.value }))} />
                 </label>
                 <label className="field">
-                  <span className="label">Jurisdiction</span>
+                  <span className="label">{t("Jurisdiction")}</span>
                   <input
                     value={create.jurisdiction}
                     onChange={(e) => setCreate((s) => ({ ...s, jurisdiction: e.target.value }))}
@@ -161,7 +163,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
                 </label>
               </div>
               <button className="button" type="button" disabled={creating || !create.name.trim()} onClick={onCreate}>
-                {creating ? "Creating..." : "Create"}
+                {creating ? t("Creating...") : t("Create")}
               </button>
               {error ? <p className="form-error">{error}</p> : null}
             </div>
@@ -169,7 +171,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
         ) : null}
 
         <div className="pill mb-10">
-          Nodes ({rows.length})
+          {t("Nodes")} ({rows.length})
         </div>
         <div className="apps-list">
           {rows.map((r) => {
@@ -202,12 +204,12 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
 
       <div>
         <div className="pill mb-10">
-          Details
+          {t("Details")}
         </div>
         {selected ? (
           <div className="form">
             <label className="field">
-              <span className="label">Name</span>
+              <span className="label">{t("Name")}</span>
               <input
                 key={selected.id + selected.name}
                 defaultValue={selected.name}
@@ -218,38 +220,38 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
             </label>
             <div className="grid-2 gap-12">
               <label className="field">
-                <span className="label">Type</span>
+                <span className="label">{t("Type")}</span>
                 <select
                   key={selected.id + "t"}
                   defaultValue={selected.type}
                   disabled={readOnly}
                   onChange={readOnly ? undefined : (e) => onSave({ type: e.target.value })}
                 >
-                  {NODE_TYPES.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
+                  {NODE_TYPES.map((v) => (
+                    <option key={v} value={v}>
+                      {v}
                     </option>
                   ))}
                 </select>
               </label>
               <label className="field">
-                <span className="label">Status</span>
+                <span className="label">{t("Status")}</span>
                 <select
                   key={selected.id + "s"}
                   defaultValue={selected.status}
                   disabled={readOnly}
                   onChange={readOnly ? undefined : (e) => onSave({ status: e.target.value })}
                 >
-                  {NODE_STATUS.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
+                  {NODE_STATUS.map((v) => (
+                    <option key={v} value={v}>
+                      {v}
                     </option>
                   ))}
                 </select>
               </label>
             </div>
             <label className="field">
-              <span className="label">Description</span>
+              <span className="label">{t("Description")}</span>
               <textarea
                 key={selected.id + "d"}
                 defaultValue={selected.description ?? ""}
@@ -260,7 +262,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
             </label>
             <div className="grid-3 gap-12">
               <label className="field">
-                <span className="label">Region</span>
+                <span className="label">{t("Region")}</span>
                 <input
                   key={selected.id + "r"}
                   defaultValue={selected.region ?? ""}
@@ -270,7 +272,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
                 />
               </label>
               <label className="field">
-                <span className="label">City</span>
+                <span className="label">{t("City")}</span>
                 <input
                   key={selected.id + "c"}
                   defaultValue={selected.city ?? ""}
@@ -280,7 +282,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
                 />
               </label>
               <label className="field">
-                <span className="label">Jurisdiction</span>
+                <span className="label">{t("Jurisdiction")}</span>
                 <input
                   key={selected.id + "j"}
                   defaultValue={selected.jurisdiction ?? ""}
@@ -291,7 +293,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
               </label>
             </div>
             <label className="field">
-              <span className="label">Level</span>
+              <span className="label">{t("Level")}</span>
               <input
                 key={selected.id + "l"}
                 type="number"
@@ -302,12 +304,12 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
               />
             </label>
             <button className="button-secondary" type="button" disabled={saving} onClick={() => refresh()}>
-              {saving ? "Saving..." : "Refresh"}
+              {saving ? t("Saving...") : t("Refresh")}
             </button>
             {error ? <p className="form-error">{error}</p> : null}
           </div>
         ) : (
-          <EmptyState message="Select a node." />
+          <EmptyState message={t("Select a node.")} />
         )}
       </div>
     </div>

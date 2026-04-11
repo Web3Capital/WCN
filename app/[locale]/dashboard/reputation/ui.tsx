@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { EmptyState } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Badge = { id: string; badge: string; awardedAt: string };
 
@@ -45,6 +46,7 @@ function ScoreBreakdown({ breakdown }: { breakdown: Record<string, number> }) {
 }
 
 export function ReputationLeaderboard({ entries, history }: { entries: Entry[]; history?: { week: string; avgScore: number }[] }) {
+  const { t } = useAutoTranslate();
   const [filter, setFilter] = useState("ALL");
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -53,8 +55,8 @@ export function ReputationLeaderboard({ entries, history }: { entries: Entry[]; 
   if (entries.length === 0) {
     return (
       <EmptyState
-        message="No reputation scores calculated yet."
-        action={<p className="muted">Scores are calculated based on PoB, task completion, evidence quality, and more.</p>}
+        message={t("No reputation scores calculated yet.")}
+        action={<p className="muted">{t("Scores are calculated based on PoB, task completion, evidence quality, and more.")}</p>}
       />
     );
   }
@@ -63,7 +65,7 @@ export function ReputationLeaderboard({ entries, history }: { entries: Entry[]; 
     <div>
       {history && history.length > 1 && (
         <div className="card p-18 mb-16">
-          <h3 className="mb-12">Network Reputation Trend</h3>
+          <h3 className="mb-12">{t("Network Reputation Trend")}</h3>
           <ResponsiveContainer width="100%" height={160}>
             <BarChart data={history}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
@@ -78,9 +80,9 @@ export function ReputationLeaderboard({ entries, history }: { entries: Entry[]; 
 
       <div className="page-toolbar mb-12">
         <div className="chip-group">
-          {TIERS.map((t) => (
-            <button key={t} className={`chip ${filter === t ? "chip-active" : ""}`} onClick={() => setFilter(t)}>
-              {t === "ALL" ? `All (${entries.length})` : `${TIER_EMOJI[t] ?? ""} ${t}`}
+          {TIERS.map((tier) => (
+            <button key={tier} className={`chip ${filter === tier ? "chip-active" : ""}`} onClick={() => setFilter(tier)}>
+              {tier === "ALL" ? `${t("All")} (${entries.length})` : `${TIER_EMOJI[tier] ?? ""} ${tier}`}
             </button>
           ))}
         </div>
@@ -90,12 +92,12 @@ export function ReputationLeaderboard({ entries, history }: { entries: Entry[]; 
         <thead>
           <tr>
             <th style={{ width: 40 }}>#</th>
-            <th>Node</th>
-            <th>Type</th>
-            <th>Score</th>
-            <th>Tier</th>
-            <th>Badges</th>
-            <th>Last Calculated</th>
+            <th>{t("Node")}</th>
+            <th>{t("Type")}</th>
+            <th>{t("Score")}</th>
+            <th>{t("Tier")}</th>
+            <th>{t("Badges")}</th>
+            <th>{t("Last Calculated")}</th>
           </tr>
         </thead>
         <tbody>

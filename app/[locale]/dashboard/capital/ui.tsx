@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { StatusBadge, EmptyState, FormCard } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type CapitalRow = {
   id: string;
@@ -22,6 +23,7 @@ export function CapitalConsole({ initialProfiles, nodes, isAdmin }: {
   nodes: { id: string; name: string }[];
   isAdmin: boolean;
 }) {
+  const { t } = useAutoTranslate();
   const [profiles, setProfiles] = useState(initialProfiles);
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState("");
@@ -57,38 +59,38 @@ export function CapitalConsole({ initialProfiles, nodes, isAdmin }: {
   return (
     <div className="mt-20">
       {isAdmin && (
-        <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="Add capital profile">
+        <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("Add capital profile")}>
           <form onSubmit={createProfile} className="form">
             <div className="grid-2 gap-12">
               <label className="field">
-                <span className="label">Name</span>
-                <input placeholder="Name *" value={name} onChange={(e) => setName(e.target.value)} required />
+                <span className="label">{t("Name")}</span>
+                <input placeholder={t("Name *")} value={name} onChange={(e) => setName(e.target.value)} required />
               </label>
               <label className="field">
-                <span className="label">Entity</span>
-                <input placeholder="Entity" value={entity} onChange={(e) => setEntity(e.target.value)} />
+                <span className="label">{t("Entity")}</span>
+                <input placeholder={t("Entity")} value={entity} onChange={(e) => setEntity(e.target.value)} />
               </label>
             </div>
             <div className="grid-3 gap-12">
               <label className="field">
-                <span className="label">Linked node</span>
+                <span className="label">{t("Linked node")}</span>
                 <select value={nodeId} onChange={(e) => setNodeId(e.target.value)}>
-                  <option value="">No linked node</option>
+                  <option value="">{t("No linked node")}</option>
                   {nodes.map((n) => <option key={n.id} value={n.id}>{n.name}</option>)}
                 </select>
               </label>
               <label className="field">
-                <span className="label">Min ticket</span>
-                <input type="number" placeholder="Min ticket" value={ticketMin} onChange={(e) => setTicketMin(e.target.value)} />
+                <span className="label">{t("Min ticket")}</span>
+                <input type="number" placeholder={t("Min ticket")} value={ticketMin} onChange={(e) => setTicketMin(e.target.value)} />
               </label>
               <label className="field">
-                <span className="label">Max ticket</span>
-                <input type="number" placeholder="Max ticket" value={ticketMax} onChange={(e) => setTicketMax(e.target.value)} />
+                <span className="label">{t("Max ticket")}</span>
+                <input type="number" placeholder={t("Max ticket")} value={ticketMax} onChange={(e) => setTicketMax(e.target.value)} />
               </label>
             </div>
             <div className="flex gap-8">
-              <button type="submit" className="button" disabled={busy}>{busy ? "Creating..." : "Create"}</button>
-              <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+              <button type="submit" className="button" disabled={busy}>{busy ? t("Creating...") : t("Create")}</button>
+              <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>{t("Cancel")}</button>
             </div>
           </form>
         </FormCard>
@@ -96,7 +98,7 @@ export function CapitalConsole({ initialProfiles, nodes, isAdmin }: {
 
       {!isAdmin && (
         <div className="card mb-16" style={{ padding: "10px 14px", background: "var(--amber-bg)", border: "1px solid color-mix(in oklab, var(--amber) 25%, transparent)" }}>
-          <p className="muted text-sm" style={{ margin: 0 }}>Read-only view. Contact admin for changes.</p>
+          <p className="muted text-sm" style={{ margin: 0 }}>{t("Read-only view. Contact admin for changes.")}</p>
         </div>
       )}
 
@@ -120,7 +122,7 @@ export function CapitalConsole({ initialProfiles, nodes, isAdmin }: {
           </Link>
         ))}
         {profiles.length === 0 && (
-          <EmptyState message="No capital profiles yet." />
+          <EmptyState message={t("No capital profiles yet.")} />
         )}
       </div>
     </div>

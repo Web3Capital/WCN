@@ -7,6 +7,7 @@ import { AgentsConsole } from "./ui";
 import { getOwnedNodeIds, memberAgentsWhere } from "@/lib/member-data-scope";
 import { redactAgentForMember, redactNodeForMember } from "@/lib/member-redact";
 import { isAdminRole } from "@/lib/permissions";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 
 export const dynamic = "force-dynamic";
 
@@ -31,9 +32,9 @@ export default async function AgentsPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Work</span>
-        <h1>Agents</h1>
-        <p className="muted">Register agents, grant permissions, and inspect execution logs.</p>
+        <span className="eyebrow"><T>Work</T></span>
+        <h1><T>Agents</T></h1>
+        <p className="muted"><T>Register agents, grant permissions, and inspect execution logs.</T></p>
         {!isAdmin ? <ReadOnlyBanner /> : null}
         <div className="card" style={{ marginTop: 18 }}>
           <AgentsConsole initial={safeAgents as any} nodes={safeNodes as any} readOnly={!isAdmin} />

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { DetailLayout, StatusBadge } from "../../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type NodeRow = { id: string; name: string; type: string; status: string };
 type ApplicationRow = { id: string; status: string; applicantName: string; nodeType: string | null; createdAt: string };
@@ -30,6 +31,7 @@ export function UserDetail({
   activity: ActivityRow[];
   currentUserId: string;
 }) {
+  const { t } = useAutoTranslate();
   const [role, setRole] = useState(user.role);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -50,10 +52,10 @@ export function UserDetail({
       if (data.ok) {
         setRole(data.data.role);
       } else {
-        setError(data.error?.message || data.error || "Failed to update role.");
+        setError(data.error?.message || data.error || t("Failed to update role."));
       }
     } catch {
-      setError("Network error.");
+      setError(t("Network error."));
     }
     setBusy(false);
   }
@@ -61,38 +63,38 @@ export function UserDetail({
   return (
     <DetailLayout
       backHref="/dashboard/users"
-      backLabel="All Users"
-      title={user.name || user.email || "Unknown"}
+      backLabel={t("All Users")}
+      title={user.name || user.email || t("Unknown")}
       badge={
         <span className="flex items-center gap-6">
           <span className="badge badge-accent">{role}</span>
-          {isSelf && <span className="badge">(you)</span>}
+          {isSelf && <span className="badge">{t("(you)")}</span>}
         </span>
       }
-      meta={<span>Joined {new Date(user.createdAt).toLocaleDateString()}</span>}
+      meta={<span>{t("Joined")} {new Date(user.createdAt).toLocaleDateString()}</span>}
     >
       <div className="card p-18">
         <div className="grid-2 gap-12">
           <div className="kpi">
-            <strong>Email</strong>
+            <strong>{t("Email")}</strong>
             <span className="muted">{user.email ?? "—"}</span>
           </div>
           <div className="kpi">
-            <strong>User ID</strong>
+            <strong>{t("User ID")}</strong>
             <span className="muted text-xs" style={{ wordBreak: "break-all" }}>{user.id}</span>
           </div>
           <div className="kpi">
-            <strong>Owned Nodes</strong>
+            <strong>{t("Owned Nodes")}</strong>
             <span>{user._count.nodes}</span>
           </div>
           <div className="kpi">
-            <strong>Applications</strong>
+            <strong>{t("Applications")}</strong>
             <span>{user._count.applications}</span>
           </div>
         </div>
         <div className="mt-16">
           <label className="field">
-            <span className="label">Role</span>
+            <span className="label">{t("Role")}</span>
             <select
               value={role}
               onChange={(e) => changeRole(e.target.value)}
@@ -102,16 +104,16 @@ export function UserDetail({
               {ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
           </label>
-          {isSelf && <p className="muted mt-4 text-xs">Cannot change your own role.</p>}
+          {isSelf && <p className="muted mt-4 text-xs">{t("Cannot change your own role.")}</p>}
           {error && <p className="form-error mt-8">{error}</p>}
         </div>
       </div>
 
       <div className="grid-2 gap-16">
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Nodes ({user.nodes.length})</h3>
+          <h3 className="mt-0 mb-12">{t("Nodes")} ({user.nodes.length})</h3>
           {user.nodes.length === 0 ? (
-            <p className="muted mt-0 mb-0">No nodes.</p>
+            <p className="muted mt-0 mb-0">{t("No nodes.")}</p>
           ) : (
             <div className="flex-col gap-8">
               {user.nodes.map((n) => (
@@ -126,9 +128,9 @@ export function UserDetail({
         </div>
 
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Applications ({user.applications.length})</h3>
+          <h3 className="mt-0 mb-12">{t("Applications")} ({user.applications.length})</h3>
           {user.applications.length === 0 ? (
-            <p className="muted mt-0 mb-0">No applications.</p>
+            <p className="muted mt-0 mb-0">{t("No applications.")}</p>
           ) : (
             <div className="flex-col gap-8">
               {user.applications.map((a) => (
@@ -148,7 +150,7 @@ export function UserDetail({
 
       {activity.length > 0 && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Recent Activity</h3>
+          <h3 className="mt-0 mb-12">{t("Recent Activity")}</h3>
           <div className="timeline">
             {activity.map((log) => (
               <div key={log.id} className="timeline-item">

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { StatusBadge, EmptyState } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Application = {
   id: string;
@@ -40,6 +41,7 @@ export function ApplicationsTable({
   initial: Application[];
   readOnly?: boolean;
 }) {
+  const { t } = useAutoTranslate();
   const [items, setItems] = useState<Application[]>(initial);
   const [activeId, setActiveId] = useState<string | null>(initial[0]?.id ?? null);
   const active = useMemo(() => items.find((i) => i.id === activeId) ?? null, [items, activeId]);
@@ -66,7 +68,7 @@ export function ApplicationsTable({
     const json = await res.json().catch(() => null);
     setSaving(false);
     if (!res.ok || !json?.ok) {
-      setError(json?.error ?? "Failed to save.");
+      setError(json?.error ?? t("Failed to save."));
       return;
     }
     setItems((prev) => prev.map((x) => (x.id === id ? json.data : x)));
@@ -102,7 +104,7 @@ export function ApplicationsTable({
               <div>
                 <h3 className="mb-6">{active.applicantName}</h3>
                 <p className="muted" style={{ margin: 0 }}>
-                  Submitted: {formatDate(active.createdAt)}
+                  {t("Submitted:")} {formatDate(active.createdAt)}
                 </p>
               </div>
               {readOnly ? (
@@ -126,49 +128,49 @@ export function ApplicationsTable({
 
             <div className="grid-2 mt-14">
               <div className="kpi">
-                <strong>Contact</strong>
+                <strong>{t("Contact")}</strong>
                 <span className="muted">{active.contact}</span>
               </div>
               <div className="kpi">
-                <strong>Role</strong>
+                <strong>{t("Role")}</strong>
                 <span className="muted">{active.role ?? "—"}</span>
               </div>
               <div className="kpi">
-                <strong>Organization</strong>
+                <strong>{t("Organization")}</strong>
                 <span className="muted">{active.organization ?? "—"}</span>
               </div>
               <div className="kpi">
-                <strong>LinkedIn</strong>
+                <strong>{t("LinkedIn")}</strong>
                 <span className="muted">{active.linkedin ?? "—"}</span>
               </div>
             </div>
 
             <div className="mt-14" style={{ display: "grid", gap: 12 }}>
               <div>
-                <div className="label">Resources</div>
+                <div className="label">{t("Resources")}</div>
                 <p className="muted" style={{ margin: 0 }}>{active.resources ?? "—"}</p>
               </div>
               <div>
-                <div className="label">Looking for</div>
+                <div className="label">{t("Looking for")}</div>
                 <p className="muted" style={{ margin: 0 }}>{active.lookingFor ?? "—"}</p>
               </div>
               <div>
-                <div className="label">Why WCN</div>
+                <div className="label">{t("Why WCN")}</div>
                 <p className="muted" style={{ margin: 0 }}>{active.whyWcn ?? "—"}</p>
               </div>
             </div>
 
             {!readOnly ? (
               <div className="mt-14">
-                <div className="label">Internal notes</div>
+                <div className="label">{t("Internal notes")}</div>
                 <textarea
                   defaultValue={active.notes ?? ""}
                   onBlur={(e) => updateApplication(active.id, { notes: e.target.value })}
-                  placeholder="Add review notes here…"
+                  placeholder={t("Add review notes here…")}
                   disabled={saving}
                 />
                 <p className="muted mt-10 mb-0 text-sm">
-                  Notes auto-save on blur.
+                  {t("Notes auto-save on blur.")}
                 </p>
                 {error ? <p className="form-error mt-10">{error}</p> : null}
               </div>
@@ -176,13 +178,13 @@ export function ApplicationsTable({
 
             <div className="mt-14">
               <Link href={`/dashboard/applications/${active.id}`} className="button text-xs" style={{ textDecoration: "none" }}>
-                Full detail →
+                {t("Full detail →")}
               </Link>
             </div>
 
             {!readOnly && reviews.length > 0 ? (
               <div className="mt-14">
-                <div className="label">Review history</div>
+                <div className="label">{t("Review history")}</div>
                 <div className="apps-list mt-6">
                   {reviews.map((r) => (
                     <div key={r.id} className="apps-row" style={{ cursor: "default" }}>
@@ -203,7 +205,7 @@ export function ApplicationsTable({
             ) : null}
           </>
         ) : (
-          <EmptyState message="No applications." />
+          <EmptyState message={t("No applications.")} />
         )}
       </div>
     </div>

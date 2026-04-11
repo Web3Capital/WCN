@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { ReadOnlyBanner } from "@/app/[locale]/dashboard/_components/read-only-banner";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { PobConsole } from "./ui";
 import { getOwnedNodeIds, memberPoBWhere, memberTasksWhere, memberProjectsWhere, memberEvidenceWhere } from "@/lib/member-data-scope";
 import { redactNodeForMember, redactEvidenceForMember } from "@/lib/member-redact";
@@ -43,9 +44,9 @@ export default async function PobPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Verification</span>
-        <h1>PoB verification</h1>
-        <p className="muted">Record and review proof-of-business outcomes.</p>
+        <span className="eyebrow"><T>Verification</T></span>
+        <h1><T>PoB verification</T></h1>
+        <p className="muted"><T>Record and review proof-of-business outcomes.</T></p>
         {!isAdmin ? <ReadOnlyBanner /> : null}
         <div className="card" style={{ marginTop: 18 }}>
           <PobConsole

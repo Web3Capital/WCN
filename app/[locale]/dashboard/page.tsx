@@ -6,6 +6,7 @@ import { getPrisma } from "@/lib/prisma";
 import { getOwnedNodeIds, scopedSummaryCounts } from "@/lib/member-data-scope";
 import { isAdminRole } from "@/lib/permissions";
 import { Network, FolderKanban, ShieldCheck, Plus, Scale, Inbox, Handshake, Landmark, ListTodo } from "lucide-react";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 
 export const dynamic = "force-dynamic";
 
@@ -51,8 +52,8 @@ export default async function DashboardIndex() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Overview</span>
-        <h1>Welcome back</h1>
+        <span className="eyebrow"><T>Overview</T></span>
+        <h1><T>Welcome back</T></h1>
         <p className="muted">
           {roleLabel(role)} · WCN Operating Console
         </p>
@@ -74,7 +75,7 @@ export default async function DashboardIndex() {
         <div className="grid-4 card-grid-animated mt-18">
           <div className="card kpi-card">
             <div className="kpi-header">
-              <span className="badge badge-accent">Registry</span>
+              <span className="badge badge-accent"><T>Registry</T></span>
               <Network size={18} className="kpi-icon" />
             </div>
             <div className="stat-number">{isAdmin ? nodeCount : (memberCounts?.ownedNodes ?? 0)}</div>
@@ -83,7 +84,7 @@ export default async function DashboardIndex() {
 
           <div className="card kpi-card">
             <div className="kpi-header">
-              <span className="badge badge-green">Projects</span>
+              <span className="badge badge-green"><T>Projects</T></span>
               <FolderKanban size={18} className="kpi-icon" />
             </div>
             <div className="stat-number">{isAdmin ? projectCount : (memberCounts?.scopedProjects ?? 0)}</div>
@@ -92,7 +93,7 @@ export default async function DashboardIndex() {
 
           <div className="card kpi-card">
             <div className="kpi-header">
-              <span className="badge badge-amber">Verification</span>
+              <span className="badge badge-amber"><T>Verification</T></span>
               <ShieldCheck size={18} className="kpi-icon" />
             </div>
             <div className="stat-number">{isAdmin ? pobPending : (memberCounts?.scopedPoB ?? 0)}</div>
@@ -101,7 +102,7 @@ export default async function DashboardIndex() {
 
           <div className="card kpi-card">
             <div className="kpi-header">
-              <span className="badge badge-purple">Deals</span>
+              <span className="badge badge-purple"><T>Deals</T></span>
               <Handshake size={18} className="kpi-icon" />
             </div>
             <div className="stat-number">{isAdmin ? dealCount : 0}</div>
@@ -114,29 +115,29 @@ export default async function DashboardIndex() {
             <Link href="/dashboard/nodes" className="quick-action">
               <div className="quick-action-icon"><Plus size={18} /></div>
               <div>
-                <div className="quick-action-title">Create node</div>
-                <div className="quick-action-desc">New network participant</div>
+                <div className="quick-action-title"><T>Create node</T></div>
+                <div className="quick-action-desc"><T>New network participant</T></div>
               </div>
             </Link>
             <Link href="/dashboard/projects" className="quick-action">
               <div className="quick-action-icon"><FolderKanban size={18} /></div>
               <div>
-                <div className="quick-action-title">New project</div>
-                <div className="quick-action-desc">Start project workflow</div>
+                <div className="quick-action-title"><T>New project</T></div>
+                <div className="quick-action-desc"><T>Start project workflow</T></div>
               </div>
             </Link>
             <Link href="/dashboard/capital" className="quick-action">
               <div className="quick-action-icon"><Landmark size={18} /></div>
               <div>
-                <div className="quick-action-title">Add capital</div>
-                <div className="quick-action-desc">New investor profile</div>
+                <div className="quick-action-title"><T>Add capital</T></div>
+                <div className="quick-action-desc"><T>New investor profile</T></div>
               </div>
             </Link>
             <Link href="/dashboard/settlement" className="quick-action">
               <div className="quick-action-icon"><Scale size={18} /></div>
               <div>
-                <div className="quick-action-title">Settlement</div>
-                <div className="quick-action-desc">Run allocation cycles</div>
+                <div className="quick-action-title"><T>Settlement</T></div>
+                <div className="quick-action-desc"><T>Run allocation cycles</T></div>
               </div>
             </Link>
           </div>
@@ -144,41 +145,41 @@ export default async function DashboardIndex() {
 
         <div className="grid-2 mt-14">
           <div className="card">
-            <h3>My work</h3>
+            <h3><T>My work</T></h3>
             <div className="flex-col gap-10">
               <Link href="/dashboard/tasks" className="module-link">
-                <span className="status-dot status-dot-accent" /> Tasks
+                <span className="status-dot status-dot-accent" /> <T>Tasks</T>
                 {isAdmin ? <span className="muted"> · {taskCount} total</span> : <span className="muted"> · scoped to your nodes</span>}
               </Link>
               <Link href="/dashboard/projects" className="module-link">
-                <span className="status-dot status-dot-green" /> Projects
+                <span className="status-dot status-dot-green" /> <T>Projects</T>
               </Link>
               <Link href="/dashboard/deals" className="module-link">
-                <span className="status-dot status-dot-purple" /> Deal Room
+                <span className="status-dot status-dot-purple" /> <T>Deal Room</T>
               </Link>
               <Link href="/dashboard/proof-desk" className="module-link">
-                <span className="status-dot status-dot-amber" /> Proof Desk
+                <span className="status-dot status-dot-amber" /> <T>Proof Desk</T>
               </Link>
             </div>
           </div>
           <div className="card">
-            <h3>All modules</h3>
+            <h3><T>All modules</T></h3>
             <div className="flex-col gap-10">
               <Link href="/dashboard/nodes" className="module-link">
-                <span className="status-dot status-dot-green" /> Node registry
+                <span className="status-dot status-dot-green" /> <T>Node registry</T>
               </Link>
               <Link href="/dashboard/capital" className="module-link">
-                <span className="status-dot status-dot-purple" /> Capital pool
+                <span className="status-dot status-dot-purple" /> <T>Capital pool</T>
                 {isAdmin ? <span className="muted"> · {capitalCount} profiles</span> : null}
               </Link>
               <Link href="/dashboard/agents" className="module-link">
-                <span className="status-dot status-dot-accent" /> Agents
+                <span className="status-dot status-dot-accent" /> <T>Agents</T>
               </Link>
               <Link href="/dashboard/settlement" className="module-link">
-                <span className="status-dot status-dot-amber" /> Settlement
+                <span className="status-dot status-dot-amber" /> <T>Settlement</T>
               </Link>
               <Link href="/dashboard/applications" className="module-link">
-                <span className="status-dot" /> Applications
+                <span className="status-dot" /> <T>Applications</T>
                 {isAdmin ? <span className="muted"> · {applicationCount}</span> : <span className="muted"> · {myApplications}</span>}
               </Link>
             </div>
@@ -188,8 +189,8 @@ export default async function DashboardIndex() {
         {isAdmin && recentAudit.length > 0 ? (
           <div className="card mt-14">
             <div className="card-header">
-              <h3>Recent activity</h3>
-              <Link href="/dashboard/audit" className="card-header-link">View all →</Link>
+              <h3><T>Recent activity</T></h3>
+              <Link href="/dashboard/audit" className="card-header-link"><T>View all →</T></Link>
             </div>
             <div className="timeline">
               {(recentAudit as any[]).map((log: any) => (

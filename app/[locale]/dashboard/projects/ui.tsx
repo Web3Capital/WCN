@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { StatusBadge, FormCard, EmptyState } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type NodeRow = { id: string; name: string; type: string; status: string };
 type ProjectRow = {
@@ -32,6 +33,7 @@ export function ProjectsConsole({
   nodes: NodeRow[];
   readOnly?: boolean;
 }) {
+  const { t } = useAutoTranslate();
   const [rows, setRows] = useState<ProjectRow[]>(initial);
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
   const selected = useMemo(() => rows.find((r) => r.id === selectedId) ?? null, [rows, selectedId]);
@@ -49,7 +51,7 @@ export function ProjectsConsole({
   async function refresh() {
     const res = await fetch("/api/projects", { cache: "no-store" });
     const data = await res.json();
-    if (!data?.ok) throw new Error(data?.error ?? "Failed to load projects.");
+    if (!data?.ok) throw new Error(data?.error ?? t("Failed to load projects."));
     const list = data.data ?? [];
     setRows(list);
     if (!selectedId && list[0]?.id) setSelectedId(list[0].id);
@@ -70,12 +72,12 @@ export function ProjectsConsole({
         })
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Create failed.");
+      if (!data?.ok) throw new Error(data?.error ?? t("Create failed."));
       await refresh();
       setCreate({ name: "", status: "SUBMITTED", stage: "OTHER", nodeId: "" });
       setShowForm(false);
     } catch (e: any) {
-      setError(e?.message ?? "Create failed.");
+      setError(e?.message ?? t("Create failed."));
     } finally {
       setBusy(false);
     }
@@ -92,10 +94,10 @@ export function ProjectsConsole({
         body: JSON.stringify(patch)
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Save failed.");
+      if (!data?.ok) throw new Error(data?.error ?? t("Save failed."));
       await refresh();
     } catch (e: any) {
-      setError(e?.message ?? "Save failed.");
+      setError(e?.message ?? t("Save failed."));
     } finally {
       setBusy(false);
     }
@@ -105,35 +107,35 @@ export function ProjectsConsole({
     <div className="apps-layout">
       <div>
         {!readOnly ? (
-          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="Create project">
+          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("Create project")}>
             <div className="form mb-14">
               <label className="field">
-                <span className="label">Name</span>
+                <span className="label">{t("Name")}</span>
                 <input value={create.name} onChange={(e) => setCreate((s) => ({ ...s, name: e.target.value }))} />
               </label>
               <div className="grid-3 gap-12">
                 <label className="field">
-                  <span className="label">Status</span>
+                  <span className="label">{t("Status")}</span>
                   <select value={create.status} onChange={(e) => setCreate((s) => ({ ...s, status: e.target.value }))}>
-                    {PROJECT_STATUS.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
+                    {PROJECT_STATUS.map((v) => (
+                      <option key={v} value={v}>
+                        {v}
                       </option>
                     ))}
                   </select>
                 </label>
                 <label className="field">
-                  <span className="label">Stage</span>
+                  <span className="label">{t("Stage")}</span>
                   <select value={create.stage} onChange={(e) => setCreate((s) => ({ ...s, stage: e.target.value }))}>
-                    {PROJECT_STAGE.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
+                    {PROJECT_STAGE.map((v) => (
+                      <option key={v} value={v}>
+                        {v}
                       </option>
                     ))}
                   </select>
                 </label>
                 <label className="field">
-                  <span className="label">Node</span>
+                  <span className="label">{t("Node")}</span>
                   <select value={create.nodeId} onChange={(e) => setCreate((s) => ({ ...s, nodeId: e.target.value }))}>
                     <option value="">—</option>
                     {nodes.map((n) => (
@@ -145,7 +147,7 @@ export function ProjectsConsole({
                 </label>
               </div>
               <button className="button" type="button" disabled={busy || !create.name.trim()} onClick={onCreate}>
-                {busy ? "Working..." : "Create"}
+                {busy ? t("Working...") : t("Create")}
               </button>
               {error ? <p className="form-error">{error}</p> : null}
             </div>
@@ -153,7 +155,7 @@ export function ProjectsConsole({
         ) : null}
 
         <div className="pill mb-10">
-          Projects ({rows.length})
+          {t("Projects")} ({rows.length})
         </div>
         <div className="apps-list">
           {rows.map((r) => {
@@ -182,12 +184,12 @@ export function ProjectsConsole({
 
       <div>
         <div className="pill mb-10">
-          Details
+          {t("Details")}
         </div>
         {selected ? (
           <div className="form">
             <label className="field">
-              <span className="label">Name</span>
+              <span className="label">{t("Name")}</span>
               <input
                 key={selected.id + "n"}
                 defaultValue={selected.name}
@@ -198,38 +200,38 @@ export function ProjectsConsole({
             </label>
             <div className="grid-2 gap-12">
               <label className="field">
-                <span className="label">Status</span>
+                <span className="label">{t("Status")}</span>
                 <select
                   key={selected.id + "st"}
                   defaultValue={selected.status}
                   disabled={readOnly}
                   onChange={readOnly ? undefined : (e) => onSave({ status: e.target.value })}
                 >
-                  {PROJECT_STATUS.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
+                  {PROJECT_STATUS.map((v) => (
+                    <option key={v} value={v}>
+                      {v}
                     </option>
                   ))}
                 </select>
               </label>
               <label className="field">
-                <span className="label">Stage</span>
+                <span className="label">{t("Stage")}</span>
                 <select
                   key={selected.id + "sg"}
                   defaultValue={selected.stage}
                   disabled={readOnly}
                   onChange={readOnly ? undefined : (e) => onSave({ stage: e.target.value })}
                 >
-                  {PROJECT_STAGE.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
+                  {PROJECT_STAGE.map((v) => (
+                    <option key={v} value={v}>
+                      {v}
                     </option>
                   ))}
                 </select>
               </label>
             </div>
             <label className="field">
-              <span className="label">Sector</span>
+              <span className="label">{t("Sector")}</span>
               <input
                 key={selected.id + "sc"}
                 defaultValue={selected.sector ?? ""}
@@ -239,7 +241,7 @@ export function ProjectsConsole({
               />
             </label>
             <label className="field">
-              <span className="label">Website</span>
+              <span className="label">{t("Website")}</span>
               <input
                 key={selected.id + "w"}
                 defaultValue={selected.website ?? ""}
@@ -249,7 +251,7 @@ export function ProjectsConsole({
               />
             </label>
             <label className="field">
-              <span className="label">Pitch URL</span>
+              <span className="label">{t("Pitch URL")}</span>
               <input
                 key={selected.id + "p"}
                 defaultValue={selected.pitchUrl ?? ""}
@@ -259,7 +261,7 @@ export function ProjectsConsole({
               />
             </label>
             <label className="field">
-              <span className="label">Fundraising need</span>
+              <span className="label">{t("Fundraising need")}</span>
               <textarea
                 key={selected.id + "f"}
                 defaultValue={selected.fundraisingNeed ?? ""}
@@ -270,7 +272,7 @@ export function ProjectsConsole({
             </label>
             <div className="grid-3 gap-12">
               <label className="field">
-                <span className="label">Contact name</span>
+                <span className="label">{t("Contact name")}</span>
                 <input
                   key={selected.id + "cn"}
                   defaultValue={selected.contactName ?? ""}
@@ -280,7 +282,7 @@ export function ProjectsConsole({
                 />
               </label>
               <label className="field">
-                <span className="label">Email</span>
+                <span className="label">{t("Email")}</span>
                 <input
                   key={selected.id + "ce"}
                   defaultValue={selected.contactEmail ?? ""}
@@ -290,7 +292,7 @@ export function ProjectsConsole({
                 />
               </label>
               <label className="field">
-                <span className="label">Telegram</span>
+                <span className="label">{t("Telegram")}</span>
                 <input
                   key={selected.id + "ct"}
                   defaultValue={selected.contactTelegram ?? ""}
@@ -301,7 +303,7 @@ export function ProjectsConsole({
               </label>
             </div>
             <label className="field">
-              <span className="label">Node</span>
+              <span className="label">{t("Node")}</span>
               <select
                 key={selected.id + "nd"}
                 defaultValue={selected.nodeId ?? ""}
@@ -317,7 +319,7 @@ export function ProjectsConsole({
               </select>
             </label>
             <label className="field">
-              <span className="label">Description</span>
+              <span className="label">{t("Description")}</span>
               <textarea
                 key={selected.id + "ds"}
                 defaultValue={selected.description ?? ""}
@@ -327,12 +329,12 @@ export function ProjectsConsole({
               />
             </label>
             <button className="button-secondary" type="button" disabled={busy} onClick={() => refresh()}>
-              {busy ? "Working..." : "Refresh"}
+              {busy ? t("Working...") : t("Refresh")}
             </button>
             {error ? <p className="form-error">{error}</p> : null}
           </div>
         ) : (
-          <EmptyState message="Select a project." />
+          <EmptyState message={t("Select a project.")} />
         )}
       </div>
     </div>

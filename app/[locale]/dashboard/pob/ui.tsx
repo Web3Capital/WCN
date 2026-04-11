@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { getApiErrorMessageFromJson } from "@/lib/api-error";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { StatusBadge, FormCard, EmptyState } from "../_components";
 
 type TinyRow = { id: string; name?: string; title?: string };
@@ -46,6 +47,7 @@ export function PobConsole({
   evidences: EvidenceRow[];
   readOnly?: boolean;
 }) {
+  const { t } = useAutoTranslate();
   const [rows, setRows] = useState<PobRow[]>(initial);
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
   const selected = useMemo(() => rows.find((r) => r.id === selectedId) ?? null, [rows, selectedId]);
@@ -233,10 +235,10 @@ export function PobConsole({
     <div className="apps-layout">
       <div>
         {!readOnly ? (
-          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="Create PoB record">
+          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("Create PoB record")}>
             <div className="form mb-14">
               <label className="field">
-                <span className="label">Business type</span>
+                <span className="label">{t("Business type")}</span>
                 <input
                   value={create.businessType}
                   onChange={(e) => setCreate((s) => ({ ...s, businessType: e.target.value }))}
@@ -244,7 +246,7 @@ export function PobConsole({
               </label>
               <div className="grid-3 gap-12">
                 <label className="field">
-                  <span className="label">Base value</span>
+                  <span className="label">{t("Base value")}</span>
                   <input
                     type="number"
                     value={create.baseValue}
@@ -252,7 +254,7 @@ export function PobConsole({
                   />
                 </label>
                 <label className="field">
-                  <span className="label">Weight</span>
+                  <span className="label">{t("Weight")}</span>
                   <input
                     type="number"
                     value={create.weight}
@@ -260,7 +262,7 @@ export function PobConsole({
                   />
                 </label>
                 <label className="field">
-                  <span className="label">Status</span>
+                  <span className="label">{t("Status")}</span>
                   <select value={create.status} onChange={(e) => setCreate((s) => ({ ...s, status: e.target.value }))}>
                     {POB_STATUS.map((s) => (
                       <option key={s} value={s}>
@@ -272,7 +274,7 @@ export function PobConsole({
               </div>
               <div className="grid-3 gap-12">
                 <label className="field">
-                  <span className="label">Quality</span>
+                  <span className="label">{t("Quality")}</span>
                   <input
                     type="number"
                     value={create.qualityMult}
@@ -280,7 +282,7 @@ export function PobConsole({
                   />
                 </label>
                 <label className="field">
-                  <span className="label">Time</span>
+                  <span className="label">{t("Time")}</span>
                   <input
                     type="number"
                     value={create.timeMult}
@@ -288,7 +290,7 @@ export function PobConsole({
                   />
                 </label>
                 <label className="field">
-                  <span className="label">Risk discount</span>
+                  <span className="label">{t("Risk discount")}</span>
                   <input
                     type="number"
                     value={create.riskDiscount}
@@ -297,18 +299,18 @@ export function PobConsole({
                 </label>
               </div>
               <label className="field">
-                <span className="label">Task</span>
+                <span className="label">{t("Task")}</span>
                 <select value={create.taskId} onChange={(e) => setCreate((s) => ({ ...s, taskId: e.target.value }))}>
                   <option value="">—</option>
-                  {tasks.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.title ?? t.id}
+                  {tasks.map((tk) => (
+                    <option key={tk.id} value={tk.id}>
+                      {tk.title ?? tk.id}
                     </option>
                   ))}
                 </select>
               </label>
               <label className="field">
-                <span className="label">Project</span>
+                <span className="label">{t("Project")}</span>
                 <select
                   value={create.projectId}
                   onChange={(e) => setCreate((s) => ({ ...s, projectId: e.target.value }))}
@@ -322,7 +324,7 @@ export function PobConsole({
                 </select>
               </label>
               <label className="field">
-                <span className="label">Node</span>
+                <span className="label">{t("Node")}</span>
                 <select value={create.nodeId} onChange={(e) => setCreate((s) => ({ ...s, nodeId: e.target.value }))}>
                   <option value="">—</option>
                   {nodes.map((n) => (
@@ -333,7 +335,7 @@ export function PobConsole({
                 </select>
               </label>
               <button className="button" type="button" disabled={busy || !create.businessType.trim()} onClick={onCreate}>
-                {busy ? "Working..." : "Create"}
+                {busy ? t("Working...") : t("Create")}
               </button>
               {error ? <p className="form-error">{error}</p> : null}
             </div>
@@ -341,7 +343,7 @@ export function PobConsole({
         ) : null}
 
         <div className="pill mb-10">
-          Records ({rows.length})
+          {t("Records")} ({rows.length})
         </div>
         <div className="apps-list">
           {rows.map((r) => {
@@ -358,7 +360,7 @@ export function PobConsole({
                   <span className={`status-dot ${r.status === "APPROVED" ? "status-dot-green" : r.status === "REJECTED" ? "status-dot-red" : r.status === "REVIEWING" ? "status-dot-amber" : ""}`} />
                   <div>
                     <div className="font-bold">{r.businessType}</div>
-                    <div className="muted text-sm">score {Math.round((r.score ?? 0) * 100) / 100}</div>
+                    <div className="muted text-sm">{t("score")} {Math.round((r.score ?? 0) * 100) / 100}</div>
                   </div>
                 </div>
                 <StatusBadge status={r.status} />
@@ -370,13 +372,13 @@ export function PobConsole({
 
       <div>
         <div className="pill mb-10">
-          {readOnly ? "Record details" : "Review / update"}
+          {readOnly ? t("Record details") : t("Review / update")}
         </div>
         {selected ? (
           <div className="form">
             <div className="grid-2 gap-12">
               <label className="field">
-                <span className="label">Status</span>
+                <span className="label">{t("Status")}</span>
                 <select
                   key={selected.id + "st"}
                   defaultValue={selected.status}
@@ -391,12 +393,12 @@ export function PobConsole({
                 </select>
               </label>
               <label className="field">
-                <span className="label">Score</span>
+                <span className="label">{t("Score")}</span>
                 <input value={String(selected.score ?? 0)} readOnly />
               </label>
             </div>
             <label className="field">
-              <span className="label">Notes</span>
+              <span className="label">{t("Notes")}</span>
               <textarea
                 key={selected.id + "n"}
                 defaultValue={selected.notes ?? ""}
@@ -408,7 +410,7 @@ export function PobConsole({
 
             <div className="card p-14">
               <div className="pill mb-10">
-                Evidence (linked)
+                {t("Evidence (linked)")}
               </div>
               <div className="apps-list">
                 {evidences
@@ -427,18 +429,18 @@ export function PobConsole({
                   ))}
               </div>
               <p className="muted mt-10">
-                For uploads, use the Evidence module/API and link by task/project/node.
+                {t("For uploads, use the Evidence module/API and link by task/project/node.")}
               </p>
             </div>
 
             <div className="card p-14">
               <div className="pill mb-10">
-                Attribution (shareBps total = 10000)
+                {t("Attribution (shareBps total = 10000)")}
               </div>
               {!readOnly ? (
                 <>
                   <p className="muted mt-0">
-                    Enter one per line: nodeId,shareBps,role(LEAD|COLLAB)
+                    {t("Enter one per line: nodeId,shareBps,role(LEAD|COLLAB)")}
                   </p>
                   <textarea
                     value={attrText}
@@ -451,7 +453,7 @@ export function PobConsole({
                     disabled={busy || !attrText.trim()}
                     onClick={saveAttribution}
                   >
-                    Save attribution
+                    {t("Save attribution")}
                   </button>
                 </>
               ) : null}
@@ -472,13 +474,13 @@ export function PobConsole({
 
             <div className="card p-14">
               <div className="pill mb-10">
-                Confirmations
+                {t("Confirmations")}
               </div>
               {!readOnly ? (
                 <>
                   <div className="grid-2 gap-12">
                     <label className="field">
-                      <span className="label">Decision</span>
+                      <span className="label">{t("Decision")}</span>
                       <select
                         value={confirm.decision}
                         onChange={(e) => setConfirm((s) => ({ ...s, decision: e.target.value }))}
@@ -488,7 +490,7 @@ export function PobConsole({
                       </select>
                     </label>
                     <label className="field">
-                      <span className="label">Party type</span>
+                      <span className="label">{t("Party type")}</span>
                       <select
                         value={confirm.partyType}
                         onChange={(e) => setConfirm((s) => ({ ...s, partyType: e.target.value }))}
@@ -500,7 +502,7 @@ export function PobConsole({
                   </div>
                   {confirm.partyType === "NODE" ? (
                     <label className="field">
-                      <span className="label">Party node</span>
+                      <span className="label">{t("Party node")}</span>
                       <select
                         value={confirm.partyNodeId}
                         onChange={(e) => setConfirm((s) => ({ ...s, partyNodeId: e.target.value }))}
@@ -515,7 +517,7 @@ export function PobConsole({
                     </label>
                   ) : (
                     <label className="field">
-                      <span className="label">Party userId</span>
+                      <span className="label">{t("Party userId")}</span>
                       <input
                         value={confirm.partyUserId}
                         onChange={(e) => setConfirm((s) => ({ ...s, partyUserId: e.target.value }))}
@@ -523,7 +525,7 @@ export function PobConsole({
                     </label>
                   )}
                   <label className="field">
-                    <span className="label">Notes</span>
+                    <span className="label">{t("Notes")}</span>
                     <input value={confirm.notes} onChange={(e) => setConfirm((s) => ({ ...s, notes: e.target.value }))} />
                   </label>
                   <button
@@ -532,7 +534,7 @@ export function PobConsole({
                     disabled={busy || (confirm.partyType === "NODE" ? !confirm.partyNodeId : !confirm.partyUserId)}
                     onClick={addConfirmation}
                   >
-                    Add confirmation
+                    {t("Add confirmation")}
                   </button>
                 </>
               ) : null}
@@ -552,14 +554,14 @@ export function PobConsole({
             </div>
 
             <div className="card p-14">
-              <div className="pill mb-10">Disputes</div>
+              <div className="pill mb-10">{t("Disputes")}</div>
               {!readOnly ? (
                 <>
                   <div className="flex gap-8 mb-10">
                     <input
                       value={disputeReason}
                       onChange={(e) => setDisputeReason(e.target.value)}
-                      placeholder="Reason for dispute..."
+                      placeholder={t("Reason for dispute...")}
                       style={{ flex: 1 }}
                     />
                     <button
@@ -568,7 +570,7 @@ export function PobConsole({
                       disabled={busy || !disputeReason.trim()}
                       onClick={openDispute}
                     >
-                      Open dispute
+                      {t("Open dispute")}
                     </button>
                   </div>
                 </>
@@ -580,7 +582,7 @@ export function PobConsole({
                       <div>
                         <StatusBadge status={d.status} />
                         <div className="muted text-sm mt-4">{d.reason}</div>
-                        {d.resolution ? <div className="muted text-xs">Resolution: {d.resolution}</div> : null}
+                        {d.resolution ? <div className="muted text-xs">{t("Resolution:")}{" "}{d.resolution}</div> : null}
                       </div>
                       <span className="muted text-xs no-wrap">
                         {new Date(d.createdAt as any).toLocaleDateString()}
@@ -589,22 +591,22 @@ export function PobConsole({
                     {!readOnly && d.status === "OPEN" ? (
                       <div className="flex gap-6">
                         <button className="button-secondary text-xs" type="button" disabled={busy} onClick={() => resolveDispute(d.id, "RESOLVED", prompt("Resolution note:") || undefined)}>
-                          Resolve
+                          {t("Resolve")}
                         </button>
                         <button className="button-secondary text-xs" type="button" disabled={busy} onClick={() => resolveDispute(d.id, "REJECTED")}>
-                          Reject
+                          {t("Reject")}
                         </button>
                       </div>
                     ) : null}
                   </div>
                 ))}
-                {(selected.disputes ?? []).length === 0 ? <p className="muted" style={{ margin: 0 }}>No disputes.</p> : null}
+                {(selected.disputes ?? []).length === 0 ? <p className="muted" style={{ margin: 0 }}>{t("No disputes.")}</p> : null}
               </div>
             </div>
 
             {!readOnly && pobReviews.length > 0 ? (
               <div className="card p-14">
-                <div className="pill mb-10">Review history</div>
+                <div className="pill mb-10">{t("Review history")}</div>
                 <div className="apps-list">
                   {pobReviews.map((r) => (
                     <div key={r.id} className="apps-row" style={{ cursor: "default" }}>
@@ -626,16 +628,16 @@ export function PobConsole({
 
             <div className="flex gap-8 items-center">
               <Link href={`/dashboard/pob/${selected.id}`} className="button text-xs" style={{ textDecoration: "none" }}>
-                Full detail →
+                {t("Full detail →")}
               </Link>
               <button className="button-secondary" type="button" disabled={busy} onClick={() => refresh()}>
-                {busy ? "Working..." : "Refresh"}
+                {busy ? t("Working...") : t("Refresh")}
               </button>
             </div>
             {error ? <p className="form-error">{error}</p> : null}
           </div>
         ) : (
-          <EmptyState message="Select a record." />
+          <EmptyState message={t("Select a record.")} />
         )}
       </div>
     </div>

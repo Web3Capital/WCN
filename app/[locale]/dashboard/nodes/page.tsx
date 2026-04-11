@@ -6,6 +6,7 @@ import { ReadOnlyBanner } from "@/app/[locale]/dashboard/_components/read-only-b
 import { NodesConsole } from "./ui";
 import { redactNodeForMember } from "@/lib/member-redact";
 import { isAdminRole } from "@/lib/permissions";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 
 export const dynamic = "force-dynamic";
 
@@ -21,9 +22,9 @@ export default async function NodesPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Network</span>
-        <h1>Node registry</h1>
-        <p className="muted">Create, review, and manage nodes.</p>
+        <span className="eyebrow"><T>Network</T></span>
+        <h1><T>Node registry</T></h1>
+        <p className="muted"><T>Create, review, and manage nodes.</T></p>
         {!isAdmin ? <ReadOnlyBanner /> : null}
         <div className="card" style={{ marginTop: 18 }}>
           <NodesConsole initial={safeNodes} readOnly={!isAdmin} />

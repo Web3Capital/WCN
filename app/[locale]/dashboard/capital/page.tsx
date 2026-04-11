@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { CapitalConsole } from "./ui";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 
 export const dynamic = "force-dynamic";
 
@@ -37,9 +38,9 @@ export default async function CapitalPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Network</span>
-        <h1>Capital Profiles</h1>
-        <p className="muted">Manage investor profiles, preferences, and activity.</p>
+        <span className="eyebrow"><T>Network</T></span>
+        <h1><T>Capital Profiles</T></h1>
+        <p className="muted"><T>Manage investor profiles, preferences, and activity.</T></p>
         <CapitalConsole
           initialProfiles={JSON.parse(JSON.stringify(profiles))}
           nodes={nodes}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { EmptyState } from "../../_components";
 
 type InviteRow = {
@@ -21,6 +22,7 @@ const ROLES = [
 ];
 
 export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] }) {
+  const { t } = useAutoTranslate();
   const [invites, setInvites] = useState(initialInvites);
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("NODE_OWNER");
@@ -41,7 +43,7 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
         body: JSON.stringify({ email, role }),
       });
       const data = await res.json();
-      if (!data.ok) { setError(data.error || "Failed."); return; }
+      if (!data.ok) { setError(data.error || t("Failed.")); return; }
       const inv = data.data;
       setLastToken(inv.token);
       setInvites([{
@@ -52,11 +54,11 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
         expiresAt: inv.expiresAt,
         activatedAt: null,
         revokedAt: null,
-        createdBy: "You",
+        createdBy: t("You"),
         createdAt: new Date().toISOString(),
       }, ...invites]);
       setEmail("");
-    } catch { setError("Network error."); }
+    } catch { setError(t("Network error.")); }
     finally { setBusy(false); }
   }
 
@@ -71,36 +73,36 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
   return (
     <div className="mt-20">
       <div className="card p-20 mb-20">
-        <h3 style={{ margin: "0 0 14px" }}>Send new invite</h3>
+        <h3 style={{ margin: "0 0 14px" }}>{t("Send new invite")}</h3>
         <form onSubmit={createInvite} className="flex flex-wrap items-start gap-10" style={{ alignItems: "flex-end" }}>
           <label className="field" style={{ flex: 1, minWidth: 200, margin: 0 }}>
-            <span className="label">Email address</span>
+            <span className="label">{t("Email address")}</span>
             <input
               type="email"
-              placeholder="user@example.com"
+              placeholder={t("user@example.com")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </label>
           <label className="field" style={{ minWidth: 160, margin: 0 }}>
-            <span className="label">Role</span>
+            <span className="label">{t("Role")}</span>
             <select value={role} onChange={(e) => setRole(e.target.value)}>
               {ROLES.map((r) => <option key={r} value={r}>{r.replace(/_/g, " ")}</option>)}
             </select>
           </label>
           <button type="submit" className="button" disabled={busy}>
-            {busy ? "Sending..." : "Send invite"}
+            {busy ? t("Sending...") : t("Send invite")}
           </button>
         </form>
         {error && <p style={{ color: "var(--red)", margin: "8px 0 0", fontSize: 13 }}>{error}</p>}
         {lastToken && (
           <div role="status" aria-live="polite" style={{ marginTop: 12, padding: 12, background: "color-mix(in oklab, var(--green) 10%, transparent)", borderRadius: 8, fontSize: 13 }}>
-            <strong>Invite created!</strong> Copy the link below (shown only once):
+            <strong>{t("Invite created!")}</strong> {t("Copy the link below (shown only once):")}
             <div className="flex items-center gap-8 mt-6">
               <code style={{ flex: 1, fontSize: 12, wordBreak: "break-all" }}>{`${typeof window !== 'undefined' ? window.location.origin : ''}/invite/${lastToken}`}</code>
               <button className="button" style={{ fontSize: 11, padding: "3px 10px", flexShrink: 0 }} onClick={copyLink}>
-                {copied ? "Copied!" : "Copy"}
+                {copied ? t("Copied!") : t("Copy")}
               </button>
             </div>
           </div>
@@ -112,18 +114,18 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
           <table className="data-table">
             <thead>
               <tr>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Created by</th>
-                <th>Expires</th>
-                <th>Token</th>
+                <th>{t("Email")}</th>
+                <th>{t("Role")}</th>
+                <th>{t("Status")}</th>
+                <th>{t("Created by")}</th>
+                <th>{t("Expires")}</th>
+                <th>{t("Token")}</th>
               </tr>
             </thead>
             <tbody>
               {invites.map((inv) => {
                 const expired = new Date(inv.expiresAt) < new Date();
-                const status = inv.activatedAt ? "Activated" : inv.revokedAt ? "Revoked" : expired ? "Expired" : "Pending";
+                const status = inv.activatedAt ? t("Activated") : inv.revokedAt ? t("Revoked") : expired ? t("Expired") : t("Pending");
                 const badgeClass = inv.activatedAt ? "badge-green" : inv.revokedAt ? "badge-red" : expired ? "badge-red" : "badge-amber";
                 return (
                   <tr key={inv.id}>
@@ -138,7 +140,7 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
               })}
               {invites.length === 0 && (
                 <tr>
-                  <td colSpan={6}><EmptyState message="No invites yet." /></td>
+                  <td colSpan={6}><EmptyState message={t("No invites yet.")} /></td>
                 </tr>
               )}
             </tbody>

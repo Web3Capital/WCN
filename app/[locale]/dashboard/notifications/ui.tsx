@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { StatusBadge, EmptyState } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Notification = {
   id: string;
@@ -15,6 +16,7 @@ type Notification = {
 };
 
 export function NotificationsUI({ notifications }: { notifications: Notification[] }) {
+  const { t } = useAutoTranslate();
   const [items, setItems] = useState(notifications);
   const [busy, setBusy] = useState(false);
 
@@ -36,17 +38,17 @@ export function NotificationsUI({ notifications }: { notifications: Notification
   return (
     <div>
       <div className="page-toolbar notif-toolbar">
-        <p className="muted">{unreadCount} unread of {items.length} total</p>
+        <p className="muted">{t(`${unreadCount} unread of ${items.length} total`)}</p>
         <div className="page-toolbar-spacer" />
         {unreadCount > 0 && (
           <button className="button" disabled={busy} onClick={markAllRead}>
-            Mark All Read
+            {t("Mark All Read")}
           </button>
         )}
       </div>
 
       {items.length === 0 ? (
-        <EmptyState message="No notifications." />
+        <EmptyState message={t("No notifications.")} />
       ) : (
         <div className="notif-list">
           {items.map((n) => (

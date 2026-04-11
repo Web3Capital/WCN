@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { getApiErrorMessageFromJson } from "@/lib/api-error";
 import { StatusBadge, FormCard, EmptyState } from "../_components";
 import { ConfirmDialog } from "../_components/confirm-dialog";
@@ -15,6 +16,7 @@ type CycleRow = {
 };
 
 export function SettlementConsole({ initial, readOnly = false }: { initial: CycleRow[]; readOnly?: boolean }) {
+  const { t } = useAutoTranslate();
   const [rows, setRows] = useState<CycleRow[]>(initial);
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
   const selected = useMemo(() => rows.find((r) => r.id === selectedId) ?? null, [rows, selectedId]);
@@ -48,7 +50,7 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
       await refresh();
       setShowForm(false);
     } catch (e: any) {
-      setError(e?.message ?? "Create failed.");
+      setError(e?.message ?? t("Create failed."));
     } finally { setBusy(false); }
   }
 
@@ -62,7 +64,7 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
       if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
       await refresh();
     } catch (e: any) {
-      setError(e?.message ?? "Lock failed.");
+      setError(e?.message ?? t("Lock failed."));
     } finally { setBusy(false); }
   }
 
@@ -77,7 +79,7 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
       setLines(data.data?.lines ?? null);
       await refresh();
     } catch (e: any) {
-      setError(e?.message ?? "Generate failed.");
+      setError(e?.message ?? t("Generate failed."));
     } finally { setBusy(false); }
   }
 
@@ -108,57 +110,57 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
         body: JSON.stringify({ reason }),
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Reopen failed.");
+      if (!data?.ok) throw new Error(data?.error ?? t("Reopen failed."));
       await refresh();
-    } catch (e: any) { setError(e?.message ?? "Reopen failed."); } finally { setBusy(false); }
+    } catch (e: any) { setError(e?.message ?? t("Reopen failed.")); } finally { setBusy(false); }
   }
 
   return (
     <div className="apps-layout">
       <div>
         {!readOnly ? (
-          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="Create cycle">
+          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("Create cycle")}>
             <div className="form mb-14">
               <div className="grid-3 gap-12">
                 <label className="field">
-                  <span className="label">Kind</span>
+                  <span className="label">{t("Kind")}</span>
                   <select value={create.kind} onChange={(e) => setCreate((s) => ({ ...s, kind: e.target.value }))}>
-                    <option value="WEEK">WEEK</option>
-                    <option value="MONTH">MONTH</option>
+                    <option value="WEEK">{t("WEEK")}</option>
+                    <option value="MONTH">{t("MONTH")}</option>
                   </select>
                 </label>
                 <label className="field">
-                  <span className="label">Pool</span>
+                  <span className="label">{t("Pool")}</span>
                   <input type="number" value={create.pool} onChange={(e) => setCreate((s) => ({ ...s, pool: Number(e.target.value) }))} />
                 </label>
                 <label className="field">
-                  <span className="label">Start (ISO)</span>
+                  <span className="label">{t("Start (ISO)")}</span>
                   <input value={create.startAt} onChange={(e) => setCreate((s) => ({ ...s, startAt: e.target.value }))} />
                 </label>
               </div>
               <label className="field">
-                <span className="label">End (ISO)</span>
+                <span className="label">{t("End (ISO)")}</span>
                 <input value={create.endAt} onChange={(e) => setCreate((s) => ({ ...s, endAt: e.target.value }))} />
               </label>
               <button className="button" type="button" disabled={busy || !create.startAt || !create.endAt} onClick={onCreate}>
-                {busy ? "Working..." : "Create"}
+                {busy ? t("Working...") : t("Create")}
               </button>
               {error ? <p className="form-error">{error}</p> : null}
             </div>
           </FormCard>
         ) : null}
 
-        <div className="pill mb-10">Cycles ({rows.length})</div>
+        <div className="pill mb-10">{t("Cycles")} ({rows.length})</div>
         <div className="apps-list">
           {rows.length === 0 && (
-            <EmptyState message="No cycles yet." />
+            <EmptyState message={t("No cycles yet.")} />
           )}
           {rows.map((c) => (
             <button key={c.id} type="button" className="apps-row" data-active={c.id === selectedId ? "true" : "false"} onClick={() => setSelectedId(c.id)}>
               <div>
                 <div className="font-bold">{c.kind}</div>
                 <div className="muted text-sm">
-                  <StatusBadge status={c.status} className="text-xs" /> pool {c.pool.toLocaleString()}
+                  <StatusBadge status={c.status} className="text-xs" /> {t("pool")} {c.pool.toLocaleString()}
                 </div>
               </div>
               <div className="pill">{new Date(c.startAt).toISOString().slice(0, 10)}</div>
@@ -168,15 +170,15 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
       </div>
 
       <div className="apps-detail">
-        <div className="pill mb-10">Cycle actions</div>
+        <div className="pill mb-10">{t("Cycle actions")}</div>
         {selected ? (
           <div className="form">
             <div className="detail-header">
               <div>
-                <h3 style={{ margin: 0 }}>{selected.kind} Cycle</h3>
+                <h3 style={{ margin: 0 }}>{selected.kind} {t("Cycle")}</h3>
                 <div className="detail-header-meta">
                   <StatusBadge status={selected.status} />
-                  <span className="muted text-xs">Pool: {selected.pool.toLocaleString()}</span>
+                  <span className="muted text-xs">{t("Pool:")} {selected.pool.toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -186,37 +188,37 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
 
             {!readOnly ? (
               <div className="flex flex-wrap gap-6">
-                <button className="button-secondary" type="button" disabled={busy} onClick={lockCycle}>Lock</button>
-                <button className="button" type="button" disabled={busy} onClick={generateLines}>Generate lines</button>
-                <button className="button-secondary" type="button" disabled={!lines?.length} onClick={exportCsv}>Export CSV</button>
+                <button className="button-secondary" type="button" disabled={busy} onClick={lockCycle}>{t("Lock")}</button>
+                <button className="button" type="button" disabled={busy} onClick={generateLines}>{t("Generate lines")}</button>
+                <button className="button-secondary" type="button" disabled={!lines?.length} onClick={exportCsv}>{t("Export CSV")}</button>
                 <button className="button-secondary" type="button" disabled={busy} onClick={async () => {
                   if (!selected) return;
                   setBusy(true);
                   try {
                     const res = await fetch(`/api/settlement/cycles/${selected.id}/export`, { method: "POST" });
                     const data = await res.json();
-                    if (!data?.ok) throw new Error(data?.error ?? "Export failed.");
+                    if (!data?.ok) throw new Error(data?.error ?? t("Export failed."));
                     await refresh();
-                  } catch (e: any) { setError(e?.message ?? "Export failed."); } finally { setBusy(false); }
+                  } catch (e: any) { setError(e?.message ?? t("Export failed.")); } finally { setBusy(false); }
                 }}>
-                  Export &amp; Lock
+                  {t("Export & Lock")}
                 </button>
                 <button className="button-secondary" type="button" disabled={busy} style={{ color: "var(--amber)" }} onClick={() => setReopenOpen(true)}>
-                  Reopen
+                  {t("Reopen")}
                 </button>
               </div>
             ) : null}
 
             {lines?.length ? (
               <div className="card mt-12 p-18">
-                <h3 style={{ margin: "0 0 12px" }}>Allocation Lines</h3>
+                <h3 style={{ margin: "0 0 12px" }}>{t("Allocation Lines")}</h3>
                 <table className="data-table">
                   <thead>
                     <tr>
-                      <th>Node</th>
-                      <th>Score</th>
-                      <th>PoB Count</th>
-                      <th>Allocation</th>
+                      <th>{t("Node")}</th>
+                      <th>{t("Score")}</th>
+                      <th>{t("PoB Count")}</th>
+                      <th>{t("Allocation")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -230,26 +232,26 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
                     ))}
                   </tbody>
                 </table>
-                <p className="muted mt-10 text-xs">Showing first 30 lines.</p>
+                <p className="muted mt-10 text-xs">{t("Showing first 30 lines.")}</p>
               </div>
             ) : null}
 
             {error ? <p className="form-error">{error}</p> : null}
           </div>
         ) : (
-          <EmptyState message="Select a cycle." />
+          <EmptyState message={t("Select a cycle.")} />
         )}
       </div>
 
       <ConfirmDialog
         open={reopenOpen}
-        title="Reopen Settlement Cycle"
-        description="This action requires dual-control approval. Provide a reason."
-        confirmLabel="Submit Reopen"
+        title={t("Reopen Settlement Cycle")}
+        description={t("This action requires dual-control approval. Provide a reason.")}
+        confirmLabel={t("Submit Reopen")}
         variant="danger"
         withInput
-        inputLabel="Reason"
-        inputPlaceholder="Reason for reopening..."
+        inputLabel={t("Reason")}
+        inputPlaceholder={t("Reason for reopening...")}
         onConfirm={handleReopen}
         onCancel={() => setReopenOpen(false)}
       />

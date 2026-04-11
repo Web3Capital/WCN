@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ApplicationsTable } from "./ui";
 import { isAdminRole } from "@/lib/permissions";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 
 export const dynamic = "force-dynamic";
 
@@ -23,22 +24,22 @@ export default async function ApplicationsPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Admin</span>
-        <h1>Node applications</h1>
+        <span className="eyebrow"><T>Admin</T></span>
+        <h1><T>Node applications</T></h1>
         <p className="muted">
           {isAdmin
-            ? "Review and update application status."
-            : "Your submissions linked to this account (read-only). Admins see the full queue."}
+            ? <T>Review and update application status.</T>
+            : <T>Your submissions linked to this account (read-only). Admins see the full queue.</T>}
         </p>
         {!isAdmin && applications.length === 0 ? (
           <div className="card" style={{ marginTop: 18 }}>
             <p className="muted" style={{ margin: 0 }}>
-              No applications tied to this login yet.
+              <T>No applications tied to this login yet.</T>
             </p>
             <p style={{ marginTop: 14, marginBottom: 0 }}>
-              <Link href="/apply">Apply as a node</Link>
+              <Link href="/apply"><T>Apply as a node</T></Link>
               {" · "}
-              <Link href="/dashboard">Back to console</Link>
+              <Link href="/dashboard"><T>Back to console</T></Link>
             </p>
           </div>
         ) : (

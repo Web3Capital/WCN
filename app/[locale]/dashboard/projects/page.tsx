@@ -7,6 +7,7 @@ import { ProjectsConsole } from "./ui";
 import { getOwnedNodeIds, memberProjectsWhere } from "@/lib/member-data-scope";
 import { redactProjectForMember, redactNodeForMember } from "@/lib/member-redact";
 import { isAdminRole } from "@/lib/permissions";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 
 export const dynamic = "force-dynamic";
 
@@ -31,9 +32,9 @@ export default async function ProjectsPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Network</span>
-        <h1>Project pool</h1>
-        <p className="muted">Intake and review projects and their needs.</p>
+        <span className="eyebrow"><T>Network</T></span>
+        <h1><T>Project pool</T></h1>
+        <p className="muted"><T>Intake and review projects and their needs.</T></p>
         {!isAdmin ? <ReadOnlyBanner /> : null}
         <div className="card" style={{ marginTop: 18 }}>
           <ProjectsConsole initial={safeProjects as any} nodes={safeNodes as any} readOnly={!isAdmin} />

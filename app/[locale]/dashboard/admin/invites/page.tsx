@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { InviteConsole } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -34,9 +35,9 @@ export default async function InvitesPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Admin</span>
-        <h1>Invite Management</h1>
-        <p className="muted">Create and manage invitations to the WCN network.</p>
+        <span className="eyebrow"><T>Admin</T></span>
+        <h1><T>Invite Management</T></h1>
+        <p className="muted"><T>Create and manage invitations to the WCN network.</T></p>
         <InviteConsole initialInvites={serialized} />
       </div>
     </div>

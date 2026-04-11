@@ -1,6 +1,7 @@
 import { requirePermission } from "@/lib/admin";
 import { redirect } from "next/navigation";
 import { ApprovalsUI } from "./ui";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 
 export default async function ApprovalsPage() {
   const auth = await requirePermission("read", "approval");
@@ -8,9 +9,9 @@ export default async function ApprovalsPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Verification</span>
-        <h1>Approvals</h1>
-        <p className="muted">Review and approve pending items.</p>
+        <span className="eyebrow"><T>Verification</T></span>
+        <h1><T>Approvals</T></h1>
+        <p className="muted"><T>Review and approve pending items.</T></p>
         <ApprovalsUI />
       </div>
     </div>

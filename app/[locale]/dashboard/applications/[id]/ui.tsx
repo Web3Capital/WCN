@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { DetailLayout, StatusBadge } from "../../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type ApplicationData = {
   id: string;
@@ -41,6 +42,7 @@ export function ApplicationDetail({
   reviews: Review[];
   isAdmin: boolean;
 }) {
+  const { t } = useAutoTranslate();
   const [status, setStatus] = useState(application.status);
   const [notes, setNotes] = useState(application.notes ?? "");
   const [busy, setBusy] = useState(false);
@@ -59,10 +61,10 @@ export function ApplicationDetail({
       if (data.ok) {
         if (patch.status) setStatus(patch.status as string);
       } else {
-        setError(data.error?.message || data.error || "Update failed.");
+        setError(data.error?.message || data.error || t("Update failed."));
       }
     } catch {
-      setError("Network error.");
+      setError(t("Network error."));
     }
     setBusy(false);
   }
@@ -70,7 +72,7 @@ export function ApplicationDetail({
   return (
     <DetailLayout
       backHref="/dashboard/applications"
-      backLabel="All Applications"
+      backLabel={t("All Applications")}
       title={application.applicantName}
       badge={
         <span className="flex items-center gap-6">
@@ -80,30 +82,30 @@ export function ApplicationDetail({
       }
       meta={
         <>
-          <span>Submitted {new Date(application.createdAt).toLocaleString()}</span>
+          <span>{t("Submitted")} {new Date(application.createdAt).toLocaleString()}</span>
           {application.user && (
-            <span>User: <Link href={`/dashboard/users/${application.user.id}`} style={{ color: "var(--accent)" }}>{application.user.name || application.user.email || application.user.id}</Link></span>
+            <span>{t("User:")} <Link href={`/dashboard/users/${application.user.id}`} style={{ color: "var(--accent)" }}>{application.user.name || application.user.email || application.user.id}</Link></span>
           )}
         </>
       }
     >
       <div className="card p-18">
-        <h3 className="mt-0 mb-12">Applicant Information</h3>
+        <h3 className="mt-0 mb-12">{t("Applicant Information")}</h3>
         <div className="grid-2 gap-12">
           <div className="kpi">
-            <strong>Contact</strong>
+            <strong>{t("Contact")}</strong>
             <span className="muted">{application.contact}</span>
           </div>
           <div className="kpi">
-            <strong>Organization</strong>
+            <strong>{t("Organization")}</strong>
             <span className="muted">{application.organization ?? "—"}</span>
           </div>
           <div className="kpi">
-            <strong>Role</strong>
+            <strong>{t("Role")}</strong>
             <span className="muted">{application.role ?? "—"}</span>
           </div>
           <div className="kpi">
-            <strong>LinkedIn</strong>
+            <strong>{t("LinkedIn")}</strong>
             {application.linkedin ? (
               <a href={application.linkedin} target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>
                 {application.linkedin}
@@ -116,18 +118,18 @@ export function ApplicationDetail({
       </div>
 
       <div className="card p-18">
-        <h3 className="mt-0 mb-12">Application Details</h3>
+        <h3 className="mt-0 mb-12">{t("Application Details")}</h3>
         <div className="flex-col gap-16">
           <div>
-            <div className="label">Resources & Expertise</div>
+            <div className="label">{t("Resources & Expertise")}</div>
             <p className="mt-4 mb-0" style={{ whiteSpace: "pre-wrap" }}>{application.resources ?? "—"}</p>
           </div>
           <div>
-            <div className="label">Looking For</div>
+            <div className="label">{t("Looking For")}</div>
             <p className="mt-4 mb-0" style={{ whiteSpace: "pre-wrap" }}>{application.lookingFor ?? "—"}</p>
           </div>
           <div>
-            <div className="label">Why WCN</div>
+            <div className="label">{t("Why WCN")}</div>
             <p className="mt-4 mb-0" style={{ whiteSpace: "pre-wrap" }}>{application.whyWcn ?? "—"}</p>
           </div>
         </div>
@@ -135,10 +137,10 @@ export function ApplicationDetail({
 
       {isAdmin && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Review Actions</h3>
+          <h3 className="mt-0 mb-12">{t("Review Actions")}</h3>
           <div className="grid-2 gap-12">
             <label className="field">
-              <span className="label">Status</span>
+              <span className="label">{t("Status")}</span>
               <select
                 value={status}
                 onChange={(e) => updateApp({ status: e.target.value })}
@@ -149,22 +151,22 @@ export function ApplicationDetail({
             </label>
           </div>
           <label className="field mt-8">
-            <span className="label">Internal Notes</span>
+            <span className="label">{t("Internal Notes")}</span>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               onBlur={() => updateApp({ reviewNote: notes || null })}
-              placeholder="Add review notes..."
+              placeholder={t("Add review notes...")}
             />
           </label>
-          <p className="muted mt-4 text-xs">Notes auto-save on blur.</p>
+          <p className="muted mt-4 text-xs">{t("Notes auto-save on blur.")}</p>
           {error && <p className="form-error mt-8">{error}</p>}
         </div>
       )}
 
       {reviews.length > 0 && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Review History</h3>
+          <h3 className="mt-0 mb-12">{t("Review History")}</h3>
           <div className="timeline">
             {reviews.map((r) => (
               <div key={r.id} className="timeline-item">

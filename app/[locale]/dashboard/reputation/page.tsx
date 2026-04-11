@@ -1,6 +1,7 @@
 import { getPrisma } from "@/lib/prisma";
 import { requireSignedIn } from "@/lib/admin";
 import { redirect } from "next/navigation";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { ReputationLeaderboard } from "./ui";
 
 export const metadata = { title: "Reputation Leaderboard – WCN" };
@@ -43,8 +44,8 @@ export default async function ReputationPage() {
   return (
     <>
       <div className="page-header">
-        <h1>Reputation Leaderboard</h1>
-        <p className="muted">Node reputation scores ranked by composite performance.</p>
+        <h1><T>Reputation Leaderboard</T></h1>
+        <p className="muted"><T>Node reputation scores ranked by composite performance.</T></p>
       </div>
       <ReputationLeaderboard entries={JSON.parse(JSON.stringify(leaderboard))} />
     </>

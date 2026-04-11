@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { StatusBadge, FilterToolbar, EmptyState, FormCard } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Vote = { id: string; voterId: string; option: string; weight: number };
 type OptionItem = string | { id: string; label: string };
@@ -28,6 +29,7 @@ function optionKey(opt: OptionItem): string {
 const STATUS_LIST = ["ALL", "DRAFT", "ACTIVE", "PASSED", "REJECTED", "EXECUTED", "CANCELLED"] as const;
 
 export function GovernanceDashboard({ proposals: initial, userId }: { proposals: Proposal[]; userId: string }) {
+  const { t } = useAutoTranslate();
   const [proposals, setProposals] = useState(initial);
   const [showForm, setShowForm] = useState(false);
   const [filter, setFilter] = useState("ALL");
@@ -97,35 +99,35 @@ export function GovernanceDashboard({ proposals: initial, userId }: { proposals:
 
   return (
     <div className="mt-20">
-      <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="New Proposal">
+      <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("New Proposal")}>
         <form onSubmit={create} className="form">
           <label className="field">
-            <span className="label">Title</span>
+            <span className="label">{t("Title")}</span>
             <input value={title} onChange={(e) => setTitle(e.target.value)} required />
           </label>
           <label className="field">
-            <span className="label">Description</span>
+            <span className="label">{t("Description")}</span>
             <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
           </label>
           <div className="grid-3 gap-12">
             <label className="field">
-              <span className="label">Type</span>
+              <span className="label">{t("Type")}</span>
               <select value={type} onChange={(e) => setType(e.target.value)}>
-                {["GENERAL", "PARAMETER_CHANGE", "BUDGET", "POLICY"].map((t) => <option key={t} value={t}>{t}</option>)}
+                {["GENERAL", "PARAMETER_CHANGE", "BUDGET", "POLICY"].map((tp) => <option key={tp} value={tp}>{tp}</option>)}
               </select>
             </label>
             <label className="field">
-              <span className="label">Options (comma-separated)</span>
+              <span className="label">{t("Options (comma-separated)")}</span>
               <input value={options} onChange={(e) => setOptions(e.target.value)} required />
             </label>
             <label className="field">
-              <span className="label">Quorum</span>
+              <span className="label">{t("Quorum")}</span>
               <input type="number" value={quorum} onChange={(e) => setQuorum(e.target.value)} min={1} />
             </label>
           </div>
           <div className="flex gap-8">
-            <button type="submit" className="button" disabled={busy}>{busy ? "Creating..." : "Create Proposal"}</button>
-            <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+            <button type="submit" className="button" disabled={busy}>{busy ? t("Creating...") : t("Create Proposal")}</button>
+            <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>{t("Cancel")}</button>
           </div>
         </form>
       </FormCard>
@@ -133,7 +135,7 @@ export function GovernanceDashboard({ proposals: initial, userId }: { proposals:
       <FilterToolbar filters={STATUS_LIST} active={filter} onChange={setFilter} totalCount={proposals.length} />
 
       {shown.length === 0 ? (
-        <EmptyState message="No proposals found." />
+        <EmptyState message={t("No proposals found.")} />
       ) : (
         <div style={{ display: "grid", gap: 16 }}>
           {shown.map((p) => {
@@ -171,15 +173,15 @@ export function GovernanceDashboard({ proposals: initial, userId }: { proposals:
 
                 <div className="flex-between items-center mt-8">
                   <div className="muted text-xs">
-                    {p.votes.length} vote{p.votes.length !== 1 ? "s" : ""} · Quorum: {p.quorum}
-                    {p.deadline && ` · Deadline: ${new Date(p.deadline).toLocaleDateString()}`}
+                    {p.votes.length} {p.votes.length !== 1 ? t("votes") : t("vote")} · {t("Quorum:")} {p.quorum}
+                    {p.deadline && ` · ${t("Deadline:")} ${new Date(p.deadline).toLocaleDateString()}`}
                   </div>
                   <div className="flex gap-6">
                     {p.status === "DRAFT" && (
-                      <button className="button" style={{ fontSize: 10, padding: "3px 10px" }} onClick={() => transitionProposal(p.id, "ACTIVE")}>Activate</button>
+                      <button className="button" style={{ fontSize: 10, padding: "3px 10px" }} onClick={() => transitionProposal(p.id, "ACTIVE")}>{t("Activate")}</button>
                     )}
                     {p.status === "ACTIVE" && p.votes.length >= p.quorum && (
-                      <button className="button" style={{ fontSize: 10, padding: "3px 10px" }} onClick={() => transitionProposal(p.id, "finalize")}>Finalize</button>
+                      <button className="button" style={{ fontSize: 10, padding: "3px 10px" }} onClick={() => transitionProposal(p.id, "finalize")}>{t("Finalize")}</button>
                     )}
                   </div>
                 </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { DetailLayout, StatusBadge, StatCard } from "../../_components";
 
 type NodeData = {
@@ -41,6 +42,7 @@ const LIFECYCLE = [
 ];
 
 export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean }) {
+  const { t } = useAutoTranslate();
   const [status, setStatus] = useState(node.status);
   const [busy, setBusy] = useState(false);
   const [notes, setNotes] = useState("");
@@ -60,7 +62,7 @@ export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean
         setStatus(newStatus);
         setNotes("");
       } else {
-        setError(data.error || "Transition failed.");
+        setError(data.error || t("Transition failed."));
       }
     } finally { setBusy(false); }
   }
@@ -68,9 +70,9 @@ export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean
   return (
     <DetailLayout
       backHref="/dashboard/nodes"
-      backLabel="All Nodes"
+      backLabel={t("All Nodes")}
       title={node.name}
-      subtitle={node.owner ? `Owner: ${node.owner.name || node.owner.email}` : undefined}
+      subtitle={node.owner ? `${t("Owner:")} ${node.owner.name || node.owner.email}` : undefined}
       badge={
         <span className="flex items-center gap-6">
           <StatusBadge status={status} />
@@ -82,27 +84,27 @@ export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean
     >
       <div className="grid-2 gap-16">
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Profile</h3>
+          <h3 className="mt-0 mb-12">{t("Profile")}</h3>
           <div className="flex-col gap-8 text-base">
-            {node.region && <div><span className="muted">Region:</span> {node.region}</div>}
-            {node.city && <div><span className="muted">City:</span> {node.city}</div>}
-            {node.jurisdiction && <div><span className="muted">Jurisdiction:</span> {node.jurisdiction}</div>}
-            {node.entityName && <div><span className="muted">Entity:</span> {node.entityName} {node.entityType ? `(${node.entityType})` : ""}</div>}
-            {node.contactName && <div><span className="muted">Contact:</span> {node.contactName}</div>}
-            {node.contactEmail && <div><span className="muted">Email:</span> {node.contactEmail}</div>}
-            {node.resourcesOffered && <div><span className="muted">Resources:</span> {node.resourcesOffered}</div>}
-            {node.pastCases && <div><span className="muted">Past cases:</span> {node.pastCases}</div>}
-            {node.recommendation && <div><span className="muted">Recommendation:</span> {node.recommendation}</div>}
-            {node.description && <div className="mt-8"><span className="muted">Description:</span><p className="mt-4 mb-0">{node.description}</p></div>}
+            {node.region && <div><span className="muted">{t("Region:")}</span> {node.region}</div>}
+            {node.city && <div><span className="muted">{t("City:")}</span> {node.city}</div>}
+            {node.jurisdiction && <div><span className="muted">{t("Jurisdiction:")}</span> {node.jurisdiction}</div>}
+            {node.entityName && <div><span className="muted">{t("Entity:")}</span> {node.entityName} {node.entityType ? `(${node.entityType})` : ""}</div>}
+            {node.contactName && <div><span className="muted">{t("Contact:")}</span> {node.contactName}</div>}
+            {node.contactEmail && <div><span className="muted">{t("Email:")}</span> {node.contactEmail}</div>}
+            {node.resourcesOffered && <div><span className="muted">{t("Resources:")}</span> {node.resourcesOffered}</div>}
+            {node.pastCases && <div><span className="muted">{t("Past cases:")}</span> {node.pastCases}</div>}
+            {node.recommendation && <div><span className="muted">{t("Recommendation:")}</span> {node.recommendation}</div>}
+            {node.description && <div className="mt-8"><span className="muted">{t("Description:")}</span><p className="mt-4 mb-0">{node.description}</p></div>}
           </div>
           {node.tags.length > 0 && (
             <div className="flex flex-wrap gap-6 mt-12">
-              {node.tags.map((t) => <span key={t} className="badge text-xs">{t}</span>)}
+              {node.tags.map((tag) => <span key={tag} className="badge text-xs">{tag}</span>)}
             </div>
           )}
           {node.allowedServices.length > 0 && (
             <div className="flex flex-wrap gap-6 items-center mt-8">
-              <span className="muted text-xs">Services:</span>
+              <span className="muted text-xs">{t("Services:")}</span>
               {node.allowedServices.map((s) => <span key={s} className="badge badge-accent text-xs">{s}</span>)}
             </div>
           )}
@@ -110,19 +112,19 @@ export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean
 
         <div className="flex-col gap-16">
           <div className="grid-2 gap-12">
-            <StatCard label="Projects" value={node.projects.length} />
-            <StatCard label="Tasks" value={node.tasksAsOwner.length} />
-            <StatCard label="PoB records" value={node._count.pobRecords} />
-            <StatCard label="Agents" value={node.ownedAgents.length} />
+            <StatCard label={t("Projects")} value={node.projects.length} />
+            <StatCard label={t("Tasks")} value={node.tasksAsOwner.length} />
+            <StatCard label={t("PoB records")} value={node._count.pobRecords} />
+            <StatCard label={t("Agents")} value={node.ownedAgents.length} />
           </div>
           {isAdmin && (
             <div className="card p-18">
-              <h3 className="mt-0 mb-12">Billing</h3>
+              <h3 className="mt-0 mb-12">{t("Billing")}</h3>
               <div className="flex-col gap-6 text-sm">
-                <div><span className="muted">Billing:</span> {node.billingStatus ?? "—"}</div>
-                <div><span className="muted">Deposit:</span> {node.depositStatus ?? "—"}</div>
-                <div><span className="muted">Seat fee:</span> {node.seatFeeStatus ?? "—"}</div>
-                {node.onboardingScore != null && <div><span className="muted">Onboarding score:</span> {node.onboardingScore}</div>}
+                <div><span className="muted">{t("Billing:")}</span> {node.billingStatus ?? "—"}</div>
+                <div><span className="muted">{t("Deposit:")}</span> {node.depositStatus ?? "—"}</div>
+                <div><span className="muted">{t("Seat fee:")}</span> {node.seatFeeStatus ?? "—"}</div>
+                {node.onboardingScore != null && <div><span className="muted">{t("Onboarding score:")}</span> {node.onboardingScore}</div>}
               </div>
             </div>
           )}
@@ -131,9 +133,9 @@ export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean
 
       {isAdmin && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Lifecycle Actions</h3>
+          <h3 className="mt-0 mb-12">{t("Lifecycle Actions")}</h3>
           <input
-            placeholder="Notes (optional)"
+            placeholder={t("Notes (optional)")}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             className="w-full mb-8"
@@ -157,7 +159,7 @@ export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean
 
       {node.projects.length > 0 && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Projects</h3>
+          <h3 className="mt-0 mb-12">{t("Projects")}</h3>
           <div className="flex-col gap-8">
             {node.projects.map((p) => (
               <Link key={p.id} href={`/dashboard/projects/${p.id}`} className="flex items-center gap-8 text-base">
@@ -172,13 +174,13 @@ export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean
 
       {node.tasksAsOwner.length > 0 && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Tasks</h3>
+          <h3 className="mt-0 mb-12">{t("Tasks")}</h3>
           <div className="flex-col gap-8">
-            {node.tasksAsOwner.map((t) => (
-              <div key={t.id} className="flex items-center gap-8 text-base">
-                <span className={`status-dot ${t.status === "CLOSED" || t.status === "ACCEPTED" ? "status-dot-green" : t.status === "CANCELLED" ? "status-dot-red" : "status-dot-amber"}`} />
-                <span className="font-semibold">{t.title}</span>
-                <StatusBadge status={t.status} className="text-xs" />
+            {node.tasksAsOwner.map((task) => (
+              <div key={task.id} className="flex items-center gap-8 text-base">
+                <span className={`status-dot ${task.status === "CLOSED" || task.status === "ACCEPTED" ? "status-dot-green" : task.status === "CANCELLED" ? "status-dot-red" : "status-dot-amber"}`} />
+                <span className="font-semibold">{task.title}</span>
+                <StatusBadge status={task.status} className="text-xs" />
               </div>
             ))}
           </div>
@@ -187,7 +189,7 @@ export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean
 
       {node.ownedAgents.length > 0 && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Agents</h3>
+          <h3 className="mt-0 mb-12">{t("Agents")}</h3>
           <div className="flex-col gap-8">
             {node.ownedAgents.map((a) => (
               <div key={a.id} className="flex items-center gap-8 text-base">

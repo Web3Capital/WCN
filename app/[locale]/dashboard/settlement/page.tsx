@@ -6,6 +6,7 @@ import { ReadOnlyBanner } from "@/app/[locale]/dashboard/_components/read-only-b
 import { SettlementConsole } from "./ui";
 import { redactSettlementCycleForMember } from "@/lib/member-redact";
 import { isAdminRole } from "@/lib/permissions";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 
 export const dynamic = "force-dynamic";
 
@@ -21,9 +22,9 @@ export default async function SettlementPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Verification</span>
-        <h1>Settlement</h1>
-        <p className="muted">Create cycles, generate lines, and export allocations.</p>
+        <span className="eyebrow"><T>Verification</T></span>
+        <h1><T>Settlement</T></h1>
+        <p className="muted"><T>Create cycles, generate lines, and export allocations.</T></p>
         {!isAdmin ? <ReadOnlyBanner /> : null}
         <div className="card" style={{ marginTop: 18 }}>
           <SettlementConsole initial={safeCycles as any} readOnly={!isAdmin} />

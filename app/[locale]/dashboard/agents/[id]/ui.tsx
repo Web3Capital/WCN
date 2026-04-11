@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { DetailLayout, StatusBadge, EmptyState } from "../../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Permission = { id: string; scope: string; canWrite: boolean; auditLevel: number };
 type Log = { id: string; actionType: string; taskId: string | null; modelVersion: string | null; exceptionFlag: boolean; createdAt: string };
@@ -35,6 +36,7 @@ const RUN_PARAM_HINTS: Record<string, string> = {
 };
 
 export function AgentDetailUI({ agent, isAdmin }: { agent: AgentData; isAdmin: boolean }) {
+  const { t } = useAutoTranslate();
   const [tab, setTab] = useState<"overview" | "logs" | "runs">("overview");
   const [busy, setBusy] = useState(false);
   const [runInput, setRunInput] = useState("");
@@ -69,10 +71,10 @@ export function AgentDetailUI({ agent, isAdmin }: { agent: AgentData; isAdmin: b
         setRunResult(`Run ${data.data.runId} completed (${data.data.tokenCount} tokens, $${data.data.cost?.toFixed(4) ?? "0"})`);
         setTimeout(() => window.location.reload(), 1500);
       } else {
-        setRunResult(`Error: ${data.error?.message ?? "Unknown"}`);
+        setRunResult(`${t("Error:")} ${data.error?.message ?? t("Unknown")}`);
       }
     } catch (e) {
-      setRunResult(`Error: ${e instanceof Error ? e.message : "Invalid JSON"}`);
+      setRunResult(`${t("Error:")} ${e instanceof Error ? e.message : t("Invalid JSON")}`);
     }
     setBusy(false);
   }
@@ -93,7 +95,7 @@ export function AgentDetailUI({ agent, isAdmin }: { agent: AgentData; isAdmin: b
   return (
     <DetailLayout
       backHref="/dashboard/agents"
-      backLabel="All Agents"
+      backLabel={t("All Agents")}
       title={agent.name}
       badge={
         <span className="flex items-center gap-6">
@@ -104,18 +106,18 @@ export function AgentDetailUI({ agent, isAdmin }: { agent: AgentData; isAdmin: b
         </span>
       }
       meta={
-        <span>Owner: <Link href={`/dashboard/nodes/${agent.ownerNode.id}`} style={{ color: "var(--accent)" }}>{agent.ownerNode.name}</Link></span>
+        <span>{t("Owner:")} <Link href={`/dashboard/nodes/${agent.ownerNode.id}`} style={{ color: "var(--accent)" }}>{agent.ownerNode.name}</Link></span>
       }
       actions={
         <>
           {isAdmin && agent.status !== "FROZEN" && (
             <button className="button text-xs" style={{ padding: "4px 12px", background: "var(--red)", color: "#fff" }} disabled={busy} onClick={() => toggleStatus("FROZEN")}>
-              Freeze
+              {t("Freeze")}
             </button>
           )}
           {isAdmin && agent.status === "FROZEN" && (
             <button className="button text-xs" style={{ padding: "4px 12px" }} disabled={busy} onClick={() => toggleStatus("ACTIVE")}>
-              Unfreeze
+              {t("Unfreeze")}
             </button>
           )}
         </>
@@ -123,9 +125,9 @@ export function AgentDetailUI({ agent, isAdmin }: { agent: AgentData; isAdmin: b
     >
       <div>
         <div className="tab-nav">
-          {(["overview", "runs", "logs"] as const).map((t) => (
-            <button key={t} className={`tab-btn ${tab === t ? "tab-btn-active" : ""}`} onClick={() => setTab(t)}>
-              {t === "overview" ? "Overview" : t === "logs" ? `Logs (${agent.logs.length})` : `Runs (${agent.runs.length})`}
+          {(["overview", "runs", "logs"] as const).map((tabKey) => (
+            <button key={tabKey} className={`tab-btn ${tab === tabKey ? "tab-btn-active" : ""}`} onClick={() => setTab(tabKey)}>
+              {tabKey === "overview" ? t("Overview") : tabKey === "logs" ? `${t("Logs")} (${agent.logs.length})` : `${t("Runs")} (${agent.runs.length})`}
             </button>
           ))}
         </div>
@@ -134,9 +136,9 @@ export function AgentDetailUI({ agent, isAdmin }: { agent: AgentData; isAdmin: b
           <div className="flex-col gap-16">
             {agent.status === "ACTIVE" && (
               <div className="card p-20">
-                <h2 className="text-lg font-semibold mb-8 mt-0">Run Agent</h2>
+                <h2 className="text-lg font-semibold mb-8 mt-0">{t("Run Agent")}</h2>
                 <p className="muted text-xs mb-8">
-                  Required params: <code>{RUN_PARAM_HINTS[agent.type] ?? "varies"}</code>
+                  {t("Required params:")} <code>{RUN_PARAM_HINTS[agent.type] ?? t("varies")}</code>
                 </p>
                 <textarea
                   value={runInput}
@@ -147,7 +149,7 @@ export function AgentDetailUI({ agent, isAdmin }: { agent: AgentData; isAdmin: b
                 />
                 <div className="flex gap-8 items-center mt-8">
                   <button className="button text-xs" style={{ padding: "6px 16px" }} disabled={busy} onClick={triggerRun}>
-                    {busy ? "Running..." : "Execute"}
+                    {busy ? t("Running...") : t("Execute")}
                   </button>
                   {runResult && <span className="text-xs">{runResult}</span>}
                 </div>
@@ -155,17 +157,17 @@ export function AgentDetailUI({ agent, isAdmin }: { agent: AgentData; isAdmin: b
             )}
 
             <div className="card p-20">
-              <h2 className="text-lg font-semibold mb-12 mt-0">Permissions ({agent.permissions.length})</h2>
+              <h2 className="text-lg font-semibold mb-12 mt-0">{t("Permissions")} ({agent.permissions.length})</h2>
               {agent.permissions.length === 0 ? (
-                <EmptyState message="No permissions configured." />
+                <EmptyState message={t("No permissions configured.")} />
               ) : (
                 <table className="data-table">
-                  <thead><tr><th>Scope</th><th>Write</th><th>Audit Level</th></tr></thead>
+                  <thead><tr><th>{t("Scope")}</th><th>{t("Write")}</th><th>{t("Audit Level")}</th></tr></thead>
                   <tbody>
                     {agent.permissions.map((p) => (
                       <tr key={p.id}>
                         <td className="font-semibold">{p.scope}</td>
-                        <td>{p.canWrite ? <span className="badge badge-green" style={{ fontSize: 10 }}>Yes</span> : "No"}</td>
+                        <td>{p.canWrite ? <span className="badge badge-green" style={{ fontSize: 10 }}>{t("Yes")}</span> : t("No")}</td>
                         <td>{p.auditLevel}</td>
                       </tr>
                     ))}
@@ -173,7 +175,7 @@ export function AgentDetailUI({ agent, isAdmin }: { agent: AgentData; isAdmin: b
                 </table>
               )}
               {agent.endpoint && (
-                <p className="muted text-xs mt-12">Endpoint: <code>{agent.endpoint}</code></p>
+                <p className="muted text-xs mt-12">{t("Endpoint:")} <code>{agent.endpoint}</code></p>
               )}
             </div>
           </div>
@@ -181,15 +183,15 @@ export function AgentDetailUI({ agent, isAdmin }: { agent: AgentData; isAdmin: b
 
         {tab === "runs" && (
           <div className="card p-20">
-            <h2 className="text-lg font-semibold mb-12 mt-0">Agent Runs</h2>
+            <h2 className="text-lg font-semibold mb-12 mt-0">{t("Agent Runs")}</h2>
             {agent.runs.length === 0 ? (
-              <EmptyState message="No runs yet. Use the Run Agent panel on the Overview tab." />
+              <EmptyState message={t("No runs yet. Use the Run Agent panel on the Overview tab.")} />
             ) : (
               <div className="flex-col gap-12">
                 {agent.runs.map((r) => {
                   const duration = r.finishedAt
                     ? `${((new Date(r.finishedAt).getTime() - new Date(r.startedAt).getTime()) / 1000).toFixed(1)}s`
-                    : "running...";
+                    : t("running...");
                   const isExpanded = expandedRun === r.id;
                   return (
                     <div key={r.id} className="card p-14" style={{ border: "1px solid var(--border)" }}>
@@ -197,25 +199,25 @@ export function AgentDetailUI({ agent, isAdmin }: { agent: AgentData; isAdmin: b
                         <div className="flex gap-8 items-center flex-wrap">
                           <StatusBadge status={r.status} className="text-xs" />
                           {r.outputType && <span className="badge" style={{ fontSize: 10 }}>{r.outputType}</span>}
-                          {r.reviewStatus && <span className={`badge ${REVIEW_COLORS[r.reviewStatus] ?? ""}`} style={{ fontSize: 10 }}>Review: {r.reviewStatus}</span>}
-                          <span className="muted text-xs">{duration} | {r.tokenCount ?? 0} tokens | ${r.cost?.toFixed(4) ?? "0"}</span>
+                          {r.reviewStatus && <span className={`badge ${REVIEW_COLORS[r.reviewStatus] ?? ""}`} style={{ fontSize: 10 }}>{t("Review:")} {r.reviewStatus}</span>}
+                          <span className="muted text-xs">{duration} | {r.tokenCount ?? 0} {t("tokens")} | ${r.cost?.toFixed(4) ?? "0"}</span>
                           {r.modelId && <span className="muted" style={{ fontSize: 10 }}>{r.modelId}</span>}
                         </div>
                         <div className="flex gap-6">
                           <button className="button" style={{ fontSize: 10, padding: "2px 8px" }} onClick={() => setExpandedRun(isExpanded ? null : r.id)}>
-                            {isExpanded ? "Collapse" : "View Output"}
+                            {isExpanded ? t("Collapse") : t("View Output")}
                           </button>
                           {isAdmin && r.status === "SUCCESS" && r.reviewStatus === "PENDING" && (
                             <>
-                              <button className="button" style={{ fontSize: 10, padding: "2px 8px", background: "var(--green, #22c55e)", color: "#fff" }} disabled={busy} onClick={() => reviewRun(r.id, "APPROVED")}>Approve</button>
-                              <button className="button" style={{ fontSize: 10, padding: "2px 8px", background: "var(--red)", color: "#fff" }} disabled={busy} onClick={() => reviewRun(r.id, "REJECTED")}>Reject</button>
+                              <button className="button" style={{ fontSize: 10, padding: "2px 8px", background: "var(--green, #22c55e)", color: "#fff" }} disabled={busy} onClick={() => reviewRun(r.id, "APPROVED")}>{t("Approve")}</button>
+                              <button className="button" style={{ fontSize: 10, padding: "2px 8px", background: "var(--red)", color: "#fff" }} disabled={busy} onClick={() => reviewRun(r.id, "REJECTED")}>{t("Reject")}</button>
                             </>
                           )}
                         </div>
                       </div>
                       <div className="muted text-xs mt-4">
                         {new Date(r.startedAt).toLocaleString()}
-                        {r.task && <> | Task: <Link href={`/dashboard/tasks/${r.task.id}`} style={{ color: "var(--accent)" }}>{r.task.title}</Link></>}
+                        {r.task && <> | {t("Task:")} <Link href={`/dashboard/tasks/${r.task.id}`} style={{ color: "var(--accent)" }}>{r.task.title}</Link></>}
                       </div>
                       {isExpanded && r.outputs && (
                         <pre style={{ marginTop: 10, padding: 12, borderRadius: 6, background: "var(--surface)", border: "1px solid var(--border)", fontSize: 11, overflow: "auto", maxHeight: 400, whiteSpace: "pre-wrap" }}>
@@ -232,18 +234,18 @@ export function AgentDetailUI({ agent, isAdmin }: { agent: AgentData; isAdmin: b
 
         {tab === "logs" && (
           <div className="card p-20">
-            <h2 className="text-lg font-semibold mb-12 mt-0">Execution Logs</h2>
+            <h2 className="text-lg font-semibold mb-12 mt-0">{t("Execution Logs")}</h2>
             {agent.logs.length === 0 ? (
-              <EmptyState message="No logs yet." />
+              <EmptyState message={t("No logs yet.")} />
             ) : (
               <table className="data-table">
-                <thead><tr><th>Action</th><th>Model</th><th>Task</th><th>Time</th></tr></thead>
+                <thead><tr><th>{t("Action")}</th><th>{t("Model")}</th><th>{t("Task")}</th><th>{t("Time")}</th></tr></thead>
                 <tbody>
                   {agent.logs.map((l) => (
                     <tr key={l.id}>
                       <td><span className={`badge ${l.exceptionFlag ? "badge-red" : ""}`} style={{ fontSize: 10 }}>{l.actionType}</span></td>
                       <td className="muted text-xs">{l.modelVersion ?? "—"}</td>
-                      <td>{l.taskId ? <Link href={`/dashboard/tasks/${l.taskId}`} className="text-xs" style={{ color: "var(--accent)" }}>View task</Link> : "—"}</td>
+                      <td>{l.taskId ? <Link href={`/dashboard/tasks/${l.taskId}`} className="text-xs" style={{ color: "var(--accent)" }}>{t("View task")}</Link> : "—"}</td>
                       <td className="muted text-xs">{new Date(l.createdAt).toLocaleString()}</td>
                     </tr>
                   ))}

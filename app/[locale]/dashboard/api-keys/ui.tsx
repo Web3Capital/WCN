@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { LoadingState, EmptyState, FormCard } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 interface ApiKey {
   id: string;
@@ -30,6 +31,7 @@ const SCOPE_OPTIONS = [
 ];
 
 export function ApiKeysUI() {
+  const { t } = useAutoTranslate();
   const [keys, setKeys] = useState<ApiKey[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
@@ -61,7 +63,7 @@ export function ApiKeysUI() {
   }
 
   async function handleRevoke(id: string) {
-    if (!confirm("Revoke this API key? This cannot be undone.")) return;
+    if (!confirm(t("Revoke this API key? This cannot be undone."))) return;
     await fetch(`/api/apikeys?id=${id}`, { method: "DELETE" });
     fetchKeys();
   }
@@ -69,40 +71,40 @@ export function ApiKeysUI() {
   return (
     <div style={{ maxWidth: 900, margin: "0 auto" }}>
       <div className="mb-24">
-        <h2 style={{ margin: 0 }}>API Keys</h2>
+        <h2 style={{ margin: 0 }}>{t("API Keys")}</h2>
         <p style={{ color: "var(--muted)", margin: "4px 0 0" }}>
-          Create API keys for agents and external systems to access WCN.
+          {t("Create API keys for agents and external systems to access WCN.")}
         </p>
       </div>
 
       {newKey && (
         <div style={{ background: "var(--success-bg, #e8f5e9)", border: "1px solid var(--success, #4caf50)", borderRadius: 8, padding: 16, marginBottom: 20 }}>
-          <p className="font-semibold" style={{ margin: "0 0 8px" }}>API key created — copy it now, it will not be shown again:</p>
+          <p className="font-semibold" style={{ margin: "0 0 8px" }}>{t("API key created — copy it now, it will not be shown again:")}</p>
           <code className="font-mono text-sm" style={{ display: "block", padding: 12, background: "var(--bg2, #1a1a2e)", color: "var(--accent, #00d4ff)", borderRadius: 6, wordBreak: "break-all" }}>
             {newKey}
           </code>
           <button className="btn mt-12" onClick={() => { navigator.clipboard.writeText(newKey); }}>
-            Copy to Clipboard
+            {t("Copy to Clipboard")}
           </button>
-          <button className="btn" style={{ marginTop: 12, marginLeft: 8 }} onClick={() => setNewKey(null)}>Dismiss</button>
+          <button className="btn" style={{ marginTop: 12, marginLeft: 8 }} onClick={() => setNewKey(null)}>{t("Dismiss")}</button>
         </div>
       )}
 
-      <FormCard open={showCreate} onToggle={() => setShowCreate(!showCreate)} triggerLabel="+ New Key">
-        <h3 style={{ margin: "0 0 16px" }}>Create API Key</h3>
+      <FormCard open={showCreate} onToggle={() => setShowCreate(!showCreate)} triggerLabel={t("+ New Key")}>
+        <h3 style={{ margin: "0 0 16px" }}>{t("Create API Key")}</h3>
         <div className="mb-12">
           <label className="field">
-            <span className="label">Name</span>
+            <span className="label">{t("Name")}</span>
             <input
               type="text"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="e.g. Research Agent, CrunchBase Crawler"
+              placeholder={t("e.g. Research Agent, CrunchBase Crawler")}
             />
           </label>
         </div>
         <div className="mb-12">
-          <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>Scopes</label>
+          <label style={{ display: "block", marginBottom: 4, fontWeight: 500 }}>{t("Scopes")}</label>
           <div className="flex flex-wrap gap-8">
             {SCOPE_OPTIONS.map((s) => (
               <label key={s.value} className="flex items-center gap-4" style={{ cursor: "pointer" }}>
@@ -118,14 +120,14 @@ export function ApiKeysUI() {
                     });
                   }}
                 />
-                <span className="text-sm">{s.label}</span>
+                <span className="text-sm">{t(s.label)}</span>
               </label>
             ))}
           </div>
         </div>
         <div className="mb-16">
           <label className="field">
-            <span className="label">Expires in (days)</span>
+            <span className="label">{t("Expires in (days)")}</span>
             <input
               type="number"
               value={form.expiresInDays}
@@ -135,15 +137,15 @@ export function ApiKeysUI() {
           </label>
         </div>
         <div className="flex gap-8">
-          <button className="btn btn-primary" onClick={handleCreate} disabled={!form.name}>Create</button>
-          <button className="btn" onClick={() => setShowCreate(false)}>Cancel</button>
+          <button className="btn btn-primary" onClick={handleCreate} disabled={!form.name}>{t("Create")}</button>
+          <button className="btn" onClick={() => setShowCreate(false)}>{t("Cancel")}</button>
         </div>
       </FormCard>
 
       {loading ? (
         <LoadingState />
       ) : keys.length === 0 ? (
-        <EmptyState message="No API keys yet. Create one to get started." />
+        <EmptyState message={t("No API keys yet. Create one to get started.")} />
       ) : (
         <div className="flex-col gap-12">
           {keys.map((k) => (
@@ -151,15 +153,15 @@ export function ApiKeysUI() {
               <div>
                 <div className="font-semibold">{k.name}</div>
                 <div className="text-sm muted" style={{ marginTop: 4 }}>
-                  <code>{k.keyPrefix}...</code> · Scopes: {k.scopes.join(", ")} · Rate: {k.rateLimit}/min
+                  <code>{k.keyPrefix}...</code> · {t("Scopes:")} {k.scopes.join(", ")} · {t("Rate:")} {k.rateLimit}/{t("min")}
                 </div>
                 <div className="text-xs muted" style={{ marginTop: 2 }}>
-                  Created: {new Date(k.createdAt).toLocaleDateString()}
-                  {k.lastUsedAt && ` · Last used: ${new Date(k.lastUsedAt).toLocaleDateString()}`}
-                  {k.expiresAt && ` · Expires: ${new Date(k.expiresAt).toLocaleDateString()}`}
+                  {t("Created:")} {new Date(k.createdAt).toLocaleDateString()}
+                  {k.lastUsedAt && ` · ${t("Last used:")} ${new Date(k.lastUsedAt).toLocaleDateString()}`}
+                  {k.expiresAt && ` · ${t("Expires:")} ${new Date(k.expiresAt).toLocaleDateString()}`}
                 </div>
               </div>
-              <button className="btn" style={{ color: "var(--error, #ff4444)" }} onClick={() => handleRevoke(k.id)}>Revoke</button>
+              <button className="btn" style={{ color: "var(--error, #ff4444)" }} onClick={() => handleRevoke(k.id)}>{t("Revoke")}</button>
             </div>
           ))}
         </div>

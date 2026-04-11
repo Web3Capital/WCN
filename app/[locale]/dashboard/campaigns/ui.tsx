@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { StatusBadge, FilterToolbar, EmptyState, FormCard } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Campaign = {
   id: string;
@@ -19,6 +20,7 @@ type Campaign = {
 const STATUSES = ["ALL", "DRAFT", "ACTIVE", "PAUSED", "COMPLETED", "CANCELLED"] as const;
 
 export function CampaignDashboard({ campaigns: initial }: { campaigns: Campaign[] }) {
+  const { t } = useAutoTranslate();
   const [campaigns, setCampaigns] = useState(initial);
   const [showForm, setShowForm] = useState(false);
   const [filter, setFilter] = useState("ALL");
@@ -53,23 +55,23 @@ export function CampaignDashboard({ campaigns: initial }: { campaigns: Campaign[
 
   return (
     <div className="mt-20">
-      <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="New Campaign">
+      <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("New Campaign")}>
         <form onSubmit={create} className="form">
           <label className="field">
-            <span className="label">Campaign Title</span>
+            <span className="label">{t("Campaign Title")}</span>
             <input value={title} onChange={(e) => setTitle(e.target.value)} required />
           </label>
           <label className="field">
-            <span className="label">Description</span>
+            <span className="label">{t("Description")}</span>
             <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} />
           </label>
           <label className="field">
-            <span className="label">Budget (USDC)</span>
+            <span className="label">{t("Budget (USDC)")}</span>
             <input type="number" value={budget} onChange={(e) => setBudget(e.target.value)} step="0.01" />
           </label>
           <div className="flex gap-8">
-            <button type="submit" className="button" disabled={busy}>{busy ? "Creating..." : "Create"}</button>
-            <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+            <button type="submit" className="button" disabled={busy}>{busy ? t("Creating...") : t("Create")}</button>
+            <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>{t("Cancel")}</button>
           </div>
         </form>
       </FormCard>
@@ -77,17 +79,17 @@ export function CampaignDashboard({ campaigns: initial }: { campaigns: Campaign[
       <FilterToolbar filters={STATUSES} active={filter} onChange={setFilter} totalCount={campaigns.length} />
 
       {filtered.length === 0 ? (
-        <EmptyState message="No campaigns found." />
+        <EmptyState message={t("No campaigns found.")} />
       ) : (
         <table className="data-table">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Status</th>
-              <th>Budget</th>
-              <th>Channels</th>
-              <th>Metrics</th>
-              <th>Created</th>
+              <th>{t("Title")}</th>
+              <th>{t("Status")}</th>
+              <th>{t("Budget")}</th>
+              <th>{t("Channels")}</th>
+              <th>{t("Metrics")}</th>
+              <th>{t("Created")}</th>
             </tr>
           </thead>
           <tbody>

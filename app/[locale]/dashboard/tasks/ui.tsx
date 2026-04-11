@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { getApiErrorMessageFromJson } from "@/lib/api-error";
 import { StatusBadge, FormCard, EmptyState } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type NodeRow = { id: string; name: string; type: string };
 type ProjectRow = { id: string; name: string };
@@ -37,6 +38,7 @@ export function TasksConsole({
   nodes: NodeRow[];
   readOnly?: boolean;
 }) {
+  const { t } = useAutoTranslate();
   const [rows, setRows] = useState<TaskRow[]>(initial);
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
   const selected = useMemo(() => rows.find((r) => r.id === selectedId) ?? null, [rows, selectedId]);
@@ -83,7 +85,7 @@ export function TasksConsole({
       setCreate({ title: "", type: "EXECUTION", status: "OPEN", projectId: "", ownerNodeId: "", assignNodeIds: [] });
       setShowForm(false);
     } catch (e: any) {
-      setError(e?.message ?? "Create failed.");
+      setError(e?.message ?? t("Create failed."));
     } finally {
       setBusy(false);
     }
@@ -103,7 +105,7 @@ export function TasksConsole({
       if (!data?.ok) throw new Error(getApiErrorMessageFromJson(data));
       await refresh();
     } catch (e: any) {
-      setError(e?.message ?? "Save failed.");
+      setError(e?.message ?? t("Save failed."));
     } finally {
       setBusy(false);
     }
@@ -118,35 +120,35 @@ export function TasksConsole({
     <div className="apps-layout">
       <div>
         {!readOnly ? (
-          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="Create task">
+          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("Create task")}>
             <div className="form mb-14">
               <label className="field">
-                <span className="label">Title</span>
+                <span className="label">{t("Title")}</span>
                 <input value={create.title} onChange={(e) => setCreate((s) => ({ ...s, title: e.target.value }))} />
               </label>
               <div className="grid-3 gap-12">
                 <label className="field">
-                  <span className="label">Type</span>
+                  <span className="label">{t("Type")}</span>
                   <select value={create.type} onChange={(e) => setCreate((s) => ({ ...s, type: e.target.value }))}>
-                    {TASK_TYPES.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
+                    {TASK_TYPES.map((v) => (
+                      <option key={v} value={v}>
+                        {v}
                       </option>
                     ))}
                   </select>
                 </label>
                 <label className="field">
-                  <span className="label">Status</span>
+                  <span className="label">{t("Status")}</span>
                   <select value={create.status} onChange={(e) => setCreate((s) => ({ ...s, status: e.target.value }))}>
-                    {TASK_STATUS.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
+                    {TASK_STATUS.map((v) => (
+                      <option key={v} value={v}>
+                        {v}
                       </option>
                     ))}
                   </select>
                 </label>
                 <label className="field">
-                  <span className="label">Owner node</span>
+                  <span className="label">{t("Owner node")}</span>
                   <select
                     value={create.ownerNodeId}
                     onChange={(e) => setCreate((s) => ({ ...s, ownerNodeId: e.target.value }))}
@@ -161,7 +163,7 @@ export function TasksConsole({
                 </label>
               </div>
               <label className="field">
-                <span className="label">Project</span>
+                <span className="label">{t("Project")}</span>
                 <select
                   value={create.projectId}
                   onChange={(e) => setCreate((s) => ({ ...s, projectId: e.target.value }))}
@@ -175,7 +177,7 @@ export function TasksConsole({
                 </select>
               </label>
               <label className="field">
-                <span className="label">Assign nodes (collaborators)</span>
+                <span className="label">{t("Assign nodes (collaborators)")}</span>
                 <select
                   multiple
                   value={create.assignNodeIds}
@@ -195,7 +197,7 @@ export function TasksConsole({
                 </select>
               </label>
               <button className="button" type="button" disabled={busy || !create.title.trim()} onClick={onCreate}>
-                {busy ? "Working..." : "Create"}
+                {busy ? t("Working...") : t("Create")}
               </button>
               {error ? <p className="form-error">{error}</p> : null}
             </div>
@@ -203,7 +205,7 @@ export function TasksConsole({
         ) : null}
 
         <div className="pill mb-10">
-          Tasks ({rows.length})
+          {t("Tasks")} ({rows.length})
         </div>
         <div className="apps-list">
           {rows.map((r) => {
@@ -232,12 +234,12 @@ export function TasksConsole({
 
       <div>
         <div className="pill mb-10">
-          Details
+          {t("Details")}
         </div>
         {selected ? (
           <div className="form">
             <label className="field">
-              <span className="label">Title</span>
+              <span className="label">{t("Title")}</span>
               <input
                 key={selected.id + "t"}
                 defaultValue={selected.title}
@@ -248,38 +250,38 @@ export function TasksConsole({
             </label>
             <div className="grid-2 gap-12">
               <label className="field">
-                <span className="label">Type</span>
+                <span className="label">{t("Type")}</span>
                 <select
                   key={selected.id + "ty"}
                   defaultValue={selected.type}
                   disabled={readOnly}
                   onChange={readOnly ? undefined : (e) => onSave({ type: e.target.value })}
                 >
-                  {TASK_TYPES.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
+                  {TASK_TYPES.map((v) => (
+                    <option key={v} value={v}>
+                      {v}
                     </option>
                   ))}
                 </select>
               </label>
               <label className="field">
-                <span className="label">Status</span>
+                <span className="label">{t("Status")}</span>
                 <select
                   key={selected.id + "st"}
                   defaultValue={selected.status}
                   disabled={readOnly}
                   onChange={readOnly ? undefined : (e) => onSave({ status: e.target.value })}
                 >
-                  {TASK_STATUS.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
+                  {TASK_STATUS.map((v) => (
+                    <option key={v} value={v}>
+                      {v}
                     </option>
                   ))}
                 </select>
               </label>
             </div>
             <label className="field">
-              <span className="label">Description</span>
+              <span className="label">{t("Description")}</span>
               <textarea
                 key={selected.id + "d"}
                 defaultValue={selected.description ?? ""}
@@ -289,7 +291,7 @@ export function TasksConsole({
               />
             </label>
             <label className="field">
-              <span className="label">Project</span>
+              <span className="label">{t("Project")}</span>
               <select
                 key={selected.id + "p"}
                 defaultValue={selected.projectId ?? ""}
@@ -305,7 +307,7 @@ export function TasksConsole({
               </select>
             </label>
             <label className="field">
-              <span className="label">Owner node</span>
+              <span className="label">{t("Owner node")}</span>
               <select
                 key={selected.id + "o"}
                 defaultValue={selected.ownerNodeId ?? ""}
@@ -321,7 +323,7 @@ export function TasksConsole({
               </select>
             </label>
             <label className="field">
-              <span className="label">Assign nodes</span>
+              <span className="label">{t("Assign nodes")}</span>
               <select
                 key={selected.id + "a"}
                 multiple
@@ -346,12 +348,12 @@ export function TasksConsole({
             </label>
 
             <button className="button-secondary" type="button" disabled={busy} onClick={() => refresh()}>
-              {busy ? "Working..." : "Refresh"}
+              {busy ? t("Working...") : t("Refresh")}
             </button>
             {error ? <p className="form-error">{error}</p> : null}
           </div>
         ) : (
-          <EmptyState message="Select a task." />
+          <EmptyState message={t("Select a task.")} />
         )}
       </div>
     </div>

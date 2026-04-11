@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { DealsConsole } from "./ui";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 
 export const dynamic = "force-dynamic";
 
@@ -54,9 +55,9 @@ export default async function DealsPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Network</span>
-        <h1>Deals</h1>
-        <p className="muted">Each deal is an auditable business event — not a chat thread.</p>
+        <span className="eyebrow"><T>Network</T></span>
+        <h1><T>Deals</T></h1>
+        <p className="muted"><T>Each deal is an auditable business event — not a chat thread.</T></p>
         <DealsConsole
           initialDeals={JSON.parse(JSON.stringify(deals))}
           nodes={nodes}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { StatusBadge, FilterToolbar, EmptyState, LoadingState } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Approval = {
   id: string;
@@ -20,6 +21,7 @@ type Approval = {
 const FILTERS = ["PENDING", "APPROVED", "REJECTED"] as const;
 
 export function ApprovalsUI() {
+  const { t } = useAutoTranslate();
   const [approvals, setApprovals] = useState<Approval[]>([]);
   const [filter, setFilter] = useState("PENDING");
   const [loading, setLoading] = useState(true);
@@ -57,16 +59,16 @@ export function ApprovalsUI() {
       {loading ? (
         <LoadingState />
       ) : approvals.length === 0 ? (
-        <EmptyState message={`No ${filter.toLowerCase()} approvals.`} />
+        <EmptyState message={t(`No ${filter.toLowerCase()} approvals.`)} />
       ) : (
         <table className="data-table">
           <thead>
             <tr>
-              <th>Status</th>
-              <th>Action</th>
-              <th>Entity</th>
-              <th>Reason</th>
-              <th>Requested</th>
+              <th>{t("Status")}</th>
+              <th>{t("Action")}</th>
+              <th>{t("Entity")}</th>
+              <th>{t("Reason")}</th>
+              <th>{t("Requested")}</th>
               <th></th>
             </tr>
           </thead>
@@ -82,16 +84,16 @@ export function ApprovalsUI() {
                 <td className="muted text-xs">{a.reason || "—"}</td>
                 <td className="muted text-xs">
                   {new Date(a.createdAt).toLocaleString()}
-                  {a.decidedAt && <div>Decided: {new Date(a.decidedAt).toLocaleString()}</div>}
+                  {a.decidedAt && <div>{t("Decided:")} {new Date(a.decidedAt).toLocaleString()}</div>}
                 </td>
                 <td>
                   {a.status === "PENDING" && (
                     <div className="flex gap-4">
                       <button className="button" style={{ fontSize: 11, padding: "4px 12px" }} disabled={busy === a.id} onClick={() => decide(a.id, "APPROVED")}>
-                        Approve
+                        {t("Approve")}
                       </button>
                       <button className="button-secondary" style={{ fontSize: 11, padding: "4px 12px", color: "var(--red)" }} disabled={busy === a.id} onClick={() => decide(a.id, "REJECTED")}>
-                        Reject
+                        {t("Reject")}
                       </button>
                     </div>
                   )}

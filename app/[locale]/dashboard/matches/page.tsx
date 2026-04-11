@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { MatchesConsole } from "./ui";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 
 export const dynamic = "force-dynamic";
 
@@ -45,9 +46,9 @@ export default async function MatchesPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Network</span>
-        <h1>Matches</h1>
-        <p className="muted">AI-scored pairings between projects and capital profiles.</p>
+        <span className="eyebrow"><T>Network</T></span>
+        <h1><T>Matches</T></h1>
+        <p className="muted"><T>AI-scored pairings between projects and capital profiles.</T></p>
         <MatchesConsole
           initialMatches={JSON.parse(JSON.stringify(matches))}
           isAdmin={isAdmin}

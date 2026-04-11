@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { ConfirmDialog } from "../../_components/confirm-dialog";
 
 type Line = { id: string; nodeId: string; node: { id: string; name: string }; scoreTotal: number; allocation: number; pobCount: number };
@@ -37,6 +38,7 @@ export function SettlementCycleDetailUI({
   pendingApprovals: Approval[];
   isAdmin: boolean;
 }) {
+  const { t } = useAutoTranslate();
   const [busy, setBusy] = useState(false);
   const [reopenOpen, setReopenOpen] = useState(false);
 
@@ -74,12 +76,12 @@ export function SettlementCycleDetailUI({
   return (
     <div>
       <Link href="/dashboard/settlement" style={{ fontSize: 13, color: "var(--accent)" }}>
-        &larr; All Cycles
+        &larr; {t("All Cycles")}
       </Link>
 
       <div className="detail-header" style={{ marginTop: 12 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 4px" }}>{cycle.kind} Cycle</h1>
+          <h1 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 4px" }}>{cycle.kind} {t("Cycle")}</h1>
           <div className="detail-header-meta">
             <span className={`badge ${STATUS_COLORS[cycle.status] ?? ""}`}>{cycle.status.replace(/_/g, " ")}</span>
             <span className="muted" style={{ fontSize: 12 }}>
@@ -91,12 +93,12 @@ export function SettlementCycleDetailUI({
           <div className="detail-actions">
             {cycle.status === "RECONCILED" && (
               <button className="button" style={{ fontSize: 11, padding: "4px 12px" }} disabled={busy} onClick={requestLock}>
-                Request Lock (Dual)
+                {t("Request Lock (Dual)")}
               </button>
             )}
             {(cycle.status === "LOCKED" || cycle.status === "EXPORTED") && (
               <button className="button-secondary" style={{ fontSize: 11, padding: "4px 12px", color: "var(--amber)" }} disabled={busy} onClick={() => setReopenOpen(true)}>
-                Request Reopen (Dual)
+                {t("Request Reopen (Dual)")}
               </button>
             )}
           </div>
@@ -105,10 +107,10 @@ export function SettlementCycleDetailUI({
 
       {pendingApprovals.length > 0 && (
         <div className="card" style={{ padding: 16, marginBottom: 16, border: "1px solid var(--yellow)" }}>
-          <p style={{ fontWeight: 600, fontSize: 14, margin: "0 0 8px" }}>Pending Approvals</p>
+          <p style={{ fontWeight: 600, fontSize: 14, margin: "0 0 8px" }}>{t("Pending Approvals")}</p>
           {pendingApprovals.map((a) => (
             <div key={a.id} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, padding: "4px 0" }}>
-              <span><span className="badge badge-yellow" style={{ fontSize: 10 }}>{a.actionType}</span> — {a.reason || "No reason"}</span>
+              <span><span className="badge badge-yellow" style={{ fontSize: 10 }}>{a.actionType}</span> — {a.reason || t("No reason")}</span>
               <span className="muted">{new Date(a.createdAt).toLocaleString()}</span>
             </div>
           ))}
@@ -117,43 +119,43 @@ export function SettlementCycleDetailUI({
 
       <div className="grid-4" style={{ marginBottom: 20 }}>
         <div className="stat-card">
-          <div className="stat-label">Pool</div>
+          <div className="stat-label">{t("Pool")}</div>
           <div className="stat-number" style={{ marginTop: 4 }}>${cycle.pool.toLocaleString()}</div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Nodes</div>
+          <div className="stat-label">{t("Nodes")}</div>
           <div className="stat-number" style={{ marginTop: 4 }}>{cycle.lines.length}</div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Total PoB</div>
+          <div className="stat-label">{t("Total PoB")}</div>
           <div className="stat-number" style={{ marginTop: 4 }}>{totalPob}</div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Total Score</div>
+          <div className="stat-label">{t("Total Score")}</div>
           <div className="stat-number" style={{ marginTop: 4 }}>{totalScore.toFixed(1)}</div>
         </div>
       </div>
 
       {cycle.reopenReason && (
         <div className="card" style={{ padding: 16, marginBottom: 16 }}>
-          <p style={{ fontWeight: 600, fontSize: 13, margin: "0 0 4px" }}>Reopen Reason</p>
+          <p style={{ fontWeight: 600, fontSize: 13, margin: "0 0 4px" }}>{t("Reopen Reason")}</p>
           <p className="muted" style={{ margin: 0, fontSize: 13 }}>{cycle.reopenReason}</p>
         </div>
       )}
 
       <div className="card" style={{ padding: 20 }}>
-        <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Allocation Lines ({cycle.lines.length})</h2>
+        <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>{t("Allocation Lines")} ({cycle.lines.length})</h2>
         {cycle.lines.length === 0 ? (
-          <div className="empty-state"><p>No lines generated yet.</p></div>
+          <div className="empty-state"><p>{t("No lines generated yet.")}</p></div>
         ) : (
           <table className="data-table">
             <thead>
               <tr>
-                <th>Node</th>
-                <th>Score</th>
-                <th>PoB Count</th>
-                <th>Allocation</th>
-                <th>Share</th>
+                <th>{t("Node")}</th>
+                <th>{t("Score")}</th>
+                <th>{t("PoB Count")}</th>
+                <th>{t("Allocation")}</th>
+                <th>{t("Share")}</th>
               </tr>
             </thead>
             <tbody>
@@ -173,13 +175,13 @@ export function SettlementCycleDetailUI({
 
       <ConfirmDialog
         open={reopenOpen}
-        title="Request Reopen (Dual Control)"
-        description="This action requires dual-control approval. Provide a reason."
-        confirmLabel="Submit Reopen Request"
+        title={t("Request Reopen (Dual Control)")}
+        description={t("This action requires dual-control approval. Provide a reason.")}
+        confirmLabel={t("Submit Reopen Request")}
         variant="danger"
         withInput
-        inputLabel="Reason"
-        inputPlaceholder="Reason for reopening..."
+        inputLabel={t("Reason")}
+        inputPlaceholder={t("Reason for reopening...")}
         onConfirm={requestReopen}
         onCancel={() => setReopenOpen(false)}
       />

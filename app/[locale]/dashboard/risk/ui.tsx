@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { StatusBadge, EmptyState, FormCard, ConfirmDialog } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type RiskFlagRow = {
   id: string;
@@ -25,6 +26,7 @@ type RiskRule = {
 };
 
 function RiskRulesTab() {
+  const { t } = useAutoTranslate();
   const [rules, setRules] = useState<RiskRule[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState("");
@@ -68,21 +70,21 @@ function RiskRulesTab() {
 
   return (
     <div>
-      <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="Add Rule">
+      <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("Add Rule")}>
         <form onSubmit={createRule} className="form">
           <div className="grid-3 gap-12">
             <label className="field">
-              <span className="label">Rule Name</span>
+              <span className="label">{t("Rule Name")}</span>
               <input value={name} onChange={(e) => setName(e.target.value)} required />
             </label>
             <label className="field">
-              <span className="label">Entity Type</span>
+              <span className="label">{t("Entity Type")}</span>
               <select value={entityType} onChange={(e) => setEntityType(e.target.value)}>
-                {["NODE", "PROJECT", "DEAL", "TASK", "USER"].map((t) => <option key={t} value={t}>{t}</option>)}
+                {["NODE", "PROJECT", "DEAL", "TASK", "USER"].map((v) => <option key={v} value={v}>{v}</option>)}
               </select>
             </label>
             <label className="field">
-              <span className="label">Severity</span>
+              <span className="label">{t("Severity")}</span>
               <select value={severity} onChange={(e) => setSeverity(e.target.value)}>
                 {["LOW", "MEDIUM", "HIGH", "CRITICAL"].map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
@@ -90,44 +92,44 @@ function RiskRulesTab() {
           </div>
           <div className="grid-3 gap-12">
             <label className="field">
-              <span className="label">Field</span>
-              <input value={field} onChange={(e) => setField(e.target.value)} placeholder="e.g. status" required />
+              <span className="label">{t("Field")}</span>
+              <input value={field} onChange={(e) => setField(e.target.value)} placeholder={t("e.g. status")} required />
             </label>
             <label className="field">
-              <span className="label">Operator</span>
+              <span className="label">{t("Operator")}</span>
               <select value={operator} onChange={(e) => setOperator(e.target.value)}>
                 {["eq", "neq", "gt", "lt", "gte", "lte", "contains", "in"].map((o) => <option key={o} value={o}>{o}</option>)}
               </select>
             </label>
             <label className="field">
-              <span className="label">Threshold</span>
+              <span className="label">{t("Threshold")}</span>
               <input value={threshold} onChange={(e) => setThreshold(e.target.value)} required />
             </label>
           </div>
           <label className="field">
-            <span className="label">Action</span>
+            <span className="label">{t("Action")}</span>
             <select value={action} onChange={(e) => setAction(e.target.value)}>
-              {["CREATE_FLAG", "FREEZE_ENTITY", "NOTIFY_RISK_DESK"].map((a) => <option key={a} value={a}>{a.replace(/_/g, " ")}</option>)}
+              {["CREATE_FLAG", "FREEZE_ENTITY", "NOTIFY_RISK_DESK"].map((a) => <option key={a} value={a}>{t(a.replace(/_/g, " "))}</option>)}
             </select>
           </label>
           <div className="flex gap-8">
-            <button type="submit" className="button" disabled={busy}>{busy ? "Creating..." : "Create Rule"}</button>
-            <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+            <button type="submit" className="button" disabled={busy}>{busy ? t("Creating...") : t("Create Rule")}</button>
+            <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>{t("Cancel")}</button>
           </div>
         </form>
       </FormCard>
 
       {rules.length === 0 ? (
-        <EmptyState message="No risk rules configured." />
+        <EmptyState message={t("No risk rules configured.")} />
       ) : (
         <table className="data-table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Entity</th>
-              <th>Severity</th>
-              <th>Action</th>
-              <th>Status</th>
+              <th>{t("Name")}</th>
+              <th>{t("Entity")}</th>
+              <th>{t("Severity")}</th>
+              <th>{t("Action")}</th>
+              <th>{t("Status")}</th>
             </tr>
           </thead>
           <tbody>
@@ -138,7 +140,7 @@ function RiskRulesTab() {
                 <td><StatusBadge status={r.severity} /></td>
                 <td className="muted text-xs">{r.action.replace(/_/g, " ")}</td>
                 <td>
-                  <span className={`badge ${r.enabled ? "badge-green" : ""}`}>{r.enabled ? "Active" : "Disabled"}</span>
+                  <span className={`badge ${r.enabled ? "badge-green" : ""}`}>{r.enabled ? t("Active") : t("Disabled")}</span>
                 </td>
               </tr>
             ))}
@@ -150,6 +152,7 @@ function RiskRulesTab() {
 }
 
 export function RiskConsole({ initialFlags }: { initialFlags: RiskFlagRow[] }) {
+  const { t } = useAutoTranslate();
   const [flags, setFlags] = useState(initialFlags);
   const [filter, setFilter] = useState<"all" | "open" | "resolved">("open");
   const [tab, setTab] = useState<"flags" | "rules">("flags");
@@ -197,8 +200,8 @@ export function RiskConsole({ initialFlags }: { initialFlags: RiskFlagRow[] }) {
   return (
     <div className="mt-20">
       <div className="chip-group mb-16">
-        <button className={`chip ${tab === "flags" ? "chip-active" : ""}`} onClick={() => setTab("flags")}>Risk Flags</button>
-        <button className={`chip ${tab === "rules" ? "chip-active" : ""}`} onClick={() => setTab("rules")}>Rule Engine</button>
+        <button className={`chip ${tab === "flags" ? "chip-active" : ""}`} onClick={() => setTab("flags")}>{t("Risk Flags")}</button>
+        <button className={`chip ${tab === "rules" ? "chip-active" : ""}`} onClick={() => setTab("rules")}>{t("Rule Engine")}</button>
       </div>
 
       {tab === "rules" ? (
@@ -208,17 +211,17 @@ export function RiskConsole({ initialFlags }: { initialFlags: RiskFlagRow[] }) {
           <div className="page-toolbar">
             <div className="chip-group">
               <button className={`chip ${filter === "open" ? "chip-active" : ""}`} onClick={() => setFilter("open")}>
-                Open ({flags.filter((f) => !f.resolvedAt).length})
+                {t("Open")} ({flags.filter((f) => !f.resolvedAt).length})
               </button>
               <button className={`chip ${filter === "all" ? "chip-active" : ""}`} onClick={() => setFilter("all")}>
-                All ({flags.length})
+                {t("All")} ({flags.length})
               </button>
               <button className={`chip ${filter === "resolved" ? "chip-active" : ""}`} onClick={() => setFilter("resolved")}>
-                Resolved ({flags.filter((f) => !!f.resolvedAt).length})
+                {t("Resolved")} ({flags.filter((f) => !!f.resolvedAt).length})
               </button>
             </div>
             <div className="page-toolbar-spacer" />
-            <button className="button" onClick={() => setShowForm(!showForm)}>Flag risk</button>
+            <button className="button" onClick={() => setShowForm(!showForm)}>{t("Flag risk")}</button>
           </div>
 
           {showForm && (
@@ -226,47 +229,47 @@ export function RiskConsole({ initialFlags }: { initialFlags: RiskFlagRow[] }) {
               <form onSubmit={createFlag} className="form">
                 <div className="grid-3 gap-12">
                   <label className="field">
-                    <span className="label">Entity type</span>
+                    <span className="label">{t("Entity type")}</span>
                     <select value={entityType} onChange={(e) => setEntityType(e.target.value)}>
-                      {["NODE", "PROJECT", "DEAL", "TASK", "AGENT", "EVIDENCE", "POB", "CAPITAL", "USER"].map((t) => (
-                        <option key={t} value={t}>{t}</option>
+                      {["NODE", "PROJECT", "DEAL", "TASK", "AGENT", "EVIDENCE", "POB", "CAPITAL", "USER"].map((v) => (
+                        <option key={v} value={v}>{v}</option>
                       ))}
                     </select>
                   </label>
                   <label className="field">
-                    <span className="label">Entity ID</span>
-                    <input placeholder="Entity ID *" value={entityId} onChange={(e) => setEntityId(e.target.value)} required />
+                    <span className="label">{t("Entity ID")}</span>
+                    <input placeholder={t("Entity ID")} value={entityId} onChange={(e) => setEntityId(e.target.value)} required />
                   </label>
                   <label className="field">
-                    <span className="label">Severity</span>
+                    <span className="label">{t("Severity")}</span>
                     <select value={severity} onChange={(e) => setSeverity(e.target.value)}>
                       {["LOW", "MEDIUM", "HIGH", "CRITICAL"].map((s) => <option key={s} value={s}>{s}</option>)}
                     </select>
                   </label>
                 </div>
                 <label className="field">
-                  <span className="label">Reason</span>
-                  <textarea placeholder="Reason *" value={reason} onChange={(e) => setReason(e.target.value)} required rows={2} />
+                  <span className="label">{t("Reason")}</span>
+                  <textarea placeholder={t("Reason")} value={reason} onChange={(e) => setReason(e.target.value)} required rows={2} />
                 </label>
                 <div className="flex gap-8">
-                  <button type="submit" className="button" disabled={busy}>{busy ? "Creating..." : "Create flag"}</button>
-                  <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+                  <button type="submit" className="button" disabled={busy}>{busy ? t("Creating...") : t("Create flag")}</button>
+                  <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>{t("Cancel")}</button>
                 </div>
               </form>
             </div>
           )}
 
           {displayed.length === 0 ? (
-            <EmptyState message="No risk flags." />
+            <EmptyState message={t("No risk flags.")} />
           ) : (
             <table className="data-table">
               <thead>
                 <tr>
                   <th style={{ width: 32 }}></th>
-                  <th>Entity</th>
-                  <th>Reason</th>
-                  <th>Severity</th>
-                  <th>Date</th>
+                  <th>{t("Entity")}</th>
+                  <th>{t("Reason")}</th>
+                  <th>{t("Severity")}</th>
+                  <th>{t("Date")}</th>
                   <th></th>
                 </tr>
               </thead>
@@ -282,13 +285,13 @@ export function RiskConsole({ initialFlags }: { initialFlags: RiskFlagRow[] }) {
                     </td>
                     <td>
                       <div className="text-sm">{f.reason}</div>
-                      {f.resolution && <div style={{ fontSize: 12, color: "var(--green)", marginTop: 2 }}>Resolution: {f.resolution}</div>}
+                      {f.resolution && <div style={{ fontSize: 12, color: "var(--green)", marginTop: 2 }}>{t("Resolution:")} {f.resolution}</div>}
                     </td>
                     <td><StatusBadge status={f.severity} /></td>
                     <td className="muted text-xs">{new Date(f.createdAt).toLocaleDateString()}</td>
                     <td>
                       {!f.resolvedAt && (
-                        <button className="button-secondary" style={{ fontSize: 11, padding: "4px 10px" }} onClick={() => setResolveTarget(f.id)}>Resolve</button>
+                        <button className="button-secondary" style={{ fontSize: 11, padding: "4px 10px" }} onClick={() => setResolveTarget(f.id)}>{t("Resolve")}</button>
                       )}
                     </td>
                   </tr>
@@ -299,12 +302,12 @@ export function RiskConsole({ initialFlags }: { initialFlags: RiskFlagRow[] }) {
 
           <ConfirmDialog
             open={!!resolveTarget}
-            title="Resolve Risk Flag"
-            description="Provide a resolution note for this risk flag."
-            confirmLabel="Resolve"
+            title={t("Resolve Risk Flag")}
+            description={t("Provide a resolution note for this risk flag.")}
+            confirmLabel={t("Resolve")}
             withInput
-            inputLabel="Resolution"
-            inputPlaceholder="Resolution note..."
+            inputLabel={t("Resolution")}
+            inputPlaceholder={t("Resolution note...")}
             onConfirm={(val) => { if (resolveTarget && val) resolveFlag(resolveTarget, val); setResolveTarget(null); }}
             onCancel={() => setResolveTarget(null)}
           />

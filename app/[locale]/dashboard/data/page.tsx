@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { getWeeklyTimeSeries, getFunnelData, detectAnomalies } from "@/lib/modules/cockpit/weekly-report";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { DataCockpit } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -62,9 +63,9 @@ export default async function DataCockpitPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Intelligence</span>
-        <h1>Network Health</h1>
-        <p className="muted">Network-wide metrics for operational intelligence — not vanity metrics.</p>
+        <span className="eyebrow"><T>Intelligence</T></span>
+        <h1><T>Network Health</T></h1>
+        <p className="muted"><T>Network-wide metrics for operational intelligence — not vanity metrics.</T></p>
         <DataCockpit data={data} />
       </div>
     </div>

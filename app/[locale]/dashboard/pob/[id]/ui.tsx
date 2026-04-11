@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { DetailLayout, StatusBadge, StatCard } from "../../_components";
 
 type Attribution = {
@@ -76,6 +77,7 @@ export function PobDetail({
   reviews: Review[];
   isAdmin: boolean;
 }) {
+  const { t } = useAutoTranslate();
   const [status, setStatus] = useState(record.status);
   const [eventStatus, setEventStatus] = useState(record.pobEventStatus);
   const [busy, setBusy] = useState(false);
@@ -95,10 +97,10 @@ export function PobDetail({
         if (patch.status) setStatus(patch.status as string);
         if (patch.pobEventStatus) setEventStatus(patch.pobEventStatus as string);
       } else {
-        setError(data.error?.message || data.error || "Update failed.");
+        setError(data.error?.message || data.error || t("Update failed."));
       }
     } catch {
-      setError("Network error.");
+      setError(t("Network error."));
     }
     setBusy(false);
   }
@@ -106,7 +108,7 @@ export function PobDetail({
   return (
     <DetailLayout
       backHref="/dashboard/pob"
-      backLabel="All PoB"
+      backLabel={t("All PoB")}
       title={record.businessType}
       badge={
         <span className="flex items-center gap-6">
@@ -116,32 +118,32 @@ export function PobDetail({
       }
       meta={
         <>
-          <span>Score: <strong>{record.score}</strong></span>
-          {record.node && <span>Node: <Link href={`/dashboard/nodes/${record.node.id}`} style={{ color: "var(--accent)" }}>{record.node.name}</Link></span>}
-          {record.project && <span>Project: <Link href={`/dashboard/projects/${record.project.id}`} style={{ color: "var(--accent)" }}>{record.project.name}</Link></span>}
-          {record.deal && <span>Deal: <Link href={`/dashboard/deals/${record.deal.id}`} style={{ color: "var(--accent)" }}>{record.deal.title}</Link></span>}
-          {record.task && <span>Task: <Link href={`/dashboard/tasks/${record.task.id}`} style={{ color: "var(--accent)" }}>{record.task.title}</Link></span>}
+          <span>{t("Score:")}{" "}<strong>{record.score}</strong></span>
+          {record.node && <span>{t("Node:")}{" "}<Link href={`/dashboard/nodes/${record.node.id}`} style={{ color: "var(--accent)" }}>{record.node.name}</Link></span>}
+          {record.project && <span>{t("Project:")}{" "}<Link href={`/dashboard/projects/${record.project.id}`} style={{ color: "var(--accent)" }}>{record.project.name}</Link></span>}
+          {record.deal && <span>{t("Deal:")}{" "}<Link href={`/dashboard/deals/${record.deal.id}`} style={{ color: "var(--accent)" }}>{record.deal.title}</Link></span>}
+          {record.task && <span>{t("Task:")}{" "}<Link href={`/dashboard/tasks/${record.task.id}`} style={{ color: "var(--accent)" }}>{record.task.title}</Link></span>}
         </>
       }
     >
       <div className="card p-18">
-        <h3 className="mt-0 mb-12">Score Breakdown</h3>
+        <h3 className="mt-0 mb-12">{t("Score Breakdown")}</h3>
         <div className="grid-2 gap-12">
-          <StatCard label="Base Value" value={record.baseValue} />
-          <StatCard label="Weight" value={record.weight} />
-          <StatCard label="Quality Mult" value={record.qualityMult} />
-          <StatCard label="Time Mult" value={record.timeMult} />
-          <StatCard label="Risk Discount" value={record.riskDiscount} />
-          <StatCard label="Final Score" value={record.score} />
+          <StatCard label={t("Base Value")} value={record.baseValue} />
+          <StatCard label={t("Weight")} value={record.weight} />
+          <StatCard label={t("Quality Mult")} value={record.qualityMult} />
+          <StatCard label={t("Time Mult")} value={record.timeMult} />
+          <StatCard label={t("Risk Discount")} value={record.riskDiscount} />
+          <StatCard label={t("Final Score")} value={record.score} />
         </div>
       </div>
 
       {isAdmin && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Status Transition</h3>
+          <h3 className="mt-0 mb-12">{t("Status Transition")}</h3>
           <div className="grid-2 gap-12">
             <label className="field">
-              <span className="label">Review Status</span>
+              <span className="label">{t("Review Status")}</span>
               <select
                 value={status}
                 onChange={(e) => patchRecord({ status: e.target.value })}
@@ -151,7 +153,7 @@ export function PobDetail({
               </select>
             </label>
             <label className="field">
-              <span className="label">Event Status</span>
+              <span className="label">{t("Event Status")}</span>
               <select
                 value={eventStatus}
                 onChange={(e) => patchRecord({ pobEventStatus: e.target.value })}
@@ -167,9 +169,9 @@ export function PobDetail({
 
       {record.frozenAt && (
         <div className="card p-18" style={{ borderLeft: "3px solid var(--red)" }}>
-          <h3 className="mt-0 mb-4" style={{ color: "var(--red)" }}>Frozen</h3>
+          <h3 className="mt-0 mb-4" style={{ color: "var(--red)" }}>{t("Frozen")}</h3>
           <p className="muted mt-0 mb-0">
-            Frozen at {new Date(record.frozenAt).toLocaleString()}
+            {t("Frozen at")} {new Date(record.frozenAt).toLocaleString()}
             {record.frozenReason && <> — {record.frozenReason}</>}
           </p>
         </div>
@@ -177,16 +179,16 @@ export function PobDetail({
 
       {record.notes && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-8">Notes</h3>
+          <h3 className="mt-0 mb-8">{t("Notes")}</h3>
           <p className="mt-0 mb-0" style={{ whiteSpace: "pre-wrap" }}>{record.notes}</p>
         </div>
       )}
 
       <div className="grid-2 gap-16">
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Attribution ({record.attributions.length})</h3>
+          <h3 className="mt-0 mb-12">{t("Attribution")} ({record.attributions.length})</h3>
           {record.attributions.length === 0 ? (
-            <p className="muted mt-0 mb-0">No attributions recorded.</p>
+            <p className="muted mt-0 mb-0">{t("No attributions recorded.")}</p>
           ) : (
             <div className="flex-col gap-8">
               {record.attributions.map((a) => (
@@ -202,9 +204,9 @@ export function PobDetail({
         </div>
 
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Confirmations ({record.confirmations.length})</h3>
+          <h3 className="mt-0 mb-12">{t("Confirmations")} ({record.confirmations.length})</h3>
           {record.confirmations.length === 0 ? (
-            <p className="muted mt-0 mb-0">No confirmations yet.</p>
+            <p className="muted mt-0 mb-0">{t("No confirmations yet.")}</p>
           ) : (
             <div className="flex-col gap-8">
               {record.confirmations.map((c) => (
@@ -224,7 +226,7 @@ export function PobDetail({
 
       {record.disputes.length > 0 && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Disputes ({record.disputes.length})</h3>
+          <h3 className="mt-0 mb-12">{t("Disputes")} ({record.disputes.length})</h3>
           <div className="flex-col gap-8">
             {record.disputes.map((d) => (
               <div key={d.id} className="flex-between text-base">
@@ -233,7 +235,7 @@ export function PobDetail({
                   <span>{d.reason}</span>
                 </div>
                 <Link href={`/dashboard/disputes/${d.id}`} className="text-xs" style={{ color: "var(--accent)" }}>
-                  View
+                  {t("View")}
                 </Link>
               </div>
             ))}
@@ -243,7 +245,7 @@ export function PobDetail({
 
       {reviews.length > 0 && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Review History</h3>
+          <h3 className="mt-0 mb-12">{t("Review History")}</h3>
           <div className="timeline">
             {reviews.map((r) => (
               <div key={r.id} className="timeline-item">
@@ -264,7 +266,7 @@ export function PobDetail({
       )}
 
       <div className="muted text-xs">
-        Created: {new Date(record.createdAt).toLocaleString()} · Updated: {new Date(record.updatedAt).toLocaleString()}
+        {t("Created:")} {new Date(record.createdAt).toLocaleString()} · {t("Updated:")} {new Date(record.updatedAt).toLocaleString()}
       </div>
     </DetailLayout>
   );

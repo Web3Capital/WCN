@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { EmptyState } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type UserRow = {
   id: string;
@@ -19,6 +20,7 @@ function fmtDate(v: string | Date) {
 }
 
 export function UsersConsole({ initial, currentUserId }: { initial: UserRow[]; currentUserId: string }) {
+  const { t } = useAutoTranslate();
   const [users, setUsers] = useState<UserRow[]>(initial);
   const [selectedId, setSelectedId] = useState<string | null>(initial[0]?.id ?? null);
   const selected = useMemo(() => users.find((u) => u.id === selectedId) ?? null, [users, selectedId]);
@@ -36,7 +38,7 @@ export function UsersConsole({ initial, currentUserId }: { initial: UserRow[]; c
     const data = await res.json().catch(() => null);
     setSaving(false);
     if (!res.ok || !data?.ok) {
-      setError(data?.error ?? "Failed to update role.");
+      setError(data?.error ?? t("Failed to update role."));
       return;
     }
     setUsers((prev) =>
@@ -64,7 +66,7 @@ export function UsersConsole({ initial, currentUserId }: { initial: UserRow[]; c
             <div style={{ display: "grid", gap: 2 }}>
               <div className="font-bold" style={{ color: "var(--text)" }}>{u.name || u.email || "—"}</div>
               <div className="muted text-sm">
-                {u.email ?? "—"} · {u._count.nodes} nodes
+                {u.email ?? "—"} · {u._count.nodes} {t("nodes")}
               </div>
             </div>
             <span className="pill">{u.role}</span>
@@ -78,14 +80,14 @@ export function UsersConsole({ initial, currentUserId }: { initial: UserRow[]; c
             <div className="apps-detail-head">
               <div>
                 <h3 className="mb-6">{selected.name || selected.email || "—"}</h3>
-                <p className="muted" style={{ margin: 0 }}>Joined: {fmtDate(selected.createdAt)}</p>
+                <p className="muted" style={{ margin: 0 }}>{t("Joined:")} {fmtDate(selected.createdAt)}</p>
               </div>
               <div className="cta-row mt-0">
                 <select
                   value={selected.role}
                   onChange={(e) => changeRole(selected.id, e.target.value)}
                   disabled={saving || selected.id === currentUserId}
-                  title={selected.id === currentUserId ? "Cannot change your own role" : undefined}
+                  title={selected.id === currentUserId ? t("Cannot change your own role") : undefined}
                   style={{ width: 140 }}
                 >
                   <option value="USER">USER</option>
@@ -95,39 +97,39 @@ export function UsersConsole({ initial, currentUserId }: { initial: UserRow[]; c
             </div>
             <div className="grid-2 mt-14 gap-12">
               <div className="kpi">
-                <strong>Email</strong>
+                <strong>{t("Email")}</strong>
                 <span className="muted">{selected.email ?? "—"}</span>
               </div>
               <div className="kpi">
-                <strong>User ID</strong>
+                <strong>{t("User ID")}</strong>
                 <span className="muted text-sm" style={{ wordBreak: "break-all" }}>{selected.id}</span>
               </div>
               <div className="kpi">
-                <strong>Owned nodes</strong>
+                <strong>{t("Owned nodes")}</strong>
                 <span className="muted">{selected._count.nodes}</span>
               </div>
               <div className="kpi">
-                <strong>Applications</strong>
+                <strong>{t("Applications")}</strong>
                 <span className="muted">{selected._count.applications}</span>
               </div>
             </div>
             {selected.id === currentUserId ? (
               <p className="muted mt-14 mb-0 text-sm">
-                This is your account. Role changes must be made by another admin.
+                {t("This is your account. Role changes must be made by another admin.")}
               </p>
             ) : null}
             {error ? <p className="form-error mt-10">{error}</p> : null}
             <div className="flex gap-8 mt-14">
               <Link href={`/dashboard/users/${selected.id}`} className="button text-xs" style={{ textDecoration: "none" }}>
-                Full profile →
+                {t("Full profile →")}
               </Link>
               <button className="button-secondary" type="button" onClick={refresh} disabled={saving}>
-                Refresh
+                {t("Refresh")}
               </button>
             </div>
           </>
         ) : (
-          <EmptyState message="Select a user." />
+          <EmptyState message={t("Select a user.")} />
         )}
       </div>
     </div>

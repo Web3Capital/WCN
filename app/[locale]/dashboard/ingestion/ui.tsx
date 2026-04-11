@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { LoadingState, EmptyState, FormCard } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 interface IngestionSource {
   id: string;
@@ -29,6 +30,7 @@ interface Adapter {
 }
 
 export function IngestionUI() {
+  const { t } = useAutoTranslate();
   const [sources, setSources] = useState<IngestionSource[]>([]);
   const [adapters, setAdapters] = useState<Adapter[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,7 +53,7 @@ export function IngestionUI() {
 
   async function handleCreate() {
     let parsedConfig: Record<string, unknown> = {};
-    try { parsedConfig = JSON.parse(form.config); } catch { return alert("Invalid JSON config"); }
+    try { parsedConfig = JSON.parse(form.config); } catch { return alert(t("Invalid JSON config")); }
 
     const res = await fetch("/api/ingestion", {
       method: "POST",
@@ -89,28 +91,28 @@ export function IngestionUI() {
   return (
     <div style={{ maxWidth: 900, margin: "0 auto" }}>
       <div className="mb-24">
-        <h2 style={{ margin: 0 }}>Data Ingestion</h2>
+        <h2 style={{ margin: 0 }}>{t("Data Ingestion")}</h2>
         <p style={{ color: "var(--muted)", margin: "4px 0 0" }}>
-          Configure external data sources that agents use to import projects and investors.
+          {t("Configure external data sources that agents use to import projects and investors.")}
         </p>
       </div>
 
-      <FormCard open={showCreate} onToggle={() => setShowCreate(!showCreate)} triggerLabel="+ New Source">
-        <h3 style={{ margin: "0 0 16px" }}>Add Ingestion Source</h3>
+      <FormCard open={showCreate} onToggle={() => setShowCreate(!showCreate)} triggerLabel={t("+ New Source")}>
+        <h3 style={{ margin: "0 0 16px" }}>{t("Add Ingestion Source")}</h3>
         <div className="mb-12">
           <label className="field">
-            <span className="label">Name</span>
+            <span className="label">{t("Name")}</span>
             <input
               type="text"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="e.g. DeFi Protocols Crawler"
+              placeholder={t("e.g. DeFi Protocols Crawler")}
             />
           </label>
         </div>
         <div className="mb-12">
           <label className="field">
-            <span className="label">Adapter</span>
+            <span className="label">{t("Adapter")}</span>
             <select
               value={form.type}
               onChange={(e) => setForm({ ...form, type: e.target.value })}
@@ -123,7 +125,7 @@ export function IngestionUI() {
         </div>
         <div className="mb-16">
           <label className="field">
-            <span className="label">Config (JSON)</span>
+            <span className="label">{t("Config (JSON)")}</span>
             <textarea
               value={form.config}
               onChange={(e) => setForm({ ...form, config: e.target.value })}
@@ -134,15 +136,15 @@ export function IngestionUI() {
           </label>
         </div>
         <div className="flex gap-8">
-          <button className="btn btn-primary" onClick={handleCreate} disabled={!form.name}>Create</button>
-          <button className="btn" onClick={() => setShowCreate(false)}>Cancel</button>
+          <button className="btn btn-primary" onClick={handleCreate} disabled={!form.name}>{t("Create")}</button>
+          <button className="btn" onClick={() => setShowCreate(false)}>{t("Cancel")}</button>
         </div>
       </FormCard>
 
       {loading ? (
         <LoadingState />
       ) : sources.length === 0 ? (
-        <EmptyState message="No ingestion sources configured yet." />
+        <EmptyState message={t("No ingestion sources configured yet.")} />
       ) : (
         <div className="flex-col gap-16">
           {sources.map((s) => (
@@ -151,8 +153,8 @@ export function IngestionUI() {
                 <div>
                   <h3 style={{ margin: 0 }}>{s.name}</h3>
                   <div className="muted text-sm" style={{ marginTop: 4 }}>
-                    Type: {s.type} · {s.enabled ? "Active" : "Disabled"}
-                    {s.lastRunAt && ` · Last run: ${new Date(s.lastRunAt).toLocaleString()}`}
+                    {t("Type:")} {s.type} · {s.enabled ? t("Active") : t("Disabled")}
+                    {s.lastRunAt && ` · ${t("Last run:")} ${new Date(s.lastRunAt).toLocaleString()}`}
                   </div>
                 </div>
                 <button
@@ -160,20 +162,20 @@ export function IngestionUI() {
                   onClick={() => handleRun(s.id)}
                   disabled={running === s.id}
                 >
-                  {running === s.id ? "Running..." : "Run Now"}
+                  {running === s.id ? t("Running...") : t("Run Now")}
                 </button>
               </div>
 
               {s.runs.length > 0 && (
                 <div className="mt-12">
-                  <div className="text-sm font-semibold mb-6">Recent Runs:</div>
+                  <div className="text-sm font-semibold mb-6">{t("Recent Runs:")}</div>
                   {s.runs.map((r) => (
                     <div key={r.id} className="flex gap-16 text-sm border-t" style={{ padding: "4px 0" }}>
                       <span style={{ color: statusColor[r.status] ?? "var(--muted)" }}>{r.status}</span>
-                      <span>Found: {r.itemsFound}</span>
-                      <span style={{ color: "var(--success, #4caf50)" }}>New: {r.itemsNew}</span>
-                      <span>Updated: {r.itemsUpdated}</span>
-                      <span>Skipped: {r.itemsSkipped}</span>
+                      <span>{t("Found:")} {r.itemsFound}</span>
+                      <span style={{ color: "var(--success, #4caf50)" }}>{t("New:")} {r.itemsNew}</span>
+                      <span>{t("Updated:")} {r.itemsUpdated}</span>
+                      <span>{t("Skipped:")} {r.itemsSkipped}</span>
                       <span className="muted">{new Date(r.startedAt).toLocaleString()}</span>
                       {r.errorMsg && <span style={{ color: "var(--error)" }}>{r.errorMsg}</span>}
                     </div>

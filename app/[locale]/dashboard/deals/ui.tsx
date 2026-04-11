@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { StatusBadge, FilterToolbar, EmptyState, FormCard } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type DealRow = {
   id: string;
@@ -25,6 +26,7 @@ export function DealsConsole({ initialDeals, nodes, projects, isAdmin }: {
   projects: { id: string; name: string }[];
   isAdmin: boolean;
 }) {
+  const { t } = useAutoTranslate();
   const [deals, setDeals] = useState(initialDeals);
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState("");
@@ -58,48 +60,48 @@ export function DealsConsole({ initialDeals, nodes, projects, isAdmin }: {
       <FilterToolbar filters={STAGES} active={filter} onChange={setFilter} totalCount={deals.length} />
 
       {isAdmin && (
-        <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="New deal">
+        <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("New deal")}>
           <form onSubmit={createDeal} className="form">
             <label className="field">
-              <span className="label">Deal title</span>
-              <input placeholder="Deal title *" value={title} onChange={(e) => setTitle(e.target.value)} required />
+              <span className="label">{t("Deal title")}</span>
+              <input placeholder={t("Deal title *")} value={title} onChange={(e) => setTitle(e.target.value)} required />
             </label>
             <div className="grid-2 gap-12">
               <label className="field">
-                <span className="label">Lead node</span>
+                <span className="label">{t("Lead node")}</span>
                 <select value={leadNodeId} onChange={(e) => setLeadNodeId(e.target.value)} required>
-                  <option value="">Lead node *</option>
+                  <option value="">{t("Lead node *")}</option>
                   {nodes.map((n) => <option key={n.id} value={n.id}>{n.name}</option>)}
                 </select>
               </label>
               <label className="field">
-                <span className="label">Project</span>
+                <span className="label">{t("Project")}</span>
                 <select value={projectId} onChange={(e) => setProjectId(e.target.value)}>
-                  <option value="">No project</option>
+                  <option value="">{t("No project")}</option>
                   {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
               </label>
             </div>
             <div className="flex gap-8">
-              <button type="submit" className="button" disabled={busy}>{busy ? "Creating..." : "Create"}</button>
-              <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+              <button type="submit" className="button" disabled={busy}>{busy ? t("Creating...") : t("Create")}</button>
+              <button type="button" className="button-secondary" onClick={() => setShowForm(false)}>{t("Cancel")}</button>
             </div>
           </form>
         </FormCard>
       )}
 
       {filtered.length === 0 ? (
-        <EmptyState message="No deals found." />
+        <EmptyState message={t("No deals found.")} />
       ) : (
         <table className="data-table">
           <thead>
             <tr>
               <th style={{ width: 32 }}></th>
-              <th>Deal</th>
-              <th>Lead Node</th>
-              <th>Stage</th>
-              <th>Stats</th>
-              <th>Updated</th>
+              <th>{t("Deal")}</th>
+              <th>{t("Lead Node")}</th>
+              <th>{t("Stage")}</th>
+              <th>{t("Stats")}</th>
+              <th>{t("Updated")}</th>
             </tr>
           </thead>
           <tbody>
@@ -112,7 +114,7 @@ export function DealsConsole({ initialDeals, nodes, projects, isAdmin }: {
                   <Link href={`/dashboard/deals/${d.id}`} className="font-bold text-sm" style={{ color: "var(--accent)" }}>
                     {d.title}
                   </Link>
-                  {d.nextAction && <div className="muted text-xs">Next: {d.nextAction}</div>}
+                  {d.nextAction && <div className="muted text-xs">{t("Next:")} {d.nextAction}</div>}
                 </td>
                 <td>
                   <div className="text-sm">{d.leadNode.name}</div>

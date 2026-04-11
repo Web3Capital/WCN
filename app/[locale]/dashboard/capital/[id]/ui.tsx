@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { DetailLayout, StatusBadge } from "../../_components";
 
 type CapitalData = {
@@ -28,6 +29,7 @@ type CapitalData = {
 const STATUSES = ["PROSPECT", "QUALIFIED", "ACTIVE", "WARM", "IN_DD", "CLOSED", "PASSED", "DORMANT"];
 
 export function CapitalDetail({ profile, isAdmin }: { profile: CapitalData; isAdmin: boolean }) {
+  const { t } = useAutoTranslate();
   const [status, setStatus] = useState(profile.status);
   const [busy, setBusy] = useState(false);
 
@@ -47,50 +49,50 @@ export function CapitalDetail({ profile, isAdmin }: { profile: CapitalData; isAd
   return (
     <DetailLayout
       backHref="/dashboard/capital"
-      backLabel="All Capital"
+      backLabel={t("All Capital")}
       title={profile.name}
       subtitle={profile.entity || undefined}
       badge={<StatusBadge status={status} />}
       meta={profile.node ? (
-        <span>Node: <Link href={`/dashboard/nodes/${profile.node.id}`} style={{ color: "var(--accent)" }}>{profile.node.name}</Link></span>
+        <span>{t("Node:")} <Link href={`/dashboard/nodes/${profile.node.id}`} style={{ color: "var(--accent)" }}>{profile.node.name}</Link></span>
       ) : undefined}
     >
       <div className="grid-2 gap-16">
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Investment Profile</h3>
+          <h3 className="mt-0 mb-12">{t("Investment Profile")}</h3>
           <div className="flex-col gap-8 text-base">
             {(profile.ticketMin != null || profile.ticketMax != null) && (
-              <div><span className="muted">Ticket range:</span> ${profile.ticketMin?.toLocaleString() ?? "?"} – ${profile.ticketMax?.toLocaleString() ?? "?"}</div>
+              <div><span className="muted">{t("Ticket range:")}</span> ${profile.ticketMin?.toLocaleString() ?? "?"} – ${profile.ticketMax?.toLocaleString() ?? "?"}</div>
             )}
             {profile.investmentFocus.length > 0 && (
               <div>
-                <span className="muted">Focus:</span>
+                <span className="muted">{t("Focus:")}</span>
                 <div className="flex flex-wrap gap-6 mt-4">
                   {profile.investmentFocus.map((f) => <span key={f} className="badge text-xs">{f}</span>)}
                 </div>
               </div>
             )}
             {profile.structurePref.length > 0 && (
-              <div><span className="muted">Structure:</span> <span style={{ marginLeft: 6 }}>{profile.structurePref.join(", ")}</span></div>
+              <div><span className="muted">{t("Structure:")}</span> <span style={{ marginLeft: 6 }}>{profile.structurePref.join(", ")}</span></div>
             )}
             {profile.jurisdictionLimit.length > 0 && (
-              <div><span className="muted">Jurisdiction limits:</span> <span style={{ marginLeft: 6 }}>{profile.jurisdictionLimit.join(", ")}</span></div>
+              <div><span className="muted">{t("Jurisdiction limits:")}</span> <span style={{ marginLeft: 6 }}>{profile.jurisdictionLimit.join(", ")}</span></div>
             )}
-            {profile.restrictions && <div><span className="muted">Restrictions:</span> {profile.restrictions}</div>}
+            {profile.restrictions && <div><span className="muted">{t("Restrictions:")}</span> {profile.restrictions}</div>}
           </div>
         </div>
 
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Contact & Metrics</h3>
+          <h3 className="mt-0 mb-12">{t("Contact & Metrics")}</h3>
           <div className="flex-col gap-8 text-base">
-            {profile.contactName && <div><span className="muted">Contact:</span> {profile.contactName}</div>}
-            {profile.contactEmail && <div><span className="muted">Email:</span> {profile.contactEmail}</div>}
-            {profile.responseSpeed != null && <div><span className="muted">Response speed:</span> {profile.responseSpeed} days</div>}
-            {profile.activityScore != null && <div><span className="muted">Activity score:</span> {profile.activityScore}</div>}
+            {profile.contactName && <div><span className="muted">{t("Contact:")}</span> {profile.contactName}</div>}
+            {profile.contactEmail && <div><span className="muted">{t("Email:")}</span> {profile.contactEmail}</div>}
+            {profile.responseSpeed != null && <div><span className="muted">{t("Response speed:")}</span> {profile.responseSpeed} {t("days")}</div>}
+            {profile.activityScore != null && <div><span className="muted">{t("Activity score:")}</span> {profile.activityScore}</div>}
           </div>
           {profile.notes && (
             <div className="mt-12">
-              <span className="muted">Notes:</span>
+              <span className="muted">{t("Notes:")}</span>
               <p className="mt-4 mb-0" style={{ whiteSpace: "pre-wrap" }}>{profile.notes}</p>
             </div>
           )}
@@ -99,7 +101,7 @@ export function CapitalDetail({ profile, isAdmin }: { profile: CapitalData; isAd
 
       {isAdmin && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Status Actions</h3>
+          <h3 className="mt-0 mb-12">{t("Status Actions")}</h3>
           <div className="flex flex-wrap gap-8">
             {STATUSES.map((s) => (
               <button
@@ -117,7 +119,7 @@ export function CapitalDetail({ profile, isAdmin }: { profile: CapitalData; isAd
 
       {profile.deals.length > 0 && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Related Deals</h3>
+          <h3 className="mt-0 mb-12">{t("Related Deals")}</h3>
           <div className="flex-col gap-8">
             {profile.deals.map((d) => (
               <div key={d.id} className="flex items-center gap-8 text-base">
@@ -132,7 +134,7 @@ export function CapitalDetail({ profile, isAdmin }: { profile: CapitalData; isAd
 
       {profile.blacklist.length > 0 && isAdmin && (
         <div className="card p-18" style={{ borderLeft: "3px solid var(--red)" }}>
-          <h3 className="mt-0 mb-8">Blacklist</h3>
+          <h3 className="mt-0 mb-8">{t("Blacklist")}</h3>
           <div className="flex flex-wrap gap-6">
             {profile.blacklist.map((b) => <span key={b} className="badge badge-red text-xs">{b}</span>)}
           </div>

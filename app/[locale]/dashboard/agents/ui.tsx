@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { StatusBadge, FormCard, EmptyState } from "../_components";
 
 type NodeRow = { id: string; name: string; type: string };
@@ -26,6 +27,7 @@ export function AgentsConsole({
   nodes: NodeRow[];
   readOnly?: boolean;
 }) {
+  const { t } = useAutoTranslate();
   const [rows, setRows] = useState<AgentRow[]>(initial);
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
   const selected = useMemo(() => rows.find((r) => r.id === selectedId) ?? null, [rows, selectedId]);
@@ -39,7 +41,7 @@ export function AgentsConsole({
   async function refresh() {
     const res = await fetch("/api/agents", { cache: "no-store" });
     const data = await res.json();
-    if (!data?.ok) throw new Error(data?.error ?? "Failed to load agents.");
+    if (!data?.ok) throw new Error(data?.error ?? t("Failed to load agents."));
     const list = data.data ?? [];
     setRows(list);
     if (!selectedId && list[0]?.id) setSelectedId(list[0].id);
@@ -60,12 +62,12 @@ export function AgentsConsole({
         })
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Create failed.");
+      if (!data?.ok) throw new Error(data?.error ?? t("Create failed."));
       await refresh();
       setCreate({ name: "", type: "EXECUTION", ownerNodeId: "", endpoint: "" });
       setShowForm(false);
     } catch (e: any) {
-      setError(e?.message ?? "Create failed.");
+      setError(e?.message ?? t("Create failed."));
     } finally {
       setBusy(false);
     }
@@ -82,10 +84,10 @@ export function AgentsConsole({
         body: JSON.stringify(patch)
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Save failed.");
+      if (!data?.ok) throw new Error(data?.error ?? t("Save failed."));
       await refresh();
     } catch (e: any) {
-      setError(e?.message ?? "Save failed.");
+      setError(e?.message ?? t("Save failed."));
     } finally {
       setBusy(false);
     }
@@ -102,10 +104,10 @@ export function AgentsConsole({
         body: JSON.stringify(perm)
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Add permission failed.");
+      if (!data?.ok) throw new Error(data?.error ?? t("Add permission failed."));
       await refresh();
     } catch (e: any) {
-      setError(e?.message ?? "Add permission failed.");
+      setError(e?.message ?? t("Add permission failed."));
     } finally {
       setBusy(false);
     }
@@ -122,10 +124,10 @@ export function AgentsConsole({
         body: JSON.stringify({ permissionId })
       });
       const data = await res.json();
-      if (!data?.ok) throw new Error(data?.error ?? "Delete permission failed.");
+      if (!data?.ok) throw new Error(data?.error ?? t("Delete permission failed."));
       await refresh();
     } catch (e: any) {
-      setError(e?.message ?? "Delete permission failed.");
+      setError(e?.message ?? t("Delete permission failed."));
     } finally {
       setBusy(false);
     }
@@ -135,25 +137,25 @@ export function AgentsConsole({
     <div className="apps-layout">
       <div>
         {!readOnly ? (
-          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel="Register agent">
+          <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("Register agent")}>
             <div className="form mb-14">
               <label className="field">
-                <span className="label">Name</span>
+                <span className="label">{t("Name")}</span>
                 <input value={create.name} onChange={(e) => setCreate((s) => ({ ...s, name: e.target.value }))} />
               </label>
               <div className="grid-2 gap-12">
                 <label className="field">
-                  <span className="label">Type</span>
+                  <span className="label">{t("Type")}</span>
                   <select value={create.type} onChange={(e) => setCreate((s) => ({ ...s, type: e.target.value }))}>
-                    {AGENT_TYPES.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
+                    {AGENT_TYPES.map((v) => (
+                      <option key={v} value={v}>
+                        {v}
                       </option>
                     ))}
                   </select>
                 </label>
                 <label className="field">
-                  <span className="label">Owner node</span>
+                  <span className="label">{t("Owner node")}</span>
                   <select
                     value={create.ownerNodeId}
                     onChange={(e) => setCreate((s) => ({ ...s, ownerNodeId: e.target.value }))}
@@ -168,7 +170,7 @@ export function AgentsConsole({
                 </label>
               </div>
               <label className="field">
-                <span className="label">Endpoint (optional)</span>
+                <span className="label">{t("Endpoint (optional)")}</span>
                 <input value={create.endpoint} onChange={(e) => setCreate((s) => ({ ...s, endpoint: e.target.value }))} />
               </label>
               <button
@@ -177,7 +179,7 @@ export function AgentsConsole({
                 disabled={busy || !create.name.trim() || !create.ownerNodeId}
                 onClick={onCreate}
               >
-                {busy ? "Working..." : "Create"}
+                {busy ? t("Working...") : t("Create")}
               </button>
               {error ? <p className="form-error">{error}</p> : null}
             </div>
@@ -185,7 +187,7 @@ export function AgentsConsole({
         ) : null}
 
         <div className="pill mb-10">
-          Agents ({rows.length})
+          {t("Agents")} ({rows.length})
         </div>
         <div className="apps-list">
           {rows.map((a) => {
@@ -214,12 +216,12 @@ export function AgentsConsole({
 
       <div>
         <div className="pill mb-10">
-          Agent details
+          {t("Agent details")}
         </div>
         {selected ? (
           <div className="form">
             <label className="field">
-              <span className="label">Name</span>
+              <span className="label">{t("Name")}</span>
               <input
                 key={selected.id + "n"}
                 defaultValue={selected.name}
@@ -230,19 +232,19 @@ export function AgentsConsole({
             </label>
             <div className="grid-2 gap-12">
               <label className="field">
-                <span className="label">Status</span>
+                <span className="label">{t("Status")}</span>
                 <select
                   key={selected.id + "s"}
                   defaultValue={selected.status}
                   disabled={readOnly}
                   onChange={readOnly ? undefined : (e) => onSave({ status: e.target.value })}
                 >
-                  <option value="ACTIVE">ACTIVE</option>
-                  <option value="DISABLED">DISABLED</option>
+                  <option value="ACTIVE">{t("ACTIVE")}</option>
+                  <option value="DISABLED">{t("DISABLED")}</option>
                 </select>
               </label>
               <label className="field">
-                <span className="label">Endpoint</span>
+                <span className="label">{t("Endpoint")}</span>
                 <input
                   key={selected.id + "e"}
                   defaultValue={selected.endpoint ?? ""}
@@ -254,17 +256,17 @@ export function AgentsConsole({
             </div>
 
             <div className="pill mt-10">
-              Permissions
+              {t("Permissions")}
             </div>
             {!readOnly ? (
               <>
                 <div className="grid-3 gap-12">
                   <label className="field">
-                    <span className="label">Scope</span>
+                    <span className="label">{t("Scope")}</span>
                     <input value={perm.scope} onChange={(e) => setPerm((s) => ({ ...s, scope: e.target.value }))} />
                   </label>
                   <label className="field">
-                    <span className="label">Audit level</span>
+                    <span className="label">{t("Audit level")}</span>
                     <input
                       type="number"
                       value={perm.auditLevel}
@@ -272,18 +274,18 @@ export function AgentsConsole({
                     />
                   </label>
                   <label className="field">
-                    <span className="label">Can write</span>
+                    <span className="label">{t("Can write")}</span>
                     <select
                       value={perm.canWrite ? "yes" : "no"}
                       onChange={(e) => setPerm((s) => ({ ...s, canWrite: e.target.value === "yes" }))}
                     >
-                      <option value="no">No</option>
-                      <option value="yes">Yes</option>
+                      <option value="no">{t("No")}</option>
+                      <option value="yes">{t("Yes")}</option>
                     </select>
                   </label>
                 </div>
                 <button className="button-secondary" type="button" disabled={busy || !perm.scope.trim()} onClick={addPermission}>
-                  {busy ? "Working..." : "Add permission"}
+                  {busy ? t("Working...") : t("Add permission")}
                 </button>
               </>
             ) : null}
@@ -294,12 +296,12 @@ export function AgentsConsole({
                   <div>
                     <div className="font-bold">{p.scope}</div>
                     <div className="muted text-sm">
-                      audit {p.auditLevel} · {p.canWrite ? "write" : "read"}
+                      {t("audit")} {p.auditLevel} · {p.canWrite ? t("write") : t("read")}
                     </div>
                   </div>
                   {!readOnly ? (
                     <button className="button-secondary" type="button" disabled={busy} onClick={() => deletePermission(p.id)}>
-                      Remove
+                      {t("Remove")}
                     </button>
                   ) : null}
                 </div>
@@ -308,11 +310,11 @@ export function AgentsConsole({
 
             {error ? <p className="form-error">{error}</p> : null}
             <button className="button-secondary" type="button" disabled={busy} onClick={() => refresh()}>
-              Refresh
+              {t("Refresh")}
             </button>
           </div>
         ) : (
-          <EmptyState message="Select an agent." />
+          <EmptyState message={t("Select an agent.")} />
         )}
       </div>
     </div>

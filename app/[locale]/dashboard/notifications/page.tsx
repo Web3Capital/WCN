@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { NotificationsUI } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -20,8 +21,8 @@ export default async function NotificationsPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Console</span>
-        <h1>Notifications</h1>
+        <span className="eyebrow"><T>Console</T></span>
+        <h1><T>Notifications</T></h1>
         <NotificationsUI notifications={JSON.parse(JSON.stringify(notifications))} />
       </div>
     </div>

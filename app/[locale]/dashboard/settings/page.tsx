@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { SettingsPage } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -19,9 +20,9 @@ export default async function DashboardSettingsPage() {
   return (
     <div className="dashboard-page section">
       <div className="container" style={{ maxWidth: 720 }}>
-        <span className="eyebrow">Account</span>
-        <h1>Settings</h1>
-        <p className="muted">Security, sessions, and preferences.</p>
+        <span className="eyebrow"><T>Account</T></span>
+        <h1><T>Settings</T></h1>
+        <p className="muted"><T>Security, sessions, and preferences.</T></p>
         <SettingsPage
           has2FA={dbUser?.twoFactorEnabled ?? false}
           hasPassword={!!dbUser?.passwordHash}

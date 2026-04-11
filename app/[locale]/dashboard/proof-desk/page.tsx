@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { getOwnedNodeIds, memberEvidenceWhere } from "@/lib/member-data-scope";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { ProofDeskConsole } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -50,9 +51,9 @@ export default async function ProofDeskPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Verification</span>
-        <h1>Evidence & Review</h1>
-        <p className="muted">Submit evidence, track review progress, and manage the reviewer queue.</p>
+        <span className="eyebrow"><T>Verification</T></span>
+        <h1><T>Evidence & Review</T></h1>
+        <p className="muted"><T>Submit evidence, track review progress, and manage the reviewer queue.</T></p>
         <ProofDeskConsole
           evidences={JSON.parse(JSON.stringify(evidences))}
           reviewQueue={JSON.parse(JSON.stringify(reviewQueue))}

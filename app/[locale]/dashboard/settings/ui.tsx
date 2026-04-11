@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type NotifPref = { channel: string; enabled: boolean };
 
 function NotificationPreferences() {
+  const { t } = useAutoTranslate();
   const [prefs, setPrefs] = useState<NotifPref[]>([]);
   const [busy, setBusy] = useState(false);
 
@@ -36,7 +38,7 @@ function NotificationPreferences() {
   const channels = ["EMAIL", "IN_APP", "TELEGRAM", "SLACK"];
   return (
     <div className="card p-20">
-      <h3 className="mt-0 mb-12">Notification Preferences</h3>
+      <h3 className="mt-0 mb-12">{t("Notification Preferences")}</h3>
       <div className="flex-col gap-8">
         {channels.map((ch) => {
           const pref = prefs.find((p) => p.channel === ch);
@@ -59,6 +61,7 @@ function NotificationPreferences() {
 }
 
 export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPassword: boolean }) {
+  const { t } = useAutoTranslate();
   const [currentPw, setCurrentPw] = useState("");
   const [newPw, setNewPw] = useState("");
   const [pwBusy, setPwBusy] = useState(false);
@@ -78,9 +81,9 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
         body: JSON.stringify({ currentPassword: currentPw, newPassword: newPw }),
       });
       const data = await res.json();
-      setPwMsg(data.ok ? "Password updated." : (data.error?.message || data.error || "Failed."));
+      setPwMsg(data.ok ? t("Password updated.") : (data.error?.message || data.error || t("Failed.")));
       if (data.ok) { setCurrentPw(""); setNewPw(""); }
-    } catch { setPwMsg("Network error."); }
+    } catch { setPwMsg(t("Network error.")); }
     finally { setPwBusy(false); }
   }
 
@@ -92,34 +95,34 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
       const data = await res.json();
       setSessionMsg(
         data.ok
-          ? `All sessions revoked. You will be signed out shortly.`
-          : "Failed to revoke sessions.",
+          ? t("All sessions revoked. You will be signed out shortly.")
+          : t("Failed to revoke sessions."),
       );
       if (data.ok) {
         setTimeout(() => { window.location.href = "/login"; }, 2000);
       }
-    } catch { setSessionMsg("Network error."); }
+    } catch { setSessionMsg(t("Network error.")); }
     finally { setSessionBusy(false); }
   }
 
   return (
     <div className="flex-col gap-20 mt-20">
       <div className="card p-20">
-        <h3 className="mt-0 mb-12">Two-Factor Authentication</h3>
+        <h3 className="mt-0 mb-12">{t("Two-Factor Authentication")}</h3>
         {has2FA ? (
           <div>
-            <span className="badge badge-green">Enabled</span>
+            <span className="badge badge-green">{t("Enabled")}</span>
             <p className="muted mt-8 mb-0" style={{ fontSize: 13 }}>
-              Your account is protected with an authenticator app.
+              {t("Your account is protected with an authenticator app.")}
             </p>
           </div>
         ) : (
           <div>
             <p className="muted mt-0 mb-12">
-              Add an extra layer of security to your account.
+              {t("Add an extra layer of security to your account.")}
             </p>
             <Link href="/account/2fa" className="button" style={{ display: "inline-block" }}>
-              Set up 2FA
+              {t("Set up 2FA")}
             </Link>
           </div>
         )}
@@ -127,10 +130,10 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
 
       {hasPassword && (
         <div className="card p-20">
-          <h3 className="mt-0 mb-12">Change Password</h3>
+          <h3 className="mt-0 mb-12">{t("Change Password")}</h3>
           <form onSubmit={changePassword} className="form">
             <label className="field">
-              <span className="label">Current password</span>
+              <span className="label">{t("Current password")}</span>
               <input
                 type="password"
                 value={currentPw}
@@ -140,7 +143,7 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
               />
             </label>
             <label className="field">
-              <span className="label">New password (min 8 characters)</span>
+              <span className="label">{t("New password (min 8 characters)")}</span>
               <input
                 type="password"
                 value={newPw}
@@ -156,7 +159,7 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
               </p>
             )}
             <button type="submit" className="button-secondary" disabled={pwBusy} style={{ width: "fit-content" }}>
-              {pwBusy ? "Saving..." : "Update password"}
+              {pwBusy ? t("Saving...") : t("Update password")}
             </button>
           </form>
         </div>
@@ -164,9 +167,9 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
 
       {!hasPassword && (
         <div className="card p-20">
-          <h3 className="mt-0 mb-12">Password</h3>
+          <h3 className="mt-0 mb-12">{t("Password")}</h3>
           <p className="muted mt-0 mb-0" style={{ fontSize: 13 }}>
-            You signed up with a social account and do not have a password set.
+            {t("You signed up with a social account and do not have a password set.")}
           </p>
         </div>
       )}
@@ -174,9 +177,9 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
       <NotificationPreferences />
 
       <div className="card p-20">
-        <h3 className="mt-0 mb-12">Active Sessions</h3>
+        <h3 className="mt-0 mb-12">{t("Active Sessions")}</h3>
         <p className="muted mt-0 mb-12" style={{ fontSize: 13 }}>
-          Sign out of all devices. This will invalidate all active sessions including the current one.
+          {t("Sign out of all devices. This will invalidate all active sessions including the current one.")}
         </p>
         {sessionMsg && (
           <p role="status" className="mt-0 mb-8" style={{ color: "var(--amber)", fontSize: 13 }}>
@@ -184,7 +187,7 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
           </p>
         )}
         <button className="button-secondary" onClick={revokeAllSessions} disabled={sessionBusy}>
-          {sessionBusy ? "Revoking..." : "Revoke all sessions"}
+          {sessionBusy ? t("Revoking...") : t("Revoke all sessions")}
         </button>
       </div>
     </div>

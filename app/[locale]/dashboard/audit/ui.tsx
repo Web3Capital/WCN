@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { EmptyState } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type AuditRow = {
   id: string;
@@ -19,6 +20,7 @@ function fmtDate(v: string | Date) {
 }
 
 export function AuditConsole({ initial, actions }: { initial: AuditRow[]; actions: string[] }) {
+  const { t } = useAutoTranslate();
   const [rows, setRows] = useState<AuditRow[]>(initial);
   const [filterAction, setFilterAction] = useState("");
   const [filterTarget, setFilterTarget] = useState("");
@@ -56,30 +58,30 @@ export function AuditConsole({ initial, actions }: { initial: AuditRow[]; action
     <div>
       <div className="grid-3 gap-12 mb-14">
         <label className="field">
-          <span className="label">Action</span>
+          <span className="label">{t("Action")}</span>
           <select value={filterAction} onChange={(e) => setFilterAction(e.target.value)}>
-            <option value="">All</option>
+            <option value="">{t("All")}</option>
             {actions.map((a) => (
               <option key={a} value={a}>{a}</option>
             ))}
           </select>
         </label>
         <label className="field">
-          <span className="label">Target type</span>
+          <span className="label">{t("Target type")}</span>
           <input
             value={filterTarget}
             onChange={(e) => setFilterTarget(e.target.value)}
-            placeholder="e.g. POB, USER, NODE"
+            placeholder={t("e.g. POB, USER, NODE")}
           />
         </label>
         <label className="field">
-          <span className="label">Since</span>
+          <span className="label">{t("Since")}</span>
           <input type="date" value={since} onChange={(e) => setSince(e.target.value)} />
         </label>
       </div>
       <div className="cta-row mb-14">
         <button className="button" type="button" disabled={loading} onClick={() => search()}>
-          {loading ? "Loading..." : "Search"}
+          {loading ? t("Loading...") : t("Search")}
         </button>
       </div>
 
@@ -96,13 +98,13 @@ export function AuditConsole({ initial, actions }: { initial: AuditRow[]; action
               <div style={{ display: "grid", gap: 2 }}>
                 <div className="font-bold" style={{ color: "var(--text)" }}>{r.action}</div>
                 <div className="muted text-sm">
-                  {r.targetType}:{r.targetId.slice(0, 8)} · {r.actor?.name || r.actor?.email || "system"}
+                  {r.targetType}:{r.targetId.slice(0, 8)} · {r.actor?.name || r.actor?.email || t("system")}
                 </div>
                 <div className="muted text-xs">{fmtDate(r.createdAt)}</div>
               </div>
             </button>
           ))}
-          {rows.length === 0 && <EmptyState message="No audit events found." />}
+          {rows.length === 0 && <EmptyState message={t("No audit events found.")} />}
         </div>
 
         <div className="apps-detail">
@@ -117,17 +119,17 @@ export function AuditConsole({ initial, actions }: { initial: AuditRow[]; action
               </div>
               <div className="grid-2 mt-14 gap-12">
                 <div className="kpi">
-                  <strong>Actor</strong>
-                  <span className="muted">{selected.actor?.name || selected.actor?.email || "system"}</span>
+                  <strong>{t("Actor")}</strong>
+                  <span className="muted">{selected.actor?.name || selected.actor?.email || t("system")}</span>
                 </div>
                 <div className="kpi">
-                  <strong>Target ID</strong>
+                  <strong>{t("Target ID")}</strong>
                   <span className="muted text-sm" style={{ wordBreak: "break-all" }}>{selected.targetId}</span>
                 </div>
               </div>
               {selected.metadata ? (
                 <div className="mt-14">
-                  <div className="label">Metadata</div>
+                  <div className="label">{t("Metadata")}</div>
                   <pre
                     className="muted text-xs"
                     style={{
@@ -145,7 +147,7 @@ export function AuditConsole({ initial, actions }: { initial: AuditRow[]; action
               ) : null}
             </>
           ) : (
-            <EmptyState message="Select an event to view details." />
+            <EmptyState message={t("Select an event to view details.")} />
           )}
         </div>
       </div>
@@ -153,7 +155,7 @@ export function AuditConsole({ initial, actions }: { initial: AuditRow[]; action
       {cursor ? (
         <div className="mt-14 text-center">
           <button className="button-secondary" type="button" disabled={loading} onClick={() => search(true)}>
-            {loading ? "Loading..." : "Load more"}
+            {loading ? t("Loading...") : t("Load more")}
           </button>
         </div>
       ) : null}

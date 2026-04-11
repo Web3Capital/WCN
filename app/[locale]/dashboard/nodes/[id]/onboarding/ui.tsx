@@ -1,6 +1,7 @@
 "use client";
 
 import { DetailLayout, StatCard } from "../../../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type NodeData = {
   id: string;
@@ -30,17 +31,18 @@ function CheckItem({ label, done }: { label: string; done: boolean }) {
 }
 
 export function NodeOnboardingUI({ node, isAdmin }: { node: NodeData; isAdmin: boolean }) {
+  const { t } = useAutoTranslate();
   const hasContract = !!node.contractSentAt;
   const hasProjects = node.projects.length > 0;
   const hasTasks = node.tasksAsOwner.length > 0;
   const isLive = node.status === "LIVE";
 
   const steps = [
-    { label: "Profile completed", done: true },
-    { label: "Contract sent", done: hasContract },
-    { label: "First pipeline project added", done: hasProjects },
-    { label: "First task assigned", done: hasTasks },
-    { label: "Node goes live", done: isLive },
+    { label: t("Profile completed"), done: true },
+    { label: t("Contract sent"), done: hasContract },
+    { label: t("First pipeline project added"), done: hasProjects },
+    { label: t("First task assigned"), done: hasTasks },
+    { label: t("Node goes live"), done: isLive },
   ];
 
   const completedCount = steps.filter((s) => s.done).length;
@@ -49,13 +51,13 @@ export function NodeOnboardingUI({ node, isAdmin }: { node: NodeData; isAdmin: b
   return (
     <DetailLayout
       backHref={`/dashboard/nodes/${node.id}`}
-      backLabel={`Back to ${node.name}`}
-      title={`Onboarding: ${node.name}`}
-      subtitle="Track onboarding progress for the first 14 days."
+      backLabel={t(`Back to ${node.name}`)}
+      title={t(`Onboarding: ${node.name}`)}
+      subtitle={t("Track onboarding progress for the first 14 days.")}
     >
       <div className="card p-20">
         <div className="flex-between mb-12">
-          <h2 className="text-lg font-semibold mt-0 mb-0">Progress</h2>
+          <h2 className="text-lg font-semibold mt-0 mb-0">{t("Progress")}</h2>
           <span className="stat-number" style={{ fontSize: 24 }}>{progress}%</span>
         </div>
 
@@ -65,7 +67,7 @@ export function NodeOnboardingUI({ node, isAdmin }: { node: NodeData; isAdmin: b
 
         {node.onboardingScore != null && (
           <p className="muted text-xs mb-12">
-            Onboarding Score: <strong>{node.onboardingScore}/100</strong>
+            {t("Onboarding Score:")} <strong>{node.onboardingScore}/100</strong>
           </p>
         )}
 
@@ -75,10 +77,10 @@ export function NodeOnboardingUI({ node, isAdmin }: { node: NodeData; isAdmin: b
       </div>
 
       <div className="grid-4">
-        <StatCard label="Projects" value={node.projects.length} />
-        <StatCard label="Tasks Owned" value={node.tasksAsOwner.length} />
-        <StatCard label="Contract" value={hasContract ? "Sent" : "Pending"} />
-        <StatCard label="Go Live" value={node.goLiveAt ? new Date(node.goLiveAt).toLocaleDateString() : "Not yet"} />
+        <StatCard label={t("Projects")} value={node.projects.length} />
+        <StatCard label={t("Tasks Owned")} value={node.tasksAsOwner.length} />
+        <StatCard label={t("Contract")} value={hasContract ? t("Sent") : t("Pending")} />
+        <StatCard label={t("Go Live")} value={node.goLiveAt ? new Date(node.goLiveAt).toLocaleDateString() : t("Not yet")} />
       </div>
     </DetailLayout>
   );

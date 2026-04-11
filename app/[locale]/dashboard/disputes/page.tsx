@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { DisputesUI } from "./ui";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 
 export const dynamic = "force-dynamic";
 
@@ -28,8 +29,8 @@ export default async function DisputesPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Verification</span>
-        <h1>Disputes</h1>
+        <span className="eyebrow"><T>Verification</T></span>
+        <h1><T>Disputes</T></h1>
         <DisputesUI disputes={JSON.parse(JSON.stringify(disputes))} />
       </div>
     </div>

@@ -7,6 +7,7 @@ import { TasksConsole } from "./ui";
 import { getOwnedNodeIds, memberTasksWhere, memberProjectsWhere } from "@/lib/member-data-scope";
 import { redactTaskForMember, redactNodeForMember } from "@/lib/member-redact";
 import { isAdminRole } from "@/lib/permissions";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 
 export const dynamic = "force-dynamic";
 
@@ -38,9 +39,9 @@ export default async function TasksPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Work</span>
-        <h1>Task system</h1>
-        <p className="muted">Structure work into tasks, assign nodes, and track progress.</p>
+        <span className="eyebrow"><T>Work</T></span>
+        <h1><T>Task system</T></h1>
+        <p className="muted"><T>Structure work into tasks, assign nodes, and track progress.</T></p>
         {!isAdmin ? <ReadOnlyBanner /> : null}
         <div className="card" style={{ marginTop: 18 }}>
           <TasksConsole initial={safeTasks as any} projects={projects as any} nodes={safeNodes as any} readOnly={!isAdmin} />

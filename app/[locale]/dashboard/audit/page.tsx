@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { AuditConsole } from "./ui";
 import { can } from "@/lib/permissions";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 
 export const dynamic = "force-dynamic";
 
@@ -16,11 +17,11 @@ export default async function AuditPage() {
     return (
       <div className="dashboard-page section">
         <div className="container">
-          <span className="eyebrow">Governance</span>
-          <h1>Audit log</h1>
+          <span className="eyebrow"><T>Governance</T></span>
+          <h1><T>Audit log</T></h1>
           <div className="card" style={{ marginTop: 18, padding: "14px 16px" }}>
             <p className="muted" style={{ margin: 0 }}>
-              You do not have permission to view the audit log.
+              <T>You do not have permission to view the audit log.</T>
             </p>
           </div>
         </div>
@@ -41,9 +42,9 @@ export default async function AuditPage() {
   return (
     <div className="dashboard-page section">
       <div className="container">
-        <span className="eyebrow">Admin</span>
-        <h1>Audit log</h1>
-        <p className="muted">Browse system events — status changes, creations, settlements, and role updates.</p>
+        <span className="eyebrow"><T>Admin</T></span>
+        <h1><T>Audit log</T></h1>
+        <p className="muted"><T>Browse system events — status changes, creations, settlements, and role updates.</T></p>
         <div className="card" style={{ marginTop: 18 }}>
           <AuditConsole initial={logs as any} actions={actionList} />
         </div>

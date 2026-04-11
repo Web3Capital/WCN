@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { DetailLayout, StatusBadge } from "../../_components";
 
 type DealData = {
@@ -35,6 +36,7 @@ export function DealDetail({ deal, nodes, isAdmin }: {
   nodes: { id: string; name: string }[];
   isAdmin: boolean;
 }) {
+  const { t } = useAutoTranslate();
   const [stage, setStage] = useState(deal.stage);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,7 +58,7 @@ export function DealDetail({ deal, nodes, isAdmin }: {
       });
       const data = await res.json();
       if (data.ok) setStage(s);
-      else setError(data.error || "Transition failed.");
+      else setError(data.error || t("Transition failed."));
     } finally { setBusy(false); }
   }
 
@@ -117,7 +119,7 @@ export function DealDetail({ deal, nodes, isAdmin }: {
   return (
     <DetailLayout
       backHref="/dashboard/deals"
-      backLabel="All Deals"
+      backLabel={t("All Deals")}
       title={deal.title}
       badge={
         <span className="flex items-center gap-6">
@@ -129,19 +131,19 @@ export function DealDetail({ deal, nodes, isAdmin }: {
       }
       meta={
         <>
-          <span>Lead: {deal.leadNode.name}</span>
+          <span>{t("Lead:")} {deal.leadNode.name}</span>
           {deal.project && (
-            <span>Project: <Link href={`/dashboard/projects/${deal.project.id}`} style={{ color: "var(--accent)" }}>{deal.project.name}</Link></span>
+            <span>{t("Project:")} <Link href={`/dashboard/projects/${deal.project.id}`} style={{ color: "var(--accent)" }}>{deal.project.name}</Link></span>
           )}
           {deal.capital && (
-            <span>Capital: <Link href={`/dashboard/capital/${deal.capital.id}`} style={{ color: "var(--accent)" }}>{deal.capital.name}</Link></span>
+            <span>{t("Capital:")} <Link href={`/dashboard/capital/${deal.capital.id}`} style={{ color: "var(--accent)" }}>{deal.capital.name}</Link></span>
           )}
         </>
       }
     >
       {isAdmin && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Stage Transition</h3>
+          <h3 className="mt-0 mb-12">{t("Stage Transition")}</h3>
           <div className="flex flex-wrap gap-6">
             {STAGES.map((s) => (
               <button key={s} className="button-secondary text-xs" disabled={busy || s === stage} onClick={() => transitionStage(s)}>
@@ -155,7 +157,7 @@ export function DealDetail({ deal, nodes, isAdmin }: {
 
       <div className="grid-2 gap-16">
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Participants ({participants.length})</h3>
+          <h3 className="mt-0 mb-12">{t("Participants")} ({participants.length})</h3>
           <div className="flex-col gap-8">
             {participants.map((p) => (
               <div key={p.id} className="flex items-center gap-8 text-base">
@@ -168,32 +170,32 @@ export function DealDetail({ deal, nodes, isAdmin }: {
           {isAdmin && (
             <div className="flex gap-8 mt-8">
               <select value={addNodeId} onChange={(e) => setAddNodeId(e.target.value)} style={{ flex: 1 }}>
-                <option value="">Add node...</option>
+                <option value="">{t("Add node...")}</option>
                 {nodes.map((n) => <option key={n.id} value={n.id}>{n.name}</option>)}
               </select>
-              <button className="button-secondary text-xs" onClick={addParticipant} disabled={!addNodeId}>Add</button>
+              <button className="button-secondary text-xs" onClick={addParticipant} disabled={!addNodeId}>{t("Add")}</button>
             </div>
           )}
         </div>
 
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Milestones ({milestones.length})</h3>
+          <h3 className="mt-0 mb-12">{t("Milestones")} ({milestones.length})</h3>
           <div className="flex-col gap-8">
             {milestones.map((m) => (
               <div key={m.id} className="flex items-center gap-8 text-base">
                 <span className={`status-dot ${m.doneAt ? "status-dot-green" : "status-dot-amber"}`} />
                 <span className="font-semibold" style={{ textDecoration: m.doneAt ? "line-through" : undefined }}>{m.title}</span>
-                {m.dueAt && !m.doneAt && <span className="muted text-xs">Due {new Date(m.dueAt).toLocaleDateString()}</span>}
+                {m.dueAt && !m.doneAt && <span className="muted text-xs">{t("Due")} {new Date(m.dueAt).toLocaleDateString()}</span>}
                 {!m.doneAt && isAdmin && (
-                  <button className="button-secondary text-xs" style={{ padding: "2px 8px" }} onClick={() => completeMilestone(m.id)}>Done</button>
+                  <button className="button-secondary text-xs" style={{ padding: "2px 8px" }} onClick={() => completeMilestone(m.id)}>{t("Done")}</button>
                 )}
               </div>
             ))}
           </div>
           {isAdmin && (
             <div className="flex gap-8 mt-8">
-              <input placeholder="New milestone" value={msTitle} onChange={(e) => setMsTitle(e.target.value)} style={{ flex: 1 }} />
-              <button className="button-secondary text-xs" onClick={addMilestone} disabled={!msTitle.trim()}>Add</button>
+              <input placeholder={t("New milestone")} value={msTitle} onChange={(e) => setMsTitle(e.target.value)} style={{ flex: 1 }} />
+              <button className="button-secondary text-xs" onClick={addMilestone} disabled={!msTitle.trim()}>{t("Add")}</button>
             </div>
           )}
         </div>
@@ -201,29 +203,29 @@ export function DealDetail({ deal, nodes, isAdmin }: {
 
       {deal.description && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-8">Description</h3>
+          <h3 className="mt-0 mb-8">{t("Description")}</h3>
           <p className="mt-0 mb-0" style={{ whiteSpace: "pre-wrap" }}>{deal.description}</p>
         </div>
       )}
 
       {deal.nextAction && (
         <div className="card p-18" style={{ borderLeft: "3px solid var(--accent)" }}>
-          <h3 className="mt-0 mb-4">Next Action</h3>
+          <h3 className="mt-0 mb-4">{t("Next Action")}</h3>
           <p className="mt-0 mb-0">{deal.nextAction}</p>
-          {deal.nextActionDueAt && <p className="muted mt-4 mb-0 text-sm">Due: {new Date(deal.nextActionDueAt).toLocaleDateString()}</p>}
+          {deal.nextActionDueAt && <p className="muted mt-4 mb-0 text-sm">{t("Due:")} {new Date(deal.nextActionDueAt).toLocaleDateString()}</p>}
         </div>
       )}
 
       {deal.tasks.length > 0 && (
         <div className="card p-18">
-          <h3 className="mt-0 mb-12">Tasks ({deal._count.tasks})</h3>
+          <h3 className="mt-0 mb-12">{t("Tasks")} ({deal._count.tasks})</h3>
           <div className="flex-col gap-8">
-            {deal.tasks.map((t) => (
-              <Link key={t.id} href={`/dashboard/tasks/${t.id}`} className="flex items-center gap-8 text-base">
-                <span className={`status-dot ${t.status === "CLOSED" || t.status === "ACCEPTED" ? "status-dot-green" : t.status === "CANCELLED" ? "status-dot-red" : "status-dot-amber"}`} />
-                <span className="font-semibold">{t.title}</span>
-                <span className="badge text-xs">{t.type}</span>
-                <StatusBadge status={t.status} className="text-xs" />
+            {deal.tasks.map((task) => (
+              <Link key={task.id} href={`/dashboard/tasks/${task.id}`} className="flex items-center gap-8 text-base">
+                <span className={`status-dot ${task.status === "CLOSED" || task.status === "ACCEPTED" ? "status-dot-green" : task.status === "CANCELLED" ? "status-dot-red" : "status-dot-amber"}`} />
+                <span className="font-semibold">{task.title}</span>
+                <span className="badge text-xs">{task.type}</span>
+                <StatusBadge status={task.status} className="text-xs" />
               </Link>
             ))}
           </div>
@@ -233,7 +235,7 @@ export function DealDetail({ deal, nodes, isAdmin }: {
       <div className="grid-2 gap-16">
         {deal.evidence.length > 0 && (
           <div className="card p-18">
-            <h3 className="mt-0 mb-12">Evidence ({deal._count.evidence})</h3>
+            <h3 className="mt-0 mb-12">{t("Evidence")} ({deal._count.evidence})</h3>
             <div className="flex-col gap-8">
               {deal.evidence.map((e) => (
                 <div key={e.id} className="flex items-center gap-8 text-base">
@@ -247,13 +249,13 @@ export function DealDetail({ deal, nodes, isAdmin }: {
         )}
         {deal.pobRecords.length > 0 && (
           <div className="card p-18">
-            <h3 className="mt-0 mb-12">PoB Records</h3>
+            <h3 className="mt-0 mb-12">{t("PoB Records")}</h3>
             <div className="flex-col gap-8">
               {deal.pobRecords.map((p) => (
                 <div key={p.id} className="flex items-center gap-8 text-base">
                   <span className={`status-dot ${p.status === "EFFECTIVE" ? "status-dot-green" : p.status === "REJECTED" || p.status === "FROZEN" ? "status-dot-red" : "status-dot-amber"}`} />
                   <span>{p.businessType}</span>
-                  <span className="badge badge-accent text-xs">Score: {p.score}</span>
+                  <span className="badge badge-accent text-xs">{t("Score:")} {p.score}</span>
                   <StatusBadge status={p.status} className="text-xs" />
                 </div>
               ))}
@@ -264,15 +266,15 @@ export function DealDetail({ deal, nodes, isAdmin }: {
 
       {deal.riskTags.length > 0 && (
         <div className="flex flex-wrap gap-6">
-          {deal.riskTags.map((t) => <span key={t} className="badge badge-red text-xs">{t}</span>)}
+          {deal.riskTags.map((tag) => <span key={tag} className="badge badge-red text-xs">{tag}</span>)}
         </div>
       )}
 
       <div className="card p-18">
-        <h3 className="mt-0 mb-12">Communication Notes ({localNotes.length})</h3>
+        <h3 className="mt-0 mb-12">{t("Communication Notes")} ({localNotes.length})</h3>
         <div className="flex gap-8 mb-16">
-          <input placeholder="Add a note..." value={noteText} onChange={(e) => setNoteText(e.target.value)} style={{ flex: 1 }} onKeyDown={(e) => e.key === "Enter" && addNote()} />
-          <button className="button-secondary" onClick={addNote} disabled={!noteText.trim()}>Add</button>
+          <input placeholder={t("Add a note...")} value={noteText} onChange={(e) => setNoteText(e.target.value)} style={{ flex: 1 }} onKeyDown={(e) => e.key === "Enter" && addNote()} />
+          <button className="button-secondary" onClick={addNote} disabled={!noteText.trim()}>{t("Add")}</button>
         </div>
         <div className="timeline">
           {localNotes.map((n) => (
@@ -284,7 +286,7 @@ export function DealDetail({ deal, nodes, isAdmin }: {
               </div>
             </div>
           ))}
-          {localNotes.length === 0 && <p className="muted">No notes yet.</p>}
+          {localNotes.length === 0 && <p className="muted">{t("No notes yet.")}</p>}
         </div>
       </div>
     </DetailLayout>

@@ -5,6 +5,7 @@ import {
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from "recharts";
 import { StatCard } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Distribution = { label: string; count: number }[];
 type TimeSeriesPoint = { week: string; count: number };
@@ -54,8 +55,9 @@ const DEAL_COLORS: Record<string, string> = {
 };
 
 function DistributionPie({ items, colorMap }: { items: Distribution; colorMap?: Record<string, string> }) {
+  const { t } = useAutoTranslate();
   const total = items.reduce((a, b) => a + b.count, 0);
-  if (total === 0) return <p className="muted">No data.</p>;
+  if (total === 0) return <p className="muted">{t("No data.")}</p>;
 
   return (
     <div className="flex items-center gap-16">
@@ -86,9 +88,10 @@ function DistributionPie({ items, colorMap }: { items: Distribution; colorMap?: 
 }
 
 function TrendChart({ data, color = "#6366f1", label }: { data: TimeSeriesPoint[]; color?: string; label: string }) {
+  const { t } = useAutoTranslate();
   return (
     <div className="card p-18">
-      <h3 className="mb-12">{label} / Week</h3>
+      <h3 className="mb-12">{t(`${label} / Week`)}</h3>
       <ResponsiveContainer width="100%" height={180}>
         <AreaChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
@@ -103,9 +106,10 @@ function TrendChart({ data, color = "#6366f1", label }: { data: TimeSeriesPoint[
 }
 
 function FunnelChart({ data }: { data: FunnelStage[] }) {
+  const { t } = useAutoTranslate();
   return (
     <div className="card p-18">
-      <h3 className="mb-12">Conversion Funnel</h3>
+      <h3 className="mb-12">{t("Conversion Funnel")}</h3>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
@@ -124,13 +128,14 @@ function FunnelChart({ data }: { data: FunnelStage[] }) {
 }
 
 export function DataCockpit({ data }: { data: CockpitData }) {
+  const { t } = useAutoTranslate();
   const s = data.summary;
 
   return (
     <div className="data-cockpit">
       {data.anomalies && data.anomalies.length > 0 && (
         <div className="card p-16 mb-16" style={{ borderLeft: "3px solid var(--red)" }}>
-          <h3 className="mb-8" style={{ color: "var(--red)" }}>Anomaly Alerts</h3>
+          <h3 className="mb-8" style={{ color: "var(--red)" }}>{t("Anomaly Alerts")}</h3>
           {data.anomalies.map((a) => (
             <div key={a.metric} className="mb-4" style={{ fontSize: 13 }}>
               <strong>{a.metric}</strong>: {a.current} (avg {a.average}, {a.deviation > 0 ? "+" : ""}{a.deviation}σ)
@@ -141,16 +146,16 @@ export function DataCockpit({ data }: { data: CockpitData }) {
 
       <div className="grid-5">
         {[
-          { label: "Active Nodes", value: s.activeNodes },
-          { label: "Active Projects", value: s.activeProjects },
-          { label: "Active Deals", value: s.activeDeals },
-          { label: "Capital Profiles", value: s.totalCapital },
-          { label: "Total Tasks", value: s.totalTasks },
-          { label: "Total Evidence", value: s.totalEvidence },
-          { label: "PoB Records", value: s.totalPoB },
-          { label: "Agents", value: s.totalAgents },
-          { label: "Open Disputes", value: s.openDisputes },
-          { label: "Settled Cycles", value: s.settledCycles },
+          { label: t("Active Nodes"), value: s.activeNodes },
+          { label: t("Active Projects"), value: s.activeProjects },
+          { label: t("Active Deals"), value: s.activeDeals },
+          { label: t("Capital Profiles"), value: s.totalCapital },
+          { label: t("Total Tasks"), value: s.totalTasks },
+          { label: t("Total Evidence"), value: s.totalEvidence },
+          { label: t("PoB Records"), value: s.totalPoB },
+          { label: t("Agents"), value: s.totalAgents },
+          { label: t("Open Disputes"), value: s.openDisputes },
+          { label: t("Settled Cycles"), value: s.settledCycles },
         ].map((m) => (
           <StatCard key={m.label} label={m.label} value={m.value} />
         ))}
@@ -158,20 +163,20 @@ export function DataCockpit({ data }: { data: CockpitData }) {
 
       {data.timeSeries && (
         <div className="grid-2 mt-16">
-          <TrendChart data={data.timeSeries.deals} color="#6366f1" label="Deals" />
-          <TrendChart data={data.timeSeries.pob} color="#8b5cf6" label="PoB Records" />
-          <TrendChart data={data.timeSeries.evidence} color="#22c55e" label="Evidence" />
-          <TrendChart data={data.timeSeries.tasks} color="#f59e0b" label="Tasks" />
+          <TrendChart data={data.timeSeries.deals} color="#6366f1" label={t("Deals")} />
+          <TrendChart data={data.timeSeries.pob} color="#8b5cf6" label={t("PoB Records")} />
+          <TrendChart data={data.timeSeries.evidence} color="#22c55e" label={t("Evidence")} />
+          <TrendChart data={data.timeSeries.tasks} color="#f59e0b" label={t("Tasks")} />
         </div>
       )}
 
       <div className="grid-2 mt-16">
         <div className="card p-18">
-          <h3 className="mb-12">Nodes by Status</h3>
+          <h3 className="mb-12">{t("Nodes by Status")}</h3>
           <DistributionPie items={data.distributions.nodesByStatus} colorMap={NODE_COLORS} />
         </div>
         <div className="card p-18">
-          <h3 className="mb-12">Deals by Stage</h3>
+          <h3 className="mb-12">{t("Deals by Stage")}</h3>
           <DistributionPie items={data.distributions.dealsByStage} colorMap={DEAL_COLORS} />
         </div>
       </div>

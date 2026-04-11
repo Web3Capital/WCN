@@ -5,13 +5,20 @@ import { authOptions } from "@/lib/auth";
 import { isAdminRole } from "@/lib/permissions";
 import { DashboardShell } from "./_components/dashboard-shell";
 import { Spotlight } from "./_components/spotlight";
+import { AutoTranslateProvider } from "@/lib/i18n/auto-translate-provider";
 
 export const metadata: Metadata = {
   title: "Console · WCN",
   description: "WCN collaboration network console."
 };
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function DashboardLayout({
+  children,
+  params: { locale },
+}: {
+  children: React.ReactNode;
+  params: { locale: string };
+}) {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
 
@@ -23,7 +30,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
       role={u.role}
       isAdmin={isAdminRole(u.role)}
     >
-      {children}
+      <AutoTranslateProvider locale={locale ?? "en"}>
+        {children}
+      </AutoTranslateProvider>
       <Spotlight />
     </DashboardShell>
   );

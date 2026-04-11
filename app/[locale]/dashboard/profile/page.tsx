@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { ProfilePage } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -32,9 +33,9 @@ export default async function DashboardProfilePage() {
   return (
     <div className="dashboard-page section">
       <div className="container" style={{ maxWidth: 720 }}>
-        <span className="eyebrow">Account</span>
-        <h1>Profile</h1>
-        <p className="muted">Manage your personal information.</p>
+        <span className="eyebrow"><T>Account</T></span>
+        <h1><T>Profile</T></h1>
+        <p className="muted"><T>Manage your personal information.</T></p>
         <ProfilePage user={JSON.parse(JSON.stringify(user))} />
       </div>
     </div>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { StatusBadge, EmptyState, ConfirmDialog } from "../_components";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Dispute = {
   id: string;
@@ -20,6 +21,7 @@ type Dispute = {
 const FILTERS = ["ALL", "OPEN", "UNDER_REVIEW", "RESOLVED", "DISMISSED", "ESCALATED"] as const;
 
 export function DisputesUI({ disputes: initialDisputes }: { disputes: Dispute[] }) {
+  const { t } = useAutoTranslate();
   const [disputes, setDisputes] = useState(initialDisputes);
   const [filter, setFilter] = useState("ALL");
   const [busy, setBusy] = useState<string | null>(null);
@@ -48,28 +50,28 @@ export function DisputesUI({ disputes: initialDisputes }: { disputes: Dispute[] 
   return (
     <div>
       <div className="page-toolbar mb-20">
-        <p className="muted text-sm" style={{ margin: 0 }}>{disputes.length} total disputes</p>
+        <p className="muted text-sm" style={{ margin: 0 }}>{disputes.length} {t("total disputes")}</p>
         <div className="page-toolbar-spacer" />
         <div className="chip-group">
           {FILTERS.map((s) => (
             <button key={s} className={`chip ${filter === s ? "chip-active" : ""}`} onClick={() => setFilter(s)}>
-              {s.replace(/_/g, " ")}
+              {t(s.replace(/_/g, " "))}
             </button>
           ))}
         </div>
       </div>
 
       {filtered.length === 0 ? (
-        <EmptyState message="No disputes matching filter." />
+        <EmptyState message={t("No disputes matching filter.")} />
       ) : (
         <table className="data-table">
           <thead>
             <tr>
-              <th>Status</th>
-              <th>Target</th>
-              <th>Reason</th>
-              <th>Filed</th>
-              <th>Window</th>
+              <th>{t("Status")}</th>
+              <th>{t("Target")}</th>
+              <th>{t("Reason")}</th>
+              <th>{t("Filed")}</th>
+              <th>{t("Window")}</th>
               <th></th>
             </tr>
           </thead>
@@ -78,7 +80,7 @@ export function DisputesUI({ disputes: initialDisputes }: { disputes: Dispute[] 
               <tr key={d.id}>
                 <td>
                   <StatusBadge status={d.status} />
-                  {d.pob && <div className="muted" style={{ fontSize: 10, marginTop: 2 }}>PoB: {d.pob.businessType}</div>}
+                  {d.pob && <div className="muted" style={{ fontSize: 10, marginTop: 2 }}>{t("PoB:")} {d.pob.businessType}</div>}
                 </td>
                 <td>
                   <span className="badge text-xs">{d.targetType}</span>
@@ -95,16 +97,16 @@ export function DisputesUI({ disputes: initialDisputes }: { disputes: Dispute[] 
                   {d.status === "OPEN" && (
                     <div className="flex gap-4">
                       <button className="button" style={{ fontSize: 10, padding: "3px 8px" }} disabled={busy === d.id}
-                        onClick={() => setDialog({ id: d.id, status: "RESOLVED", defaultResolution: "Resolved by reviewer." })}>
-                        Resolve
+                        onClick={() => setDialog({ id: d.id, status: "RESOLVED", defaultResolution: t("Resolved by reviewer.") })}>
+                        {t("Resolve")}
                       </button>
                       <button className="button-secondary" style={{ fontSize: 10, padding: "3px 8px", color: "var(--red)" }} disabled={busy === d.id}
                         onClick={() => resolve(d.id, "Dismissed.", "DISMISSED")}>
-                        Dismiss
+                        {t("Dismiss")}
                       </button>
                       <button className="button-secondary" style={{ fontSize: 10, padding: "3px 8px", color: "var(--amber)" }} disabled={busy === d.id}
                         onClick={() => resolve(d.id, "Escalated for further review.", "ESCALATED")}>
-                        Escalate
+                        {t("Escalate")}
                       </button>
                     </div>
                   )}
@@ -117,12 +119,12 @@ export function DisputesUI({ disputes: initialDisputes }: { disputes: Dispute[] 
 
       <ConfirmDialog
         open={!!dialog}
-        title="Resolve Dispute"
-        description="Provide a resolution note."
-        confirmLabel="Resolve"
+        title={t("Resolve Dispute")}
+        description={t("Provide a resolution note.")}
+        confirmLabel={t("Resolve")}
         withInput
-        inputLabel="Resolution"
-        inputPlaceholder={dialog?.defaultResolution ?? "Resolution note..."}
+        inputLabel={t("Resolution")}
+        inputPlaceholder={dialog?.defaultResolution ?? t("Resolution note...")}
         onConfirm={(val) => {
           if (dialog && val) resolve(dialog.id, val, dialog.status);
           setDialog(null);
