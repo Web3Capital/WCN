@@ -25,7 +25,7 @@ const assignChannelSchema = z.object({
   campaignId: z.string().min(1),
   nodeId: z.string().min(1),
   channel: z.string().min(1),
-  deliverables: z.record(z.unknown()).optional(),
+  deliverables: z.record(z.string(), z.unknown()).optional(),
 });
 
 const recordMetricSchema = z.object({

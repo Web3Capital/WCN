@@ -5,8 +5,8 @@ import { isAdminRole } from "@/lib/permissions";
 import { apiOk, apiCreated, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
 import { getOwnedNodeIds } from "@/lib/member-data-scope";
 
-async function assertAgentAccess(prisma: ReturnType<typeof getPrisma>, agentId: string, userId: string, role: string) {
-  if (isAdminRole(role)) return true;
+async function assertAgentAccess(prisma: ReturnType<typeof getPrisma>, agentId: string, userId: string, role: string | undefined) {
+  if (isAdminRole(role as any)) return true;
   const ownedNodeIds = await getOwnedNodeIds(prisma, userId);
   const scoped = await prisma.agent.findFirst({
     where: { id: agentId, ownerNodeId: { in: ownedNodeIds } },

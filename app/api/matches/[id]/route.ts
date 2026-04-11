@@ -14,8 +14,8 @@ import { matchActionSchema, parseBody } from "@/lib/core/validation";
 import { getMatch, expressInterest, declineMatch, convertMatchToDeal } from "@/lib/modules/matching/engine";
 import { getOwnedNodeIds } from "@/lib/member-data-scope";
 
-async function assertMatchAccess(userId: string, role: string, matchId: string): Promise<boolean> {
-  if (isAdminRole(role)) return true;
+async function assertMatchAccess(userId: string, role: string | undefined, matchId: string): Promise<boolean> {
+  if (isAdminRole(role as any)) return true;
   const prisma = getPrisma();
   const ownedNodeIds = await getOwnedNodeIds(prisma, userId);
   const match = await prisma.match.findFirst({

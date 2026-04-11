@@ -42,7 +42,7 @@ export async function POST(req: Request) {
   const { workspaceId, entityType, entityId, grantedToType, grantedToId, grantType, scope, expiresAt } = parsed.data;
 
   if (!isAdminRole(auth.session.user?.role ?? "USER")) {
-    const membership = await prisma.workspaceMember.findFirst({
+    const membership = await prisma.workspaceMembership.findFirst({
       where: { workspaceId, userId: auth.session.user!.id },
       select: { id: true },
     });

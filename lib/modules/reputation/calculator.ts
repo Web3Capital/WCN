@@ -57,7 +57,7 @@ export async function recalculateNodeReputation(
     prisma.poBRecord.findMany({ where: { nodeId }, select: { score: true } }),
     prisma.task.findMany({
       where: { assignments: { some: { nodeId } } },
-      select: { status: true, dueAt: true, completedAt: true },
+      select: { status: true, dueAt: true, updatedAt: true },
     }),
     prisma.evidence.findMany({
       where: { nodeId },
@@ -90,8 +90,8 @@ export async function recalculateNodeReputation(
   const disputeRate = deals.length > 0 ? disputes.length / deals.length : 0;
   const fundedDeals = deals.filter((d) => d.stage === "FUNDED").length;
 
-  const tasksWithDue = tasks.filter((t) => t.dueAt && t.completedAt);
-  const onTimeTasks = tasksWithDue.filter((t) => t.completedAt! <= t.dueAt!).length;
+  const tasksWithDue = tasks.filter((t) => t.dueAt && t.updatedAt);
+  const onTimeTasks = tasksWithDue.filter((t) => t.updatedAt! <= t.dueAt!).length;
   const slaCompliance = tasksWithDue.length > 0 ? onTimeTasks / tasksWithDue.length : 1;
 
   const components: ReputationComponents = {

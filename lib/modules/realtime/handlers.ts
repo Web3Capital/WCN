@@ -30,7 +30,7 @@ export function initRealtimeHandlers(): void {
     const actorId = meta.actorId;
 
     sseManager.broadcast("entity_update", safePayload, (client) => {
-      if (isAdminRole(client.role)) return true;
+      if (isAdminRole(client.role as any)) return true;
       if (actorId && client.userId === actorId) return true;
       return false;
     });

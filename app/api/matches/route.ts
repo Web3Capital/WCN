@@ -26,7 +26,7 @@ export async function GET(req: Request) {
       ...parsed.data,
       status: parsed.data.status as MatchStatus | undefined,
     });
-    const filtered = result.filter((m: any) =>
+    const filtered = (result as any).filter((m: any) =>
       ownedNodeIds.includes(m.capitalNodeId) ||
       ownedNodeIds.includes(m.project?.nodeId)
     );

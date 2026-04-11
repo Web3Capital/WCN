@@ -20,15 +20,18 @@ export default async function DashboardLayout({
   params: { locale: string };
 }) {
   const session = await getServerSession(authOptions);
-  if (!session?.user) redirect("/login");
+  if (!session?.user) {
+    redirect({ href: "/login", locale });
+    return null;
+  }
 
   const u = session.user;
   return (
     <DashboardShell
-      displayName={u.name || u.email || "Account"}
+      displayName={u.name ?? u.email ?? "Account"}
       email={u.email ?? undefined}
-      role={u.role}
-      isAdmin={isAdminRole(u.role)}
+      role={u.role!}
+      isAdmin={isAdminRole(u.role!)}
     >
       <AutoTranslateProvider locale={locale ?? "en"}>
         {children}

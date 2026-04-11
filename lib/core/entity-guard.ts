@@ -15,7 +15,7 @@ export async function assertNotFrozen(
       workspaceId,
       entityType,
       entityId,
-      unfrozenAt: null,
+      liftedAt: null,
     },
     select: { id: true, reason: true },
   });
