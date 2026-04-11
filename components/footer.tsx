@@ -27,7 +27,7 @@ export function Footer() {
             <h4>{t("resources")}</h4>
             <Link href="/wiki">{nav("wiki")}</Link>
             <Link href="/about">{t("aboutWcn")}</Link>
-            <Link href="/dashboard/assets">{t("phase3Roadmap")}</Link>
+            <Link href="/wiki">{t("phase3Roadmap")}</Link>
           </div>
           <div className="footer-col">
             <h4>{t("connect")}</h4>
