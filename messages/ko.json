@@ -503,7 +503,9 @@
       "consoleMenu": "메뉴",
       "breadcrumbRoot": "콘솔",
       "topTitle": "WCN Console",
-      "siteHomeFooter": "마케팅 사이트"
+      "siteHomeFooter": "홈페이지",
+      "settings": "설정",
+      "signOut": "로그아웃"
     },
     "roles": {
       "FOUNDER": "창립자",

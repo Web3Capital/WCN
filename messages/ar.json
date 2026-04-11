@@ -503,7 +503,9 @@
       "consoleMenu": "القائمة",
       "breadcrumbRoot": "وحدة التحكّم",
       "topTitle": "WCN Console",
-      "siteHomeFooter": "الموقع التسويقي"
+      "siteHomeFooter": "الصفحة الرئيسية",
+      "settings": "الإعدادات",
+      "signOut": "تسجيل الخروج"
     },
     "roles": {
       "FOUNDER": "مؤسّس",

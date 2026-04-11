@@ -503,7 +503,9 @@
       "consoleMenu": "Menu",
       "breadcrumbRoot": "Console",
       "topTitle": "WCN Console",
-      "siteHomeFooter": "Marketing site"
+      "siteHomeFooter": "Home Page",
+      "settings": "Settings",
+      "signOut": "Log out"
     },
     "roles": {
       "FOUNDER": "Founder",

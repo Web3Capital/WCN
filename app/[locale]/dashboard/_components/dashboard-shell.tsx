@@ -451,19 +451,6 @@ export function DashboardShell({
 
       <aside id={navId} className="dashboard-sidebar" data-open={open ? "true" : "false"}>
         <div className="dashboard-sidebar-inner">
-          <div className="dashboard-scope-switcher">
-            <span className="user-avatar" style={{ width: 28, height: 28, fontSize: 11 }}>
-              {(displayName || "?").charAt(0).toUpperCase()}
-            </span>
-            <div className="dashboard-scope-info">
-              <span className="dashboard-scope-name">{displayName}</span>
-              <span className={`dashboard-role-pill ${isAdmin ? "dashboard-role-pill-admin" : ""}`}>
-                {roleLabelText}
-              </span>
-            </div>
-            <ChevronDown size={16} className="dashboard-scope-chevron" aria-hidden />
-          </div>
-
           <div className="dashboard-sidebar-search">
             <GlobalSearch />
           </div>
@@ -504,10 +491,34 @@ export function DashboardShell({
           </nav>
 
           <div className="dashboard-sidebar-footer">
+            <div className="dashboard-nav-divider" />
+            {email && <p className="dashboard-footer-email muted">{email}</p>}
+            <Link href="/dashboard/settings" className="dashboard-nav-link dashboard-nav-link-muted">
+              <span className="dashboard-nav-icon" aria-hidden><Settings size={16} strokeWidth={2} /></span>
+              {tShell("settings") || "Settings"}
+            </Link>
             <Link href="/" className="dashboard-nav-link dashboard-nav-link-muted">
               <span className="dashboard-nav-icon" aria-hidden><Home size={16} strokeWidth={2} /></span>
               {tShell("siteHomeFooter")}
             </Link>
+            <button
+              type="button"
+              className="dashboard-nav-link dashboard-nav-link-muted dashboard-signout-btn"
+              onClick={() => signOut({ callbackUrl: "/" })}
+            >
+              <span className="dashboard-nav-icon" aria-hidden><LogOut size={16} strokeWidth={2} /></span>
+              {tShell("signOut") || "Log out"}
+            </button>
+            <div className="dashboard-footer-user">
+              <span className="user-avatar" style={{ width: 28, height: 28, fontSize: 11 }}>
+                {(displayName || "?").charAt(0).toUpperCase()}
+              </span>
+              <span className="dashboard-footer-name">{displayName}</span>
+              <span className={`dashboard-role-pill ${isAdmin ? "dashboard-role-pill-admin" : ""}`}>
+                {roleLabelText}
+              </span>
+              <NotificationBell />
+            </div>
           </div>
         </div>
       </aside>
@@ -534,10 +545,6 @@ export function DashboardShell({
             ) : (
               <span className="dashboard-topbar-title">{tShell("topTitle")}</span>
             )}
-          </div>
-          <div className="dashboard-topbar-right">
-            <NotificationBell />
-            <AccountMenu displayName={displayName} email={email} />
           </div>
         </header>
         {children}

@@ -503,7 +503,9 @@
       "consoleMenu": "菜单",
       "breadcrumbRoot": "控制台",
       "topTitle": "WCN 控制台",
-      "siteHomeFooter": "官网首页"
+      "siteHomeFooter": "首页",
+      "settings": "设置",
+      "signOut": "退出登录"
     },
     "roles": {
       "FOUNDER": "创始人",

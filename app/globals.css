@@ -1927,21 +1927,13 @@ html[data-dashboard="true"] .footer {
 .dashboard-nav-link:hover {
   background: color-mix(in oklab, var(--text) 6%, transparent);
   color: var(--text);
+  border-radius: 6px;
 }
 .dashboard-nav-link[data-active="true"] {
-  background: color-mix(in oklab, var(--text) 8%, transparent);
+  background: color-mix(in oklab, var(--text) 12%, transparent);
   color: var(--text);
   font-weight: 600;
-}
-.dashboard-nav-link[data-active="true"]::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 6px;
-  bottom: 6px;
-  width: 2px;
-  border-radius: 1px;
-  background: var(--accent);
+  border-radius: 6px;
 }
 .dashboard-nav-icon {
   display: flex;
@@ -1961,8 +1953,41 @@ html[data-dashboard="true"] .footer {
 }
 .dashboard-sidebar-footer {
   margin-top: auto;
-  padding-top: 16px;
+  padding-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.dashboard-footer-email {
+  font-size: 12px;
+  padding: 4px 12px;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dashboard-signout-btn {
+  width: 100%;
+  background: none;
+  cursor: pointer;
+}
+.dashboard-footer-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 8px 4px;
+  margin-top: 4px;
   border-top: 1px solid var(--line);
+}
+.dashboard-footer-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 .dashboard-main {
   flex: 1;
@@ -5744,7 +5769,7 @@ html[data-theme="dark"] .pob-formula-specbar {
 html[dir="rtl"] { direction: rtl; text-align: right; }
 html[dir="rtl"] .dashboard-sidebar { left: auto; right: 0; border-right: none; border-left: 1px solid var(--line); }
 html[dir="rtl"] .dashboard-main { margin-left: 0; margin-right: var(--sidebar-w, 240px); }
-html[dir="rtl"] .dashboard-nav-link[data-active="true"]::before { left: auto; right: 0; }
+
 html[dir="rtl"] .breadcrumb-slash { transform: scaleX(-1); }
 html[dir="rtl"] .arrow { transform: scaleX(-1); }
 html[dir="rtl"] .nav-dropdown-chevron { margin-left: 0; margin-right: 4px; }

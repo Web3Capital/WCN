@@ -503,7 +503,9 @@
       "consoleMenu": "メニュー",
       "breadcrumbRoot": "コンソール",
       "topTitle": "WCNコンソール",
-      "siteHomeFooter": "マーケティングサイト"
+      "siteHomeFooter": "ホームページ",
+      "settings": "設定",
+      "signOut": "ログアウト"
     },
     "roles": {
       "FOUNDER": "創設者",

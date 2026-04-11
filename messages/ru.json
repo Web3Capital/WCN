@@ -503,7 +503,9 @@
       "consoleMenu": "Меню",
       "breadcrumbRoot": "Консоль",
       "topTitle": "Консоль WCN",
-      "siteHomeFooter": "Маркетинговый сайт"
+      "siteHomeFooter": "Главная",
+      "settings": "Настройки",
+      "signOut": "Выйти"
     },
     "roles": {
       "FOUNDER": "Основатель",
