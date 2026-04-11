@@ -385,6 +385,82 @@ function NotificationBell() {
   );
 }
 
+function SidebarFooterMenu({
+  displayName,
+  email,
+  roleLabelText,
+  isAdmin,
+  tShell,
+}: {
+  displayName: string;
+  email?: string;
+  roleLabelText: string;
+  isAdmin: boolean;
+  tShell: (key: string) => string;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as HTMLElement)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
+  return (
+    <div ref={ref} className="dashboard-sidebar-footer">
+      {open && (
+        <div className="sidebar-footer-popup">
+          {email && <p className="sidebar-footer-popup-email">{email}</p>}
+          <div className="sidebar-footer-popup-divider" />
+          <Link href="/dashboard/settings" className="sidebar-footer-popup-item" onClick={() => setOpen(false)}>
+            <Settings size={16} strokeWidth={2} />
+            {tShell("settings")}
+          </Link>
+          <Link href="/" className="sidebar-footer-popup-item" onClick={() => setOpen(false)}>
+            <Home size={16} strokeWidth={2} />
+            {tShell("siteHomeFooter")}
+          </Link>
+          <div className="sidebar-footer-popup-divider" />
+          <button
+            type="button"
+            className="sidebar-footer-popup-item"
+            onClick={() => signOut({ callbackUrl: "/" })}
+          >
+            <LogOut size={16} strokeWidth={2} />
+            {tShell("signOut")}
+          </button>
+        </div>
+      )}
+      <button
+        type="button"
+        className="dashboard-footer-trigger"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span className="user-avatar" style={{ width: 28, height: 28, fontSize: 11 }}>
+          {(displayName || "?").charAt(0).toUpperCase()}
+        </span>
+        <span className="dashboard-footer-name">{displayName}</span>
+        <span className={`dashboard-role-pill ${isAdmin ? "dashboard-role-pill-admin" : ""}`}>
+          {roleLabelText}
+        </span>
+        <ChevronDown size={14} className="dashboard-footer-chevron" data-open={open ? "true" : "false"} />
+      </button>
+    </div>
+  );
+}
+
 export function DashboardShell({
   children,
   displayName,
@@ -490,36 +566,13 @@ export function DashboardShell({
             })}
           </nav>
 
-          <div className="dashboard-sidebar-footer">
-            <div className="dashboard-nav-divider" />
-            {email && <p className="dashboard-footer-email muted">{email}</p>}
-            <Link href="/dashboard/settings" className="dashboard-nav-link dashboard-nav-link-muted">
-              <span className="dashboard-nav-icon" aria-hidden><Settings size={16} strokeWidth={2} /></span>
-              {tShell("settings") || "Settings"}
-            </Link>
-            <Link href="/" className="dashboard-nav-link dashboard-nav-link-muted">
-              <span className="dashboard-nav-icon" aria-hidden><Home size={16} strokeWidth={2} /></span>
-              {tShell("siteHomeFooter")}
-            </Link>
-            <button
-              type="button"
-              className="dashboard-nav-link dashboard-nav-link-muted dashboard-signout-btn"
-              onClick={() => signOut({ callbackUrl: "/" })}
-            >
-              <span className="dashboard-nav-icon" aria-hidden><LogOut size={16} strokeWidth={2} /></span>
-              {tShell("signOut") || "Log out"}
-            </button>
-            <div className="dashboard-footer-user">
-              <span className="user-avatar" style={{ width: 28, height: 28, fontSize: 11 }}>
-                {(displayName || "?").charAt(0).toUpperCase()}
-              </span>
-              <span className="dashboard-footer-name">{displayName}</span>
-              <span className={`dashboard-role-pill ${isAdmin ? "dashboard-role-pill-admin" : ""}`}>
-                {roleLabelText}
-              </span>
-              <NotificationBell />
-            </div>
-          </div>
+          <SidebarFooterMenu
+            displayName={displayName}
+            email={email}
+            roleLabelText={roleLabelText}
+            isAdmin={isAdmin}
+            tShell={tShell}
+          />
         </div>
       </aside>
 
