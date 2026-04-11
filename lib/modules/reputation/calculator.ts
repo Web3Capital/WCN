@@ -52,12 +52,12 @@ export async function recalculateNodeReputation(
   prisma: PrismaClient,
   nodeId: string,
 ): Promise<{ score: number; tier: TierName; components: ReputationComponents }> {
-  const [node, pobRecords, tasks, evidences, disputes, deals] = await Promise.all([
+  const [node, pobRecords, tasks, evidences, disputes, deals, latestActivity] = await Promise.all([
     prisma.node.findUnique({ where: { id: nodeId }, select: { createdAt: true } }),
     prisma.poBRecord.findMany({ where: { nodeId }, select: { score: true } }),
     prisma.task.findMany({
       where: { assignments: { some: { nodeId } } },
-      select: { status: true },
+      select: { status: true, dueAt: true, completedAt: true },
     }),
     prisma.evidence.findMany({
       where: { nodeId },
@@ -70,6 +70,11 @@ export async function recalculateNodeReputation(
     prisma.deal.findMany({
       where: { OR: [{ leadNodeId: nodeId }, { participants: { some: { nodeId } } }] },
       select: { stage: true },
+    }),
+    prisma.poBRecord.findFirst({
+      where: { nodeId },
+      orderBy: { createdAt: "desc" },
+      select: { createdAt: true },
     }),
   ]);
 
@@ -85,18 +90,31 @@ export async function recalculateNodeReputation(
   const disputeRate = deals.length > 0 ? disputes.length / deals.length : 0;
   const fundedDeals = deals.filter((d) => d.stage === "FUNDED").length;
 
+  const tasksWithDue = tasks.filter((t) => t.dueAt && t.completedAt);
+  const onTimeTasks = tasksWithDue.filter((t) => t.completedAt! <= t.dueAt!).length;
+  const slaCompliance = tasksWithDue.length > 0 ? onTimeTasks / tasksWithDue.length : 1;
+
   const components: ReputationComponents = {
     pobScore: totalPobScore,
     taskCompletionRate,
     evidenceQuality,
     disputeRate: Math.min(disputeRate, 1),
-    slaCompliance: 1,
+    slaCompliance,
     tenureMonths,
     dealCount: fundedDeals,
   };
 
-  const score = calculateCompositeScore(components);
+  let score = calculateCompositeScore(components);
   const tier = determineTier(score);
+
+  if (latestActivity) {
+    const monthsSinceActivity = Math.floor(
+      (Date.now() - latestActivity.createdAt.getTime()) / (30 * 24 * 60 * 60 * 1000),
+    );
+    if (monthsSinceActivity > 3) {
+      score = applyDecay(score, monthsSinceActivity - 3);
+    }
+  }
 
   await prisma.$transaction([
     prisma.reputationScore.upsert({

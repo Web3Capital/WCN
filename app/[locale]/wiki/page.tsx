@@ -1,22 +1,25 @@
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { getChapters } from "@/lib/docs";
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Wiki",
-  description: "WCN 完整知识库 — 从项目介绍到系统架构，全面了解 Web3 Capital Network。",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("wiki");
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
-export default function WikiLandingPage() {
+export default async function WikiLandingPage() {
   const chapters = getChapters();
+  const t = await getTranslations("wiki");
 
   return (
     <div className="docs-landing">
       <header className="docs-landing-hero">
-        <h1>WCN Wiki</h1>
-        <p>
-          从项目定义到系统架构，从节点机制到商业模式 — 全面了解 Web3 Capital Network 的设计与运作方式。
-        </p>
+        <h1>{t("heading")}</h1>
+        <p>{t("subtitle")}</p>
       </header>
 
       <div className="docs-landing-chapters">
@@ -25,13 +28,13 @@ export default function WikiLandingPage() {
           const href = firstDoc?.href ?? "/wiki";
 
           return (
-            <Link key={ch.slug} href={href} className="docs-landing-card">
+            <Link key={ch.slug} href={href as any} className="docs-landing-card">
               {ch.icon && <span className="docs-landing-card-icon">{ch.icon}</span>}
               <span className="docs-landing-card-title">{ch.title}</span>
               {ch.description && (
                 <span className="docs-landing-card-desc">{ch.description}</span>
               )}
-              <span className="docs-landing-card-count">{ch.docs.length} pages</span>
+              <span className="docs-landing-card-count">{ch.docs.length} {t("pages")}</span>
             </Link>
           );
         })}

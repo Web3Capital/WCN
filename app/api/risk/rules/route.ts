@@ -1,6 +1,7 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
+import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
 import { z } from "zod";
 
@@ -48,6 +49,14 @@ export async function POST(req: Request) {
       action: parsed.data.action ?? "CREATE_FLAG",
       enabled: parsed.data.enabled ?? true,
     },
+  });
+
+  await writeAudit({
+    actorUserId: auth.session.user!.id,
+    action: AuditAction.RISK_RULE_CREATE,
+    targetType: "RISK_RULE",
+    targetId: rule.id,
+    metadata: { name: rule.name, entityType: rule.entityType, severity: rule.severity, action: rule.action },
   });
 
   return apiOk(rule);

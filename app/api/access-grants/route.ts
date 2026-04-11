@@ -1,8 +1,9 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
+import { isAdminRole } from "@/lib/permissions";
 import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
+import { apiOk, apiCreated, apiUnauthorized, zodToApiError, apiForbidden } from "@/lib/core/api-response";
 import { parseBody, createAccessGrantSchema } from "@/lib/core/validation";
 
 export async function GET(req: Request) {
@@ -39,6 +40,14 @@ export async function POST(req: Request) {
 
   const prisma = getPrisma();
   const { workspaceId, entityType, entityId, grantedToType, grantedToId, grantType, scope, expiresAt } = parsed.data;
+
+  if (!isAdminRole(auth.session.user?.role ?? "USER")) {
+    const membership = await prisma.workspaceMember.findFirst({
+      where: { workspaceId, userId: auth.session.user!.id },
+      select: { id: true },
+    });
+    if (!membership) return apiForbidden("You are not a member of this workspace.");
+  }
 
   const grant = await prisma.accessGrant.create({
     data: {

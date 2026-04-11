@@ -55,6 +55,18 @@ export async function POST(req: Request) {
 
   const prisma = getPrisma();
   const { reason, targetType, targetId, pobId } = parsed.data;
+
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (!isAdmin) {
+    if (!pobId) return apiUnauthorized();
+    const ownedNodeIds = await getOwnedNodeIds(prisma, auth.session.user!.id);
+    const scoped = await prisma.poBRecord.findFirst({
+      where: { id: pobId, ...memberPoBWhere(ownedNodeIds) },
+      select: { id: true },
+    });
+    if (!scoped) return apiUnauthorized();
+  }
+
   const windowDays = 5;
   const windowEndsAt = new Date(Date.now() + windowDays * 24 * 60 * 60 * 1000);
 

@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     }
   }
 
-  if (body?.action === "activate") {
+  if (body?.action === "activate" || body?.action === "ACTIVE") {
     const prisma = getPrisma();
     const proposal = await activateProposal(prisma, body.proposalId);
     return apiOk(proposal);

@@ -4,12 +4,24 @@ import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
+import { getOwnedNodeIds } from "@/lib/member-data-scope";
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+
+  if (!isAdmin) {
+    const ownedNodeIds = await getOwnedNodeIds(prisma, auth.session.user!.id);
+    const scoped = await prisma.agent.findFirst({
+      where: { id: params.id, ownerNodeId: { in: ownedNodeIds } },
+      select: { id: true },
+    });
+    if (!scoped) return apiUnauthorized();
+  }
+
   const agent = await prisma.agent.findUnique({
     where: { id: params.id },
     include: {
@@ -22,7 +34,6 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
 
   if (!agent) return apiNotFound("Agent");
 
-  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
   if (!isAdmin) {
     (agent as any).endpoint = null;
   }

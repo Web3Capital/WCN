@@ -1,11 +1,13 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireSignedIn, requirePermission } from "@/lib/admin";
+import { isAdminRole } from "@/lib/permissions";
 import { canTransitionEvidence } from "@/lib/state-machines/evidence-pob";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
+import { getOwnedNodeIds, memberEvidenceWhere } from "@/lib/member-data-scope";
 import type { EvidenceReviewStatus } from "@prisma/client";
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
@@ -13,6 +15,17 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
+
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (!isAdmin) {
+    const ownedNodeIds = await getOwnedNodeIds(prisma, auth.session.user!.id);
+    const scoped = await prisma.evidence.findFirst({
+      where: { id: params.id, ...memberEvidenceWhere(ownedNodeIds) },
+      select: { id: true },
+    });
+    if (!scoped) return apiUnauthorized();
+  }
+
   const evidence = await prisma.evidence.findUnique({
     where: { id: params.id },
     include: {
@@ -33,6 +46,16 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (!isAdmin) {
+    const ownedNodeIds = await getOwnedNodeIds(prisma, auth.session.user!.id);
+    const scoped = await prisma.evidence.findFirst({
+      where: { id: params.id, ...memberEvidenceWhere(ownedNodeIds) },
+      select: { id: true },
+    });
+    if (!scoped) return apiUnauthorized();
+  }
+
   const body = await req.json().catch(() => ({}));
 
   const existing = await prisma.evidence.findUnique({ where: { id: params.id }, select: { id: true, reviewStatus: true, dealId: true } });

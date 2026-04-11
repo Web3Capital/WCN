@@ -2,10 +2,12 @@ import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
+import { apiOk, apiUnauthorized, apiNotFound, apiConflict } from "@/lib/core/api-response";
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
 import type { SettlementCalculatedEvent } from "@/lib/core/event-types";
+import { calculateSettlementForCycle } from "@/lib/modules/settlement/calculator";
+import { canTransitionSettlement } from "@/lib/state-machines/settlement";
 
 export async function POST(_req: Request, { params }: { params: { id: string } }) {
   const admin = await requireAdmin();
@@ -33,39 +35,16 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
     return apiOk({ idempotent: true, cycle, networkScore, lines });
   }
 
-  const approved = await prisma.poBRecord.findMany({
-    where: {
-      status: "APPROVED",
-      createdAt: { gte: cycle.startAt, lte: cycle.endAt },
-    },
-    include: { attributions: true },
+  if (!canTransitionSettlement(cycle.status, "RECONCILED")) {
+    return apiConflict(`Cannot generate lines: cycle status is '${cycle.status}', expected 'DRAFT'`);
+  }
+
+  const result = await calculateSettlementForCycle(cycle.id);
+
+  await prisma.settlementCycle.update({
+    where: { id: cycle.id },
+    data: { status: "RECONCILED" },
   });
-
-  const totals = new Map<string, { scoreTotal: number; pobCount: number }>();
-  for (const pob of approved) {
-    for (const attr of pob.attributions) {
-      const share = (pob.score * attr.shareBps) / 10000;
-      const cur = totals.get(attr.nodeId) ?? { scoreTotal: 0, pobCount: 0 };
-      cur.scoreTotal += share;
-      cur.pobCount += 1;
-      totals.set(attr.nodeId, cur);
-    }
-  }
-
-  const networkScore = Array.from(totals.values()).reduce((s, v) => s + v.scoreTotal, 0);
-  await prisma.settlementLine.deleteMany({ where: { cycleId: cycle.id } });
-
-  const rows = Array.from(totals.entries()).map(([nodeId, v]) => ({
-    cycleId: cycle.id,
-    nodeId,
-    scoreTotal: v.scoreTotal,
-    pobCount: v.pobCount,
-    allocation: networkScore > 0 ? (v.scoreTotal / networkScore) * cycle.pool : 0,
-  }));
-
-  if (rows.length) {
-    await prisma.settlementLine.createMany({ data: rows });
-  }
 
   const lines = await prisma.settlementLine.findMany({
     where: { cycleId: cycle.id },
@@ -78,14 +57,21 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
     action: AuditAction.SETTLEMENT_LINES_GENERATE,
     targetType: "SETTLEMENT_CYCLE",
     targetId: cycle.id,
-    metadata: { idempotent: false, lineCount: lines.length, networkScore, cycleStatus: cycle.status },
+    metadata: {
+      idempotent: false,
+      lineCount: result.lineCount,
+      networkScore: result.networkScore,
+      platformFee: result.platformFee,
+      distributablePool: result.distributablePool,
+      cycleStatus: "RECONCILED",
+    },
   });
 
   await eventBus.emit<SettlementCalculatedEvent>(Events.SETTLEMENT_CALCULATED, {
     cycleId: cycle.id,
-    totalEntries: lines.length,
-    totalAmount: networkScore,
+    totalEntries: result.lineCount,
+    totalAmount: result.distributablePool,
   }, { actorId: admin.session.user?.id });
 
-  return apiOk({ idempotent: false, cycle, networkScore, lines });
+  return apiOk({ idempotent: false, cycle: { ...cycle, status: "RECONCILED" }, networkScore: result.networkScore, lines });
 }

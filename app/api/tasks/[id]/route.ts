@@ -1,11 +1,13 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { isAdminRole } from "@/lib/permissions";
 import { canTransitionTask } from "@/lib/state-machines/task";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
+import { getOwnedNodeIds, memberTasksWhere } from "@/lib/member-data-scope";
 import type { TaskStatus } from "@prisma/client";
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
@@ -13,6 +15,16 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (!isAdmin) {
+    const ownedNodeIds = await getOwnedNodeIds(prisma, auth.session.user!.id);
+    const scoped = await prisma.task.findFirst({
+      where: { id: params.id, ...memberTasksWhere(ownedNodeIds) },
+      select: { id: true },
+    });
+    if (!scoped) return apiUnauthorized();
+  }
+
   const task = await prisma.task.findUnique({
     where: { id: params.id },
     include: {

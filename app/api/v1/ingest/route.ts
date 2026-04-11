@@ -50,18 +50,42 @@ export async function POST(req: NextRequest) {
   const { items, source, deduplicate } = parsed.data;
   const results = { created: 0, skipped: 0, errors: 0, details: [] as Array<{ name: string; action: string }> };
 
+  const projectItems = items.filter((i) => i.type === "project");
+  const capitalItems = items.filter((i) => i.type === "capital");
+
+  const existingProjectNames = new Set<string>();
+  const existingProjectWebsites = new Set<string>();
+  const existingCapitalNames = new Set<string>();
+
+  if (deduplicate && projectItems.length > 0) {
+    const names = projectItems.map((i) => i.name);
+    const websites = projectItems.map((i) => i.website).filter(Boolean) as string[];
+    const existing = await prisma.project.findMany({
+      where: { OR: [{ name: { in: names } }, ...(websites.length ? [{ website: { in: websites } }] : [])] },
+      select: { name: true, website: true },
+    });
+    for (const e of existing) {
+      existingProjectNames.add(e.name);
+      if (e.website) existingProjectWebsites.add(e.website);
+    }
+  }
+
+  if (deduplicate && capitalItems.length > 0) {
+    const names = capitalItems.map((i) => i.name);
+    const existing = await prisma.capitalProfile.findMany({
+      where: { name: { in: names } },
+      select: { name: true },
+    });
+    for (const e of existing) existingCapitalNames.add(e.name);
+  }
+
   for (const item of items) {
     try {
       if (item.type === "project") {
-        if (deduplicate) {
-          const existing = await prisma.project.findFirst({
-            where: { OR: [{ name: item.name }, ...(item.website ? [{ website: item.website }] : [])] },
-          });
-          if (existing) {
-            results.skipped++;
-            results.details.push({ name: item.name, action: "skipped_duplicate" });
-            continue;
-          }
+        if (deduplicate && (existingProjectNames.has(item.name) || (item.website && existingProjectWebsites.has(item.website)))) {
+          results.skipped++;
+          results.details.push({ name: item.name, action: "skipped_duplicate" });
+          continue;
         }
 
         const project = await prisma.project.create({
@@ -87,15 +111,10 @@ export async function POST(req: NextRequest) {
         results.created++;
         results.details.push({ name: item.name, action: "created" });
       } else if (item.type === "capital") {
-        if (deduplicate) {
-          const existing = await prisma.capitalProfile.findFirst({
-            where: { name: item.name },
-          });
-          if (existing) {
-            results.skipped++;
-            results.details.push({ name: item.name, action: "skipped_duplicate" });
-            continue;
-          }
+        if (deduplicate && existingCapitalNames.has(item.name)) {
+          results.skipped++;
+          results.details.push({ name: item.name, action: "skipped_duplicate" });
+          continue;
         }
 
         await prisma.capitalProfile.create({

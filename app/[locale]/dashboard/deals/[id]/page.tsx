@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
+import { getOwnedNodeIds } from "@/lib/member-data-scope";
 import { DealDetail } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +14,21 @@ export default async function DealDetailPage({ params }: { params: { id: string 
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(session.user.role);
+
+  if (!isAdmin) {
+    const ownedNodeIds = await getOwnedNodeIds(prisma, session.user.id);
+    const hasAccess = await prisma.deal.findFirst({
+      where: {
+        id: params.id,
+        OR: [
+          { project: { node: { id: { in: ownedNodeIds } } } },
+          { participants: { some: { nodeId: { in: ownedNodeIds } } } },
+        ],
+      },
+      select: { id: true },
+    });
+    if (!hasAccess) redirect("/dashboard/deals");
+  }
 
   const deal = await prisma.deal.findUnique({
     where: { id: params.id },

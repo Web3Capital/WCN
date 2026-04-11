@@ -9,7 +9,7 @@ import { Events } from "@/lib/core/event-types";
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const auth = await requirePermission("update", "settlement");
+  const auth = await requirePermission("update", "approval");
   if (!auth.ok) return apiUnauthorized();
 
   const body = await req.json().catch(() => ({}));

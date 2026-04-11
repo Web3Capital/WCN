@@ -8,10 +8,12 @@
 import { getPrisma } from "@/lib/prisma";
 import type { ProjectContext, CapitalContext, DealContext, MatchContext } from "./types";
 
-export async function buildProjectContext(projectId: string): Promise<ProjectContext | null> {
+export async function buildProjectContext(projectId: string, ownerNodeId?: string): Promise<ProjectContext | null> {
   const prisma = getPrisma();
-  const p = await prisma.project.findUnique({
-    where: { id: projectId },
+  const whereClause: any = { id: projectId };
+  if (ownerNodeId) whereClause.nodeId = ownerNodeId;
+  const p = await prisma.project.findFirst({
+    where: whereClause,
     include: {
       node: { select: { name: true } },
       deals: {
@@ -59,10 +61,17 @@ export async function buildCapitalContext(capitalProfileId: string): Promise<Cap
   };
 }
 
-export async function buildDealContext(dealId: string): Promise<DealContext | null> {
+export async function buildDealContext(dealId: string, ownerNodeId?: string): Promise<DealContext | null> {
   const prisma = getPrisma();
-  const d = await prisma.deal.findUnique({
-    where: { id: dealId },
+  const whereClause: any = { id: dealId };
+  if (ownerNodeId) {
+    whereClause.OR = [
+      { project: { nodeId: ownerNodeId } },
+      { participants: { some: { nodeId: ownerNodeId } } },
+    ];
+  }
+  const d = await prisma.deal.findFirst({
+    where: whereClause,
     select: {
       id: true,
       title: true,
@@ -97,10 +106,17 @@ export async function buildDealContext(dealId: string): Promise<DealContext | nu
   };
 }
 
-export async function buildMatchContext(matchId: string): Promise<MatchContext | null> {
+export async function buildMatchContext(matchId: string, ownerNodeId?: string): Promise<MatchContext | null> {
   const prisma = getPrisma();
-  const m = await prisma.match.findUnique({
-    where: { id: matchId },
+  const whereClause: any = { id: matchId };
+  if (ownerNodeId) {
+    whereClause.OR = [
+      { capitalNodeId: ownerNodeId },
+      { project: { nodeId: ownerNodeId } },
+    ];
+  }
+  const m = await prisma.match.findFirst({
+    where: whereClause,
     select: {
       id: true,
       score: true,
@@ -114,7 +130,7 @@ export async function buildMatchContext(matchId: string): Promise<MatchContext |
   if (!m) return null;
 
   const [project, capital] = await Promise.all([
-    buildProjectContext(m.projectId),
+    buildProjectContext(m.projectId, ownerNodeId),
     buildCapitalContext(m.capitalProfileId),
   ]);
   if (!project || !capital) return null;

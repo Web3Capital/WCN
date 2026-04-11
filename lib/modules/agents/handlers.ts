@@ -87,7 +87,7 @@ export function initAgentHandlers(): void {
           where: { id: inputs.projectId },
           data: {
             ...(outputs.summary ? { description: outputs.summary } : {}),
-            ...(outputs.riskTags ? { metadata: { riskTags: outputs.riskTags } } : {}),
+            ...(outputs.risks ? { metadata: { risks: outputs.risks } } : {}),
           },
         }).catch(() => {});
       }
@@ -102,10 +102,10 @@ export function initAgentHandlers(): void {
       }
 
       if (agentType === "EXECUTION" && inputs?.dealId && outputs?.actionItems) {
-        for (const item of outputs.actionItems as Array<{ title: string; assignee?: string }>) {
+        for (const item of outputs.actionItems as Array<{ description: string; assignee?: string }>) {
           await prisma.task.create({
             data: {
-              title: item.title,
+              title: item.description,
               dealId: inputs.dealId,
               status: "DRAFT",
               type: "EXECUTION",

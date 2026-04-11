@@ -185,7 +185,7 @@ export const authOptions: NextAuthOptions = (() => {
               lastLoginAt: new Date(),
               lastLoginIp: loginIp,
               lastLoginDevice: loginDevice,
-              accountStatus: user.accountStatus === "INVITED" ? "ACTIVE" : user.accountStatus === "PENDING_2FA" ? "ACTIVE" : user.accountStatus,
+              accountStatus: user.accountStatus === "INVITED" ? "ACTIVE" : user.accountStatus,
             }
           });
 

@@ -562,5 +562,12 @@
     "openWiki": "Wiki öffnen",
     "learnMore": "Mehr erfahren",
     "skipToContent": "Zum Inhalt springen"
+  },
+  "wiki": {
+    "title": "Wiki",
+    "description": "Die vollständige WCN-Wissensdatenbank — von der Projektvorstellung bis zur Systemarchitektur: das Web3 Capital Network vollständig verstehen.",
+    "heading": "WCN Wiki",
+    "subtitle": "Von der Projektdefinition bis zur Systemarchitektur, von Knotenmechanismen bis zu Geschäftsmodellen — Design und Betrieb des Web3 Capital Network vollständig verstehen.",
+    "pages": "Seiten"
   }
 }

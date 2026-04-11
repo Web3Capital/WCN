@@ -181,7 +181,7 @@ function GlobalSearch() {
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(value)}`);
         const data = await res.json();
-        if (data.ok) setResults(data.data ?? []);
+        if (data.ok) setResults(data.data?.results ?? data.data ?? []);
       } catch { /* ignore */ }
     }, 300);
   }, []);
@@ -598,6 +598,9 @@ export function DashboardShell({
             ) : (
               <span className="dashboard-topbar-title">{tShell("topTitle")}</span>
             )}
+          </div>
+          <div className="dashboard-topbar-right" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <NotificationBell />
           </div>
         </header>
         {children}

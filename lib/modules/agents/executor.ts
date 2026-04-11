@@ -41,8 +41,10 @@ export async function runResearchAgent(
   projectId: string,
   triggeredBy: string,
 ): Promise<AgentRunResult> {
-  const project = await buildProjectContext(projectId);
-  if (!project) throw new Error(`Project ${projectId} not found`);
+  const prisma = getPrisma();
+  const agentRecord = await prisma.agent.findUnique({ where: { id: agentId }, select: { ownerNodeId: true } });
+  const project = await buildProjectContext(projectId, agentRecord?.ownerNodeId ?? undefined);
+  if (!project) throw new Error(`Project ${projectId} not found or not accessible by agent's owner node`);
 
   return executeAgent({
     agentId,
@@ -73,8 +75,10 @@ export async function runDealAgent(
   matchId: string,
   triggeredBy: string,
 ): Promise<AgentRunResult> {
-  const match = await buildMatchContext(matchId);
-  if (!match) throw new Error(`Match ${matchId} not found`);
+  const prisma = getPrisma();
+  const agentRecord = await prisma.agent.findUnique({ where: { id: agentId }, select: { ownerNodeId: true } });
+  const match = await buildMatchContext(matchId, agentRecord?.ownerNodeId ?? undefined);
+  if (!match) throw new Error(`Match ${matchId} not found or not accessible by agent's owner node`);
 
   return executeAgent({
     agentId,
@@ -106,8 +110,10 @@ export async function runExecutionAgent(
   transcript: string,
   triggeredBy: string,
 ): Promise<AgentRunResult> {
-  const deal = await buildDealContext(dealId);
-  if (!deal) throw new Error(`Deal ${dealId} not found`);
+  const prisma = getPrisma();
+  const agentRecord = await prisma.agent.findUnique({ where: { id: agentId }, select: { ownerNodeId: true } });
+  const deal = await buildDealContext(dealId, agentRecord?.ownerNodeId ?? undefined);
+  if (!deal) throw new Error(`Deal ${dealId} not found or not accessible by agent's owner node`);
 
   return executeAgent({
     agentId,
@@ -139,8 +145,10 @@ export async function runGrowthAgent(
   triggeredBy: string,
   targetAudience?: string,
 ): Promise<AgentRunResult> {
-  const project = await buildProjectContext(projectId);
-  if (!project) throw new Error(`Project ${projectId} not found`);
+  const prisma = getPrisma();
+  const agentRecord = await prisma.agent.findUnique({ where: { id: agentId }, select: { ownerNodeId: true } });
+  const project = await buildProjectContext(projectId, agentRecord?.ownerNodeId ?? undefined);
+  if (!project) throw new Error(`Project ${projectId} not found or not accessible by agent's owner node`);
 
   return executeAgent({
     agentId,
@@ -222,7 +230,7 @@ async function executeAgent(plan: ExecutionPlan): Promise<AgentRunResult> {
 
   const agent = await prisma.agent.findUnique({
     where: { id: plan.agentId },
-    select: { id: true, type: true, status: true, ownerNodeId: true },
+    select: { id: true, type: true, status: true, ownerNodeId: true, ownerNode: { select: { id: true } } },
   });
   if (!agent) throw new Error(`Agent ${plan.agentId} not found`);
   if (agent.status !== "ACTIVE") throw new Error(`Agent ${plan.agentId} is ${agent.status}`);
@@ -233,7 +241,7 @@ async function executeAgent(plan: ExecutionPlan): Promise<AgentRunResult> {
     const allPerms = await prisma.agentPermission.findMany({ where: { agentId: agent.id }, select: { scope: true } });
     const hasFallback = allPerms.some((p) => p.scope === "*" || p.scope === "admin");
     if (!hasFallback) {
-      console.warn(`[Agent] ${agent.id} missing permission '${requiredScope}', proceeding with warning`);
+      throw new Error(`Agent ${agent.id} missing required permission '${requiredScope}'. Grant the permission or add a wildcard scope.`);
     }
   }
 

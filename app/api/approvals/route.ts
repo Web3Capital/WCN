@@ -8,7 +8,7 @@ import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
 
 export async function GET(req: Request) {
-  const auth = await requirePermission("read", "settlement");
+  const auth = await requirePermission("read", "approval");
   if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
@@ -30,7 +30,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const auth = await requirePermission("create", "settlement");
+  const auth = await requirePermission("create", "approval");
   if (!auth.ok) return apiUnauthorized();
 
   const body = await req.json().catch(() => ({}));

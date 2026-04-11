@@ -44,8 +44,8 @@ export async function POST(req: Request) {
     return apiOk({ marked: "all" });
   }
 
-  await prisma.notification.update({
-    where: { id: parsed.data.id },
+  await prisma.notification.updateMany({
+    where: { id: parsed.data.id, userId: auth.session.user!.id },
     data: { readAt: new Date() },
   });
   return apiOk({ marked: parsed.data.id });

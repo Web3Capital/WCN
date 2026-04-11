@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { autoTranslate } from "@/lib/i18n/auto-translate";
+import { requireSignedIn } from "@/lib/admin";
+import { apiUnauthorized } from "@/lib/core/api-response";
 
 export async function POST(req: NextRequest) {
+  const auth = await requireSignedIn();
+  if (!auth.ok) return apiUnauthorized();
+
   try {
     const { strings, locale } = await req.json();
 

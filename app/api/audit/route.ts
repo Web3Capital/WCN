@@ -1,6 +1,7 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
+import { isAdminRole } from "@/lib/permissions";
 import { apiOk, apiUnauthorized } from "@/lib/core/api-response";
 import type { Prisma } from "@prisma/client";
 
@@ -16,6 +17,7 @@ export async function GET(req: Request) {
   const until = url.searchParams.get("until");
   const cursor = url.searchParams.get("cursor");
   const limit = Math.min(Number(url.searchParams.get("limit") ?? 50), 200);
+  const workspaceId = url.searchParams.get("workspaceId");
 
   const where: Prisma.AuditLogWhereInput = {};
   if (action) where.action = action;
@@ -25,6 +27,13 @@ export async function GET(req: Request) {
     where.createdAt = {};
     if (since) where.createdAt.gte = new Date(since);
     if (until) where.createdAt.lte = new Date(until);
+  }
+
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (workspaceId) {
+    where.workspaceId = workspaceId;
+  } else if (!isAdmin) {
+    where.actorUserId = auth.session.user!.id;
   }
 
   const prisma = getPrisma();

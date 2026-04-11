@@ -24,7 +24,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   return apiCreated(milestone);
 }
 
-export async function PATCH(req: Request) {
+export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const auth = await requirePermission("update", "deal");
   if (!auth.ok) return apiUnauthorized();
 
@@ -33,12 +33,17 @@ export async function PATCH(req: Request) {
   const milestoneId = String(body?.milestoneId ?? "");
   if (!milestoneId) return apiValidationError([{ path: "milestoneId", message: "milestoneId required." }]);
 
+  const milestone = await prisma.dealMilestone.findFirst({
+    where: { id: milestoneId, dealId: params.id },
+  });
+  if (!milestone) return apiValidationError([{ path: "milestoneId", message: "Milestone not found for this deal." }]);
+
   const data: Record<string, unknown> = {};
   if (body?.title !== undefined) data.title = String(body.title);
   if (body?.doneAt !== undefined) data.doneAt = body.doneAt ? new Date(String(body.doneAt)) : null;
   if (body?.dueAt !== undefined) data.dueAt = body.dueAt ? new Date(String(body.dueAt)) : null;
 
-  const milestone = await prisma.dealMilestone.update({ where: { id: milestoneId }, data });
+  const updated = await prisma.dealMilestone.update({ where: { id: milestoneId }, data });
 
-  return apiOk(milestone);
+  return apiOk(updated);
 }

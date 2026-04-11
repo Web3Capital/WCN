@@ -57,9 +57,12 @@ function getAdminLimiter(): Ratelimit | null {
   return _adminLimiter;
 }
 
-async function check(limiter: Ratelimit | null, identifier: string): Promise<RateLimitResult> {
+async function check(limiter: Ratelimit | null, identifier: string, failClosed = false): Promise<RateLimitResult> {
   if (!limiter) {
-    if (process.env.NODE_ENV === "production") return failClosedResult;
+    if (process.env.NODE_ENV === "production" && failClosed) return failClosedResult;
+    if (process.env.NODE_ENV === "production") {
+      console.warn("[rate-limit] Upstash Redis not configured in production — rate limiting disabled for this request");
+    }
     return noopResult;
   }
   try {
@@ -71,19 +74,19 @@ async function check(limiter: Ratelimit | null, identifier: string): Promise<Rat
       reset: result.reset,
     };
   } catch {
-    if (process.env.NODE_ENV === "production") return failClosedResult;
+    if (process.env.NODE_ENV === "production" && failClosed) return failClosedResult;
     return noopResult;
   }
 }
 
 export async function rateLimit(identifier: string): Promise<RateLimitResult> {
-  return check(getApiLimiter(), identifier);
+  return check(getApiLimiter(), identifier, false);
 }
 
 export async function rateLimitAuth(identifier: string): Promise<RateLimitResult> {
-  return check(getAuthLimiter(), identifier);
+  return check(getAuthLimiter(), identifier, true);
 }
 
 export async function rateLimitAdmin(identifier: string): Promise<RateLimitResult> {
-  return check(getAdminLimiter(), identifier);
+  return check(getAdminLimiter(), identifier, false);
 }

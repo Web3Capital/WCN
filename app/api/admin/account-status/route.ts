@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
+import { timingSafeEqual } from "crypto";
 import { getPrisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
+function constantTimeEquals(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+}
+
 function isValidSecret(secret: string | null): boolean {
   if (!secret) return false;
-  if (process.env.CRON_SECRET && secret === process.env.CRON_SECRET) return true;
-  if (process.env.NEXTAUTH_SECRET && secret === process.env.NEXTAUTH_SECRET) return true;
+  const adminSecret = process.env.ADMIN_API_SECRET || process.env.CRON_SECRET;
+  if (adminSecret && constantTimeEquals(secret, adminSecret)) return true;
   return false;
 }
 

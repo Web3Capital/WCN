@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
+import { getOwnedNodeIds } from "@/lib/member-data-scope";
 import { AgentDetailUI } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +14,17 @@ export default async function AgentDetailPage({ params }: { params: Promise<{ id
   if (!session?.user) redirect("/login");
 
   const prisma = getPrisma();
+  const isAdmin = isAdminRole(session.user.role);
+
+  if (!isAdmin) {
+    const ownedNodeIds = await getOwnedNodeIds(prisma, session.user.id);
+    const scoped = await prisma.agent.findFirst({
+      where: { id, ownerNodeId: { in: ownedNodeIds } },
+      select: { id: true },
+    });
+    if (!scoped) redirect("/dashboard/agents");
+  }
+
   const agent = await prisma.agent.findUnique({
     where: { id },
     include: {
@@ -27,8 +39,6 @@ export default async function AgentDetailPage({ params }: { params: Promise<{ id
     },
   });
   if (!agent) redirect("/dashboard/agents");
-
-  const isAdmin = isAdminRole(session.user.role);
 
   return (
     <div className="dashboard-page section">

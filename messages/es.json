@@ -562,5 +562,12 @@
     "openWiki": "Abrir wiki",
     "learnMore": "Más información",
     "skipToContent": "Saltar al contenido"
+  },
+  "wiki": {
+    "title": "Wiki",
+    "description": "Base de conocimiento completa de WCN: desde la presentación del proyecto hasta la arquitectura del sistema; comprende por completo la Web3 Capital Network.",
+    "heading": "WCN Wiki",
+    "subtitle": "Desde la definición del proyecto hasta la arquitectura del sistema, desde los mecanismos de los nodos hasta los modelos de negocio: comprende el diseño y el funcionamiento de la Web3 Capital Network.",
+    "pages": "páginas"
   }
 }

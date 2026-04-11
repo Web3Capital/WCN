@@ -3,7 +3,9 @@ import type { Prisma } from "@prisma/client";
 import { ApplicationStatus } from "@prisma/client";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { isAdminRole } from "@/lib/permissions";
 import { AuditAction, writeAudit } from "@/lib/audit";
+import { getOwnedNodeIds, memberPoBWhere } from "@/lib/member-data-scope";
 import { assertPoBStatusValue, canTransitionPoBStatus, pobTransitionErrorMessage } from "@/lib/pob-state";
 import { canTransitionPoB } from "@/lib/state-machines/evidence-pob";
 import { apiOk, apiUnauthorized, apiNotFound, apiValidationError, apiConflict } from "@/lib/core/api-response";
@@ -14,6 +16,17 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
+
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (!isAdmin) {
+    const ownedNodeIds = await getOwnedNodeIds(prisma, auth.session.user!.id);
+    const scoped = await prisma.poBRecord.findFirst({
+      where: { id: params.id, ...memberPoBWhere(ownedNodeIds) },
+      select: { id: true },
+    });
+    if (!scoped) return apiUnauthorized();
+  }
+
   const record = await prisma.poBRecord.findUnique({
     where: { id: params.id },
     include: {

@@ -562,5 +562,12 @@
     "openWiki": "Wiki 열기",
     "learnMore": "더 알아보기",
     "skipToContent": "본문으로 건너뛰기"
+  },
+  "wiki": {
+    "title": "Wiki",
+    "description": "WCN 완전 지식 베이스 — 프로젝트 소개부터 시스템 아키텍처까지, Web3 Capital Network를 완전히 이해하세요.",
+    "heading": "WCN Wiki",
+    "subtitle": "프로젝트 정의에서 시스템 아키텍처까지, 노드 메커니즘에서 비즈니스 모델까지 — Web3 Capital Network의 설계와 운영을 완전히 이해하세요.",
+    "pages": "페이지"
   }
 }

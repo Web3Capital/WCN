@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole, can } from "@/lib/permissions";
+import { getOwnedNodeIds, memberTasksWhere } from "@/lib/member-data-scope";
 import { TaskDetail } from "./ui";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +14,15 @@ export default async function TaskDetailPage({ params }: { params: { id: string 
 
   const prisma = getPrisma();
   const isAdmin = isAdminRole(session.user.role);
+
+  if (!isAdmin) {
+    const ownedNodeIds = await getOwnedNodeIds(prisma, session.user.id);
+    const scoped = await prisma.task.findFirst({
+      where: { id: params.id, ...memberTasksWhere(ownedNodeIds) },
+      select: { id: true },
+    });
+    if (!scoped) redirect("/dashboard/tasks");
+  }
 
   const task = await prisma.task.findUnique({
     where: { id: params.id },
