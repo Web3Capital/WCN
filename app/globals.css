@@ -2260,6 +2260,21 @@ html[data-dashboard="true"] .footer {
     margin-top: 8px;
     box-shadow: var(--shadow-sm);
   }
+  .nav-utils {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .lang-toggle {
+    width: 100%;
+  }
+  .lang-dropdown {
+    position: static;
+    width: 100%;
+    max-height: none;
+    box-shadow: none;
+    border: 1px solid var(--line);
+    margin-top: 6px;
+  }
 }
 
 /* —— Badge system —— */
