@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
+import { Info, AlertTriangle, Lightbulb, AlertOctagon } from "lucide-react";
 
-const ICONS: Record<string, string> = {
-  info: "ℹ",
-  warning: "⚠",
-  tip: "💡",
-  danger: "🚨",
+const ICONS: Record<string, React.ReactNode> = {
+  info: <Info size={16} strokeWidth={2} />,
+  warning: <AlertTriangle size={16} strokeWidth={2} />,
+  tip: <Lightbulb size={16} strokeWidth={2} />,
+  danger: <AlertOctagon size={16} strokeWidth={2} />,
 };
 
 export function Callout({

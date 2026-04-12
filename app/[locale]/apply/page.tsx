@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
+import { Landmark, Box, Wrench, Globe, Megaphone, Factory } from "lucide-react";
 import { ApplyForm } from "./ui";
 
-const NODE_TYPES = [
-  { icon: "💰", titleKey: "capitalTitle" as const, descKey: "capitalDesc" as const },
-  { icon: "📦", titleKey: "projectTitle" as const, descKey: "projectDesc" as const },
-  { icon: "🔧", titleKey: "serviceTitle" as const, descKey: "serviceDesc" as const },
-  { icon: "🌍", titleKey: "regionalTitle" as const, descKey: "regionalDesc" as const },
-  { icon: "📣", titleKey: "mediaTitle" as const, descKey: "mediaDesc" as const },
-  { icon: "🏭", titleKey: "industryTitle" as const, descKey: "industryDesc" as const },
-] as const;
+const NODE_TYPES: { icon: ReactNode; titleKey: string; descKey: string }[] = [
+  { icon: <Landmark size={20} strokeWidth={1.5} />, titleKey: "capitalTitle", descKey: "capitalDesc" },
+  { icon: <Box size={20} strokeWidth={1.5} />, titleKey: "projectTitle", descKey: "projectDesc" },
+  { icon: <Wrench size={20} strokeWidth={1.5} />, titleKey: "serviceTitle", descKey: "serviceDesc" },
+  { icon: <Globe size={20} strokeWidth={1.5} />, titleKey: "regionalTitle", descKey: "regionalDesc" },
+  { icon: <Megaphone size={20} strokeWidth={1.5} />, titleKey: "mediaTitle", descKey: "mediaDesc" },
+  { icon: <Factory size={20} strokeWidth={1.5} />, titleKey: "industryTitle", descKey: "industryDesc" },
+];
 
 const STEPS = [
   { num: 1, titleKey: "step1Title" as const, descKey: "step1Desc" as const },

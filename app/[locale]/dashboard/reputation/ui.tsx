@@ -23,7 +23,7 @@ const TIER_BADGE: Record<string, string> = {
 };
 
 const TIER_EMOJI: Record<string, string> = {
-  DIAMOND: "💎", PLATINUM: "🏆", GOLD: "🥇", SILVER: "🥈", BRONZE: "🥉",
+  DIAMOND: "◆", PLATINUM: "★", GOLD: "●", SILVER: "○", BRONZE: "·",
 };
 
 const TIERS = ["ALL", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE"] as const;
