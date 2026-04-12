@@ -19,6 +19,7 @@ const replacements: Array<[RegExp, string]> = [
   [/获取访问权限/g, "Request Access"],
   [/联系方式/g, "Contact"],
   [/是什么/g, "What it is"],
+  [/不只是什么/g, "What it's not just"],
   [/不是什么/g, "What it is not"],
   [/愿景与使命/g, "Vision & Mission"],
   [/为什么是现在/g, "Why now"],

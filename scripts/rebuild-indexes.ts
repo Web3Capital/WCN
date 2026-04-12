@@ -24,7 +24,7 @@ const META: Record<string, ChapterMeta> = {
     title: "项目介绍",
     icon: "📖",
     description: "WCN 的定义、边界、愿景与时代窗口。",
-    lead: "这一章不是背景介绍，而是整个知识库的认知地基。它负责讲清四件事：WCN 是什么、WCN 不是什么、WCN 想去哪里，以及为什么这件事值得现在做。",
+    lead: "这一章不是背景介绍，而是整个知识库的认知地基。它负责讲清四件事：WCN 是什么、WCN 不只是什么、WCN 想去哪里，以及为什么这件事值得现在做。",
     heroTitle: "先建立对 WCN 的第一印象，再进入系统细节。",
     readOrder: "先总览，再顺读 1.1 → 1.4",
     audience: "投资人、节点、合作方与团队成员",
