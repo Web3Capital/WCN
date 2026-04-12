@@ -13,7 +13,7 @@ export function Footer() {
         <div className="footer-grid">
           <div className="footer-col">
             <div className="brand">
-              <span className="brand-mark" />
+              <span className="brand-mark">W³</span>
               <span>WCN</span>
             </div>
             <p className="muted footer-tagline">{t("tagline")}</p>
