@@ -8,9 +8,12 @@ import { PobConsole } from "./ui";
 import { getOwnedNodeIds, memberPoBWhere, memberTasksWhere, memberProjectsWhere, memberEvidenceWhere } from "@/lib/member-data-scope";
 import { redactNodeForMember, redactEvidenceForMember } from "@/lib/member-redact";
 import { isAdminRole } from "@/lib/permissions";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
+
+export const metadata = dashboardMeta("PoB Records", "Proof of Business records");
 export default async function PobPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");

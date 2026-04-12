@@ -6,9 +6,12 @@ import Link from "next/link";
 import { ApplicationsTable } from "./ui";
 import { isAdminRole } from "@/lib/permissions";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
+
+export const metadata = dashboardMeta("Applications", "Node applications");
 export default async function ApplicationsPage() {
   const prisma = getPrisma();
   const session = await getServerSession(authOptions);

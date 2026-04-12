@@ -5,9 +5,12 @@ import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { getOwnedNodeIds } from "@/lib/member-data-scope";
 import { DealDetail } from "./ui";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
+
+export const metadata = dashboardMeta("Deal Details", "View deal details");
 export default async function DealDetailPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");

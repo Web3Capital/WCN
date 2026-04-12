@@ -5,9 +5,12 @@ import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { CapitalConsole } from "./ui";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
+
+export const metadata = dashboardMeta("Capital", "Capital management");
 export default async function CapitalPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");

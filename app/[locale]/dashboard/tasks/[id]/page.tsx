@@ -5,9 +5,12 @@ import { getPrisma } from "@/lib/prisma";
 import { isAdminRole, can } from "@/lib/permissions";
 import { getOwnedNodeIds, memberTasksWhere } from "@/lib/member-data-scope";
 import { TaskDetail } from "./ui";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
+
+export const metadata = dashboardMeta("Task Details", "View task details");
 export default async function TaskDetailPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");

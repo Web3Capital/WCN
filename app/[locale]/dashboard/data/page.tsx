@@ -6,9 +6,12 @@ import { isAdminRole } from "@/lib/permissions";
 import { getWeeklyTimeSeries, getFunnelData, detectAnomalies } from "@/lib/modules/cockpit/weekly-report";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { DataCockpit } from "./ui";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
+
+export const metadata = dashboardMeta("Data Cockpit", "Analytics and data overview");
 export default async function DataCockpitPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");

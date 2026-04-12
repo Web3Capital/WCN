@@ -131,6 +131,7 @@ export async function middleware(request: NextRequest) {
   // For page routes: run next-intl middleware first for locale detection/redirect
   const intlResponse = intlMiddleware(request);
   intlResponse.headers.set("x-request-id", requestId);
+  intlResponse.headers.set("x-url", request.url);
 
   // If next-intl issued a redirect (e.g. bare /about -> /en/about), return it
   if (intlResponse.status >= 300 && intlResponse.status < 400) {

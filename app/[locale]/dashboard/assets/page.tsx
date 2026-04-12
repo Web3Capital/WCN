@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { PageHeader } from "../_components";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
+
+export const metadata = dashboardMeta("Assets", "Asset management");
 export default function AssetsPhase3Page() {
   return (
     <div className="dashboard-page section">

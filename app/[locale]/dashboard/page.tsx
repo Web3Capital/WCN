@@ -7,6 +7,7 @@ import { getOwnedNodeIds, scopedSummaryCounts } from "@/lib/member-data-scope";
 import { isAdminRole } from "@/lib/permissions";
 import { Network, FolderKanban, ShieldCheck, Plus, Scale, Inbox, Handshake, Landmark, ListTodo } from "lucide-react";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,8 @@ function roleLabel(role: string): string {
   return map[role] || role;
 }
 
+
+export const metadata = dashboardMeta("Dashboard", "WCN console overview");
 export default async function DashboardIndex() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");

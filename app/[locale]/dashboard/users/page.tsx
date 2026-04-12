@@ -5,9 +5,12 @@ import { redirect } from "next/navigation";
 import { UsersConsole } from "./ui";
 import { isAdminRole } from "@/lib/permissions";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
+
+export const metadata = dashboardMeta("Users", "User management");
 export default async function UsersPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");

@@ -7,9 +7,12 @@ import { NodesConsole } from "./ui";
 import { redactNodeForMember } from "@/lib/member-redact";
 import { isAdminRole } from "@/lib/permissions";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
+
+export const metadata = dashboardMeta("Nodes", "Manage network nodes");
 export default async function NodesPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");

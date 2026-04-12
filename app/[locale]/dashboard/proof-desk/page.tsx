@@ -6,9 +6,12 @@ import { isAdminRole } from "@/lib/permissions";
 import { getOwnedNodeIds, memberEvidenceWhere } from "@/lib/member-data-scope";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { ProofDeskConsole } from "./ui";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
+
+export const metadata = dashboardMeta("Evidence Desk", "Evidence review and verification");
 export default async function ProofDeskPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");

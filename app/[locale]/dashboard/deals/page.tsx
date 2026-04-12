@@ -5,9 +5,12 @@ import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { DealsConsole } from "./ui";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
+
+export const metadata = dashboardMeta("Deal Room", "Active deals and negotiations");
 export default async function DealsPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");

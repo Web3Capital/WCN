@@ -1,5 +1,6 @@
 import { TranslatedPage } from "@/lib/i18n/translate-page";
 import InviteActivationClient from "./client";
+import type { Metadata } from "next";
 
 const PAGE_STRINGS = [
   "Welcome", "Activate your account",
@@ -11,6 +12,8 @@ const PAGE_STRINGS = [
   "Activating...", "Activate account", "Network error.",
 ];
 
+
+export const metadata: Metadata = { title: "Invitation", description: "Accept your invitation", robots: { index: false, follow: false } };
 export default async function InviteActivationPage({ params }: { params: Promise<{ locale: string; token: string }> }) {
   const { locale } = await params;
   return (

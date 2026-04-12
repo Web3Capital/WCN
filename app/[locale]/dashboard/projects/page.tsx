@@ -8,9 +8,12 @@ import { getOwnedNodeIds, memberProjectsWhere } from "@/lib/member-data-scope";
 import { redactProjectForMember, redactNodeForMember } from "@/lib/member-redact";
 import { isAdminRole } from "@/lib/permissions";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
+
+export const metadata = dashboardMeta("Projects", "Manage projects");
 export default async function ProjectsPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");

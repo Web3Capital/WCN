@@ -1,5 +1,6 @@
 import { TranslatedPage } from "@/lib/i18n/translate-page";
 import TermsAcceptanceClient from "./client";
+import type { Metadata } from "next";
 
 const PAGE_STRINGS = [
   "Onboarding", "Terms & Agreements",
@@ -14,6 +15,8 @@ const PAGE_STRINGS = [
   "Continue to Dashboard", "Loading...", "Network error.",
 ];
 
+
+export const metadata: Metadata = { title: "Terms & Agreements", description: "Accept terms", robots: { index: false, follow: false } };
 export default async function TermsAcceptancePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   return (

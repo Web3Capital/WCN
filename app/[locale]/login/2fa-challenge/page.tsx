@@ -1,5 +1,6 @@
 import { TranslatedPage } from "@/lib/i18n/translate-page";
 import TwoFactorChallengeClient from "./client";
+import type { Metadata } from "next";
 
 const PAGE_STRINGS = [
   "Security", "Two-Factor Verification",
@@ -13,6 +14,8 @@ const PAGE_STRINGS = [
   "Network error.",
 ];
 
+
+export const metadata: Metadata = { title: "2FA Challenge", description: "Enter your 2FA code", robots: { index: false, follow: false } };
 export default async function TwoFactorChallengePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   return (

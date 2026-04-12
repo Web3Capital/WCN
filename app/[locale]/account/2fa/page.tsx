@@ -1,5 +1,6 @@
 import { TranslatedPage } from "@/lib/i18n/translate-page";
 import TwoFactorSetupClient from "./client";
+import type { Metadata } from "next";
 
 const PAGE_STRINGS = [
   "Account", "Two-Factor Authentication",
@@ -12,6 +13,8 @@ const PAGE_STRINGS = [
   "Go to Dashboard", "Network error.",
 ];
 
+
+export const metadata: Metadata = { title: "Two-Factor Authentication", description: "Set up 2FA", robots: { index: false, follow: false } };
 export default async function TwoFactorSetupPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   return (

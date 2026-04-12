@@ -5,9 +5,12 @@ import { redirect } from "next/navigation";
 import { AuditConsole } from "./ui";
 import { can } from "@/lib/permissions";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
+
+export const metadata = dashboardMeta("Audit Log", "System audit trail");
 export default async function AuditPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");

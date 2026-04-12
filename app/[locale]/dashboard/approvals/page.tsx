@@ -2,7 +2,10 @@ import { requirePermission } from "@/lib/admin";
 import { redirect } from "next/navigation";
 import { ApprovalsUI } from "./ui";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
+
+export const metadata = dashboardMeta("Approvals", "Pending approvals");
 export default async function ApprovalsPage() {
   const auth = await requirePermission("read", "approval");
   if (!auth.ok) redirect("/dashboard");

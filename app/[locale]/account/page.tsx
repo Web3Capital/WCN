@@ -4,11 +4,14 @@ import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { TranslatedPage } from "@/lib/i18n/translate-page";
 import { AccountSettings } from "./ui";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
 const PAGE_STRINGS = ["Account", "Settings"];
 
+
+export const metadata: Metadata = { title: "Account Settings", description: "Manage your account", robots: { index: false, follow: false } };
 export default async function AccountPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const session = await getServerSession(authOptions);

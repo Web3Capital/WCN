@@ -5,9 +5,12 @@ import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { InviteConsole } from "./ui";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
+
+export const metadata = dashboardMeta("Invites", "Manage invitations");
 export default async function InvitesPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
