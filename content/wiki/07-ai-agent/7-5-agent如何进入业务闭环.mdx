@@ -26,10 +26,10 @@ order: 5
 ## Agent 输出进入 Proof 的必要条件
 
 <CardGrid cols={2}>
-  <Card title="任务 ID 绑定" icon="🔗">每条机器输出关联 `task_id`（或等价句柄）；禁止游离在私聊或离线文档里的「幽灵结果」。</Card>
-  <Card title="输入与版本留痕" icon="📋">模型名、版本、温度或等价参数、检索片段 ID、关键附件哈希；便于复现与争议时取证。</Card>
-  <Card title="人类采纳记录" icon="✅">显式事件：`adopted_by`、`timestamp`、可选修改 diff；与 Copilot 隐式「用户复制走了」不同，必须结构化。</Card>
-  <Card title="结果关联" icon="🔄">可追溯到 deal、里程碑或链上/链下业务事件（如合同归档、上所公告）；否则无法做归因结算。</Card>
+  <Card title="任务 ID 绑定">每条机器输出关联 `task_id`（或等价句柄）；禁止游离在私聊或离线文档里的「幽灵结果」。</Card>
+  <Card title="输入与版本留痕">模型名、版本、温度或等价参数、检索片段 ID、关键附件哈希；便于复现与争议时取证。</Card>
+  <Card title="人类采纳记录">显式事件：`adopted_by`、`timestamp`、可选修改 diff；与 Copilot 隐式「用户复制走了」不同，必须结构化。</Card>
+  <Card title="结果关联">可追溯到 deal、里程碑或链上/链下业务事件（如合同归档、上所公告）；否则无法做归因结算。</Card>
 </CardGrid>
 
 <Callout type="warning">
@@ -53,10 +53,10 @@ order: 5
 ## 这一步决定什么
 
 <CardGrid cols={2}>
-  <Card title="AI 是否只是工具" icon="🤖">进入闭环才成为正式执行层；否则与任意 LLM 包装无异。</Card>
-  <Card title="Agent 是否可被结算" icon="💰">无 Proof 链则无 PoB；激励与分润缺少凭据。</Card>
-  <Card title="Agent 是否可治理" icon="🛡️">采纳率、错误采纳回滚、模型 A/B 效果都可度量，才能升级或暂停具体 Agent 配置。</Card>
-  <Card title="WCN 差异化" icon="⚡">不是「接入了 GPT/Claude/Gemini」，而是**多节点业务网络里第一次把机器输出接到统一证据与结算语义上**。</Card>
+  <Card title="AI 是否只是工具">进入闭环才成为正式执行层；否则与任意 LLM 包装无异。</Card>
+  <Card title="Agent 是否可被结算">无 Proof 链则无 PoB；激励与分润缺少凭据。</Card>
+  <Card title="Agent 是否可治理">采纳率、错误采纳回滚、模型 A/B 效果都可度量，才能升级或暂停具体 Agent 配置。</Card>
+  <Card title="WCN 差异化">不是「接入了 GPT/Claude/Gemini」，而是**多节点业务网络里第一次把机器输出接到统一证据与结算语义上**。</Card>
 </CardGrid>
 
 <Callout type="tip">

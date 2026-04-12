@@ -26,10 +26,10 @@ order: 6
 ## 四个核心组件
 
 <CardGrid cols={2}>
-  <Card title="Proof Desk（证据收集）" icon="📎">Deal 完成后，Deal Owner 把结果证据提交至 Proof Desk：已签协议、打款记录、交付件、链上哈希、会议纪要、邮件确认。证据类型和数量取决于 Deal 类型——融资 Deal 需要协议 + 打款确认，服务 Deal 需要 SOW + 交付验收。</Card>
-  <Card title="Reviewer Queue（审核队列）" icon="🔍">独立审核人检查证据：材料完整性、真实性验证、时间线合理性、风险标记。关键规则：审核人不能是 Deal 参与方（利益回避），审核结果需要多签确认。</Card>
-  <Card title="PoB Event（业务证明）" icon="✅">审核通过后，业务结果作为 PoB Event 进入系统账本。PoB 记录不可篡改，包含完整的参与方、证据摘要、归因分配和时间戳。</Card>
-  <Card title="Settlement Run（周期结算）" icon="⚖️">PoB 在周期性 Settlement Run 中被汇总处理。系统基于归因比例，把价值分配给所有贡献方——节点、服务商和 Agent。</Card>
+  <Card title="Proof Desk（证据收集）">Deal 完成后，Deal Owner 把结果证据提交至 Proof Desk：已签协议、打款记录、交付件、链上哈希、会议纪要、邮件确认。证据类型和数量取决于 Deal 类型——融资 Deal 需要协议 + 打款确认，服务 Deal 需要 SOW + 交付验收。</Card>
+  <Card title="Reviewer Queue（审核队列）">独立审核人检查证据：材料完整性、真实性验证、时间线合理性、风险标记。关键规则：审核人不能是 Deal 参与方（利益回避），审核结果需要多签确认。</Card>
+  <Card title="PoB Event（业务证明）">审核通过后，业务结果作为 PoB Event 进入系统账本。PoB 记录不可篡改，包含完整的参与方、证据摘要、归因分配和时间戳。</Card>
+  <Card title="Settlement Run（周期结算）">PoB 在周期性 Settlement Run 中被汇总处理。系统基于归因比例，把价值分配给所有贡献方——节点、服务商和 Agent。</Card>
 </CardGrid>
 
 ---
@@ -37,8 +37,8 @@ order: 6
 ## 与 TradFi 验证体系的对比
 
 <CardGrid cols={2}>
-  <Card title="TradFi：成熟但中心化" icon="🏦">四大会计师事务所（Deloitte / PwC / EY / KPMG）提供审计，DTCC / Euroclear 提供清算，Bloomberg / MSCI 提供绩效归因。体系成熟但高度中心化、高门槛、高成本。</Card>
-  <Card title="WCN：网络化 + 可编程" icon="🌐">Proof Desk 替代人工审计收集，PoB 替代纸质审计报告，智能归因替代手动绩效计算，链上 Settlement 替代中心化清算。更开放、更可追踪、更低成本。</Card>
+  <Card title="TradFi：成熟但中心化">四大会计师事务所（Deloitte / PwC / EY / KPMG）提供审计，DTCC / Euroclear 提供清算，Bloomberg / MSCI 提供绩效归因。体系成熟但高度中心化、高门槛、高成本。</Card>
+  <Card title="WCN：网络化 + 可编程">Proof Desk 替代人工审计收集，PoB 替代纸质审计报告，智能归因替代手动绩效计算，链上 Settlement 替代中心化清算。更开放、更可追踪、更低成本。</Card>
 </CardGrid>
 
 > **关键区别**：TradFi 的验证是**事后审计**（年报出来后才审），WCN 的验证是**实时嵌入**——每个 Deal 完成时就立即进入证据收集和审核流程，不存在「年底补账」的问题。
@@ -48,10 +48,10 @@ order: 6
 ## 缺少验证层会发生什么
 
 <CardGrid cols={2}>
-  <Card title="结果主观化" icon="⊘">参与方声称「我促成了这个 Deal」，但没有证据支持。系统退化为口头 claim 和关系型分配。</Card>
-  <Card title="归因争议" icon="⊘">多方参与一个 Deal，谁贡献了多少无法判断。大多数 Web3 项目选择回避这个问题（平分或不结算），长期伤害参与积极性。</Card>
-  <Card title="信誉不累积" icon="⊘">没有验证过的结果，节点的信誉评分无法建立。系统无法区分高价值节点和低价值节点。</Card>
-  <Card title="价值不沉淀" icon="⊘">协作结果是一次性的——做完了就散了，没有系统性记录。网络无法从过去的合作中学习和积累。</Card>
+  <Card title="结果主观化" icon="ban">参与方声称「我促成了这个 Deal」，但没有证据支持。系统退化为口头 claim 和关系型分配。</Card>
+  <Card title="归因争议" icon="ban">多方参与一个 Deal，谁贡献了多少无法判断。大多数 Web3 项目选择回避这个问题（平分或不结算），长期伤害参与积极性。</Card>
+  <Card title="信誉不累积" icon="ban">没有验证过的结果，节点的信誉评分无法建立。系统无法区分高价值节点和低价值节点。</Card>
+  <Card title="价值不沉淀" icon="ban">协作结果是一次性的——做完了就散了，没有系统性记录。网络无法从过去的合作中学习和积累。</Card>
 </CardGrid>
 
 <Callout type="tip">

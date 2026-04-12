@@ -18,12 +18,12 @@ order: 3
 ## 关键状态
 
 <CardGrid cols={3}>
-  <Card title="Registered" icon="📝">已在目录登记（名称、类型、默认模型、所有者节点、用途说明）。尚未接业务数据，相当于「账号已建、未开通权限」。</Card>
-  <Card title="Authorized" icon="🔑">完成权限评审：数据域、工具白名单、每日调用上限、是否允许写外部系统。对应企业 IAM 中的 role binding。</Card>
-  <Card title="Active" icon="▶️">在授权范围内执行任务并**持续**写结构化日志（输入摘要、输出哈希、工具调用、审批结果）。</Card>
-  <Card title="Paused / Suspended" icon="⏸️">触发条件示例：异常越权尝试、输出质量抽检连续失败、安全事件、合规禁令。暂停应可一键切断工具与外部回调。</Card>
-  <Card title="Upgraded" icon="⬆️">模型版本、prompt、工具或限额变更；须记录变更单号、审批人、生效时间与回滚包。对标 MLOps 与变更管理（如 ITIL）。</Card>
-  <Card title="Retired" icon="🏁">业务下线或不达标淘汰；保留只读日志留存期，删除或匿名化训练用敏感字段（按政策）。</Card>
+  <Card title="Registered">已在目录登记（名称、类型、默认模型、所有者节点、用途说明）。尚未接业务数据，相当于「账号已建、未开通权限」。</Card>
+  <Card title="Authorized">完成权限评审：数据域、工具白名单、每日调用上限、是否允许写外部系统。对应企业 IAM 中的 role binding。</Card>
+  <Card title="Active" icon="play">在授权范围内执行任务并**持续**写结构化日志（输入摘要、输出哈希、工具调用、审批结果）。</Card>
+  <Card title="Paused / Suspended" icon="pause">触发条件示例：异常越权尝试、输出质量抽检连续失败、安全事件、合规禁令。暂停应可一键切断工具与外部回调。</Card>
+  <Card title="Upgraded" icon="arrow-up">模型版本、prompt、工具或限额变更；须记录变更单号、审批人、生效时间与回滚包。对标 MLOps 与变更管理（如 ITIL）。</Card>
+  <Card title="Retired">业务下线或不达标淘汰；保留只读日志留存期，删除或匿名化训练用敏感字段（按政策）。</Card>
 </CardGrid>
 
 ## 生命周期路径
