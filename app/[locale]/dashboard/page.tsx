@@ -24,7 +24,6 @@ function roleLabel(role: string): string {
 
 export const metadata = dashboardMeta("Dashboard", "WCN console overview");
 export default async function DashboardIndex() {
-  try {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
 
@@ -214,17 +213,4 @@ export default async function DashboardIndex() {
       </div>
     </div>
   );
-  } catch (err: any) {
-    return (
-      <div style={{ padding: 40, maxWidth: 700, margin: "0 auto", fontFamily: "monospace" }}>
-        <h2>Dashboard Debug</h2>
-        <pre style={{ whiteSpace: "pre-wrap", background: "#fee", padding: 16, borderRadius: 8, fontSize: 13 }}>
-          {err?.message ?? String(err)}
-        </pre>
-        <pre style={{ whiteSpace: "pre-wrap", background: "#f5f5f5", padding: 16, borderRadius: 8, fontSize: 11, marginTop: 8 }}>
-          {err?.stack ?? "no stack"}
-        </pre>
-      </div>
-    );
-  }
 }
