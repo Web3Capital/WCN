@@ -1,5 +1,5 @@
-import { sendEmail } from "@/lib/modules/email/client";
-import { sseManager } from "@/lib/modules/realtime/sse";
+import { sendEmail } from "@/lib/modules/email";
+import { sseManager } from "@/lib/modules/realtime";
 
 export type NotificationPayload = {
   userId: string;

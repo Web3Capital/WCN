@@ -1,0 +1,119 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+
+export default function TwoFactorSetupClient() {
+  const { t } = useAutoTranslate();
+  const router = useRouter();
+  const [step, setStep] = useState<"generate" | "verify" | "done">("generate");
+  const [secret, setSecret] = useState("");
+  const [otpauthUrl, setOtpauthUrl] = useState("");
+  const [code, setCode] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleGenerate() {
+    setBusy(true);
+    setError("");
+    try {
+      const res = await fetch("/api/account/2fa/setup", { method: "POST" });
+      const data = await res.json();
+      if (!data.ok) { setError(data.error || "Failed to generate."); return; }
+      setSecret(data.secret);
+      setOtpauthUrl(data.otpauthUrl);
+      setStep("verify");
+    } catch {
+      setError(t("Network error."));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleVerify(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      const res = await fetch("/api/account/2fa/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      const data = await res.json();
+      if (!data.ok) { setError(data.error || "Verification failed."); return; }
+      setStep("done");
+    } catch {
+      setError(t("Network error."));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <main className="section">
+      <div className="container" style={{ maxWidth: 480 }}>
+        <span className="eyebrow">{t("Account")}</span>
+        <h1>{t("Two-Factor Authentication")}</h1>
+        <div className="card" style={{ marginTop: 18 }}>
+
+          {step === "generate" ? (
+            <>
+              <p className="muted" style={{ marginBottom: 16 }}>
+                {t("Secure your account with a TOTP authenticator app (Google Authenticator, Authy, 1Password, etc.)")}
+              </p>
+              {error ? <p style={{ color: "var(--red)", margin: "0 0 12px", fontSize: 13 }}>{error}</p> : null}
+              <button className="button" onClick={handleGenerate} disabled={busy} style={{ width: "100%" }}>
+                {busy ? t("Generating...") : t("Generate secret")}
+              </button>
+            </>
+          ) : step === "verify" ? (
+            <>
+              <p className="muted" style={{ marginBottom: 12 }}>
+                {t("Scan the QR code or enter the secret manually in your authenticator app:")}
+              </p>
+              <div className="card" style={{ padding: 16, textAlign: "center", marginBottom: 16, wordBreak: "break-all", fontFamily: "monospace", fontSize: 13 }}>
+                {secret}
+              </div>
+              <p className="muted" style={{ fontSize: 12, marginBottom: 12 }}>
+                {t("OTP Auth URL:")} <code style={{ fontSize: 11 }}>{otpauthUrl}</code>
+              </p>
+              <form onSubmit={handleVerify} className="form">
+                <label className="field">
+                  <span className="label">{t("Verification code")}</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    required
+                    maxLength={6}
+                    style={{ textAlign: "center", fontSize: 20, letterSpacing: 8 }}
+                  />
+                </label>
+                {error ? <p className="form-error" role="alert">{error}</p> : null}
+                <button type="submit" className="button" disabled={busy || code.length !== 6} style={{ width: "100%" }}>
+                  {busy ? t("Verifying...") : t("Verify & enable")}
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <div style={{ textAlign: "center", padding: "24px 0" }}>
+                <div className="badge badge-green" style={{ fontSize: 14, padding: "10px 16px", marginBottom: 16 }}>
+                  {t("2FA enabled successfully")}
+                </div>
+                <p className="muted">{t("Your account is now secured with two-factor authentication.")}</p>
+                <button className="button" onClick={() => router.push("/dashboard")} style={{ marginTop: 16 }}>
+                  {t("Go to Dashboard")}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </main>
+  );
+}

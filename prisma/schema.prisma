@@ -161,6 +161,13 @@ enum EvidenceReviewStatus {
   DISPUTED
 }
 
+enum PoBRecordStatus {
+  PENDING
+  REVIEWING
+  APPROVED
+  REJECTED
+}
+
 enum PoBEventStatus {
   CREATED
   PENDING_REVIEW
@@ -446,6 +453,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   @@index([accountStatus])
+  @@index([role])
 }
 
 model Account {
@@ -487,6 +495,11 @@ model VerificationToken {
 }
 
 // ─── WORKSPACE ──────────────────────────────────────────────────────────────
+// NOTE: Many models carry `workspaceId String?` without a formal @relation
+// to Workspace. This is by design for Phase 1 — tenant scoping is enforced
+// at the application layer (query filters + middleware). A future migration
+// should add `workspace Workspace? @relation(...)` with onDelete: SetNull
+// to prevent orphaned records if a workspace is deleted.
 
 model Workspace {
   id          String  @id @default(cuid())
@@ -608,6 +621,7 @@ model AccessGrant {
 
   @@index([workspaceId, entityType, entityId])
   @@index([grantedToType, grantedToId])
+  @@index([grantedById])
 }
 
 // ─── APPROVAL (DUAL CONTROL) ────────────────────────────────────────────────
@@ -629,6 +643,8 @@ model ApprovalAction {
 
   @@index([workspaceId, entityType, entityId, status])
   @@index([status, createdAt])
+  @@index([requestedById])
+  @@index([approvedById])
 }
 
 // ─── ENTITY FREEZE ──────────────────────────────────────────────────────────
@@ -648,6 +664,7 @@ model EntityFreeze {
 
   @@index([workspaceId, entityType, entityId])
   @@index([liftedAt])
+  @@index([frozenById])
 }
 
 // ─── SEARCH INDEX ───────────────────────────────────────────────────────────
@@ -952,6 +969,7 @@ model DealNote {
   createdAt DateTime @default(now())
 
   @@index([dealId, createdAt])
+  @@index([authorId])
   @@index([workspaceId])
 }
 
@@ -1056,6 +1074,7 @@ model Evidence {
   @@index([projectId])
   @@index([nodeId])
   @@index([dealId])
+  @@index([reviewerId])
   @@index([workspaceId])
 }
 
@@ -1085,7 +1104,7 @@ model PoBRecord {
   dealId String?
   deal   Deal?   @relation(fields: [dealId], references: [id], onDelete: SetNull)
 
-  status ApplicationStatus @default(PENDING)
+  status PoBRecordStatus @default(PENDING)
 
   pobEventStatus     PoBEventStatus @default(CREATED)
   leadNodeId         String?
@@ -1294,6 +1313,7 @@ model AgentLog {
   createdAt DateTime @default(now())
 
   @@index([agentId, createdAt])
+  @@index([ownerNodeId])
   @@index([taskId])
   @@index([workspaceId])
 }
@@ -1616,6 +1636,7 @@ model SavedSearch {
   createdAt   DateTime @default(now())
 
   @@index([userId])
+  @@index([createdAt])
 }
 
 // ─── NOTIFICATION PREFERENCES (Phase 4) ────────────────────────────────────

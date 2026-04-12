@@ -18,7 +18,7 @@ import { getPrisma } from "@/lib/prisma";
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
 import type { PoBCreatedEvent } from "@/lib/core/event-types";
-import { assessPoBRisk } from "@/lib/modules/risk/anti-gaming";
+import { assessPoBRisk } from "@/lib/modules/risk";
 
 // ─── Configuration ──────────────────────────────────────────────
 

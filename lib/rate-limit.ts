@@ -20,6 +20,7 @@ const failClosedResult: RateLimitResult = { success: false, limit: 0, remaining:
 let _apiLimiter: Ratelimit | null = null;
 let _authLimiter: Ratelimit | null = null;
 let _adminLimiter: Ratelimit | null = null;
+let _smsLimiter: Ratelimit | null = null;
 
 function getApiLimiter(): Ratelimit | null {
   if (_apiLimiter) return _apiLimiter;
@@ -89,4 +90,21 @@ export async function rateLimitAuth(identifier: string): Promise<RateLimitResult
 
 export async function rateLimitAdmin(identifier: string): Promise<RateLimitResult> {
   return check(getAdminLimiter(), identifier, false);
+}
+
+function getSmsLimiter(): Ratelimit | null {
+  if (_smsLimiter) return _smsLimiter;
+  const redis = getRedis();
+  if (!redis) return null;
+  _smsLimiter = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(3, "1 h"),
+    prefix: "wcn:rl:sms",
+  });
+  return _smsLimiter;
+}
+
+/** 3 SMS per phone per hour — fail-closed in production. */
+export async function rateLimitSms(phone: string): Promise<RateLimitResult> {
+  return check(getSmsLimiter(), `sms:${phone}`, true);
 }

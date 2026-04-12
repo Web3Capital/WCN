@@ -1,5 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
-import { sendEmail } from "@/lib/modules/email/client";
+import { sendEmail } from "@/lib/modules/email";
 
 export async function sendDigestForUser(
   prisma: PrismaClient,

@@ -7,12 +7,14 @@
 
 import { initEventHandlers } from "./event-handlers";
 import { initEmailHandlers } from "@/lib/modules/email/dispatcher";
+import { validateEnv } from "@/lib/env";
 
 let _initialized = false;
 
 export function initWCN(): void {
   if (_initialized) return;
   _initialized = true;
+  validateEnv();
   initEventHandlers();
   initEmailHandlers();
 }

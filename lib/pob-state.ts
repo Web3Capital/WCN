@@ -1,4 +1,4 @@
-/** PoB uses ApplicationStatus in schema; valid workflow states for records. */
+/** Valid workflow states for PoBRecord (uses PoBRecordStatus enum). */
 const STATES = new Set<string>(["PENDING", "REVIEWING", "APPROVED", "REJECTED"]);
 
 /**

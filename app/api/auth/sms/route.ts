@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sendOTP } from "@/lib/modules/sms/otp";
+import { rateLimitSms } from "@/lib/rate-limit";
 import { z } from "zod";
 
 const schema = z.object({
@@ -13,6 +14,19 @@ export async function POST(req: Request) {
     return NextResponse.json(
       { ok: false, error: "Invalid phone number" },
       { status: 400 },
+    );
+  }
+
+  const rl = await rateLimitSms(parsed.data.phone);
+  if (!rl.success) {
+    return NextResponse.json(
+      { ok: false, error: "Too many SMS requests. Please try again later." },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(Math.ceil((rl.reset - Date.now()) / 1000)),
+        },
+      },
     );
   }
 

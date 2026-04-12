@@ -14,7 +14,7 @@ import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
 import type { MatchGeneratedEvent, MatchDeclinedEvent, MatchConvertedEvent } from "@/lib/core/event-types";
 import type { MatchStatus, Project, CapitalProfile } from "@prisma/client";
-import { checkSelfDealing } from "@/lib/modules/risk/anti-gaming";
+import { checkSelfDealing } from "@/lib/modules/risk";
 
 // ─── Scoring Weights ─────────────────────────────────────────────
 

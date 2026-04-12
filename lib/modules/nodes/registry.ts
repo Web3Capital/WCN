@@ -1,5 +1,5 @@
 /**
- * @wcn/nodes — Node Type Registry
+ * @wcn/nodes — Node Type Registry (Phase 2 — not yet wired)
  *
  * Register new node types without modifying core code.
  * Each node type defines its required fields, capabilities, and review flow.

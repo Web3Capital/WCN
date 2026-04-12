@@ -8,7 +8,11 @@ export const runtime = "nodejs";
 
 const startedAt = Date.now();
 
-export async function GET() {
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const secret = url.searchParams.get("secret");
+  const isDetailed = secret && process.env.HEALTH_SECRET && secret === process.env.HEALTH_SECRET;
+
   const checks: Record<string, { status: string; latencyMs?: number; error?: string }> = {};
 
   // Database check
@@ -70,6 +74,13 @@ export async function GET() {
   const allOk = Object.values(checks).every(
     (c) => c.status === "ok" || c.status === "not_configured"
   );
+
+  if (!isDetailed) {
+    return NextResponse.json(
+      { status: allOk ? "healthy" : "degraded", timestamp: new Date().toISOString() },
+      { status: allOk ? 200 : 503 },
+    );
+  }
 
   return NextResponse.json(
     {

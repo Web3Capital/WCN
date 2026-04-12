@@ -1,6 +1,21 @@
+import type { Metadata } from "next";
 import { Network, ShieldCheck, Scale, Workflow, FileCheck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "metadata" });
+  return {
+    title: t("siteTitle"),
+    description: t("siteDescription"),
+    openGraph: {
+      title: t("siteTitle"),
+      description: t("siteDescription"),
+      type: "website",
+    },
+  };
+}
 
 export default async function HomePage() {
   const t = await getTranslations("home");

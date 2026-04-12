@@ -1,6 +1,6 @@
 import "@/lib/core/init";
 import type { Prisma } from "@prisma/client";
-import { ApplicationStatus } from "@prisma/client";
+import { PoBRecordStatus } from "@prisma/client";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
@@ -75,7 +75,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     if (!canTransitionPoBStatus(existing.status, status)) {
       return apiConflict(pobTransitionErrorMessage(existing.status, status));
     }
-    data.status = status as ApplicationStatus;
+    data.status = status as PoBRecordStatus;
   }
 
   if (body?.pobEventStatus !== undefined) {

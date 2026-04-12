@@ -1,6 +1,6 @@
 import { getToken } from "next-auth/jwt";
 import { type NextRequest } from "next/server";
-import { sseManager } from "@/lib/modules/realtime/sse";
+import { sseManager } from "@/lib/modules/realtime";
 import crypto from "crypto";
 
 export const dynamic = "force-dynamic";

@@ -4,8 +4,11 @@ import { getToken } from "next-auth/jwt";
 import { rateLimit, rateLimitAuth, rateLimitAdmin } from "./lib/rate-limit";
 import createIntlMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
+import { locales } from "./i18n/config";
 
 const intlMiddleware = createIntlMiddleware(routing);
+
+const localePattern = new RegExp(`^\\/(${locales.join("|")})(\/|$)`);
 
 const PUBLIC_PAGE_PATHS = new Set([
   "/",
@@ -19,7 +22,6 @@ const PUBLIC_PAGE_PATHS = new Set([
 ]);
 
 function stripLocalePrefix(pathname: string): string {
-  const localePattern = /^\/(en|zh|ja|ko|es|fr|de|pt|ar|ru)(\/|$)/;
   const match = pathname.match(localePattern);
   if (match) {
     const rest = pathname.slice(match[1].length + 1);
@@ -39,6 +41,7 @@ function isPublicPath(pathname: string): boolean {
   if (bare.startsWith("/api/applications") && bare === "/api/applications") return true;
   if (bare.startsWith("/api/theme")) return true;
   if (bare.startsWith("/api/lang")) return true;
+  if (bare.startsWith("/api/invites/")) return true;
   if (bare.startsWith("/invite/")) return true;
   if (bare.startsWith("/_next")) return true;
   if (bare.startsWith("/favicon")) return true;
@@ -143,21 +146,21 @@ export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token) {
-    const locale = pathname.match(/^\/(en|zh|ja|ko|es|fr|de|pt|ar|ru)\//)?.[1] || "en";
+    const locale = pathname.match(localePattern)?.[1] || "en";
     const loginUrl = new URL(`/${locale}/login`, request.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return withRequestId(NextResponse.redirect(loginUrl));
   }
 
   if (token.accountStatus && BLOCKED_STATUSES.has(token.accountStatus as string)) {
-    const locale = pathname.match(/^\/(en|zh|ja|ko|es|fr|de|pt|ar|ru)\//)?.[1] || "en";
+    const locale = pathname.match(localePattern)?.[1] || "en";
     if (!bare.startsWith("/account")) {
       return withRequestId(NextResponse.redirect(new URL(`/${locale}/login?error=blocked`, request.url)));
     }
   }
 
   if (token.accountStatus === "PENDING_2FA") {
-    const locale = pathname.match(/^\/(en|zh|ja|ko|es|fr|de|pt|ar|ru)\//)?.[1] || "en";
+    const locale = pathname.match(localePattern)?.[1] || "en";
     const allowed2faPaths = ["/account", "/account/2fa"];
     const isAllowed = allowed2faPaths.some((p) => bare === p || bare.startsWith(`${p}/`));
     if (!isAllowed) {

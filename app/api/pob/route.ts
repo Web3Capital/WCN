@@ -7,7 +7,7 @@ import { isAdminRole } from "@/lib/permissions";
 import { apiOk, apiCreated, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
-import { ApplicationStatus } from "@prisma/client";
+import { PoBRecordStatus } from "@prisma/client";
 
 function computeScore(input: {
   baseValue: number;
@@ -72,13 +72,13 @@ export async function POST(req: Request) {
   const riskDiscount = Number(body?.riskDiscount ?? 1);
   const score = computeScore({ baseValue, weight, qualityMult, timeMult, riskDiscount });
 
-  let initialStatus: ApplicationStatus | undefined;
+  let initialStatus: PoBRecordStatus | undefined;
   if (body?.status !== undefined && body?.status !== null && String(body.status).trim() !== "") {
     const s = String(body.status).trim();
     if (s !== "PENDING" && s !== "REVIEWING") {
       return apiValidationError([{ path: "status", message: "New PoB may only start as PENDING or REVIEWING." }]);
     }
-    initialStatus = s as ApplicationStatus;
+    initialStatus = s as PoBRecordStatus;
   }
 
   const now = new Date();

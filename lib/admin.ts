@@ -48,6 +48,7 @@ export async function requirePermission(action: Action, resource: Resource): Pro
 export async function requireAdmin(): Promise<AuthResult> {
   const session = await getServerSession(authOptions);
   if (!session?.user) return { ok: false as const };
+  if (isBlocked(session)) return { ok: false as const };
   if (!isAdminRole((session.user as any).role ?? "USER")) return { ok: false as const };
   return { ok: true as const, session: session as any };
 }

@@ -13,6 +13,9 @@ import type { EventPayload } from "./event-bus";
 /**
  * Write an event to the outbox within a transaction context.
  * Call this inside a Prisma $transaction block.
+ *
+ * Phase 2: Wire into mutation services (deals, pob, settlement) to guarantee
+ * at-least-once event delivery with Transactional Outbox pattern.
  */
 export async function writeToOutbox(
   tx: any,
