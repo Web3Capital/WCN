@@ -53,8 +53,10 @@ export default async function WikiLandingPage() {
 
           return (
             <Link key={ch.slug} href={href as any} className="docs-landing-card">
-              {icon && <span className="docs-landing-card-icon">{icon}</span>}
-              <span className="docs-landing-card-title">{ch.title}</span>
+              <span className="docs-landing-card-header">
+                {icon && <span className="docs-landing-card-icon">{icon}</span>}
+                <span className="docs-landing-card-title">{ch.title}</span>
+              </span>
               {ch.description && (
                 <span className="docs-landing-card-desc">{ch.description}</span>
               )}

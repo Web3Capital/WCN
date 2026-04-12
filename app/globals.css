@@ -1637,13 +1637,20 @@ a.docs-card:hover::after { opacity: 1; transform: translateX(2px); }
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
   background: color-mix(in oklab, var(--card) 92%, #fff 8%);
 }
+.docs-landing-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .docs-landing-card-icon {
   display: flex;
   align-items: center;
-  color: var(--muted);
+  flex-shrink: 0;
+  color: var(--fg);
+  opacity: 0.7;
 }
 .docs-landing-card-title {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
 }
 .docs-landing-card-desc {
