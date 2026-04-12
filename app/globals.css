@@ -787,9 +787,10 @@ p, li { color: var(--muted); line-height: 1.7; font-size: 16px; }
   background: color-mix(in oklab, var(--text) 6%, transparent);
 }
 .docs-sidebar-icon {
-  font-size: 16px;
-  line-height: 1;
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
+  color: var(--accent);
 }
 .docs-sidebar-chevron {
   margin-left: auto;

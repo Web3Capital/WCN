@@ -4,6 +4,29 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Link } from "@/i18n/routing";
 import { usePathname } from "next/navigation";
 import type { ChapterEntry } from "@/lib/docs";
+import {
+  BookOpen, Search, Lightbulb, Settings, Layers,
+  Globe, Bot, ShieldCheck, Coins, DoorOpen,
+  Building2, Map, Trophy, Handshake, Archive,
+} from "lucide-react";
+
+const CHAPTER_ICONS: Record<string, React.ReactNode> = {
+  "project-intro":    <BookOpen size={16} strokeWidth={1.8} />,
+  "industry-problem": <Search size={16} strokeWidth={1.8} />,
+  "solution":         <Lightbulb size={16} strokeWidth={1.8} />,
+  "how-it-works":     <Settings size={16} strokeWidth={1.8} />,
+  "network-arch":     <Layers size={16} strokeWidth={1.8} />,
+  "node-system":      <Globe size={16} strokeWidth={1.8} />,
+  "ai-agent":         <Bot size={16} strokeWidth={1.8} />,
+  "pob":              <ShieldCheck size={16} strokeWidth={1.8} />,
+  "business-model":   <Coins size={16} strokeWidth={1.8} />,
+  "node-onboarding":  <DoorOpen size={16} strokeWidth={1.8} />,
+  "governance":       <Building2 size={16} strokeWidth={1.8} />,
+  "roadmap":          <Map size={16} strokeWidth={1.8} />,
+  "why-wcn":          <Trophy size={16} strokeWidth={1.8} />,
+  "join-wcn":         <Handshake size={16} strokeWidth={1.8} />,
+  "resources":        <Archive size={16} strokeWidth={1.8} />,
+};
 
 export function DocsSidebar({
   chapters,
@@ -47,7 +70,9 @@ export function DocsSidebar({
                 onClick={() => toggle(ch.slug)}
                 aria-expanded={isOpen}
               >
-                {ch.icon && <span className="docs-sidebar-icon">{ch.icon}</span>}
+                {CHAPTER_ICONS[ch.slug] && (
+                  <span className="docs-sidebar-icon">{CHAPTER_ICONS[ch.slug]}</span>
+                )}
                 <span>{ch.title}</span>
                 <svg
                   className="docs-sidebar-chevron"
