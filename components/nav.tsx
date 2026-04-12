@@ -137,7 +137,7 @@ export function Nav() {
     <header className="nav">
       <div className="container nav-inner" ref={shellRef}>
         <Link href="/" className="brand">
-          <span className="brand-mark" />
+          <span className="brand-mark">W³</span>
           <span>WCN</span>
         </Link>
         <button
