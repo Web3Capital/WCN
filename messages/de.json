@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "WCN — Globaler institutioneller Orchestrator",
-    "titleTemplate": "{title} — WCN",
+    "titleTemplate": "%s — WCN",
     "description": "WCN verwandelt fragmentiertes Kapital, Ressourcen und Umsetzung in ein strukturiertes, verifizierbares und abwickelbares globales Netzwerk für Web3 und AI.",
     "ogDescription": "Koordinationsschicht für die dezentrale Ökonomie: Knoten, Deals, Nachweise und Abwicklung.",
     "twitterDescription": "Strukturierte Koordination für institutionelles Web3 und AI — verifizierbare Arbeit, ausgerichtete Abwicklung."

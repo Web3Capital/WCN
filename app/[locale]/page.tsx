@@ -7,11 +7,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata" });
   return {
-    title: t("siteTitle"),
-    description: t("siteDescription"),
+    title: t("title"),
+    description: t("description"),
     openGraph: {
-      title: t("siteTitle"),
-      description: t("siteDescription"),
+      title: t("title"),
+      description: t("description"),
       type: "website",
     },
   };

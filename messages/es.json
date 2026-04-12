@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "WCN — Orquestador institucional global",
-    "titleTemplate": "{title} — WCN",
+    "titleTemplate": "%s — WCN",
     "description": "WCN convierte capital, recursos y ejecución fragmentados en una red global estructurada, verificable y liquidable para Web3 y AI.",
     "ogDescription": "Capa de coordinación para la economía descentralizada: nodos, acuerdos, prueba y liquidación.",
     "twitterDescription": "Coordinación estructurada para Web3 y AI institucionales: trabajo verificable y liquidación alineada."

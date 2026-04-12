@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "WCN — The Business Network for Web3 and AI",
-    "titleTemplate": "{title} — WCN",
+    "titleTemplate": "%s — WCN",
     "description": "WCN connects institutional capital, projects, and services into one network — with Proof of Business verification and fair settlement for every contributor.",
     "ogDescription": "The business network for Web3 and AI: real operators, verified outcomes, fair settlement.",
     "twitterDescription": "Real operators. Verified outcomes. Fair settlement. The business network for Web3 and AI."

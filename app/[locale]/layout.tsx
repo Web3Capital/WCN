@@ -50,7 +50,7 @@ export async function generateMetadata({
     metadataBase: new URL(siteUrl),
     title: {
       default: t("title"),
-      template: t("titleTemplate"),
+      template: t.raw("titleTemplate"),
     },
     description: t("description"),
     alternates: {

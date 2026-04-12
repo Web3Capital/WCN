@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "WCN — Web3 与 AI 商业网络",
-    "titleTemplate": "{title} — WCN",
+    "titleTemplate": "%s — WCN",
     "description": "WCN 将机构资本、项目与服务连接为一个网络——通过商业证明（PoB）验证每一个成果，为每一位贡献者提供公平结算。",
     "ogDescription": "Web3 与 AI 的商业网络：真实运营者，经验证的成果，公平的结算。",
     "twitterDescription": "真实运营者。经验证的成果。公平的结算。Web3 与 AI 的商业网络。"

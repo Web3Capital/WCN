@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "WCN — グローバル機関向けオーケストレーター",
-    "titleTemplate": "{title} — WCN",
+    "titleTemplate": "%s — WCN",
     "description": "WCNは、分散した資本・リソース・実行力を、Web3とAI向けの構造化され検証可能で決済可能なグローバルネットワークへとまとめます。",
     "ogDescription": "分散型エコノミーの調整レイヤー：ノード、ディール、プルーフ、決済。",
     "twitterDescription": "機関向けWeb3とAIのための構造化された調整 — 検証可能な業務、整合した決済。"
