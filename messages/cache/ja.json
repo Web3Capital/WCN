@@ -1,0 +1,18 @@
+{
+  "Onboarding": "オンボーディング",
+  "Terms & Agreements": "利用規約と同意事項",
+  "Please review and accept the following agreements before continuing.": "続行する前に、次の契約を確認して同意してください。",
+  "Non-Disclosure Agreement": "機密保持契約",
+  "You agree not to disclose confidential information shared within the WCN platform to unauthorized third parties.": "お客様は、WCN プラットフォーム内で共有される機密情報を権限のない第三者に開示しないことに同意します。",
+  "Platform Terms of Service": "プラットフォーム利用規約",
+  "You agree to abide by the WCN Operating Console terms of service, including data handling, usage policies, and dispute resolution procedures.": "お客様は、データの処理、使用ポリシー、紛争解決手順を含む、WCN オペレーティング コンソールのサービス利用規約に従うことに同意します。",
+  "Code of Conduct": "行動規範",
+  "You agree to maintain professional standards, avoid conflicts of interest, and participate in good faith across all WCN operations.": "あなたは、プロフェッショナルな基準を維持し、利益相反を回避し、WCN のすべての業務に誠実に参加することに同意します。",
+  "Accepted": "承認されました",
+  "Accept": "受け入れる",
+  "Accept All": "すべてを受け入れる",
+  "Processing...": "処理...",
+  "Continue to Dashboard": "ダッシュボードに進む",
+  "Loading...": "読み込み中...",
+  "Network error.": "ネットワークエラー。"
+}

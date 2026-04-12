@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import {
   AlertTriangle,
@@ -41,7 +41,7 @@ import {
 import type { Role } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import { useTranslations, useLocale } from "next-intl";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 
 type GroupTitleKey = "overview" | "network" | "work" | "verification" | "intelligence" | "admin" | "ecosystem" | "platform";
 type ItemLabelKey = "myWorkspace" | "nodes" | "projects" | "capital" | "dealRoom" | "matches" | "tasks" | "agents" | "evidenceDesk" | "pobRecords" | "disputes" | "settlement" | "dataCockpit" | "riskConsole" | "reputation" | "approvals" | "applications" | "users" | "invites" | "auditLog" | "proposals" | "campaigns" | "apiKeys" | "ingestion";
@@ -318,14 +318,17 @@ function NotificationBell() {
 
   useEffect(() => {
     fetch("/api/notifications?unread=false")
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error(`Notification fetch failed: ${r.status}`);
+        return r.json();
+      })
       .then((d) => {
         if (d.ok && d.data) {
           setCount(d.data.unreadCount ?? 0);
           setItems(d.data.notifications ?? []);
         }
       })
-      .catch(() => {});
+      .catch((err) => console.error("[Dashboard] notification fetch failed", err));
   }, []);
 
   useEffect(() => {

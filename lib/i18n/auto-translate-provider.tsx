@@ -47,13 +47,16 @@ export function AutoTranslateProvider({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ strings, locale }),
     })
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error(`Translate API failed: ${r.status}`);
+        return r.json();
+      })
       .then((data) => {
         if (data.translations) {
           setMap((prev) => ({ ...prev, ...data.translations }));
         }
       })
-      .catch(() => {});
+      .catch((err) => console.error("[i18n] auto-translate fetch failed", err));
   }, [locale]);
 
   const t = useCallback(

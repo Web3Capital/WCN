@@ -37,7 +37,7 @@ export function initPoBHandlers(): void {
             severity: risk.level,
             reason: risk.flags.map((f) => `[${f.rule}] ${f.message}`).join("; "),
           },
-        }).catch(() => {});
+        }).catch((err) => console.error("[PoB] riskFlag create failed", err));
       }
     } catch (e) {
       console.error("[AntiGaming] PoB scan failed", payload.pobId, e);
@@ -70,7 +70,7 @@ export function initPoBHandlers(): void {
     await prisma.poBRecord.update({
       where: { id: payload.pobId },
       data: { pobEventStatus: "FROZEN", frozenAt: new Date(), frozenReason: `Dispute #${payload.disputeId}` },
-    }).catch(() => {});
+    }).catch((err) => console.error("[PoB] freeze update failed", err));
 
     const pob = await prisma.poBRecord.findUnique({
       where: { id: payload.pobId },

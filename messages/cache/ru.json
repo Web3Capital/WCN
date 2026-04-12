@@ -1,0 +1,18 @@
+{
+  "Onboarding": "Регистрация",
+  "Terms & Agreements": "Условия и соглашения",
+  "Please review and accept the following agreements before continuing.": "Прежде чем продолжить, просмотрите и примите следующие соглашения.",
+  "Non-Disclosure Agreement": "Соглашение о неразглашении информации",
+  "You agree not to disclose confidential information shared within the WCN platform to unauthorized third parties.": "Вы соглашаетесь не раскрывать конфиденциальную информацию, передаваемую на платформе WCN, неавторизованным третьим лицам.",
+  "Platform Terms of Service": "Условия использования платформы",
+  "You agree to abide by the WCN Operating Console terms of service, including data handling, usage policies, and dispute resolution procedures.": "Вы соглашаетесь соблюдать условия обслуживания операционной консоли WCN, включая обработку данных, политики использования и процедуры разрешения споров.",
+  "Code of Conduct": "Нормы поведения",
+  "You agree to maintain professional standards, avoid conflicts of interest, and participate in good faith across all WCN operations.": "Вы соглашаетесь соблюдать профессиональные стандарты, избегать конфликтов интересов и добросовестно участвовать во всех операциях WCN.",
+  "Accepted": "Принял",
+  "Accept": "Принимать",
+  "Accept All": "Принять все",
+  "Processing...": "Обработка...",
+  "Continue to Dashboard": "Перейти к панели управления",
+  "Loading...": "Загрузка...",
+  "Network error.": "Ошибка сети."
+}

@@ -25,13 +25,14 @@ export function NotificationsUI({ notifications }: { notifications: Notification
   async function markAllRead() {
     setBusy(true);
     try {
-      await fetch("/api/notifications", {
+      const res = await fetch("/api/notifications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "markAllRead" }),
       });
+      if (!res.ok) throw new Error(`Mark read failed: ${res.status}`);
       setItems(items.map((n) => ({ ...n, readAt: n.readAt || new Date().toISOString() })));
-    } catch { /* ignore */ }
+    } catch (err) { console.error("[Notifications] mark all read failed", err); }
     setBusy(false);
   }
 

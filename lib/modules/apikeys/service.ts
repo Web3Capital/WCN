@@ -70,7 +70,7 @@ export async function validateApiKey(
   await prisma.apiKey.update({
     where: { id: key.id },
     data: { lastUsedAt: new Date() },
-  }).catch(() => {});
+  }).catch((err) => console.error("[ApiKey] lastUsedAt update failed", err));
 
   return {
     valid: true,

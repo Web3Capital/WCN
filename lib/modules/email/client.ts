@@ -30,9 +30,10 @@ export async function sendEmail(payload: EmailPayload): Promise<{ id?: string; s
   const resend = getResend();
 
   if (!resend) {
-    console.log(`[Email/Dev] To: ${Array.isArray(payload.to) ? payload.to.join(", ") : payload.to}`);
-    console.log(`[Email/Dev] Subject: ${payload.subject}`);
-    console.log(`[Email/Dev] Body: ${payload.text ?? payload.html.slice(0, 200)}`);
+    if (process.env.NODE_ENV === "development") {
+      console.log(`[Email/Dev] To: ${Array.isArray(payload.to) ? payload.to.join(", ") : payload.to}`);
+      console.log(`[Email/Dev] Subject: ${payload.subject}`);
+    }
     return { success: true };
   }
 

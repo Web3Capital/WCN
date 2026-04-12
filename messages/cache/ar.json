@@ -1,0 +1,16 @@
+{
+  "Account": "حساب",
+  "Two-Factor Authentication": "المصادقة الثنائية",
+  "Secure your account with a TOTP authenticator app (Google Authenticator, Authy, 1Password, etc.)": "قم بتأمين حسابك باستخدام تطبيق مصادقة TOTP (Google Authenticator، Authy، 1Password، وما إلى ذلك)",
+  "Generating...": "جارٍ الإنشاء...",
+  "Generate secret": "توليد سر",
+  "Scan the QR code or enter the secret manually in your authenticator app:": "امسح رمز الاستجابة السريعة ضوئيًا أو أدخل السر يدويًا في تطبيق المصادقة الخاص بك:",
+  "OTP Auth URL:": "عنوان URL لمصادقة OTP:",
+  "Verification code": "رمز التحقق",
+  "Verifying...": "جارٍ التحقق...",
+  "Verify & enable": "التحقق والتمكين",
+  "2FA enabled successfully": "تم تمكين المصادقة الثنائية (2FA) بنجاح",
+  "Your account is now secured with two-factor authentication.": "لقد تم الآن تأمين حسابك من خلال المصادقة الثنائية.",
+  "Go to Dashboard": "انتقل إلى لوحة المعلومات",
+  "Network error.": "خطأ في الشبكة."
+}

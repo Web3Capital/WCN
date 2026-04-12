@@ -84,7 +84,7 @@ export async function calculateAttribution(dealId: string): Promise<AttributionR
         severity: risk.level,
         reason: risk.flags.map((f) => `[${f.rule}] ${f.message}`).join("; "),
       },
-    }).catch(() => {});
+    }).catch((err) => console.error("[PoB] attribution riskFlag create failed", err));
     return null;
   }
 

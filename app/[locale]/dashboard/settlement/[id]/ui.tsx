@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { ConfirmDialog } from "../../_components/confirm-dialog";
 
@@ -45,13 +45,14 @@ export function SettlementCycleDetailUI({
   async function requestLock() {
     setBusy(true);
     try {
-      await fetch(`/api/settlement/cycles/${cycle.id}/lock`, {
+      const res = await fetch(`/api/settlement/cycles/${cycle.id}/lock`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dualControl: true, reason: "Standard period close" }),
       });
+      if (!res.ok) throw new Error(`Lock failed: ${res.status}`);
       window.location.reload();
-    } catch { /* ignore */ }
+    } catch (err) { console.error("[Settlement] lock request failed", err); }
     setBusy(false);
   }
 
@@ -60,13 +61,14 @@ export function SettlementCycleDetailUI({
     setReopenOpen(false);
     setBusy(true);
     try {
-      await fetch(`/api/settlement/cycles/${cycle.id}/reopen`, {
+      const res = await fetch(`/api/settlement/cycles/${cycle.id}/reopen`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dualControl: true, reason }),
       });
+      if (!res.ok) throw new Error(`Reopen failed: ${res.status}`);
       window.location.reload();
-    } catch { /* ignore */ }
+    } catch (err) { console.error("[Settlement] reopen request failed", err); }
     setBusy(false);
   }
 

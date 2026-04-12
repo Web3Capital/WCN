@@ -50,11 +50,12 @@ export function ProofDeskConsole({ evidences: initialEvidences, reviewQueue: ini
   const filtered = filter === "ALL" ? displayed : displayed.filter((e) => e.reviewStatus === filter);
 
   async function reviewAction(id: string, action: "UNDER_REVIEW" | "APPROVED" | "REJECTED") {
-    await fetch(`/api/evidence/${id}`, {
+    const res = await fetch(`/api/evidence/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reviewStatus: action }),
     });
+    if (!res.ok) throw new Error(`Evidence review failed: ${res.status}`);
     const update = (items: EvidenceRow[]) =>
       items.map((e) => e.id === id ? { ...e, reviewStatus: action } : e);
     setEvidences(update);

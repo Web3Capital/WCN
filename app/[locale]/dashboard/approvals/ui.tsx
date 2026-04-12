@@ -32,7 +32,7 @@ export function ApprovalsUI() {
     fetch(`/api/approvals?status=${filter}`)
       .then((r) => r.json())
       .then((d) => { if (d.ok) setApprovals(d.data ?? []); })
-      .catch(() => {})
+      .catch((err) => console.error("[Approvals] fetch failed", err))
       .finally(() => setLoading(false));
   }, [filter]);
 

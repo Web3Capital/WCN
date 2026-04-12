@@ -37,7 +37,7 @@ export async function dispatchToTelegram(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chat_id: chatId, text, parse_mode: "Markdown" }),
-  }).catch(() => {});
+  }).catch((err) => console.error("[Telegram] dispatch failed", err));
 }
 
 export async function dispatchToSlack(
@@ -51,7 +51,7 @@ export async function dispatchToSlack(
       text: `*${payload.title}*\n${payload.body}`,
       ...(payload.url ? { attachments: [{ text: `<${process.env.NEXTAUTH_URL}${payload.url}|View Details>` }] } : {}),
     }),
-  }).catch(() => {});
+  }).catch((err) => console.error("[Slack] dispatch failed", err));
 }
 
 export function dispatchToSSE(userId: string, payload: NotificationPayload): void {

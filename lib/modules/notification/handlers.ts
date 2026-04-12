@@ -94,14 +94,14 @@ export function initNotificationHandlers(): void {
       await prisma.settlementCycle.update({
         where: { id: approval.entityId },
         data: { status: "LOCKED", lockedById: payload.grantedBy },
-      }).catch(() => {});
+      }).catch((err) => console.error("[Notification] settlement lock failed", err));
     }
 
     if (approval.entityType === "SETTLEMENT_CYCLE" && approval.actionType === "REOPEN") {
       await prisma.settlementCycle.update({
         where: { id: approval.entityId },
         data: { status: "REOPENED", reopenedAt: new Date() },
-      }).catch(() => {});
+      }).catch((err) => console.error("[Notification] settlement reopen failed", err));
     }
   });
 }

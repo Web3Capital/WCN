@@ -229,7 +229,7 @@ export async function generateMatchesForProject(
     await prisma.project.update({
       where: { id: projectId },
       data: { status: "IN_DEAL_ROOM" },
-    }).catch(() => {});
+    }).catch((err) => console.error("[Matching] project status update failed", err));
   }
 
   return created;

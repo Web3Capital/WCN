@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { getApiErrorMessageFromJson } from "@/lib/api-error";
 import { StatusBadge, FormCard, EmptyState } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";

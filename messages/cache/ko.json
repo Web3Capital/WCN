@@ -1,0 +1,18 @@
+{
+  "Onboarding": "온보딩",
+  "Terms & Agreements": "이용약관",
+  "Please review and accept the following agreements before continuing.": "계속하기 전에 다음 계약을 검토하고 동의하세요.",
+  "Non-Disclosure Agreement": "비공개 계약",
+  "You agree not to disclose confidential information shared within the WCN platform to unauthorized third parties.": "귀하는 WCN 플랫폼 내에서 공유된 기밀 정보를 승인되지 않은 제3자에게 공개하지 않을 것에 동의합니다.",
+  "Platform Terms of Service": "플랫폼 서비스 약관",
+  "You agree to abide by the WCN Operating Console terms of service, including data handling, usage policies, and dispute resolution procedures.": "귀하는 데이터 처리, 사용 정책, 분쟁 해결 절차를 포함하여 WCN 운영 콘솔 서비스 약관을 준수하는 데 동의합니다.",
+  "Code of Conduct": "행동 강령",
+  "You agree to maintain professional standards, avoid conflicts of interest, and participate in good faith across all WCN operations.": "귀하는 전문적 기준을 유지하고, 이해 상충을 피하며, 모든 WCN 운영 전반에 걸쳐 선의로 참여할 것에 동의합니다.",
+  "Accepted": "수락됨",
+  "Accept": "수용하다",
+  "Accept All": "모두 수락",
+  "Processing...": "처리 중...",
+  "Continue to Dashboard": "대시보드로 계속",
+  "Loading...": "로드 중...",
+  "Network error.": "네트워크 오류입니다."
+}

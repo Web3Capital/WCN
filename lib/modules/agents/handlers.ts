@@ -89,7 +89,7 @@ export function initAgentHandlers(): void {
             ...(outputs.summary ? { description: outputs.summary } : {}),
             ...(outputs.risks ? { metadata: { risks: outputs.risks } } : {}),
           },
-        }).catch(() => {});
+        }).catch((err) => console.error("[Agent] project update failed", err));
       }
 
       if (agentType === "DEAL" && inputs?.matchId && outputs) {
@@ -97,7 +97,7 @@ export function initAgentHandlers(): void {
         if (match?.convertedDealId) {
           await prisma.dealNote.create({
             data: { dealId: match.convertedDealId, content: JSON.stringify(outputs), authorId: payload.reviewedBy },
-          }).catch(() => {});
+          }).catch((err) => console.error("[Agent] dealNote create failed", err));
         }
       }
 
@@ -110,7 +110,7 @@ export function initAgentHandlers(): void {
               status: "DRAFT",
               type: "EXECUTION",
             },
-          }).catch(() => {});
+          }).catch((err) => console.error("[Agent] task create failed", err));
         }
       }
 
@@ -124,7 +124,7 @@ export function initAgentHandlers(): void {
               actionType: "post_approval.growth_strategy",
               outputReference: JSON.stringify(outputs),
             },
-          }).catch(() => {});
+          }).catch((err) => console.error("[Agent] agentLog create failed", err));
         }
       }
     } catch (e) {

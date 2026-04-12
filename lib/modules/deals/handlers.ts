@@ -76,6 +76,6 @@ export function initDealHandlers(): void {
     await prisma.project.update({
       where: { id: payload.projectId },
       data: { status: "ARCHIVED" },
-    }).catch(() => {});
+    }).catch((err) => console.error("[Deals] project archive failed", err));
   });
 }

@@ -35,7 +35,6 @@ function isPublicPath(pathname: string): boolean {
   if (PUBLIC_PAGE_PATHS.has(bare)) return true;
   if (bare.startsWith("/login/")) return true;
   if (bare.startsWith("/wiki")) return true;
-  if (bare.startsWith("/docs")) return true;
   if (bare.startsWith("/api/auth")) return true;
   if (bare.startsWith("/api/signup")) return true;
   if (bare.startsWith("/api/applications") && bare === "/api/applications") return true;

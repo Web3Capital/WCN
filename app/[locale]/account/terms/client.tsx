@@ -55,7 +55,7 @@ export default function TermsAcceptanceClient() {
           setAccepted(keys);
         }
       })
-      .catch(() => {})
+      .catch((err) => console.error("[Terms] acceptance fetch failed", err))
       .finally(() => setLoading(false));
   }, []);
 

@@ -39,9 +39,12 @@ function RiskRulesTab() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    fetch("/api/risk/rules").then((r) => r.json()).then((d) => {
+    fetch("/api/risk/rules").then((r) => {
+      if (!r.ok) throw new Error(`Risk rules fetch failed: ${r.status}`);
+      return r.json();
+    }).then((d) => {
       if (d.ok) setRules(d.data);
-    });
+    }).catch((err) => console.error("[Risk]", err));
   }, []);
 
   async function createRule(e: React.FormEvent) {

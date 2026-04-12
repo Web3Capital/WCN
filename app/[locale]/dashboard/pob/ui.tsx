@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { getApiErrorMessageFromJson } from "@/lib/api-error";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { StatusBadge, FormCard, EmptyState } from "../_components";
@@ -78,7 +78,7 @@ export function PobConsole({
     fetch(`/api/reviews?targetType=POB&targetId=${selectedId}`, { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => { if (d?.ok) setPobReviews(d.data ?? []); })
-      .catch(() => {});
+      .catch((err) => console.error("[PoB] review fetch failed", err));
   }, [selectedId, readOnly]);
 
   async function refresh() {

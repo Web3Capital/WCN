@@ -169,5 +169,7 @@ export function initEmailHandlers(): void {
     await sendEmail({ to: emails, ...template });
   });
 
-  console.log("[WCN] Email handlers initialized");
+  if (process.env.NODE_ENV === "development") {
+    console.log("[WCN] Email handlers initialized");
+  }
 }

@@ -17,7 +17,7 @@ export function initSearchHandlers(): void {
       const prisma = getPrisma();
       await prisma.searchDocument.deleteMany({
         where: { entityType: "Node", entityId: payload.nodeId },
-      }).catch(() => {});
+      }).catch((err) => console.error("[Search] node doc delete failed", err));
     }
   });
 
@@ -44,6 +44,6 @@ export function initSearchHandlers(): void {
         title: payload.name,
         body: `${payload.sector ?? ""} ${payload.stage ?? ""}`.trim(),
       },
-    }).catch(() => {});
+    }).catch((err) => console.error("[Search] project doc upsert failed", err));
   });
 }

@@ -43,5 +43,7 @@ export function initEventHandlers(): void {
   initSearchHandlers();
   initRealtimeHandlers();
 
-  console.log("[WCN] Event handlers initialized (12 modules)");
+  if (process.env.NODE_ENV === "development") {
+    console.log("[WCN] Event handlers initialized (12 modules)");
+  }
 }

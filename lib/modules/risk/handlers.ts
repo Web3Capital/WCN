@@ -24,7 +24,7 @@ export function initRiskHandlers(): void {
           severity: payload.attemptCount >= 10 ? "HIGH" : "MEDIUM",
           reason: `Excessive login failures: ${payload.attemptCount} attempts (IP: ${payload.ip ?? "unknown"})`,
         },
-      }).catch(() => {});
+      }).catch((err) => console.error("[Risk] riskFlag create failed", err));
     }
   });
 

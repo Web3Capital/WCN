@@ -92,7 +92,9 @@ export async function sendOTP(phone: string): Promise<{ ok: boolean; error?: str
       return { ok: false, error: "Failed to send SMS" };
     }
   } else {
-    console.log(`[SMS OTP] ${normalizedPhone}: ${code}`);
+    if (process.env.NODE_ENV === "development") {
+      console.log(`[SMS OTP] ${normalizedPhone}: ${code}`);
+    }
   }
 
   return { ok: true };
