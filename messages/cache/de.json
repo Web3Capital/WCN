@@ -27,5 +27,15 @@
   "Accept All": "Alle akzeptieren",
   "Processing...": "Verarbeitung...",
   "Continue to Dashboard": "Weiter zum Dashboard",
-  "Loading...": "Laden..."
+  "Loading...": "Laden...",
+  "Security": "Sicherheit",
+  "Two-Factor Verification": "Zwei-Faktor-Verifizierung",
+  "Enter your credentials and the 6-digit code from your authenticator app.": "Geben Sie Ihre Zugangsdaten und den 6-stelligen Code aus Ihrer Authentifizierungs-App ein.",
+  "Email": "E-Mail",
+  "Password": "Passwort",
+  "Please enter a 6-digit code.": "Bitte geben Sie einen 6-stelligen Code ein.",
+  "Invalid code. Please try again.": "Ungültiger Code. Bitte versuchen Sie es erneut.",
+  "Authentication failed. Check your credentials and try again.": "Die Authentifizierung ist fehlgeschlagen. Überprüfen Sie Ihre Anmeldedaten und versuchen Sie es erneut.",
+  "Verify & Sign in": "Bestätigen und anmelden",
+  "Lost access to your authenticator? Contact your administrator.": "Zugriff auf Ihren Authentifikator verloren? Kontaktieren Sie Ihren Administrator."
 }
