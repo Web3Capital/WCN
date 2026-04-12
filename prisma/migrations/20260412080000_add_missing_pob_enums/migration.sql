@@ -191,13 +191,16 @@ DO $$ BEGIN
 END $$;
 
 -- Alter PoBRecord.status column from ApplicationStatus to PoBRecordStatus
+-- Must drop default first, change type, then re-add default
 DO $$ BEGIN
   IF EXISTS (
     SELECT 1 FROM information_schema.columns
     WHERE table_name = 'PoBRecord' AND column_name = 'status'
       AND udt_name = 'ApplicationStatus'
   ) THEN
+    ALTER TABLE "PoBRecord" ALTER COLUMN "status" DROP DEFAULT;
     ALTER TABLE "PoBRecord" ALTER COLUMN "status" TYPE "PoBRecordStatus" USING "status"::text::"PoBRecordStatus";
+    ALTER TABLE "PoBRecord" ALTER COLUMN "status" SET DEFAULT 'PENDING'::"PoBRecordStatus";
   END IF;
 END $$;
 
