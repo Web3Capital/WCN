@@ -1631,7 +1631,9 @@ a.docs-card:hover::after { opacity: 1; transform: translateX(2px); }
   background: color-mix(in oklab, var(--card) 92%, #fff 8%);
 }
 .docs-landing-card-icon {
-  font-size: 24px;
+  display: flex;
+  align-items: center;
+  color: var(--muted);
 }
 .docs-landing-card-title {
   font-size: 17px;
