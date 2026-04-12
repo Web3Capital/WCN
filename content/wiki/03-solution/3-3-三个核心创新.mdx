@@ -22,14 +22,14 @@ order: 2
 ## 创新一：全球多层级节点网络
 
 <CardGrid cols={1}>
-  <Card title="不是社群，是责任网络">WCN 的节点不是注册用户，不是社群成员，不是 KOL。每个节点有明确的类型（功能 / 国家 / 地区 / 行业）、位置、权限和责任。节点进入系统后必须带来资源、推进协作、提交证据——否则会被降级或退出。</Card>
+  <Card title="不是社群，是责任网络" icon="globe">WCN 的节点不是注册用户，不是社群成员，不是 KOL。每个节点有明确的类型（功能 / 国家 / 地区 / 行业）、位置、权限和责任。节点进入系统后必须带来资源、推进协作、提交证据——否则会被降级或退出。</Card>
 </CardGrid>
 
 **与现有方案的区别**：
 
 <CardGrid cols={2}>
-  <Card title="Chainlink 节点">Chainlink 的节点是数据预言机，负责把链下数据推到链上。它解决的是数据可信问题，而非业务协同问题。Chainlink 节点不会帮你找项目、推进交易或验证业务结果。</Card>
-  <Card title="WCN 节点">WCN 的节点是业务参与者——项目方、资本方、服务商、区域负责人。它们不是读取数据，而是引入资源、推进交易、形成闭环。这是完全不同的抽象层次。</Card>
+  <Card title="Chainlink 节点" icon="link">Chainlink 的节点是数据预言机，负责把链下数据推到链上。它解决的是数据可信问题，而非业务协同问题。Chainlink 节点不会帮你找项目、推进交易或验证业务结果。</Card>
+  <Card title="WCN 节点" icon="globe">WCN 的节点是业务参与者——项目方、资本方、服务商、区域负责人。它们不是读取数据，而是引入资源、推进交易、形成闭环。这是完全不同的抽象层次。</Card>
 </CardGrid>
 
 > **关键洞察**：Web3 有很多「技术节点」（验证者、矿工、预言机），但几乎没有「业务节点」——即有真实资源、能推进交易、愿意承担责任的机构化参与者。WCN 填补的是这个空白。
@@ -39,14 +39,14 @@ order: 2
 ## 创新二：AI Agent 执行系统
 
 <CardGrid cols={1}>
-  <Card title="不是聊天机器人，是正式执行层">WCN 的 Agent 不是给用户回答问题的工具。它们进入正式任务系统：Research Agent 做项目筛选和尽调辅助，Matching Agent 做资源匹配和推荐，Growth Agent 做分发和增长执行，Monitor Agent 做合规和风险监控。每个 Agent 有权限边界、输出日志和归因记录。</Card>
+  <Card title="不是聊天机器人，是正式执行层" icon="bot">WCN 的 Agent 不是给用户回答问题的工具。它们进入正式任务系统：Research Agent 做项目筛选和尽调辅助，Matching Agent 做资源匹配和推荐，Growth Agent 做分发和增长执行，Monitor Agent 做合规和风险监控。每个 Agent 有权限边界、输出日志和归因记录。</Card>
 </CardGrid>
 
 **与现有方案的区别**：
 
 <CardGrid cols={2}>
-  <Card title="AutoGPT / AI Agent 框架">AutoGPT、CrewAI、LangGraph 等是通用 Agent 框架——它们提供构建 Agent 的工具，但不提供业务上下文。Agent 在这些框架中是「无组织的」，没有明确的任务系统、权限体系和结果审核。</Card>
-  <Card title="WCN Agent">WCN 的 Agent 不是通用的，而是嵌入在具体业务流程中的。它们的输入来自节点和 Deal，输出进入 Proof Desk，经人类审核后获得归因。这是 Agent 从「能力」到「责任」的关键转变。</Card>
+  <Card title="AutoGPT / AI Agent 框架" icon="brain">AutoGPT、CrewAI、LangGraph 等是通用 Agent 框架——它们提供构建 Agent 的工具，但不提供业务上下文。Agent 在这些框架中是「无组织的」，没有明确的任务系统、权限体系和结果审核。</Card>
+  <Card title="WCN Agent" icon="bot">WCN 的 Agent 不是通用的，而是嵌入在具体业务流程中的。它们的输入来自节点和 Deal，输出进入 Proof Desk，经人类审核后获得归因。这是 Agent 从「能力」到「责任」的关键转变。</Card>
 </CardGrid>
 
 > **行业趋势**：2025 年 AI Agent 赛道融资超过 $8B，但绝大多数项目仍在做「Agent 基础设施」——框架、调度、工具链。很少有项目在回答「Agent 的输出进入什么系统、谁审核、怎么结算」。WCN 回答的正是这个问题。
@@ -56,14 +56,14 @@ order: 2
 ## 创新三：Proof of Business（PoB）
 
 <CardGrid cols={1}>
-  <Card title="不是活跃积分，是结果证明">PoB 要求每一个进入价值层的结果都经过：证据提交 → 多维审核 → 归因分配。它不记录「你做了什么动作」，而记录「你推动了什么可验证的业务结果」。</Card>
+  <Card title="不是活跃积分，是结果证明" icon="circle-check">PoB 要求每一个进入价值层的结果都经过：证据提交 → 多维审核 → 归因分配。它不记录「你做了什么动作」，而记录「你推动了什么可验证的业务结果」。</Card>
 </CardGrid>
 
 **与现有方案的区别**：
 
 <CardGrid cols={2}>
-  <Card title="Gitcoin / Grants 模式">Gitcoin 的二次方融资（QF）奖励的是「社区支持度」——谁获得更多小额捐赠，谁分到更多匹配资金。这适合公共品资助，但不适用于 B2B 商业协作的贡献归因。</Card>
-  <Card title="WCN PoB">PoB 不看社区投票，看业务证据。一个 $3M 的 Deal 闭环中，谁引荐了项目方（10%归因）、谁做了尽调（15%）、谁完成了法务审核（20%）、谁推动了签约（30%）、谁做了投后管理（25%）——这些归因基于证据链条，而非主观判断。</Card>
+  <Card title="Gitcoin / Grants 模式" icon="coins">Gitcoin 的二次方融资（QF）奖励的是「社区支持度」——谁获得更多小额捐赠，谁分到更多匹配资金。这适合公共品资助，但不适用于 B2B 商业协作的贡献归因。</Card>
+  <Card title="WCN PoB" icon="circle-check">PoB 不看社区投票，看业务证据。一个 $3M 的 Deal 闭环中，谁引荐了项目方（10%归因）、谁做了尽调（15%）、谁完成了法务审核（20%）、谁推动了签约（30%）、谁做了投后管理（25%）——这些归因基于证据链条，而非主观判断。</Card>
 </CardGrid>
 
 > **行业痛点**：Web3 的贡献归因至今靠「谁声音大」「谁关系好」「谁先开口」。一个典型的 FA 争端：项目方被三个不同渠道引荐到同一个投资人，最终成交后三方都主张佣金。没有 PoB 这类机制，这个问题永远无解。
@@ -75,10 +75,10 @@ order: 2
 三个创新单独存在时，各自只能解决一类问题。放在一起，它们形成一个互相增强的飞轮：
 
 <CardGrid cols={2}>
-  <Card title="节点 → Agent 变强" icon="chevron">节点越多，Agent 的训练数据和任务场景越丰富。更多 Deal 意味着 Agent 能学到更精准的匹配模式和筛选标准。</Card>
-  <Card title="Agent → 节点效率放大" icon="chevron">Agent 把重复性执行（Research、筛选、跟进）自动化后，节点可以把时间花在高价值决策上。单个节点的产出因此被放大。</Card>
-  <Card title="PoB → 信任积累" icon="chevron">每一次验证过的闭环都沉淀为系统记录。时间越长，节点信誉越清晰，Agent 匹配越精准，新参与者越容易信任系统。</Card>
-  <Card title="信任 → 更多节点和 Deal" icon="chevron">系统的可信度吸引更多高质量节点加入，带来更多资源和 Deal，飞轮加速。</Card>
+  <Card title="节点 → Agent 变强" icon="globe-to-bot">节点越多，Agent 的训练数据和任务场景越丰富。更多 Deal 意味着 Agent 能学到更精准的匹配模式和筛选标准。</Card>
+  <Card title="Agent → 节点效率放大" icon="bot-to-globe">Agent 把重复性执行（Research、筛选、跟进）自动化后，节点可以把时间花在高价值决策上。单个节点的产出因此被放大。</Card>
+  <Card title="PoB → 信任积累" icon="circle-check-to-gem">每一次验证过的闭环都沉淀为系统记录。时间越长，节点信誉越清晰，Agent 匹配越精准，新参与者越容易信任系统。</Card>
+  <Card title="信任 → 更多节点和 Deal" icon="gem-to-globe">系统的可信度吸引更多高质量节点加入，带来更多资源和 Deal，飞轮加速。</Card>
 </CardGrid>
 
 <Callout type="info">
@@ -90,8 +90,8 @@ order: 2
 ## 组合壁垒
 
 <CardGrid cols={2}>
-  <Card title="为什么难以被复制">三层系统的复制难度不是线性叠加，而是指数级的。你需要同时具备：全球节点的招募和管理能力、业务领域 AI Agent 的开发和训练能力、以及 PoB 归因机制的设计和审核能力。任缺一层，系统都跑不起来。</Card>
-  <Card title="先发优势会加速">节点网络和 PoB 账本是典型的网络效应产品——先跑起来的系统会积累更多数据、更多信誉、更多 Agent 训练素材。后来者面对的不是技术壁垒，而是数据和信任壁垒。</Card>
+  <Card title="为什么难以被复制" icon="shield">三层系统的复制难度不是线性叠加，而是指数级的。你需要同时具备：全球节点的招募和管理能力、业务领域 AI Agent 的开发和训练能力、以及 PoB 归因机制的设计和审核能力。任缺一层，系统都跑不起来。</Card>
+  <Card title="先发优势会加速" icon="rocket">节点网络和 PoB 账本是典型的网络效应产品——先跑起来的系统会积累更多数据、更多信誉、更多 Agent 训练素材。后来者面对的不是技术壁垒，而是数据和信任壁垒。</Card>
 </CardGrid>
 
 <Callout type="tip">

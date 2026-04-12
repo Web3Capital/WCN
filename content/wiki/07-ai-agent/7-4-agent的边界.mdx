@@ -18,21 +18,21 @@ order: 4
 ## Agent 可以做什么（允许集）
 
 <CardGrid cols={2}>
-  <Card title="研究与整理">摘要、对比矩阵、尽调初筛、引用带来源的 bullet；适合 GPT-4 / Claude 长文 + RAG。输出默认标注「未法律验证」。</Card>
-  <Card title="流程与纪要">会议纪要草稿、行动项、跟进邮件模板；Execution 类核心场景。时间线与发言人归因错误需人工改。</Card>
-  <Card title="增长与监控">文案变体、渠道要点、指标异常的叙述性说明；Liquidity 类只读行情后的自然语言警报。</Card>
-  <Card title="低风险自动化">在明确权限内填表、贴标签、同步状态字段；类比 RPA，但由 LLM 解析非结构化输入。</Card>
+  <Card title="研究与整理" icon="search">摘要、对比矩阵、尽调初筛、引用带来源的 bullet；适合 GPT-4 / Claude 长文 + RAG。输出默认标注「未法律验证」。</Card>
+  <Card title="流程与纪要" icon="file-text">会议纪要草稿、行动项、跟进邮件模板；Execution 类核心场景。时间线与发言人归因错误需人工改。</Card>
+  <Card title="增长与监控" icon="chart-bar">文案变体、渠道要点、指标异常的叙述性说明；Liquidity 类只读行情后的自然语言警报。</Card>
+  <Card title="低风险自动化" icon="settings">在明确权限内填表、贴标签、同步状态字段；类比 RPA，但由 LLM 解析非结构化输入。</Card>
 </CardGrid>
 
 ## Agent 不能做什么（禁止集）
 
 <CardGrid cols={3}>
-  <Card title="不能替代签约">电子签、具约束力条款、排他/对赌结论须人类与法务流程。</Card>
-  <Card title="不能单独驱动资金">转账、拨款、链上授权、托管指令——即使接钱包工具也需多重人类批准与限额。</Card>
-  <Card title="不能出具法律/税务/审计意见">可检索法规摘要，不得输出「对你方合法」类终局结论。</Card>
-  <Card title="不能最终裁定 PoB">Proof Desk 与治理规则决定采纳；Agent 可预审排序，不可「自证通过」。</Card>
-  <Card title="不能越权对外承诺">收益、监管状态、上所时间、背书关系——律所级表述禁止自动生成发送。</Card>
-  <Card title="不能绕过日志与接管">关键路径须可中断、可回滚；禁止静默调用未登记工具。</Card>
+  <Card title="不能替代签约" icon="ban">电子签、具约束力条款、排他/对赌结论须人类与法务流程。</Card>
+  <Card title="不能单独驱动资金" icon="ban">转账、拨款、链上授权、托管指令——即使接钱包工具也需多重人类批准与限额。</Card>
+  <Card title="不能出具法律/税务/审计意见" icon="ban">可检索法规摘要，不得输出「对你方合法」类终局结论。</Card>
+  <Card title="不能最终裁定 PoB" icon="ban">Proof Desk 与治理规则决定采纳；Agent 可预审排序，不可「自证通过」。</Card>
+  <Card title="不能越权对外承诺" icon="ban">收益、监管状态、上所时间、背书关系——律所级表述禁止自动生成发送。</Card>
+  <Card title="不能绕过日志与接管" icon="ban">关键路径须可中断、可回滚；禁止静默调用未登记工具。</Card>
 </CardGrid>
 
 ## 风险矩阵（简）

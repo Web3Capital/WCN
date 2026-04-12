@@ -18,12 +18,12 @@ order: 9
 ## 节点状态机
 
 <CardGrid cols={3}>
-  <Card title="Applied" description="提交资质、推荐人、业务计划与拟覆盖范围；运营与合规初审材料完整性与利益冲突。" />
-  <Card title="Approved" description="资格通过但尚未完成协议签署、权限开通与培训；常见于背景调查或法务排队。" />
-  <Card title="Active" description="全功能路由与 PoB 提交权限；参与 KPI 统计与激励池。" />
-  <Card title="Probation" description="触发条件示例：连续两季度低于最低引入数、客户投诉属实、PoB 造假嫌疑未结。" />
-  <Card title="Suspended" description="临时冻结权限：调查违规、待补充材料或司法配合；期间不参与分配。" />
-  <Card title="Renewed / Revoked" description="续期通过则刷新授权期限；撤销则进入冷却期与品牌下架，关键记录依法或依协议保留。" />
+  <Card title="Applied" description="提交资质、推荐人、业务计划与拟覆盖范围；运营与合规初审材料完整性与利益冲突。" icon="file-text" />
+  <Card title="Approved" description="资格通过但尚未完成协议签署、权限开通与培训；常见于背景调查或法务排队。" icon="circle-check" />
+  <Card title="Active" description="全功能路由与 PoB 提交权限；参与 KPI 统计与激励池。" icon="zap" />
+  <Card title="Probation" description="触发条件示例：连续两季度低于最低引入数、客户投诉属实、PoB 造假嫌疑未结。" icon="triangle-alert" />
+  <Card title="Suspended" description="临时冻结权限：调查违规、待补充材料或司法配合；期间不参与分配。" icon="lock" />
+  <Card title="Renewed / Revoked" description="续期通过则刷新授权期限；撤销则进入冷却期与品牌下架，关键记录依法或依协议保留。" icon="refresh-cw" />
 </CardGrid>
 
 ---
@@ -35,10 +35,10 @@ order: 9
 </Callout>
 
 <CardGrid cols={2}>
-  <Card title="准入阶段" description="评估资源真实性、历史声誉、与现有子图重叠度；必要时要求试点任务。" />
-  <Card title="上线阶段" description="完成规则培训、保密分级测试、系统工具 onboarding；签署对外话术边界。" />
-  <Card title="运行阶段" description="按 KPI 跟踪 pipeline、闭环、PoB 质量与客户反馈；数据驱动路由权重。" />
-  <Card title="续期阶段" description="对照贡献与违规记录决策：续约、减量权限、观察期或清退。" />
+  <Card title="准入阶段" description="评估资源真实性、历史声誉、与现有子图重叠度；必要时要求试点任务。" icon="search" />
+  <Card title="上线阶段" description="完成规则培训、保密分级测试、系统工具 onboarding；签署对外话术边界。" icon="clipboard-list" />
+  <Card title="运行阶段" description="按 KPI 跟踪 pipeline、闭环、PoB 质量与客户反馈；数据驱动路由权重。" icon="zap" />
+  <Card title="续期阶段" description="对照贡献与违规记录决策：续约、减量权限、观察期或清退。" icon="star" />
 </CardGrid>
 
 <Statement>节点不是 NFT 式永久资产，而是与绩效和合规绑定的服务型合约；设计得当可让网络在扩张期仍保持边际质量不下降。</Statement>
