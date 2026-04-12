@@ -1409,9 +1409,16 @@ a.docs-card:hover::after { opacity: 1; transform: translateX(2px); }
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.10);
   background: color-mix(in oklab, var(--card) 92%, #fff 8%);
 }
+.docs-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .docs-card-icon {
-  font-size: 26px;
-  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--accent);
 }
 .docs-card-title {
   font-size: 15px;

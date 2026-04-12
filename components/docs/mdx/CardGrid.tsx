@@ -45,8 +45,10 @@ export function Card({
   const resolved = icon ? resolveIcon(icon) : null;
   return (
     <Tag className="docs-card" {...(href ? { href } : {})}>
-      {resolved && <span className="docs-card-icon">{resolved}</span>}
-      <strong className="docs-card-title">{title}</strong>
+      <span className="docs-card-header">
+        {resolved && <span className="docs-card-icon">{resolved}</span>}
+        <strong className="docs-card-title">{title}</strong>
+      </span>
       {body && <span className="docs-card-desc">{body}</span>}
     </Tag>
   );
