@@ -1395,7 +1395,17 @@ p, li { color: var(--muted); line-height: 1.7; font-size: 16px; }
   text-decoration: none;
   color: var(--text);
 }
-a.docs-card { cursor: pointer; }
+a.docs-card {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+a.docs-card .docs-card-title {
+  transition: color var(--dur-2) var(--ease-out);
+}
+a.docs-card:hover .docs-card-title {
+  color: var(--accent);
+}
 a.docs-card::after {
   content: "→";
   font-size: 14px;
@@ -1626,6 +1636,8 @@ a.docs-card:hover::after { opacity: 1; transform: translateX(2px); }
   border: 1px solid var(--line);
   background: var(--card);
   box-shadow: var(--shadow-sm);
+  color: inherit;
+  text-decoration: none;
   text-decoration: none;
   color: var(--text);
   transition:
@@ -1639,6 +1651,9 @@ a.docs-card:hover::after { opacity: 1; transform: translateX(2px); }
   transform: translateY(-2px);
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
   background: color-mix(in oklab, var(--card) 92%, #fff 8%);
+}
+.docs-landing-card:hover .docs-landing-card-title {
+  color: var(--accent);
 }
 .docs-landing-card-header {
   display: flex;
@@ -1655,6 +1670,7 @@ a.docs-card:hover::after { opacity: 1; transform: translateX(2px); }
 .docs-landing-card-title {
   font-size: 16px;
   font-weight: 700;
+  transition: color var(--dur-2) var(--ease-out);
 }
 .docs-landing-card-desc {
   font-size: 14px;
