@@ -96,7 +96,7 @@ const META: Record<string, ChapterMeta> = {
     title: "商业模式",
     icon: "💰",
     description: "收入来源、节点席位与服务收入。",
-    lead: "WCN 的商业模式必须先于 Token 成立。本章展开收入地图：席位收入、服务收入、Agent 商业化，以及为什么不依赖发币生存。",
+    lead: "WCN 的商业模式必须先于 Token 成立。本章展开收入地图：席位收入、服务收入、Agent 商业化，以及为什么不依赖发行 Token 生存。",
     heroTitle: "如果商业模式不能在 Token 之前成立，就很难证明这是业务网络而不是叙事网络。",
     readOrder: "先看收入来源，再看各模块细节",
     audience: "投资人、财务团队、节点",
