@@ -1,6 +1,7 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
+import { isAdminRole } from "@/lib/permissions";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
 
@@ -15,6 +16,10 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   });
 
   if (!file) return apiNotFound("File");
+
+  if (!isAdminRole(auth.session.user?.role ?? "USER") && file.uploaderUserId !== auth.session.user!.id) {
+    return apiUnauthorized();
+  }
 
   await prisma.fileAccessLog.create({
     data: {

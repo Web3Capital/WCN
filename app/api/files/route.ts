@@ -2,7 +2,8 @@ import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
+import { apiOk, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
+import { parseBody, uploadFileSchema } from "@/lib/core/validation";
 import { generatePresignedUpload, buildStorageKey } from "@/lib/modules/storage/service";
 
 export async function GET(req: Request) {
@@ -32,37 +33,36 @@ export async function POST(req: Request) {
   const auth = await requirePermission("create", "file");
   if (!auth.ok) return apiUnauthorized();
 
-  const body = await req.json().catch(() => null);
-  if (!body?.filename || !body?.entityType || !body?.entityId) {
-    return apiValidationError([{ path: "body", message: "filename, entityType, entityId required." }]);
-  }
+  const body = await req.json().catch(() => ({}));
+  const parsed = parseBody(uploadFileSchema, body);
+  if (!parsed.ok) return zodToApiError(parsed.error);
 
   const prisma = getPrisma();
-  const storageKey = buildStorageKey(body.entityType, body.entityId, body.filename);
-  const contentType = body.contentType ?? "application/octet-stream";
+  const d = parsed.data;
+  const storageKey = buildStorageKey(d.entityType, d.entityId, d.filename);
 
   const record = await prisma.file.create({
     data: {
-      filename: body.filename,
-      mimeType: contentType,
-      sizeBytes: body.sizeBytes ?? null,
+      filename: d.filename,
+      mimeType: d.contentType,
+      sizeBytes: d.sizeBytes ?? null,
       storageKey,
-      confidentiality: (body.confidentiality as any) ?? "PUBLIC",
+      confidentiality: d.confidentiality,
       uploaderUserId: auth.session.user!.id,
-      entityType: body.entityType,
-      entityId: body.entityId,
+      entityType: d.entityType,
+      entityId: d.entityId,
       scanStatus: "PENDING",
     },
   });
 
-  const presigned = await generatePresignedUpload(storageKey, contentType);
+  const presigned = await generatePresignedUpload(storageKey, d.contentType);
 
   await writeAudit({
     actorUserId: auth.session.user!.id,
     action: AuditAction.FILE_UPLOAD,
     targetType: "FILE",
     targetId: record.id,
-    metadata: { filename: body.filename, entityType: body.entityType, entityId: body.entityId },
+    metadata: { filename: d.filename, entityType: d.entityType, entityId: d.entityId },
   });
 
   return apiOk({ file: record, upload: presigned });

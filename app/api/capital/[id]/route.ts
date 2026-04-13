@@ -41,8 +41,15 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (!parsed.ok) return zodToApiError(parsed.error);
 
   const prisma = getPrisma();
-  const existing = await prisma.capitalProfile.findUnique({ where: { id: params.id }, select: { id: true, status: true, nodeId: true } });
+  const existing = await prisma.capitalProfile.findUnique({
+    where: { id: params.id },
+    select: { id: true, status: true, nodeId: true, node: { select: { ownerUserId: true } } },
+  });
   if (!existing) return apiNotFound("CapitalProfile");
+
+  if (!isAdminRole(auth.session.user?.role ?? "USER") && existing.node?.ownerUserId !== auth.session.user!.id) {
+    return apiUnauthorized();
+  }
 
   const data: Record<string, unknown> = {};
   const d = parsed.data;

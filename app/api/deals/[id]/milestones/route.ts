@@ -1,12 +1,33 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
-import { apiCreated, apiOk, apiUnauthorized, apiValidationError, zodToApiError } from "@/lib/core/api-response";
+import { isAdminRole } from "@/lib/permissions";
+import { apiCreated, apiOk, apiUnauthorized, apiNotFound, apiValidationError, zodToApiError } from "@/lib/core/api-response";
 import { parseBody, createDealMilestoneSchema } from "@/lib/core/validation";
+import { getOwnedNodeIds } from "@/lib/member-data-scope";
+
+async function verifyDealAccess(prisma: any, dealId: string, auth: any): Promise<boolean> {
+  if (isAdminRole(auth.session.user?.role ?? "USER")) return true;
+  const ownedNodeIds = await getOwnedNodeIds(prisma, auth.session.user!.id);
+  const hasAccess = await prisma.deal.findFirst({
+    where: {
+      id: dealId,
+      OR: [
+        { project: { node: { id: { in: ownedNodeIds } } } },
+        { participants: { some: { nodeId: { in: ownedNodeIds } } } },
+      ],
+    },
+    select: { id: true },
+  });
+  return !!hasAccess;
+}
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   const auth = await requirePermission("update", "deal");
   if (!auth.ok) return apiUnauthorized();
+
+  const prisma = getPrisma();
+  if (!(await verifyDealAccess(prisma, params.id, auth))) return apiNotFound("Deal");
 
   const body = await req.json().catch(() => ({}));
   const parsed = parseBody(createDealMilestoneSchema, body);
@@ -29,6 +50,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
+  if (!(await verifyDealAccess(prisma, params.id, auth))) return apiNotFound("Deal");
   const body = await req.json().catch(() => ({}));
   const milestoneId = String(body?.milestoneId ?? "");
   if (!milestoneId) return apiValidationError([{ path: "milestoneId", message: "milestoneId required." }]);

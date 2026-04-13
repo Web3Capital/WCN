@@ -16,6 +16,7 @@ const mockPrisma = {
     deleteMany: vi.fn(),
     createMany: vi.fn(),
   },
+  $transaction: vi.fn(async (fn: (tx: any) => Promise<any>) => fn(mockPrisma)),
 };
 
 import { calculateSettlementForCycle } from "../calculator";
@@ -34,6 +35,7 @@ describe("calculateSettlementForCycle", () => {
       startAt: new Date("2026-01-01"),
       endAt: new Date("2026-01-31"),
       pool: 100000,
+      status: "DRAFT",
     });
 
     mockPrisma.poBRecord.findMany.mockResolvedValue([
@@ -66,6 +68,7 @@ describe("calculateSettlementForCycle", () => {
       startAt: new Date("2026-01-01"),
       endAt: new Date("2026-01-31"),
       pool: 50000,
+      status: "DRAFT",
     });
 
     mockPrisma.poBRecord.findMany.mockResolvedValue([]);
@@ -81,6 +84,7 @@ describe("calculateSettlementForCycle", () => {
       startAt: new Date("2026-01-01"),
       endAt: new Date("2026-01-31"),
       pool: 200000,
+      status: "RECONCILED",
     });
 
     mockPrisma.poBRecord.findMany.mockResolvedValue([]);
@@ -101,6 +105,7 @@ describe("calculateSettlementForCycle", () => {
       startAt: new Date("2026-01-01"),
       endAt: new Date("2026-01-31"),
       pool: 100000,
+      status: "DRAFT",
     });
 
     mockPrisma.poBRecord.findMany.mockResolvedValue([

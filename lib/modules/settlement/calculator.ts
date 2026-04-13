@@ -54,6 +54,11 @@ export async function calculateSettlementForCycle(
   });
   if (!cycle) throw new Error(`Settlement cycle ${cycleId} not found`);
 
+  const NON_CALCULABLE = new Set(["LOCKED", "EXPORTED", "FINALIZED"]);
+  if (NON_CALCULABLE.has(cycle.status)) {
+    throw new Error(`Cannot recalculate cycle in ${cycle.status} state`);
+  }
+
   const pobs = await prisma.poBRecord.findMany({
     where: {
       pobEventStatus: "EFFECTIVE",
@@ -108,23 +113,25 @@ export async function calculateSettlementForCycle(
 
   lines.sort((a, b) => b.allocation - a.allocation);
 
-  await prisma.settlementLine.deleteMany({ where: { cycleId } });
+  await prisma.$transaction(async (tx) => {
+    await tx.settlementLine.deleteMany({ where: { cycleId } });
 
-  if (lines.length > 0) {
-    await prisma.settlementLine.createMany({
-      data: lines.map((l) => ({
-        cycleId,
-        nodeId: l.nodeId,
-        scoreTotal: l.scoreTotal,
-        allocation: l.allocation,
-        pobCount: l.pobCount,
-      })),
+    if (lines.length > 0) {
+      await tx.settlementLine.createMany({
+        data: lines.map((l) => ({
+          cycleId,
+          nodeId: l.nodeId,
+          scoreTotal: l.scoreTotal,
+          allocation: l.allocation,
+          pobCount: l.pobCount,
+        })),
+      });
+    }
+
+    await tx.settlementCycle.update({
+      where: { id: cycleId },
+      data: { reconciledAt: new Date() },
     });
-  }
-
-  await prisma.settlementCycle.update({
-    where: { id: cycleId },
-    data: { reconciledAt: new Date() },
   });
 
   return {

@@ -369,6 +369,22 @@ export const completeUploadSchema = z.object({
   hash: optionalString,
 });
 
+export const uploadFileSchema = z.object({
+  filename: trimmedString,
+  entityType: trimmedString,
+  entityId: trimmedString,
+  contentType: z.string().default("application/octet-stream"),
+  sizeBytes: z.number().int().min(0).nullable().optional(),
+  confidentiality: z.enum(["PUBLIC", "NETWORK", "DEAL_ROOM", "RESTRICTED"]).default("PUBLIC"),
+});
+
+export const completeFileUploadSchema = z.object({
+  sizeBytes: z.number().int().min(0).nullable().optional(),
+  hash: optionalString,
+  checksumAlgorithm: optionalString,
+  hasPreview: z.boolean().optional(),
+});
+
 // ─── Deal Sub-resource Schemas ──────────────────────────────────
 
 export const createDealNoteSchema = z.object({

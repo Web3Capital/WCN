@@ -1,6 +1,7 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
+import { isAdminRole } from "@/lib/permissions";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
 import { generatePresignedDownload } from "@/lib/modules/storage/service";
@@ -13,6 +14,10 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const prisma = getPrisma();
   const file = await prisma.file.findUnique({ where: { id } });
   if (!file || !file.storageKey) return apiNotFound("File");
+
+  if (!isAdminRole(auth.session.user?.role ?? "USER") && file.uploaderUserId !== auth.session.user!.id) {
+    return apiUnauthorized();
+  }
 
   const downloadUrl = await generatePresignedDownload(file.storageKey);
 
