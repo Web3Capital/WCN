@@ -9,8 +9,8 @@ import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
-
 export const metadata = dashboardMeta("Task Details", "View task details");
+
 export default async function TaskDetailPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
@@ -37,6 +37,7 @@ export default async function TaskDetailPage({ params }: { params: { id: string 
       evidences: { select: { id: true, title: true, type: true, reviewStatus: true, createdAt: true }, take: 30, orderBy: { createdAt: "desc" } },
       pobRecords: { select: { id: true, businessType: true, status: true, score: true }, take: 10 },
       agentRuns: { select: { id: true, status: true, cost: true, startedAt: true, finishedAt: true }, take: 10, orderBy: { startedAt: "desc" } },
+      _count: { select: { assignments: true, evidences: true, pobRecords: true, agentRuns: true } },
     },
   });
 
@@ -44,8 +45,12 @@ export default async function TaskDetailPage({ params }: { params: { id: string 
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
-        <TaskDetail task={JSON.parse(JSON.stringify(task))} isAdmin={isAdmin} canReviewEvidence={can(session.user.role, "review", "evidence")} />
+      <div className="container-wide">
+        <TaskDetail
+          task={JSON.parse(JSON.stringify(task))}
+          isAdmin={isAdmin}
+          canReviewEvidence={can(session.user.role, "review", "evidence")}
+        />
       </div>
     </div>
   );

@@ -12,8 +12,8 @@ import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
-
 export const metadata = dashboardMeta("Tasks", "Task management");
+
 export default async function TasksPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
@@ -30,10 +30,10 @@ export default async function TasksPage() {
       where: taskWhere,
       orderBy: { createdAt: "desc" },
       take: 200,
-      include: { project: { include: { node: true } }, ownerNode: true, assignments: { include: { node: true } } }
+      include: { project: { select: { id: true, name: true } }, ownerNode: { select: { id: true, name: true } }, assignments: { include: { node: true } } },
     }),
     prisma.project.findMany({ where: projectWhere, orderBy: { createdAt: "desc" }, take: 200 }),
-    prisma.node.findMany({ orderBy: { createdAt: "desc" }, take: 200 })
+    prisma.node.findMany({ orderBy: { createdAt: "desc" }, take: 200 }),
   ]);
 
   const safeTasks = isAdmin ? tasks : tasks.map((t) => redactTaskForMember(t, userId));
@@ -41,16 +41,22 @@ export default async function TasksPage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <span className="eyebrow"><T>Work</T></span>
-        <h1><T>Task system</T></h1>
-        <p className="muted"><T>Structure work into tasks, assign nodes, and track progress.</T></p>
-        {!isAdmin ? <ReadOnlyBanner /> : null}
-        <div className="card" style={{ marginTop: 18 }}>
-          <TasksConsole initial={safeTasks as any} projects={projects as any} nodes={safeNodes as any} readOnly={!isAdmin} />
+        <h1><T>Task Management</T></h1>
+        <p className="muted" style={{ maxWidth: 600 }}>
+          <T>Structure work into tasks, assign nodes, and track progress across the network.</T>
+        </p>
+        {!isAdmin && <ReadOnlyBanner />}
+        <div style={{ marginTop: 24 }}>
+          <TasksConsole
+            initial={JSON.parse(JSON.stringify(safeTasks))}
+            projects={JSON.parse(JSON.stringify(projects))}
+            nodes={JSON.parse(JSON.stringify(safeNodes))}
+            readOnly={!isAdmin}
+          />
         </div>
       </div>
     </div>
   );
 }
-
