@@ -38,7 +38,7 @@ export const createDealSchema = z.object({
   projectId: cuid.nullable().optional(),
   capitalId: cuid.nullable().optional(),
   nextAction: optionalString,
-  confidentialityLevel: z.enum(["PUBLIC", "NETWORK", "DEAL_ROOM", "RESTRICTED"]).default("DEAL_ROOM"),
+  confidentialityLevel: z.enum(["PUBLIC", "CERTIFIED_NODE", "DEAL_ROOM", "RESTRICTED"]).default("DEAL_ROOM"),
 });
 
 export const updateDealSchema = z.object({
@@ -48,7 +48,7 @@ export const updateDealSchema = z.object({
   nextAction: optionalString,
   nextActionDueAt: optionalDate,
   riskTags: z.array(z.string()).optional(),
-  confidentialityLevel: z.enum(["PUBLIC", "NETWORK", "DEAL_ROOM", "RESTRICTED"]).optional(),
+  confidentialityLevel: z.enum(["PUBLIC", "CERTIFIED_NODE", "DEAL_ROOM", "RESTRICTED"]).optional(),
 });
 
 // ─── Node Schemas ───────────────────────────────────────────────
@@ -375,7 +375,7 @@ export const uploadFileSchema = z.object({
   entityId: trimmedString,
   contentType: z.string().default("application/octet-stream"),
   sizeBytes: z.number().int().min(0).nullable().optional(),
-  confidentiality: z.enum(["PUBLIC", "NETWORK", "DEAL_ROOM", "RESTRICTED"]).default("PUBLIC"),
+  confidentiality: z.enum(["PUBLIC", "CERTIFIED_NODE", "DEAL_ROOM", "RESTRICTED"]).default("PUBLIC"),
 });
 
 export const completeFileUploadSchema = z.object({
