@@ -43,6 +43,8 @@ describe("Agent Prompts", () => {
       ticketMax: 3000000,
       regions: ["APAC"],
       investorType: "VC",
+      instruments: ["SAFE", "SAFT"],
+      aum: "$50M–$100M",
     },
   };
 

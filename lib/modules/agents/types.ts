@@ -66,6 +66,8 @@ export interface CapitalContext {
   ticketMax: number | null;
   regions: string[];
   investorType: string | null;
+  instruments: string[];
+  aum: string | null;
 }
 
 export interface DealContext {

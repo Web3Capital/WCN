@@ -57,7 +57,9 @@ export async function buildCapitalContext(capitalProfileId: string): Promise<Cap
     ticketMin: c.ticketMin ? Number(c.ticketMin) : null,
     ticketMax: c.ticketMax ? Number(c.ticketMax) : null,
     regions: c.jurisdictionLimit ?? [],
-    investorType: c.entity,
+    investorType: c.investorType ?? c.entity,
+    instruments: c.instruments ?? [],
+    aum: c.aum ?? null,
   };
 }
 

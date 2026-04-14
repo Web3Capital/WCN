@@ -184,12 +184,12 @@ async function main() {
 
   // ── CAPITAL PROFILES ───────────────────────────────────────────────────
   const capitalData = [
-    { name: "Paradigm Digital", entity: "Paradigm Digital Fund I", focus: ["DeFi", "Infrastructure"], ticketMin: 5_000_000, ticketMax: 25_000_000, nodeIdx: 2, status: "ACTIVE" as const },
-    { name: "Hashkey Capital", entity: "Hashkey Capital III", focus: ["Infrastructure", "DePIN", "AI x Crypto"], ticketMin: 2_000_000, ticketMax: 15_000_000, nodeIdx: 3, status: "ACTIVE" as const },
-    { name: "Tiger Crypto", entity: "Tiger Global Crypto", focus: ["DeFi", "Payments", "Social"], ticketMin: 10_000_000, ticketMax: 50_000_000, nodeIdx: 2, status: "QUALIFIED" as const },
-    { name: "Animoca Brands", entity: "Animoca Brands Fund", focus: ["Gaming", "Social", "Data"], ticketMin: 1_000_000, ticketMax: 10_000_000, nodeIdx: 3, status: "ACTIVE" as const },
-    { name: "Sequoia Crypto", entity: "Sequoia Web3 Fund", focus: ["Infrastructure", "AI x Crypto"], ticketMin: 5_000_000, ticketMax: 30_000_000, nodeIdx: 2, status: "WARM" as const },
-    { name: "a16z Crypto", entity: "Andreessen Horowitz Crypto IV", focus: ["DeFi", "Infrastructure", "Social"], ticketMin: 10_000_000, ticketMax: 100_000_000, nodeIdx: 3, status: "PROSPECT" as const },
+    { name: "Paradigm Digital", entity: "Paradigm Digital Fund I", investorType: "VC", aum: "$500M–$1B", focus: ["DeFi", "Infrastructure"], instruments: ["SAFE", "Token Warrant", "Equity"], ticketMin: 5_000_000, ticketMax: 25_000_000, nodeIdx: 2, status: "ACTIVE" as const, maxConcurrentDeals: 8, decisionTimeline: "3–6 weeks", totalDeployed: 45_000_000, totalDeals: 6 },
+    { name: "Hashkey Capital", entity: "Hashkey Capital III", investorType: "VC", aum: "$200M–$500M", focus: ["Infrastructure", "DePIN", "AI x Crypto"], instruments: ["SAFT", "Token Warrant"], ticketMin: 2_000_000, ticketMax: 15_000_000, nodeIdx: 3, status: "ACTIVE" as const, maxConcurrentDeals: 5, decisionTimeline: "2–4 weeks", totalDeployed: 22_000_000, totalDeals: 4 },
+    { name: "Tiger Crypto", entity: "Tiger Global Crypto", investorType: "CVC", aum: "$1B+", focus: ["DeFi", "Payments", "Social"], instruments: ["Equity", "Convertible Note"], ticketMin: 10_000_000, ticketMax: 50_000_000, nodeIdx: 2, status: "QUALIFIED" as const, maxConcurrentDeals: 3, decisionTimeline: "4–8 weeks", totalDeployed: 0, totalDeals: 0 },
+    { name: "Animoca Brands", entity: "Animoca Brands Fund", investorType: "CVC", aum: "$100M–$200M", focus: ["Gaming", "Social", "Data"], instruments: ["SAFE", "SAFT", "Token Warrant"], ticketMin: 1_000_000, ticketMax: 10_000_000, nodeIdx: 3, status: "ACTIVE" as const, maxConcurrentDeals: 10, decisionTimeline: "1–3 weeks", totalDeployed: 8_500_000, totalDeals: 3 },
+    { name: "Sequoia Crypto", entity: "Sequoia Web3 Fund", investorType: "VC", aum: "$500M–$1B", focus: ["Infrastructure", "AI x Crypto"], instruments: ["Equity", "SAFE"], ticketMin: 5_000_000, ticketMax: 30_000_000, nodeIdx: 2, status: "WARM" as const, maxConcurrentDeals: 4, decisionTimeline: "4–6 weeks", totalDeployed: 0, totalDeals: 0 },
+    { name: "a16z Crypto", entity: "Andreessen Horowitz Crypto IV", investorType: "VC", aum: "$1B+", focus: ["DeFi", "Infrastructure", "Social"], instruments: ["SAFE", "SAFT", "Equity", "Token Warrant"], ticketMin: 10_000_000, ticketMax: 100_000_000, nodeIdx: 3, status: "PROSPECT" as const, maxConcurrentDeals: 6, decisionTimeline: "6–10 weeks", totalDeployed: 0, totalDeals: 0 },
   ];
 
   const capitals: any[] = [];
@@ -198,10 +198,17 @@ async function main() {
       data: {
         name: cd.name,
         entity: cd.entity,
+        investorType: cd.investorType,
+        aum: cd.aum,
         investmentFocus: cd.focus,
+        instruments: cd.instruments,
         ticketMin: cd.ticketMin,
         ticketMax: cd.ticketMax,
         status: cd.status,
+        maxConcurrentDeals: cd.maxConcurrentDeals,
+        decisionTimeline: cd.decisionTimeline,
+        totalDeployed: cd.totalDeployed,
+        totalDeals: cd.totalDeals,
         nodeId: nodes[cd.nodeIdx].id,
         workspaceId: workspace.id,
         contactName: cd.name.split(" ")[0] + " GP",

@@ -57,7 +57,7 @@ export default async function DealDetailPage({ params }: { params: { id: string 
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <DealDetail deal={JSON.parse(JSON.stringify(deal))} nodes={nodes} isAdmin={isAdmin} />
       </div>
     </div>
