@@ -33,7 +33,6 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   const parsed = parseBody(createDealMilestoneSchema, body);
   if (!parsed.ok) return zodToApiError(parsed.error);
 
-  const prisma = getPrisma();
   const milestone = await prisma.dealMilestone.create({
     data: {
       dealId: params.id,
