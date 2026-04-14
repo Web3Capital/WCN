@@ -12,8 +12,8 @@ import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
-
 export const metadata = dashboardMeta("Projects", "Manage projects");
+
 export default async function ProjectsPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
@@ -25,8 +25,13 @@ export default async function ProjectsPage() {
   const projectWhere = isAdmin ? {} : memberProjectsWhere(ownedNodeIds);
 
   const [projects, nodes] = await Promise.all([
-    prisma.project.findMany({ where: projectWhere, orderBy: { createdAt: "desc" }, take: 200, include: { node: true } }),
-    prisma.node.findMany({ orderBy: { createdAt: "desc" }, take: 200 })
+    prisma.project.findMany({
+      where: projectWhere,
+      orderBy: { createdAt: "desc" },
+      take: 200,
+      include: { node: { select: { id: true, name: true } } },
+    }),
+    prisma.node.findMany({ orderBy: { createdAt: "desc" }, take: 200 }),
   ]);
 
   const safeProjects = isAdmin ? projects : projects.map((p) => redactProjectForMember(p, userId));
@@ -34,16 +39,21 @@ export default async function ProjectsPage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <span className="eyebrow"><T>Network</T></span>
-        <h1><T>Project pool</T></h1>
-        <p className="muted"><T>Intake and review projects and their needs.</T></p>
-        {!isAdmin ? <ReadOnlyBanner /> : null}
-        <div className="card" style={{ marginTop: 18 }}>
-          <ProjectsConsole initial={safeProjects as any} nodes={safeNodes as any} readOnly={!isAdmin} />
+        <h1><T>Project Pool</T></h1>
+        <p className="muted" style={{ maxWidth: 600 }}>
+          <T>Intake, review, and manage projects across the network pipeline.</T>
+        </p>
+        {!isAdmin && <ReadOnlyBanner />}
+        <div style={{ marginTop: 24 }}>
+          <ProjectsConsole
+            initial={JSON.parse(JSON.stringify(safeProjects))}
+            nodes={JSON.parse(JSON.stringify(safeNodes))}
+            readOnly={!isAdmin}
+          />
         </div>
       </div>
     </div>
   );
 }
-

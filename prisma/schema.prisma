@@ -854,13 +854,22 @@ model CapitalProfile {
   status            CapitalStatus @default(PROSPECT)
   name              String
   entity            String?
+  investorType      String?
+  aum               String?
   investmentFocus   String[]      @default([])
   ticketMin         Float?
   ticketMax         Float?
+  instruments       String[]      @default([])
   jurisdictionLimit String[]      @default([])
   structurePref     String[]      @default([])
   blacklist         String[]      @default([])
   restrictions      String?
+  maxConcurrentDeals Int?
+  activeDealCount   Int           @default(0)
+  decisionTimeline  String?
+  totalDeployed     Float         @default(0)
+  totalDeals        Int           @default(0)
+  avgTicketSize     Float?
   responseSpeed     Int?
   activityScore     Float?
   contactName       String?
@@ -880,6 +889,7 @@ model CapitalProfile {
   @@index([status])
   @@index([nodeId])
   @@index([workspaceId])
+  @@index([investorType])
 }
 
 // ─── DEAL ROOM ──────────────────────────────────────────────────────────────

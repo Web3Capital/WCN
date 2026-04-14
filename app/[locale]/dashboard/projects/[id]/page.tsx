@@ -9,8 +9,8 @@ import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
-
 export const metadata = dashboardMeta("Project Details", "View project details");
+
 export default async function ProjectDetailPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
@@ -36,7 +36,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <ProjectDetail project={JSON.parse(JSON.stringify(data))} isAdmin={isAdmin} />
       </div>
     </div>

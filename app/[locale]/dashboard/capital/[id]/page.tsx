@@ -21,19 +21,58 @@ export default async function CapitalDetailPage({ params }: { params: { id: stri
     where: { id: params.id },
     include: {
       node: { select: { id: true, name: true, ownerUserId: true } },
-      deals: { select: { id: true, title: true, stage: true }, take: 30, orderBy: { createdAt: "desc" } },
+      deals: {
+        select: { id: true, title: true, stage: true, createdAt: true, closedAt: true },
+        take: 50,
+        orderBy: { createdAt: "desc" },
+      },
+      matches: {
+        select: {
+          id: true,
+          score: true,
+          status: true,
+          createdAt: true,
+          project: { select: { id: true, name: true, sector: true } },
+        },
+        take: 30,
+        orderBy: { createdAt: "desc" },
+      },
     },
   });
 
   if (!profile) redirect("/dashboard/capital");
 
   const isOwner = profile.node?.ownerUserId === session.user.id;
-  const data = isAdmin || isOwner ? profile : { ...profile, contactEmail: null, restrictions: null, blacklist: [] };
+  const data = isAdmin || isOwner
+    ? profile
+    : { ...profile, contactEmail: null, restrictions: null, blacklist: [] };
+
+  const dealStageDistribution = profile.deals.reduce((acc, d) => {
+    acc[d.stage] = (acc[d.stage] ?? 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const matchScoreDistribution = profile.matches.reduce((acc, m) => {
+    const bucket = m.score >= 80 ? "80-100" : m.score >= 60 ? "60-79" : m.score >= 40 ? "40-59" : "0-39";
+    acc[bucket] = (acc[bucket] ?? 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
-        <CapitalDetail profile={JSON.parse(JSON.stringify(data))} isAdmin={isAdmin} />
+      <div className="container-wide">
+        <CapitalDetail
+          profile={JSON.parse(JSON.stringify(data))}
+          isAdmin={isAdmin}
+          analytics={{
+            dealStageDistribution,
+            matchScoreDistribution,
+            totalMatches: profile.matches.length,
+            avgMatchScore: profile.matches.length > 0
+              ? Math.round(profile.matches.reduce((s, m) => s + m.score, 0) / profile.matches.length)
+              : 0,
+          }}
+        />
       </div>
     </div>
   );

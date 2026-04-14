@@ -54,7 +54,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   const data: Record<string, unknown> = {};
   const d = parsed.data;
 
-  const stringFields = ["name", "entity", "restrictions", "contactName", "contactEmail", "notes"] as const;
+  const stringFields = ["name", "entity", "investorType", "aum", "restrictions", "decisionTimeline", "contactName", "contactEmail", "notes"] as const;
   for (const f of stringFields) {
     if (d[f] !== undefined) data[f] = d[f] ? String(d[f]).trim() : null;
   }
@@ -62,11 +62,16 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (d.status !== undefined) data.status = d.status;
   if (d.ticketMin !== undefined) data.ticketMin = d.ticketMin;
   if (d.ticketMax !== undefined) data.ticketMax = d.ticketMax;
+  if (d.maxConcurrentDeals !== undefined) data.maxConcurrentDeals = d.maxConcurrentDeals;
+  if (d.activeDealCount !== undefined) data.activeDealCount = d.activeDealCount;
+  if (d.totalDeployed !== undefined) data.totalDeployed = d.totalDeployed;
+  if (d.totalDeals !== undefined) data.totalDeals = d.totalDeals;
+  if (d.avgTicketSize !== undefined) data.avgTicketSize = d.avgTicketSize;
   if (d.responseSpeed !== undefined) data.responseSpeed = d.responseSpeed;
   if (d.activityScore !== undefined) data.activityScore = d.activityScore;
   if (d.nodeId !== undefined) data.nodeId = d.nodeId ?? null;
 
-  const arrayFields = ["investmentFocus", "jurisdictionLimit", "structurePref", "blacklist"] as const;
+  const arrayFields = ["investmentFocus", "instruments", "jurisdictionLimit", "structurePref", "blacklist"] as const;
   for (const f of arrayFields) {
     if (d[f] !== undefined) data[f] = d[f];
   }

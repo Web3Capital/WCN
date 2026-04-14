@@ -9,9 +9,14 @@ import { z } from "zod";
 const createSchema = z.object({
   name: z.string().min(1).max(200),
   entity: z.string().optional(),
+  investorType: z.enum(["VC", "FAMILY_OFFICE", "CVC", "ANGEL", "HNW", "LP", "DAO_TREASURY", "OTHER"]).optional(),
+  aum: z.string().optional(),
   investmentFocus: z.array(z.string()).optional(),
   ticketMin: z.number().optional(),
   ticketMax: z.number().optional(),
+  instruments: z.array(z.string()).optional(),
+  maxConcurrentDeals: z.number().int().min(0).optional(),
+  decisionTimeline: z.string().optional(),
   contactName: z.string().optional(),
   contactEmail: z.string().email().optional(),
   notes: z.string().max(5000).optional(),
@@ -21,8 +26,9 @@ const createSchema = z.object({
 });
 
 const ALLOWED_FIELDS = [
-  "id", "name", "entity", "status", "investmentFocus",
-  "ticketMin", "ticketMax", "contactName", "createdAt",
+  "id", "name", "entity", "investorType", "status", "investmentFocus",
+  "ticketMin", "ticketMax", "instruments", "totalDeployed", "totalDeals",
+  "contactName", "createdAt",
 ] as const;
 
 export async function GET(req: NextRequest) {
@@ -86,9 +92,14 @@ export async function POST(req: NextRequest) {
     data: {
       name: d.name,
       entity: d.entity ?? null,
+      investorType: d.investorType ?? null,
+      aum: d.aum ?? null,
       investmentFocus: d.investmentFocus ?? [],
       ticketMin: d.ticketMin ?? null,
       ticketMax: d.ticketMax ?? null,
+      instruments: d.instruments ?? [],
+      maxConcurrentDeals: d.maxConcurrentDeals ?? null,
+      decisionTimeline: d.decisionTimeline ?? null,
       contactName: d.contactName ?? null,
       contactEmail: d.contactEmail ?? null,
       notes: d.notes ?? null,
