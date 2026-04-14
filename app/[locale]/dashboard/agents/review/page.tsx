@@ -40,7 +40,7 @@ export default async function AgentReviewQueuePage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <ReviewQueueUI
           pendingRuns={JSON.parse(JSON.stringify(pendingRuns))}
           recentReviewed={JSON.parse(JSON.stringify(recentReviewed))}

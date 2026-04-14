@@ -23,6 +23,18 @@ type ReviewedRun = {
 const AGENT_TYPES = ["ALL", "RESEARCH", "DEAL", "EXECUTION", "GROWTH"] as const;
 const REVIEW_PAGE_SIZE = 10;
 
+function relativeTime(dateStr: string): string {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days < 30) return `${days}d ago`;
+  return new Date(dateStr).toLocaleDateString();
+}
+
 export function ReviewQueueUI({ pendingRuns: initialPending, recentReviewed: initialReviewed }: { pendingRuns: PendingRun[]; recentReviewed: ReviewedRun[] }) {
   const { t } = useAutoTranslate();
   const [pendingRuns] = useState(initialPending);
@@ -53,7 +65,7 @@ export function ReviewQueueUI({ pendingRuns: initialPending, recentReviewed: ini
 
   return (
     <div>
-      <div className="flex-between items-center mb-20">
+      <div className="flex-between items-center mb-20 reveal">
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>{t("Agent Review Queue")}</h1>
           <p className="muted text-sm">{pendingRuns.length} {t("outputs awaiting review")}</p>
@@ -63,21 +75,23 @@ export function ReviewQueueUI({ pendingRuns: initialPending, recentReviewed: ini
         </Link>
       </div>
 
-      <FilterToolbar
-        filters={AGENT_TYPES}
-        active={typeFilter}
-        onChange={(val) => { setTypeFilter(val); setPage(0); }}
-        totalCount={pendingRuns.length}
-      />
+      <div className="reveal reveal-delay-1">
+        <FilterToolbar
+          filters={AGENT_TYPES}
+          active={typeFilter}
+          onChange={(val) => { setTypeFilter(val); setPage(0); }}
+          totalCount={pendingRuns.length}
+        />
+      </div>
 
       {pagedPending.length === 0 ? (
         <EmptyState message={t("No pending reviews. All agent outputs have been processed.")} />
       ) : (
-        <div className="flex-col gap-12">
+        <div className="flex-col gap-12 reveal reveal-delay-2">
           {pagedPending.map((run) => {
             const isExpanded = expandedId === run.id;
             return (
-              <div key={run.id} className="card p-16" style={{ border: "1px solid var(--border)" }}>
+              <div key={run.id} className="card-glass p-16">
                 <div className="flex-between items-center flex-wrap gap-8">
                   <div className="flex flex-wrap items-center gap-8">
                     <Link href={`/dashboard/agents/${run.agent.id}`} className="font-semibold" style={{ color: "var(--accent)", fontSize: 14 }}>
@@ -102,7 +116,7 @@ export function ReviewQueueUI({ pendingRuns: initialPending, recentReviewed: ini
                   </div>
                 </div>
                 <div className="muted text-xs mt-4">
-                  {run.finishedAt ? new Date(run.finishedAt).toLocaleString() : t("Running...")}
+                  {run.finishedAt ? relativeTime(run.finishedAt) : t("Running...")}
                   {run.task && <> | {t("Task:")} <Link href={`/dashboard/tasks/${run.task.id}`} style={{ color: "var(--accent)" }}>{run.task.title}</Link></>}
                 </div>
                 {isExpanded && run.outputs && (
@@ -145,24 +159,26 @@ export function ReviewQueueUI({ pendingRuns: initialPending, recentReviewed: ini
       )}
 
       {recentReviewed.length > 0 && (
-        <div className="mt-20">
+        <div className="mt-20 reveal reveal-delay-3">
           <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>{t("Recently Reviewed")}</h2>
-          <table className="data-table">
-            <thead><tr><th>{t("Agent")}</th><th>{t("Type")}</th><th>{t("Output")}</th><th>{t("Status")}</th><th>{t("Reviewer")}</th><th>{t("Cost")}</th><th>{t("Date")}</th></tr></thead>
-            <tbody>
-              {recentReviewed.map((r) => (
-                <tr key={r.id}>
-                  <td><Link href={`/dashboard/agents/${r.agent.id}`} style={{ color: "var(--accent)" }}>{r.agent.name}</Link></td>
-                  <td className="muted">{r.agent.type}</td>
-                  <td><span className="badge text-xs">{r.outputType ?? "—"}</span></td>
-                  <td><StatusBadge status={r.reviewStatus} /></td>
-                  <td className="muted">{r.reviewedBy?.name ?? "—"}</td>
-                  <td className="muted">${r.cost?.toFixed(4) ?? "0"}</td>
-                  <td className="muted text-xs">{r.finishedAt ? new Date(r.finishedAt).toLocaleString() : "—"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="data-table-wrap">
+            <table className="data-table">
+              <thead><tr><th>{t("Agent")}</th><th>{t("Type")}</th><th>{t("Output")}</th><th>{t("Status")}</th><th>{t("Reviewer")}</th><th>{t("Cost")}</th><th>{t("Date")}</th></tr></thead>
+              <tbody>
+                {recentReviewed.map((r) => (
+                  <tr key={r.id}>
+                    <td><Link href={`/dashboard/agents/${r.agent.id}`} style={{ color: "var(--accent)" }}>{r.agent.name}</Link></td>
+                    <td className="muted">{r.agent.type}</td>
+                    <td><span className="badge text-xs">{r.outputType ?? "—"}</span></td>
+                    <td><StatusBadge status={r.reviewStatus} /></td>
+                    <td className="muted">{r.reviewedBy?.name ?? "—"}</td>
+                    <td className="muted">${r.cost?.toFixed(4) ?? "0"}</td>
+                    <td className="muted text-xs">{r.finishedAt ? relativeTime(r.finishedAt) : "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

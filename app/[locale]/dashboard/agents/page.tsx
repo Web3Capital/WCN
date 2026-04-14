@@ -12,8 +12,8 @@ import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
-
 export const metadata = dashboardMeta("Agents", "AI agent management");
+
 export default async function AgentsPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
@@ -25,8 +25,17 @@ export default async function AgentsPage() {
   const agentWhere = isAdmin ? {} : memberAgentsWhere(ownedNodeIds);
 
   const [agents, nodes] = await Promise.all([
-    prisma.agent.findMany({ where: agentWhere, orderBy: { createdAt: "desc" }, take: 200, include: { ownerNode: true, permissions: true } }),
-    prisma.node.findMany({ orderBy: { createdAt: "desc" }, take: 200 })
+    prisma.agent.findMany({
+      where: agentWhere,
+      orderBy: { createdAt: "desc" },
+      take: 200,
+      include: {
+        ownerNode: { select: { id: true, name: true } },
+        permissions: true,
+        _count: { select: { runs: true, logs: true, permissions: true } },
+      },
+    }),
+    prisma.node.findMany({ orderBy: { createdAt: "desc" }, take: 200 }),
   ]);
 
   const safeAgents = isAdmin ? agents : agents.map(redactAgentForMember);
@@ -34,16 +43,21 @@ export default async function AgentsPage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <span className="eyebrow"><T>Work</T></span>
         <h1><T>Agents</T></h1>
-        <p className="muted"><T>Register agents, grant permissions, and inspect execution logs.</T></p>
-        {!isAdmin ? <ReadOnlyBanner /> : null}
-        <div className="card" style={{ marginTop: 18 }}>
-          <AgentsConsole initial={safeAgents as any} nodes={safeNodes as any} readOnly={!isAdmin} />
+        <p className="muted" style={{ maxWidth: 600 }}>
+          <T>Register agents, grant permissions, and inspect execution logs.</T>
+        </p>
+        {!isAdmin && <ReadOnlyBanner />}
+        <div style={{ marginTop: 24 }}>
+          <AgentsConsole
+            initial={JSON.parse(JSON.stringify(safeAgents))}
+            nodes={JSON.parse(JSON.stringify(safeNodes))}
+            readOnly={!isAdmin}
+          />
         </div>
       </div>
     </div>
   );
 }
-

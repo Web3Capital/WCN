@@ -9,8 +9,8 @@ import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
 
-
 export const metadata = dashboardMeta("Agent Details", "View agent details");
+
 export default async function AgentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const session = await getServerSession(authOptions);
@@ -39,13 +39,14 @@ export default async function AgentDetailPage({ params }: { params: Promise<{ id
         take: 50,
         include: { task: { select: { id: true, title: true } } },
       },
+      _count: { select: { runs: true, logs: true, permissions: true } },
     },
   });
   if (!agent) redirect("/dashboard/agents");
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <AgentDetailUI agent={JSON.parse(JSON.stringify(agent))} isAdmin={isAdmin} />
       </div>
     </div>
