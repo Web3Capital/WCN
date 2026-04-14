@@ -88,6 +88,7 @@ import type {
   AccountStatus,
   DealStage,
   NodeStatus,
+  ProjectStatus,
   TaskStatus,
   EvidenceReviewStatus,
   PoBEventStatus,
@@ -105,6 +106,23 @@ export const AccountMachine = new StateMachine<AccountStatus>({
   },
   entityType: "Account",
   eventName: "user.status_changed",
+});
+
+export const ProjectMachine = new StateMachine<ProjectStatus>({
+  transitions: {
+    DRAFT: ["SUBMITTED"],
+    SUBMITTED: ["SCREENED", "REJECTED"],
+    SCREENED: ["CURATED", "REJECTED"],
+    CURATED: ["IN_DEAL_ROOM", "ON_HOLD"],
+    IN_DEAL_ROOM: ["ACTIVE", "ON_HOLD"],
+    ACTIVE: ["APPROVED", "ON_HOLD", "ARCHIVED"],
+    ON_HOLD: ["CURATED", "ACTIVE"],
+    APPROVED: ["ARCHIVED"],
+    REJECTED: ["DRAFT"],
+    ARCHIVED: [],
+  },
+  entityType: "Project",
+  eventName: "project.status_changed",
 });
 
 export const DealMachine = new StateMachine<DealStage>({
@@ -209,6 +227,11 @@ export const canTransitionAccount = (from: AccountStatus, to: AccountStatus) =>
   AccountMachine.canTransition(from, to);
 export const validNextAccountStatuses = (from: AccountStatus) =>
   AccountMachine.validNext(from);
+
+export const canTransitionProject = (from: ProjectStatus, to: ProjectStatus) =>
+  ProjectMachine.canTransition(from, to);
+export const validNextProjectStatuses = (from: ProjectStatus) =>
+  ProjectMachine.validNext(from);
 
 export const canTransitionDeal = (from: DealStage, to: DealStage) =>
   DealMachine.canTransition(from, to);

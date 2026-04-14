@@ -520,7 +520,11 @@ export const updateProjectSchema = z.object({
   contactEmail: optionalString,
   contactTelegram: optionalString,
   description: optionalString,
-  nodeId: optionalString,
+  nodeId: cuid.nullable().optional(),
+  internalNotes: optionalString,
+  internalScore: z.number().min(0).max(100).nullable().optional(),
+  confidentialityLevel: z.enum(["PUBLIC", "CERTIFIED_NODE", "DEAL_ROOM", "RESTRICTED"]).optional(),
+  riskTags: z.array(z.string().trim().min(1)).optional(),
 });
 
 // ─── Update Node Schema ─────────────────────────────────────────

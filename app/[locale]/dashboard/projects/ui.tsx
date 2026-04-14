@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Link } from "@/i18n/routing";
+import { ExternalLink } from "lucide-react";
 import { StatusBadge, FormCard, EmptyState } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
@@ -19,10 +21,18 @@ type ProjectRow = {
   contactTelegram: string | null;
   description: string | null;
   nodeId: string | null;
+  internalScore: number | null;
+  internalNotes: string | null;
+  confidentialityLevel: string;
+  riskTags: string[];
 };
 
-const PROJECT_STATUS = ["DRAFT", "SUBMITTED", "APPROVED", "REJECTED", "ARCHIVED"] as const;
+const PROJECT_STATUS = [
+  "DRAFT", "SUBMITTED", "SCREENED", "CURATED", "IN_DEAL_ROOM",
+  "ACTIVE", "ON_HOLD", "APPROVED", "REJECTED", "ARCHIVED",
+] as const;
 const PROJECT_STAGE = ["IDEA", "SEED", "SERIES_A", "SERIES_B", "SERIES_C", "GROWTH", "PUBLIC", "OTHER"] as const;
+const CONFIDENTIALITY_LEVELS = ["PUBLIC", "CERTIFIED_NODE", "DEAL_ROOM", "RESTRICTED"] as const;
 
 export function ProjectsConsole({
   initial,
@@ -41,18 +51,26 @@ export function ProjectsConsole({
   const [showForm, setShowForm] = useState(false);
   const [create, setCreate] = useState({
     name: "",
-    status: "SUBMITTED",
     stage: "OTHER",
-    nodeId: ""
+    sector: "",
+    nodeId: "",
+    fundraisingNeed: "",
+    website: "",
+    pitchUrl: "",
+    contactName: "",
+    contactEmail: "",
+    contactTelegram: "",
+    description: "",
   });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function refresh() {
     const res = await fetch("/api/projects", { cache: "no-store" });
+    if (!res.ok) throw new Error(`Projects fetch failed: ${res.status}`);
     const data = await res.json();
     if (!data?.ok) throw new Error(data?.error ?? t("Failed to load projects."));
-    const list = data.data ?? [];
+    const list = data.data?.projects ?? [];
     setRows(list);
     if (!selectedId && list[0]?.id) setSelectedId(list[0].id);
   }
@@ -66,15 +84,22 @@ export function ProjectsConsole({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: create.name,
-          status: create.status,
           stage: create.stage,
-          nodeId: create.nodeId || null
+          sector: create.sector || null,
+          nodeId: create.nodeId || null,
+          fundraisingNeed: create.fundraisingNeed || null,
+          website: create.website || null,
+          pitchUrl: create.pitchUrl || null,
+          contactName: create.contactName || null,
+          contactEmail: create.contactEmail || null,
+          contactTelegram: create.contactTelegram || null,
+          description: create.description || null,
         })
       });
       const data = await res.json();
       if (!data?.ok) throw new Error(data?.error ?? t("Create failed."));
       await refresh();
-      setCreate({ name: "", status: "SUBMITTED", stage: "OTHER", nodeId: "" });
+      setCreate({ name: "", stage: "OTHER", sector: "", nodeId: "", fundraisingNeed: "", website: "", pitchUrl: "", contactName: "", contactEmail: "", contactTelegram: "", description: "" });
       setShowForm(false);
     } catch (e: any) {
       setError(e?.message ?? t("Create failed."));
@@ -109,41 +134,61 @@ export function ProjectsConsole({
         {!readOnly ? (
           <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("Create project")}>
             <div className="form mb-14">
-              <label className="field">
-                <span className="label">{t("Name")}</span>
-                <input value={create.name} onChange={(e) => setCreate((s) => ({ ...s, name: e.target.value }))} />
-              </label>
               <div className="grid-3 gap-12">
                 <label className="field">
-                  <span className="label">{t("Status")}</span>
-                  <select value={create.status} onChange={(e) => setCreate((s) => ({ ...s, status: e.target.value }))}>
-                    {PROJECT_STATUS.map((v) => (
-                      <option key={v} value={v}>
-                        {v}
-                      </option>
-                    ))}
-                  </select>
+                  <span className="label">{t("Name")} *</span>
+                  <input value={create.name} onChange={(e) => setCreate((s) => ({ ...s, name: e.target.value }))} />
                 </label>
                 <label className="field">
                   <span className="label">{t("Stage")}</span>
                   <select value={create.stage} onChange={(e) => setCreate((s) => ({ ...s, stage: e.target.value }))}>
-                    {PROJECT_STAGE.map((v) => (
-                      <option key={v} value={v}>
-                        {v}
-                      </option>
-                    ))}
+                    {PROJECT_STAGE.map((v) => <option key={v} value={v}>{v}</option>)}
                   </select>
                 </label>
+                <label className="field">
+                  <span className="label">{t("Sector")}</span>
+                  <input value={create.sector} onChange={(e) => setCreate((s) => ({ ...s, sector: e.target.value }))} placeholder="AI x Crypto, DeFi..." />
+                </label>
+              </div>
+              <div className="grid-3 gap-12">
+                <label className="field">
+                  <span className="label">{t("Fundraising need")}</span>
+                  <input value={create.fundraisingNeed} onChange={(e) => setCreate((s) => ({ ...s, fundraisingNeed: e.target.value }))} placeholder="$4M Seed" />
+                </label>
+                <label className="field">
+                  <span className="label">{t("Website")}</span>
+                  <input type="url" value={create.website} onChange={(e) => setCreate((s) => ({ ...s, website: e.target.value }))} placeholder="https://" />
+                </label>
+                <label className="field">
+                  <span className="label">{t("Pitch URL")}</span>
+                  <input type="url" value={create.pitchUrl} onChange={(e) => setCreate((s) => ({ ...s, pitchUrl: e.target.value }))} placeholder="https://" />
+                </label>
+              </div>
+              <div className="grid-3 gap-12">
+                <label className="field">
+                  <span className="label">{t("Contact name")}</span>
+                  <input value={create.contactName} onChange={(e) => setCreate((s) => ({ ...s, contactName: e.target.value }))} />
+                </label>
+                <label className="field">
+                  <span className="label">{t("Email")}</span>
+                  <input type="email" value={create.contactEmail} onChange={(e) => setCreate((s) => ({ ...s, contactEmail: e.target.value }))} />
+                </label>
+                <label className="field">
+                  <span className="label">{t("Telegram")}</span>
+                  <input value={create.contactTelegram} onChange={(e) => setCreate((s) => ({ ...s, contactTelegram: e.target.value }))} placeholder="@handle" />
+                </label>
+              </div>
+              <div className="grid-2 gap-12">
                 <label className="field">
                   <span className="label">{t("Node")}</span>
                   <select value={create.nodeId} onChange={(e) => setCreate((s) => ({ ...s, nodeId: e.target.value }))}>
                     <option value="">—</option>
-                    {nodes.map((n) => (
-                      <option key={n.id} value={n.id}>
-                        {n.name} ({n.type})
-                      </option>
-                    ))}
+                    {nodes.map((n) => <option key={n.id} value={n.id}>{n.name} ({n.type})</option>)}
                   </select>
+                </label>
+                <label className="field">
+                  <span className="label">{t("Description")}</span>
+                  <textarea value={create.description} onChange={(e) => setCreate((s) => ({ ...s, description: e.target.value }))} rows={2} />
                 </label>
               </div>
               <button className="button" type="button" disabled={busy || !create.name.trim()} onClick={onCreate}>
@@ -169,7 +214,7 @@ export function ProjectsConsole({
                 onClick={() => setSelectedId(r.id)}
               >
                 <div className="flex items-center gap-10">
-                  <span className={`status-dot ${r.status === "APPROVED" ? "status-dot-green" : r.status === "REJECTED" || r.status === "ARCHIVED" ? "status-dot-red" : r.status === "SUBMITTED" ? "status-dot-amber" : ""}`} />
+                  <span className={`status-dot ${r.status === "APPROVED" || r.status === "ACTIVE" ? "status-dot-green" : r.status === "REJECTED" || r.status === "ARCHIVED" ? "status-dot-red" : r.status === "SUBMITTED" || r.status === "SCREENED" || r.status === "ON_HOLD" ? "status-dot-amber" : r.status === "IN_DEAL_ROOM" || r.status === "CURATED" ? "status-dot-accent" : ""}`} />
                   <div>
                     <div className="font-bold">{r.name}</div>
                     <div className="muted text-sm">{r.stage} · {r.sector || "—"}</div>
@@ -183,8 +228,13 @@ export function ProjectsConsole({
       </div>
 
       <div>
-        <div className="pill mb-10">
-          {t("Details")}
+        <div className="flex items-center justify-between mb-10">
+          <div className="pill">{t("Details")}</div>
+          {selected && (
+            <Link href={`/dashboard/projects/${selected.id}`} className="flex items-center gap-4 text-sm" style={{ color: "var(--accent)" }}>
+              <ExternalLink size={14} /> {t("Full page")}
+            </Link>
+          )}
         </div>
         {selected ? (
           <div className="form">
@@ -328,9 +378,81 @@ export function ProjectsConsole({
                 onBlur={readOnly ? undefined : (e) => onSave({ description: e.target.value })}
               />
             </label>
-            <button className="button-secondary" type="button" disabled={busy} onClick={() => refresh()}>
-              {busy ? t("Working...") : t("Refresh")}
-            </button>
+            {!readOnly && (
+              <>
+                <div className="pill mt-16 mb-8">{t("Admin")}</div>
+                <div className="grid-2 gap-12">
+                  <label className="field">
+                    <span className="label">{t("Internal score")}</span>
+                    <input
+                      key={selected.id + "is"}
+                      type="number"
+                      min={0}
+                      max={100}
+                      defaultValue={selected.internalScore ?? ""}
+                      onBlur={(e) => onSave({ internalScore: e.target.value ? Number(e.target.value) : null } as any)}
+                    />
+                  </label>
+                  <label className="field">
+                    <span className="label">{t("Confidentiality")}</span>
+                    <select
+                      key={selected.id + "cl"}
+                      defaultValue={selected.confidentialityLevel ?? "PUBLIC"}
+                      onChange={(e) => onSave({ confidentialityLevel: e.target.value } as any)}
+                    >
+                      {CONFIDENTIALITY_LEVELS.map((v) => <option key={v} value={v}>{v}</option>)}
+                    </select>
+                  </label>
+                </div>
+                <label className="field">
+                  <span className="label">{t("Risk tags")} <span className="muted text-xs">({t("comma-separated")})</span></span>
+                  <input
+                    key={selected.id + "rt"}
+                    defaultValue={(selected.riskTags ?? []).join(", ")}
+                    onBlur={(e) => onSave({ riskTags: e.target.value.split(",").map((s: string) => s.trim()).filter(Boolean) } as any)}
+                  />
+                </label>
+                <label className="field">
+                  <span className="label">{t("Internal notes")}</span>
+                  <textarea
+                    key={selected.id + "in"}
+                    defaultValue={selected.internalNotes ?? ""}
+                    rows={3}
+                    onBlur={(e) => onSave({ internalNotes: e.target.value } as any)}
+                  />
+                </label>
+              </>
+            )}
+            <div className="flex gap-8 mt-12">
+              <button className="button-secondary" type="button" disabled={busy} onClick={() => refresh()}>
+                {busy ? t("Working...") : t("Refresh")}
+              </button>
+              {!readOnly && (
+                <button
+                  className="button-secondary"
+                  type="button"
+                  disabled={busy}
+                  style={{ color: "var(--red)" }}
+                  onClick={async () => {
+                    if (!confirm(t("Are you sure you want to delete this project?"))) return;
+                    setBusy(true);
+                    try {
+                      const res = await fetch(`/api/projects/${selected.id}`, { method: "DELETE" });
+                      const data = await res.json();
+                      if (!data?.ok) throw new Error(data?.error ?? t("Delete failed."));
+                      setSelectedId(null);
+                      await refresh();
+                    } catch (e: any) {
+                      setError(e?.message ?? t("Delete failed."));
+                    } finally {
+                      setBusy(false);
+                    }
+                  }}
+                >
+                  {t("Delete")}
+                </button>
+              )}
+            </div>
             {error ? <p className="form-error">{error}</p> : null}
           </div>
         ) : (
