@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { LoadingState, EmptyState, FormCard } from "../_components";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { LoadingState, EmptyState, FormCard, StatCard } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 interface ApiKey {
@@ -68,14 +68,31 @@ export function ApiKeysUI() {
     fetchKeys();
   }
 
+  const keyKpis = useMemo(() => {
+    const total = keys.length;
+    const now = Date.now();
+    const used30d = keys.filter(
+      (k) => k.lastUsedAt && now - new Date(k.lastUsedAt).getTime() < 30 * 86400000,
+    ).length;
+    const expiring = keys.filter((k) => {
+      if (!k.expiresAt) return false;
+      const ms = new Date(k.expiresAt).getTime() - now;
+      return ms > 0 && ms < 14 * 86400000;
+    }).length;
+    const broad = keys.filter((k) => k.scopes.includes("*")).length;
+    return { total, used30d, expiring, broad };
+  }, [keys]);
+
   return (
-    <div style={{ maxWidth: 900, margin: "0 auto" }}>
-      <div className="mb-24">
-        <h2 style={{ margin: 0 }}>{t("API Keys")}</h2>
-        <p style={{ color: "var(--muted)", margin: "4px 0 0" }}>
-          {t("Create API keys for agents and external systems to access WCN.")}
-        </p>
-      </div>
+    <div className="flex flex-col gap-16">
+      {!loading && keys.length > 0 && (
+        <div className="grid-4 gap-12">
+          <StatCard label={t("Active keys")} value={keyKpis.total} />
+          <StatCard label={t("Used (30d)")} value={keyKpis.used30d} />
+          <StatCard label={t("Expiring (14d)")} value={keyKpis.expiring} />
+          <StatCard label={t("Full access")} value={keyKpis.broad} />
+        </div>
+      )}
 
       {newKey && (
         <div style={{ background: "var(--success-bg, #e8f5e9)", border: "1px solid var(--success, #4caf50)", borderRadius: 8, padding: 16, marginBottom: 20 }}>

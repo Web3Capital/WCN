@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { EmptyState } from "../_components";
+import { useMemo, useState } from "react";
+import { EmptyState, StatCard, DashboardDistributionPie } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type AuditRow = {
@@ -19,7 +19,15 @@ function fmtDate(v: string | Date) {
   return Number.isNaN(d.getTime()) ? "" : d.toLocaleString();
 }
 
-export function AuditConsole({ initial, actions }: { initial: AuditRow[]; actions: string[] }) {
+export function AuditConsole({
+  initial,
+  actions,
+  actionCounts = {},
+}: {
+  initial: AuditRow[];
+  actions: string[];
+  actionCounts?: Record<string, number>;
+}) {
   const { t } = useAutoTranslate();
   const [rows, setRows] = useState<AuditRow[]>(initial);
   const [filterAction, setFilterAction] = useState("");
@@ -54,8 +62,34 @@ export function AuditConsole({ initial, actions }: { initial: AuditRow[]; action
 
   const selected = selectedId ? rows.find((r) => r.id === selectedId) ?? null : null;
 
+  const auditTotals = useMemo(() => {
+    const catalogTotal = Object.values(actionCounts).reduce((a, b) => a + b, 0);
+    const distinctActions = Object.keys(actionCounts).length;
+    return { catalogTotal, distinctActions, loaded: rows.length };
+  }, [actionCounts, rows.length]);
+
+  const actionColorMap = useMemo(() => {
+    const palette = ["#6366f1", "#8b5cf6", "#22c55e", "#f59e0b", "#ef4444", "#0ea5e9", "#a855f7", "#94a3b8"] as const;
+    const m: Record<string, string> = {};
+    actions.forEach((a, i) => {
+      m[a] = palette[i % palette.length];
+    });
+    return m;
+  }, [actions]);
+
   return (
-    <div>
+    <div className="flex flex-col gap-16">
+      <div className="grid-3 gap-12">
+        <StatCard label={t("Events (catalog)")} value={auditTotals.catalogTotal} />
+        <StatCard label={t("Action types")} value={auditTotals.distinctActions} />
+        <StatCard label={t("Rows loaded")} value={auditTotals.loaded} />
+      </div>
+      {Object.keys(actionCounts).length > 0 && (
+        <div className="card p-18">
+          <h3 className="mt-0 mb-12">{t("Events by action")}</h3>
+          <DashboardDistributionPie data={actionCounts} colorMap={actionColorMap} />
+        </div>
+      )}
       <div className="grid-3 gap-12 mb-14">
         <label className="field">
           <span className="label">{t("Action")}</span>

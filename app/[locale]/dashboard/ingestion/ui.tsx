@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { LoadingState, EmptyState, FormCard } from "../_components";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { LoadingState, EmptyState, FormCard, StatCard } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 interface IngestionSource {
@@ -88,15 +88,29 @@ export function IngestionUI() {
     PENDING: "var(--muted)",
   };
 
-  return (
-    <div style={{ maxWidth: 900, margin: "0 auto" }}>
-      <div className="mb-24">
-        <h2 style={{ margin: 0 }}>{t("Data Ingestion")}</h2>
-        <p style={{ color: "var(--muted)", margin: "4px 0 0" }}>
-          {t("Configure external data sources that agents use to import projects and investors.")}
-        </p>
-      </div>
+  const ingestionKpis = useMemo(() => {
+    const total = sources.length;
+    const enabled = sources.filter((s) => s.enabled).length;
+    let failedLast = 0;
+    let itemsNewLast = 0;
+    for (const s of sources) {
+      const last = s.runs[0];
+      if (last?.status === "FAILED") failedLast += 1;
+      itemsNewLast += last?.itemsNew ?? 0;
+    }
+    return { total, enabled, failedLast, itemsNewLast };
+  }, [sources]);
 
+  return (
+    <div className="flex flex-col gap-16">
+      {!loading && sources.length > 0 && (
+        <div className="grid-4 gap-12">
+          <StatCard label={t("Sources")} value={ingestionKpis.total} />
+          <StatCard label={t("Enabled")} value={ingestionKpis.enabled} />
+          <StatCard label={t("Failed (latest run)")} value={ingestionKpis.failedLast} />
+          <StatCard label={t("New items (latest run)")} value={ingestionKpis.itemsNewLast} />
+        </div>
+      )}
       <FormCard open={showCreate} onToggle={() => setShowCreate(!showCreate)} triggerLabel={t("+ New Source")}>
         <h3 style={{ margin: "0 0 16px" }}>{t("Add Ingestion Source")}</h3>
         <div className="mb-12">
@@ -146,7 +160,7 @@ export function IngestionUI() {
       ) : sources.length === 0 ? (
         <EmptyState message={t("No ingestion sources configured yet.")} />
       ) : (
-        <div className="flex-col gap-16">
+        <div className="flex flex-col gap-16">
           {sources.map((s) => (
             <div key={s.id} className="card p-20">
               <div className="flex-between items-center">

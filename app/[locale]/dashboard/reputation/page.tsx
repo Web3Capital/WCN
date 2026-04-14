@@ -3,8 +3,9 @@ import { requireSignedIn } from "@/lib/admin";
 import { redirect } from "next/navigation";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { ReputationLeaderboard } from "./ui";
+import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
-export const metadata = { title: "Reputation Leaderboard – WCN" };
+export const metadata = dashboardMeta("Reputation Leaderboard", "Node reputation scores ranked by composite performance.");
 
 export default async function ReputationPage() {
   const auth = await requireSignedIn();
@@ -42,12 +43,17 @@ export default async function ReputationPage() {
   }));
 
   return (
-    <>
-      <div className="page-header">
+    <div className="dashboard-page section">
+      <div className="container-wide">
+        <span className="eyebrow"><T>Network</T></span>
         <h1><T>Reputation Leaderboard</T></h1>
-        <p className="muted"><T>Node reputation scores ranked by composite performance.</T></p>
+        <p className="muted" style={{ maxWidth: 600 }}>
+          <T>Node reputation scores ranked by composite performance.</T>
+        </p>
+        <div style={{ marginTop: 24 }}>
+          <ReputationLeaderboard entries={JSON.parse(JSON.stringify(leaderboard))} />
+        </div>
       </div>
-      <ReputationLeaderboard entries={JSON.parse(JSON.stringify(leaderboard))} />
-    </>
+    </div>
   );
 }

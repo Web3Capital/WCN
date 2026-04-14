@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { StatusBadge, FilterToolbar, EmptyState, LoadingState } from "../_components";
+import { useCallback, useEffect, useState } from "react";
+import { StatusBadge, FilterToolbar, EmptyState, LoadingState, StatCard, DashboardDistributionPie, DashboardPipelineBar } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Approval = {
@@ -26,6 +26,20 @@ export function ApprovalsUI() {
   const [filter, setFilter] = useState("PENDING");
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState<string | null>(null);
+  const [statusCounts, setStatusCounts] = useState<Record<string, number>>({});
+
+  const refreshCounts = useCallback(() => {
+    fetch("/api/approvals?aggregate=1")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.ok && d.data && typeof d.data === "object") setStatusCounts(d.data as Record<string, number>);
+      })
+      .catch((err) => console.error("[Approvals] aggregate failed", err));
+  }, []);
+
+  useEffect(() => {
+    refreshCounts();
+  }, [refreshCounts]);
 
   useEffect(() => {
     setLoading(true);
@@ -47,14 +61,47 @@ export function ApprovalsUI() {
       const data = await res.json();
       if (data.ok) {
         setApprovals((prev) => prev.map((a) => (a.id === id ? { ...a, status: decision, decidedAt: new Date().toISOString() } : a)));
+        refreshCounts();
       }
     } catch { /* ignore */ }
     setBusy(null);
   }
 
+  const totalTracked = (statusCounts.PENDING ?? 0) + (statusCounts.APPROVED ?? 0) + (statusCounts.REJECTED ?? 0);
+  const approvalStatusColors: Record<string, string> = {
+    PENDING: "#f59e0b",
+    APPROVED: "#22c55e",
+    REJECTED: "#ef4444",
+  };
+  const approvalOrder = ["PENDING", "APPROVED", "REJECTED"] as const;
+  const approvalPalette = ["#f59e0b", "#22c55e", "#ef4444"] as const;
+
   return (
-    <div>
-      <FilterToolbar filters={FILTERS} active={filter} onChange={setFilter} />
+    <div className="flex flex-col gap-16">
+      <div className="grid-4 gap-12">
+        <StatCard label={t("Pending")} value={statusCounts.PENDING ?? 0} />
+        <StatCard label={t("Approved")} value={statusCounts.APPROVED ?? 0} />
+        <StatCard label={t("Rejected")} value={statusCounts.REJECTED ?? 0} />
+        <StatCard label={t("Total")} value={totalTracked} />
+      </div>
+      {Object.keys(statusCounts).length > 0 && (
+        <div className="grid-2 gap-16">
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Status distribution")}</h3>
+            <DashboardDistributionPie data={statusCounts} colorMap={approvalStatusColors} />
+          </div>
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Pipeline flow")}</h3>
+            <DashboardPipelineBar orderedKeys={approvalOrder} data={statusCounts} palette={approvalPalette} />
+          </div>
+        </div>
+      )}
+      <FilterToolbar
+        filters={FILTERS}
+        active={filter}
+        onChange={setFilter}
+        counts={statusCounts as Partial<Record<(typeof FILTERS)[number], number>>}
+      />
 
       {loading ? (
         <LoadingState />

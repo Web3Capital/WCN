@@ -9,3 +9,4 @@ yarn-error.log*
 .env.*
 /lib/generated/prisma
 *.tsbuildinfo
+coverage/

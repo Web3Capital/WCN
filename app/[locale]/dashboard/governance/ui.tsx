@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { StatusBadge, FilterToolbar, EmptyState, FormCard } from "../_components";
+import { useMemo, useState } from "react";
+import { StatusBadge, FilterToolbar, EmptyState, FormCard, StatCard, DashboardDistributionPie, DashboardPipelineBar } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Vote = { id: string; voterId: string; option: string; weight: number };
@@ -97,8 +97,51 @@ export function GovernanceDashboard({ proposals: initial, userId }: { proposals:
 
   const shown = filter === "ALL" ? proposals : proposals.filter((p) => p.status === filter);
 
+  const statusCounts = useMemo(() => {
+    const c: Record<string, number> = {};
+    for (const p of proposals) c[p.status] = (c[p.status] ?? 0) + 1;
+    return c;
+  }, [proposals]);
+
+  const proposalKpis = useMemo(() => {
+    const total = proposals.length;
+    const active = proposals.filter((p) => p.status === "ACTIVE").length;
+    const votes = proposals.reduce((s, p) => s + p.votes.length, 0);
+    const passed = proposals.filter((p) => p.status === "PASSED" || p.status === "EXECUTED").length;
+    return { total, active, votes, passed };
+  }, [proposals]);
+
+  const proposalStatusColors: Record<string, string> = {
+    DRAFT: "#94a3b8",
+    ACTIVE: "#6366f1",
+    PASSED: "#22c55e",
+    REJECTED: "#ef4444",
+    EXECUTED: "#0ea5e9",
+    CANCELLED: "#64748b",
+  };
+  const proposalOrder = ["DRAFT", "ACTIVE", "PASSED", "REJECTED", "EXECUTED", "CANCELLED"] as const;
+  const proposalPalette = ["#94a3b8", "#6366f1", "#22c55e", "#ef4444", "#0ea5e9", "#64748b"] as const;
+
   return (
-    <div className="mt-20">
+    <div className="flex flex-col gap-16">
+      <div className="grid-4 gap-12">
+        <StatCard label={t("Proposals")} value={proposalKpis.total} />
+        <StatCard label={t("Active vote")} value={proposalKpis.active} />
+        <StatCard label={t("Total votes")} value={proposalKpis.votes} />
+        <StatCard label={t("Passed / executed")} value={proposalKpis.passed} />
+      </div>
+      {Object.keys(statusCounts).length > 0 && (
+        <div className="grid-2 gap-16">
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Status distribution")}</h3>
+            <DashboardDistributionPie data={statusCounts} colorMap={proposalStatusColors} />
+          </div>
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Pipeline flow")}</h3>
+            <DashboardPipelineBar orderedKeys={proposalOrder} data={statusCounts} palette={proposalPalette} />
+          </div>
+        </div>
+      )}
       <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("New Proposal")}>
         <form onSubmit={create} className="form">
           <label className="field">
@@ -132,7 +175,14 @@ export function GovernanceDashboard({ proposals: initial, userId }: { proposals:
         </form>
       </FormCard>
 
-      <FilterToolbar filters={STATUS_LIST} active={filter} onChange={setFilter} totalCount={proposals.length} />
+      <FilterToolbar
+        filters={STATUS_LIST}
+        active={filter}
+        onChange={setFilter}
+        totalLabel={t("All")}
+        totalCount={proposals.length}
+        counts={statusCounts as Partial<Record<(typeof STATUS_LIST)[number], number>>}
+      />
 
       {shown.length === 0 ? (
         <EmptyState message={t("No proposals found.")} />

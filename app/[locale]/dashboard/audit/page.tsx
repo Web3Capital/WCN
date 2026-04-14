@@ -39,17 +39,27 @@ export default async function AuditPage() {
     include: { actor: { select: { id: true, name: true, email: true } } }
   });
 
-  const actions = await prisma.auditLog.groupBy({ by: ["action"], _count: true, orderBy: { _count: { action: "desc" } } });
-  const actionList = actions.map((a) => a.action);
+  const actionGroups = await prisma.auditLog.groupBy({
+    by: ["action"],
+    _count: true,
+    orderBy: { _count: { action: "desc" } },
+  });
+  const actionCounts: Record<string, number> = {};
+  for (const row of actionGroups) {
+    actionCounts[row.action] = row._count;
+  }
+  const actionList = [...Object.keys(actionCounts)].sort((a, b) => a.localeCompare(b));
 
   return (
     <div className="dashboard-page section">
       <div className="container-wide">
         <span className="eyebrow"><T>Admin</T></span>
         <h1><T>Audit log</T></h1>
-        <p className="muted"><T>Browse system events — status changes, creations, settlements, and role updates.</T></p>
-        <div className="card" style={{ marginTop: 18 }}>
-          <AuditConsole initial={logs as any} actions={actionList} />
+        <p className="muted" style={{ maxWidth: 640 }}>
+          <T>Browse system events — status changes, creations, settlements, and role updates.</T>
+        </p>
+        <div style={{ marginTop: 24 }}>
+          <AuditConsole initial={logs as any} actions={actionList} actionCounts={actionCounts} />
         </div>
       </div>
     </div>

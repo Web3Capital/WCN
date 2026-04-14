@@ -13,8 +13,23 @@ export async function GET(req: Request) {
 
   const prisma = getPrisma();
   const url = new URL(req.url);
+  const aggregate = url.searchParams.get("aggregate") === "1";
   const status = url.searchParams.get("status");
   const workspaceId = url.searchParams.get("workspaceId");
+
+  if (aggregate) {
+    const where = workspaceId ? { workspaceId } : {};
+    const rows = await prisma.approvalAction.groupBy({
+      by: ["status"],
+      where,
+      _count: true,
+    });
+    const counts: Record<string, number> = {};
+    for (const row of rows) {
+      counts[row.status] = row._count;
+    }
+    return apiOk(counts);
+  }
 
   const where: Record<string, unknown> = {};
   if (status) where.status = status;

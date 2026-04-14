@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { Link } from "@/i18n/routing";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
-import { EmptyState } from "../_components";
+import { EmptyState, StatCard, DashboardDistributionPie } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Badge = { id: string; badge: string; awardedAt: string };
@@ -52,6 +52,28 @@ export function ReputationLeaderboard({ entries, history }: { entries: Entry[]; 
 
   const filtered = filter === "ALL" ? entries : entries.filter((e) => e.tier === filter);
 
+  const tierCounts = useMemo(() => {
+    const c: Record<string, number> = {};
+    for (const e of entries) c[e.tier] = (c[e.tier] ?? 0) + 1;
+    return c;
+  }, [entries]);
+
+  const repKpis = useMemo(() => {
+    const n = entries.length;
+    const avgScore = n ? Math.round((entries.reduce((s, e) => s + e.score, 0) / n) * 10) / 10 : 0;
+    const badgeTotal = entries.reduce((s, e) => s + (e.node.badges?.length ?? 0), 0);
+    const elite = entries.filter((e) => e.tier === "DIAMOND" || e.tier === "PLATINUM").length;
+    return { n, avgScore, badgeTotal, elite };
+  }, [entries]);
+
+  const tierColors: Record<string, string> = {
+    DIAMOND: "#22d3ee",
+    PLATINUM: "#a78bfa",
+    GOLD: "#f59e0b",
+    SILVER: "#94a3b8",
+    BRONZE: "#b45309",
+  };
+
   if (entries.length === 0) {
     return (
       <EmptyState
@@ -62,7 +84,19 @@ export function ReputationLeaderboard({ entries, history }: { entries: Entry[]; 
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-16">
+      <div className="grid-4 gap-12">
+        <StatCard label={t("Ranked nodes")} value={repKpis.n} />
+        <StatCard label={t("Avg score")} value={repKpis.avgScore} />
+        <StatCard label={t("Badges")} value={repKpis.badgeTotal} />
+        <StatCard label={t("Diamond / Platinum")} value={repKpis.elite} />
+      </div>
+      {Object.keys(tierCounts).length > 0 && (
+        <div className="card p-18">
+          <h3 className="mt-0 mb-12">{t("Tier distribution")}</h3>
+          <DashboardDistributionPie data={tierCounts} colorMap={tierColors} />
+        </div>
+      )}
       {history && history.length > 1 && (
         <div className="card p-18 mb-16">
           <h3 className="mb-12">{t("Network Reputation Trend")}</h3>
@@ -102,8 +136,8 @@ export function ReputationLeaderboard({ entries, history }: { entries: Entry[]; 
         </thead>
         <tbody>
           {filtered.map((e, i) => (
-            <>
-              <tr key={e.id} style={{ cursor: "pointer" }} onClick={() => setExpandedId(expandedId === e.id ? null : e.id)}>
+            <Fragment key={e.id}>
+              <tr style={{ cursor: "pointer" }} onClick={() => setExpandedId(expandedId === e.id ? null : e.id)}>
                 <td className="font-bold" style={{ color: i < 3 ? "var(--accent)" : undefined }}>{i + 1}</td>
                 <td>
                   <Link href={`/dashboard/nodes/${e.node.id}`} className="link" onClick={(ev) => ev.stopPropagation()}>{e.node.name}</Link>
@@ -123,12 +157,12 @@ export function ReputationLeaderboard({ entries, history }: { entries: Entry[]; 
                 <td className="muted text-xs">{new Date(e.calculatedAt).toLocaleDateString()}</td>
               </tr>
               {expandedId === e.id && e.breakdown && (
-                <tr key={`${e.id}-bd`}>
+                <tr>
                   <td></td>
                   <td colSpan={6}><ScoreBreakdown breakdown={e.breakdown} /></td>
                 </tr>
               )}
-            </>
+            </Fragment>
           ))}
         </tbody>
       </table>
