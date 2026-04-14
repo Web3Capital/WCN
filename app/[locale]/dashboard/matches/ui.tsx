@@ -2,8 +2,8 @@
 
 import { Fragment, useMemo, useState, useCallback } from "react";
 import { Link } from "@/i18n/routing";
-import { Search, ChevronDown, ChevronUp, X, RefreshCw, TrendingUp, Target, Handshake, Clock } from "lucide-react";
-import { StatusBadge, FilterToolbar, EmptyState, StatCard, ConfirmDialog } from "../_components";
+import { Search, ChevronDown, ChevronUp, X, RefreshCw, TrendingUp, Target, Handshake, Clock, LayoutGrid, Table2 } from "lucide-react";
+import { StatusBadge, FilterToolbar, EmptyState, StatCard, ConfirmDialog, DashboardDistributionPie, DashboardPipelineBar } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type MatchRow = {
@@ -36,6 +36,16 @@ type SortKey = "project" | "capital" | "score" | "status" | "createdAt";
 type SortDir = "asc" | "desc";
 
 const PAGE_SIZE = 20;
+
+const MATCH_PIPELINE_ORDER = ["GENERATED", "INTEREST_EXPRESSED", "CONVERTED_TO_DEAL", "DECLINED", "EXPIRED"] as const;
+const MATCH_STATUS_COLORS: Record<string, string> = {
+  GENERATED: "#94a3b8",
+  INTEREST_EXPRESSED: "#6366f1",
+  CONVERTED_TO_DEAL: "#22c55e",
+  DECLINED: "#ef4444",
+  EXPIRED: "#6b7280",
+};
+const MATCH_CHART_PALETTE = ["#6366f1", "#8b5cf6", "#22c55e", "#f59e0b", "#ef4444", "#94a3b8"] as const;
 
 function statusDotClass(status: string): string {
   if (status === "CONVERTED_TO_DEAL") return "status-dot-green";
@@ -85,6 +95,7 @@ export function MatchesConsole({
   const [page, setPage] = useState(0);
   const [convertModalId, setConvertModalId] = useState<string | null>(null);
   const [regenerating, setRegenerating] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"table" | "pipeline">("table");
 
   // --- Derived stats ---
   const stats = useMemo(() => {
@@ -123,6 +134,12 @@ export function MatchesConsole({
       return 0;
     });
   }, [matches, filter, search, sortKey, sortDir]);
+
+  const pipelineGroups = useMemo(() => {
+    const g: Record<string, MatchRow[]> = {};
+    for (const s of MATCH_PIPELINE_ORDER) g[s] = filtered.filter((m) => m.status === s);
+    return g;
+  }, [filtered]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paged = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
@@ -218,7 +235,34 @@ export function MatchesConsole({
         <StatCard label={t("Pending Interest")} value={stats.pendingInterest} icon={<Clock size={18} />} />
       </div>
 
-      {/* Search + clear */}
+      {isAdmin && Object.keys(statusCounts).length > 0 && (
+        <div className="grid-2 gap-16">
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Status distribution")}</h3>
+            <DashboardDistributionPie data={statusCounts as Record<string, number>} colorMap={MATCH_STATUS_COLORS} />
+          </div>
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Pipeline flow")}</h3>
+            <DashboardPipelineBar orderedKeys={MATCH_PIPELINE_ORDER} data={statusCounts as Record<string, number>} palette={MATCH_CHART_PALETTE} />
+            <div className="flex gap-6 flex-wrap mt-12">
+              {MATCH_PIPELINE_ORDER.map((s, i) => (
+                <span key={s} className="flex items-center gap-4 text-xs">
+                  <span style={{ width: 8, height: 8, borderRadius: 2, background: MATCH_CHART_PALETTE[i % MATCH_CHART_PALETTE.length] }} />
+                  <span className="muted">{s.replace(/_/g, " ")}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!isAdmin && (
+        <div className="card mb-16" style={{ padding: "10px 14px", background: "var(--amber-bg)", border: "1px solid color-mix(in oklab, var(--amber) 25%, transparent)" }}>
+          <p className="muted text-sm" style={{ margin: 0 }}>{t("Read-only view. Contact admin for changes.")}</p>
+        </div>
+      )}
+
+      {/* Search + view + clear */}
       <div className="flex items-center gap-12 flex-wrap">
         <div className="flex items-center gap-8" style={{ flex: 1, minWidth: 200, maxWidth: 360 }}>
           <div style={{ position: "relative", flex: 1 }}>
@@ -237,6 +281,14 @@ export function MatchesConsole({
             </button>
           )}
         </div>
+        <div className="flex gap-6">
+          <button type="button" className={`chip ${viewMode === "table" ? "chip-active" : ""}`} onClick={() => { setViewMode("table"); setPage(0); }}>
+            <Table2 size={14} style={{ marginRight: 4, verticalAlign: "middle" }} /> {t("Table")}
+          </button>
+          <button type="button" className={`chip ${viewMode === "pipeline" ? "chip-active" : ""}`} onClick={() => setViewMode("pipeline")}>
+            <LayoutGrid size={14} style={{ marginRight: 4, verticalAlign: "middle" }} /> {t("Pipeline")}
+          </button>
+        </div>
         <span className="muted text-sm">{filtered.length} {t("matches")}</span>
       </div>
 
@@ -252,8 +304,52 @@ export function MatchesConsole({
 
       {error && <p className="form-error">{error}</p>}
 
-      {/* Table */}
-      {paged.length === 0 ? (
+      {viewMode === "pipeline" ? (
+        filtered.length === 0 ? (
+          <EmptyState message={hasFilters ? t("No matches match your filters.") : t("No matches found.")} />
+        ) : (
+          <div
+            className="reveal"
+            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}
+          >
+            {MATCH_PIPELINE_ORDER.map((stage) => {
+              const col = pipelineGroups[stage] ?? [];
+              const color = MATCH_STATUS_COLORS[stage] ?? "#94a3b8";
+              return (
+                <div key={stage} className="card" style={{ padding: 0, minHeight: 200 }}>
+                  <div style={{
+                    padding: "10px 14px",
+                    borderBottom: "1px solid var(--line)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}>
+                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: color, flexShrink: 0 }} />
+                    <span className="font-semibold text-sm">{stage.replace(/_/g, " ")}</span>
+                    <span className="muted text-xs" style={{ marginLeft: "auto" }}>{col.length}</span>
+                  </div>
+                  <div style={{ padding: 8, display: "flex", flexDirection: "column", gap: 6 }}>
+                    {col.map((m) => (
+                      <Link
+                        key={m.id}
+                        href={`/dashboard/projects/${m.project.id}`}
+                        className="card"
+                        style={{ padding: "8px 10px", margin: 0, textDecoration: "none", display: "block" }}
+                      >
+                        <div className="font-semibold text-sm">{m.project.name}</div>
+                        <div className="muted text-xs">{m.capitalProfile.name} · {m.score}</div>
+                      </Link>
+                    ))}
+                    {col.length === 0 && (
+                      <p className="muted text-xs" style={{ textAlign: "center", padding: 16 }}>{t("Empty")}</p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )
+      ) : paged.length === 0 ? (
         <EmptyState message={hasFilters ? t("No matches match your filters.") : t("No matches found.")} />
       ) : (
         <div className="data-table-wrap reveal">
@@ -416,8 +512,8 @@ export function MatchesConsole({
         </div>
       )}
 
-      {/* Pagination */}
-      {totalPages > 1 && (
+      {/* Pagination (table only) */}
+      {viewMode === "table" && totalPages > 1 && (
         <div className="flex items-center gap-12" style={{ justifyContent: "space-between" }}>
           <span className="muted text-xs">
             {t("Showing")} {rangeStart}–{rangeEnd} {t("of")} {filtered.length}

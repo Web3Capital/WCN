@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
-import { ReadOnlyBanner } from "@/app/[locale]/dashboard/_components/read-only-banner";
 import { DealsConsole } from "./ui";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
@@ -61,6 +60,21 @@ export default async function DealsPage() {
     }),
   ]);
 
+  const stageCounts: Record<string, number> = {};
+  for (const d of deals) {
+    stageCounts[d.stage] = (stageCounts[d.stage] ?? 0) + 1;
+  }
+  const inFlight = deals.filter((d) => !["FUNDED", "PASSED", "PAUSED"].includes(d.stage)).length;
+  const won = deals.filter((d) => d.stage === "FUNDED" || d.stage === "SIGNED").length;
+  const linked = deals.filter((d) => d.project && d.capital).length;
+  const stats = {
+    total: deals.length,
+    inFlight,
+    won,
+    linked,
+    stageCounts,
+  };
+
   return (
     <div className="dashboard-page section">
       <div className="container-wide">
@@ -69,7 +83,6 @@ export default async function DealsPage() {
         <p className="muted" style={{ maxWidth: 600 }}>
           <T>Each deal is an auditable business event — not a chat thread.</T>
         </p>
-        {!isAdmin && <ReadOnlyBanner />}
         <div style={{ marginTop: 24 }}>
           <DealsConsole
             initialDeals={JSON.parse(JSON.stringify(deals))}
@@ -77,6 +90,7 @@ export default async function DealsPage() {
             projects={projects}
             capitals={capitals}
             isAdmin={isAdmin}
+            stats={stats}
           />
         </div>
       </div>

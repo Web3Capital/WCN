@@ -24,12 +24,14 @@ export default async function NodesPage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <span className="eyebrow"><T>Network</T></span>
         <h1><T>Node registry</T></h1>
-        <p className="muted"><T>Create, review, and manage nodes.</T></p>
+        <p className="muted" style={{ maxWidth: 600 }}>
+          <T>Create, review, and manage nodes.</T>
+        </p>
         {!isAdmin ? <ReadOnlyBanner /> : null}
-        <div className="card" style={{ marginTop: 18 }}>
+        <div style={{ marginTop: 24 }}>
           <NodesConsole initial={safeNodes} readOnly={!isAdmin} />
         </div>
       </div>

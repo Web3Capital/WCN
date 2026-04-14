@@ -2,7 +2,6 @@ import { getPrisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { ReadOnlyBanner } from "@/app/[locale]/dashboard/_components/read-only-banner";
 import { ProjectsConsole } from "./ui";
 import { getOwnedNodeIds, memberProjectsWhere } from "@/lib/member-data-scope";
 import { redactProjectForMember, redactNodeForMember } from "@/lib/member-redact";
@@ -45,7 +44,6 @@ export default async function ProjectsPage() {
         <p className="muted" style={{ maxWidth: 600 }}>
           <T>Intake, review, and manage projects across the network pipeline.</T>
         </p>
-        {!isAdmin && <ReadOnlyBanner />}
         <div style={{ marginTop: 24 }}>
           <ProjectsConsole
             initial={JSON.parse(JSON.stringify(safeProjects))}

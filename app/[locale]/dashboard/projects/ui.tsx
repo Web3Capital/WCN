@@ -2,8 +2,8 @@
 
 import { useMemo, useState, useCallback } from "react";
 import { Link, useRouter } from "@/i18n/routing";
-import { Search, Plus, ChevronDown, ChevronUp, Trash2, ExternalLink, X } from "lucide-react";
-import { StatusBadge, FormCard, EmptyState } from "../_components";
+import { Search, ChevronDown, ChevronUp, Trash2, X, LayoutGrid, Table2, Layers, Archive, FileEdit, TrendingUp } from "lucide-react";
+import { StatusBadge, FormCard, EmptyState, StatCard, DashboardDistributionPie, DashboardPipelineBar } from "../_components";
 import { FilterToolbar } from "../_components/filter-toolbar";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
@@ -38,6 +38,21 @@ const PROJECT_STAGE = ["IDEA", "SEED", "SERIES_A", "SERIES_B", "SERIES_C", "GROW
 
 const STATUS_FILTERS = ["ALL", ...PROJECT_STATUS] as const;
 type StatusFilter = typeof STATUS_FILTERS[number];
+
+const PROJECT_PIPELINE_ORDER = [...PROJECT_STATUS] as const;
+const PROJECT_STATUS_COLORS: Record<string, string> = {
+  DRAFT: "#94a3b8",
+  SUBMITTED: "#f59e0b",
+  SCREENED: "#f59e0b",
+  CURATED: "#6366f1",
+  IN_DEAL_ROOM: "#a855f7",
+  ACTIVE: "#22c55e",
+  ON_HOLD: "#f97316",
+  APPROVED: "#22c55e",
+  REJECTED: "#ef4444",
+  ARCHIVED: "#6b7280",
+};
+const PROJECT_CHART_PALETTE = ["#6366f1", "#8b5cf6", "#a78bfa", "#22c55e", "#f59e0b", "#ef4444", "#f97316", "#94a3b8"] as const;
 
 type SortKey = "name" | "status" | "stage" | "sector" | "createdAt" | "internalScore";
 type SortDir = "asc" | "desc";
@@ -87,6 +102,7 @@ export function ProjectsConsole({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [viewMode, setViewMode] = useState<"table" | "pipeline">("table");
 
   const statusCounts = useMemo(() => {
     const c: Record<string, number> = {};
@@ -120,6 +136,22 @@ export function ProjectsConsole({
     });
     return list;
   }, [rows, statusFilter, stageFilter, search, sortKey, sortDir]);
+
+  const headerStats = useMemo(() => {
+    const total = rows.length;
+    const inPipeline = rows.filter((r) =>
+      ["SUBMITTED", "SCREENED", "CURATED", "IN_DEAL_ROOM", "ACTIVE", "ON_HOLD"].includes(r.status)
+    ).length;
+    const archived = rows.filter((r) => r.status === "ARCHIVED").length;
+    const drafts = rows.filter((r) => r.status === "DRAFT").length;
+    return { total, inPipeline, archived, drafts };
+  }, [rows]);
+
+  const pipelineGroups = useMemo(() => {
+    const g: Record<string, ProjectRow[]> = {};
+    for (const s of PROJECT_PIPELINE_ORDER) g[s] = filtered.filter((r) => r.status === s);
+    return g;
+  }, [filtered]);
 
   const toggleSort = useCallback((key: SortKey) => {
     if (sortKey === key) setSortDir((d) => d === "asc" ? "desc" : "asc");
@@ -193,6 +225,44 @@ export function ProjectsConsole({
 
   return (
     <div className="flex-col gap-16">
+      <div className="grid-4 gap-12">
+        <StatCard label={t("Total projects")} value={headerStats.total} icon={<Layers size={18} />} />
+        <StatCard label={t("In pipeline")} value={headerStats.inPipeline} sub={t("Active intake & review")} icon={<TrendingUp size={18} />} />
+        <StatCard label={t("Drafts")} value={headerStats.drafts} icon={<FileEdit size={18} />} />
+        <StatCard label={t("Archived")} value={headerStats.archived} icon={<Archive size={18} />} />
+      </div>
+
+      {!readOnly && Object.keys(statusCounts).length > 0 && (
+        <div className="grid-2 gap-16">
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Status distribution")}</h3>
+            <DashboardDistributionPie data={statusCounts} colorMap={PROJECT_STATUS_COLORS} />
+          </div>
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Pipeline flow")}</h3>
+            <DashboardPipelineBar
+              orderedKeys={PROJECT_PIPELINE_ORDER}
+              data={statusCounts}
+              palette={PROJECT_CHART_PALETTE}
+            />
+            <div className="flex gap-6 flex-wrap mt-12">
+              {PROJECT_PIPELINE_ORDER.slice(0, 6).map((s, i) => (
+                <span key={s} className="flex items-center gap-4 text-xs">
+                  <span style={{ width: 8, height: 8, borderRadius: 2, background: PROJECT_CHART_PALETTE[i % PROJECT_CHART_PALETTE.length] }} />
+                  <span className="muted">{s.replace(/_/g, " ")}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {readOnly && (
+        <div className="card mb-16" style={{ padding: "10px 14px", background: "var(--amber-bg)", border: "1px solid color-mix(in oklab, var(--amber) 25%, transparent)" }}>
+          <p className="muted text-sm" style={{ margin: 0 }}>{t("Read-only view. Contact admin for changes.")}</p>
+        </div>
+      )}
+
       {!readOnly && (
         <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("Create project")}>
           <div className="form mb-14">
@@ -289,6 +359,14 @@ export function ProjectsConsole({
             <option value="ALL">{t("All stages")}</option>
             {PROJECT_STAGE.map((v) => <option key={v} value={v}>{v}</option>)}
           </select>
+          <div className="flex gap-6">
+            <button type="button" className={`chip ${viewMode === "table" ? "chip-active" : ""}`} onClick={() => setViewMode("table")}>
+              <Table2 size={14} style={{ marginRight: 4, verticalAlign: "middle" }} /> {t("Table")}
+            </button>
+            <button type="button" className={`chip ${viewMode === "pipeline" ? "chip-active" : ""}`} onClick={() => setViewMode("pipeline")}>
+              <LayoutGrid size={14} style={{ marginRight: 4, verticalAlign: "middle" }} /> {t("Pipeline")}
+            </button>
+          </div>
           <span className="muted text-sm">{filtered.length} {t("projects")}</span>
         </div>
       </div>
@@ -308,7 +386,51 @@ export function ProjectsConsole({
         </div>
       )}
 
-      {!loading && filtered.length === 0 ? (
+      {!loading && viewMode === "pipeline" ? (
+        filtered.length === 0 ? (
+          <EmptyState
+            message={hasFilters ? t("No projects match your filters.") : t("No projects yet. Create your first project.")}
+          />
+        ) : (
+          <div className="reveal" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
+            {PROJECT_PIPELINE_ORDER.map((statusKey) => {
+              const col = pipelineGroups[statusKey] ?? [];
+              const color = PROJECT_STATUS_COLORS[statusKey] ?? "#94a3b8";
+              return (
+                <div key={statusKey} className="card" style={{ padding: 0, minHeight: 200 }}>
+                  <div style={{
+                    padding: "10px 14px",
+                    borderBottom: "1px solid var(--line)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}>
+                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: color, flexShrink: 0 }} />
+                    <span className="font-semibold text-sm">{statusKey.replace(/_/g, " ")}</span>
+                    <span className="muted text-xs" style={{ marginLeft: "auto" }}>{col.length}</span>
+                  </div>
+                  <div style={{ padding: 8, display: "flex", flexDirection: "column", gap: 6 }}>
+                    {col.map((r) => (
+                      <Link
+                        key={r.id}
+                        href={`/dashboard/projects/${r.id}`}
+                        className="card"
+                        style={{ padding: "8px 10px", margin: 0, textDecoration: "none", display: "block" }}
+                      >
+                        <div className="font-semibold text-sm">{r.name}</div>
+                        <div className="muted text-xs">{r.stage}{r.sector ? ` · ${r.sector}` : ""}</div>
+                      </Link>
+                    ))}
+                    {col.length === 0 && (
+                      <p className="muted text-xs" style={{ textAlign: "center", padding: 16 }}>{t("Empty")}</p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )
+      ) : !loading && filtered.length === 0 ? (
         <EmptyState
           message={hasFilters ? t("No projects match your filters.") : t("No projects yet. Create your first project.")}
         />

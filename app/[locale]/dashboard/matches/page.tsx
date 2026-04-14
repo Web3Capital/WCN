@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { MatchesConsole } from "./ui";
-import { PageHeader } from "@/app/[locale]/dashboard/_components";
+import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
@@ -53,16 +53,18 @@ export default async function MatchesPage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
-        <PageHeader
-          eyebrow="Network"
-          title="Matches"
-          subtitle="AI-scored pairings between projects and capital profiles."
-        />
-        <MatchesConsole
-          initialMatches={JSON.parse(JSON.stringify(matches))}
-          isAdmin={isAdmin}
-        />
+      <div className="container-wide">
+        <span className="eyebrow"><T>Network</T></span>
+        <h1><T>Matches</T></h1>
+        <p className="muted" style={{ maxWidth: 600 }}>
+          <T>AI-scored pairings between projects and capital profiles.</T>
+        </p>
+        <div style={{ marginTop: 24 }}>
+          <MatchesConsole
+            initialMatches={JSON.parse(JSON.stringify(matches))}
+            isAdmin={isAdmin}
+          />
+        </div>
       </div>
     </div>
   );

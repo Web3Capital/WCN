@@ -10,3 +10,4 @@ export { DetailLayout } from "./detail-layout";
 export { FormCard } from "./form-card";
 export { ConfirmDialog } from "./confirm-dialog";
 export { ReadOnlyBanner } from "./read-only-banner";
+export { DashboardDistributionPie, DashboardPipelineBar } from "./dashboard-distribution-charts";

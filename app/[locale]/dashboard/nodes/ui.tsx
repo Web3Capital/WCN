@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { Link } from "@/i18n/routing";
-import { StatusBadge, FormCard, EmptyState } from "../_components";
+import { Network, Radio, Clock, AlertCircle } from "lucide-react";
+import { StatusBadge, FormCard, EmptyState, StatCard } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type NodeRow = {
@@ -109,7 +110,26 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
     }
   }
 
+  const nodeKpis = useMemo(() => {
+    const live = rows.filter((r) => r.status === "LIVE").length;
+    const inReview = rows.filter((r) => ["SUBMITTED", "UNDER_REVIEW", "NEED_MORE_INFO"].includes(r.status)).length;
+    const suspended = rows.filter((r) => r.status === "SUSPENDED" || r.status === "OFFBOARDED").length;
+    return { total: rows.length, live, inReview, suspended };
+  }, [rows]);
+
   return (
+    <div className="flex-col gap-16">
+      <div className="grid-4 gap-12">
+        <StatCard label={t("Total nodes")} value={nodeKpis.total} icon={<Network size={18} />} />
+        <StatCard label={t("Live")} value={nodeKpis.live} icon={<Radio size={18} />} />
+        <StatCard label={t("In review")} value={nodeKpis.inReview} icon={<Clock size={18} />} />
+        <StatCard label={t("Suspended / offboarded")} value={nodeKpis.suspended} icon={<AlertCircle size={18} />} />
+      </div>
+      {readOnly && (
+        <div className="card" style={{ padding: "10px 14px", background: "var(--amber-bg)", border: "1px solid color-mix(in oklab, var(--amber) 25%, transparent)" }}>
+          <p className="muted text-sm" style={{ margin: 0 }}>{t("Read-only view. Contact admin for changes.")}</p>
+        </div>
+      )}
     <div className="apps-layout">
       <div>
         {!readOnly ? (
@@ -312,6 +332,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
           <EmptyState message={t("Select a node.")} />
         )}
       </div>
+    </div>
     </div>
   );
 }

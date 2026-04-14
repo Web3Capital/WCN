@@ -2,8 +2,8 @@
 
 import { useMemo, useState, useCallback } from "react";
 import { Link, useRouter } from "@/i18n/routing";
-import { Search, ChevronDown, ChevronUp, X, Handshake } from "lucide-react";
-import { StatusBadge, FormCard, EmptyState, FilterToolbar } from "../_components";
+import { Search, ChevronDown, ChevronUp, X, Handshake, LayoutGrid, Table2, TrendingUp, Target, Layers } from "lucide-react";
+import { StatusBadge, FormCard, EmptyState, FilterToolbar, StatCard, DashboardDistributionPie, DashboardPipelineBar } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type DealRow = {
@@ -25,6 +25,16 @@ const STAGES = [
   "DD", "TERM_SHEET", "SIGNED", "FUNDED", "PASSED", "PAUSED",
 ] as const;
 type StageFilter = typeof STAGES[number];
+
+const DEAL_PIPELINE_STAGES = [
+  "SOURCED", "MATCHED", "INTRO_SENT", "MEETING_DONE", "DD", "TERM_SHEET", "SIGNED", "FUNDED", "PASSED", "PAUSED",
+] as const;
+const DEAL_STAGE_COLORS: Record<string, string> = {
+  SOURCED: "#94a3b8", MATCHED: "#f59e0b", INTRO_SENT: "#f59e0b", MEETING_DONE: "#a855f7",
+  DD: "#a855f7", TERM_SHEET: "#a855f7", SIGNED: "#22c55e", FUNDED: "#22c55e",
+  PASSED: "#ef4444", PAUSED: "#94a3b8",
+};
+const DEAL_CHART_PALETTE = ["#6366f1", "#8b5cf6", "#a78bfa", "#22c55e", "#f59e0b", "#ef4444", "#f97316", "#94a3b8"] as const;
 
 type SortKey = "title" | "leadNode" | "stage" | "updatedAt";
 type SortDir = "asc" | "desc";
@@ -49,18 +59,28 @@ function stageDotClass(stage: string): string {
   return "status-dot-amber";
 }
 
+export type DealConsoleStats = {
+  total: number;
+  inFlight: number;
+  won: number;
+  linked: number;
+  stageCounts: Record<string, number>;
+};
+
 export function DealsConsole({
   initialDeals,
   nodes,
   projects,
   capitals,
   isAdmin,
+  stats,
 }: {
   initialDeals: DealRow[];
   nodes: { id: string; name: string }[];
   projects: { id: string; name: string }[];
   capitals: { id: string; name: string }[];
   isAdmin: boolean;
+  stats: DealConsoleStats;
 }) {
   const { t } = useAutoTranslate();
   const router = useRouter();
@@ -73,6 +93,7 @@ export function DealsConsole({
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"table" | "pipeline">("table");
 
   const [create, setCreate] = useState({
     title: "", leadNodeId: nodes[0]?.id ?? "", projectId: "", capitalId: "", description: "",
@@ -109,6 +130,12 @@ export function DealsConsole({
     });
     return list;
   }, [deals, stageFilter, search, sortKey, sortDir]);
+
+  const pipelineGroups = useMemo(() => {
+    const g: Record<string, DealRow[]> = {};
+    for (const s of DEAL_PIPELINE_STAGES) g[s] = filtered.filter((d) => d.stage === s);
+    return g;
+  }, [filtered]);
 
   const toggleSort = useCallback((key: SortKey) => {
     if (sortKey === key) setSortDir((d) => d === "asc" ? "desc" : "asc");
@@ -167,6 +194,40 @@ export function DealsConsole({
 
   return (
     <div className="flex-col gap-16">
+      <div className="grid-4 gap-12">
+        <StatCard label={t("Total deals")} value={stats.total} icon={<Handshake size={18} />} />
+        <StatCard label={t("In progress")} value={stats.inFlight} sub={t("Excl. funded / passed / paused")} icon={<TrendingUp size={18} />} />
+        <StatCard label={t("Won / signed")} value={stats.won} icon={<Target size={18} />} />
+        <StatCard label={t("Project + capital")} value={stats.linked} sub={t("Both sides linked")} icon={<Layers size={18} />} />
+      </div>
+
+      {isAdmin && Object.keys(stats.stageCounts).length > 0 && (
+        <div className="grid-2 gap-16">
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Stage distribution")}</h3>
+            <DashboardDistributionPie data={stats.stageCounts} colorMap={DEAL_STAGE_COLORS} />
+          </div>
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Pipeline flow")}</h3>
+            <DashboardPipelineBar orderedKeys={DEAL_PIPELINE_STAGES} data={stats.stageCounts} palette={DEAL_CHART_PALETTE} />
+            <div className="flex gap-6 flex-wrap mt-12">
+              {DEAL_PIPELINE_STAGES.slice(0, 6).map((s, i) => (
+                <span key={s} className="flex items-center gap-4 text-xs">
+                  <span style={{ width: 8, height: 8, borderRadius: 2, background: DEAL_CHART_PALETTE[i % DEAL_CHART_PALETTE.length] }} />
+                  <span className="muted">{s.replace(/_/g, " ")}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!isAdmin && (
+        <div className="card mb-16" style={{ padding: "10px 14px", background: "var(--amber-bg)", border: "1px solid color-mix(in oklab, var(--amber) 25%, transparent)" }}>
+          <p className="muted text-sm" style={{ margin: 0 }}>{t("Read-only view. Contact admin for changes.")}</p>
+        </div>
+      )}
+
       {isAdmin && (
         <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("New deal")}>
           <form onSubmit={createDeal} className="form mb-14">
@@ -232,6 +293,14 @@ export function DealsConsole({
             </button>
           )}
         </div>
+        <div className="flex gap-6">
+          <button type="button" className={`chip ${viewMode === "table" ? "chip-active" : ""}`} onClick={() => setViewMode("table")}>
+            <Table2 size={14} style={{ marginRight: 4, verticalAlign: "middle" }} /> {t("Table")}
+          </button>
+          <button type="button" className={`chip ${viewMode === "pipeline" ? "chip-active" : ""}`} onClick={() => setViewMode("pipeline")}>
+            <LayoutGrid size={14} style={{ marginRight: 4, verticalAlign: "middle" }} /> {t("Pipeline")}
+          </button>
+        </div>
         <span className="muted text-sm">{filtered.length} {t("deals")}</span>
       </div>
 
@@ -250,7 +319,52 @@ export function DealsConsole({
         </div>
       )}
 
-      {!loading && filtered.length === 0 ? (
+      {!loading && viewMode === "pipeline" ? (
+        filtered.length === 0 ? (
+          <EmptyState
+            icon={<Handshake size={32} />}
+            message={hasFilters ? t("No deals match your filters.") : t("No deals yet.")}
+          />
+        ) : (
+          <div className="reveal" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12 }}>
+            {DEAL_PIPELINE_STAGES.map((stage) => {
+              const col = pipelineGroups[stage] ?? [];
+              const color = DEAL_STAGE_COLORS[stage] ?? "#94a3b8";
+              return (
+                <div key={stage} className="card" style={{ padding: 0, minHeight: 200 }}>
+                  <div style={{
+                    padding: "10px 14px",
+                    borderBottom: "1px solid var(--line)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}>
+                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: color, flexShrink: 0 }} />
+                    <span className="font-semibold text-sm">{stage.replace(/_/g, " ")}</span>
+                    <span className="muted text-xs" style={{ marginLeft: "auto" }}>{col.length}</span>
+                  </div>
+                  <div style={{ padding: 8, display: "flex", flexDirection: "column", gap: 6 }}>
+                    {col.map((d) => (
+                      <Link
+                        key={d.id}
+                        href={`/dashboard/deals/${d.id}`}
+                        className="card"
+                        style={{ padding: "8px 10px", margin: 0, textDecoration: "none", display: "block" }}
+                      >
+                        <div className="font-semibold text-sm">{d.title}</div>
+                        <div className="muted text-xs">{d.leadNode.name}</div>
+                      </Link>
+                    ))}
+                    {col.length === 0 && (
+                      <p className="muted text-xs" style={{ textAlign: "center", padding: 16 }}>{t("Empty")}</p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )
+      ) : !loading && filtered.length === 0 ? (
         <EmptyState
           icon={<Handshake size={32} />}
           message={hasFilters ? t("No deals match your filters.") : t("No deals yet.")}
