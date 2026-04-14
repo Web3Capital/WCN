@@ -2,7 +2,6 @@ import { getPrisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { ReadOnlyBanner } from "@/app/[locale]/dashboard/_components/read-only-banner";
 import { TasksConsole } from "./ui";
 import { getOwnedNodeIds, memberTasksWhere, memberProjectsWhere } from "@/lib/member-data-scope";
 import { redactTaskForMember, redactNodeForMember } from "@/lib/member-redact";
@@ -47,7 +46,6 @@ export default async function TasksPage() {
         <p className="muted" style={{ maxWidth: 600 }}>
           <T>Structure work into tasks, assign nodes, and track progress across the network.</T>
         </p>
-        {!isAdmin && <ReadOnlyBanner />}
         <div style={{ marginTop: 24 }}>
           <TasksConsole
             initial={JSON.parse(JSON.stringify(safeTasks))}

@@ -37,7 +37,7 @@ export default async function NodeReviewPage({ params }: { params: Promise<{ id:
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <NodeReviewUI
           node={JSON.parse(JSON.stringify(node))}
           reviews={JSON.parse(JSON.stringify(reviews))}

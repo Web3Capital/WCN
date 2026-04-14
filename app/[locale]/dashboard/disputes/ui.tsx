@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "@/i18n/routing";
-import { StatusBadge, EmptyState, ConfirmDialog } from "../_components";
+import { StatusBadge, EmptyState, ConfirmDialog, StatCard, DashboardDistributionPie, DashboardPipelineBar } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Dispute = {
@@ -29,6 +29,30 @@ export function DisputesUI({ disputes: initialDisputes }: { disputes: Dispute[] 
 
   const filtered = filter === "ALL" ? disputes : disputes.filter((d) => d.status === filter);
 
+  const statusCounts = useMemo(() => {
+    const c: Record<string, number> = {};
+    for (const d of disputes) c[d.status] = (c[d.status] ?? 0) + 1;
+    return c;
+  }, [disputes]);
+
+  const disputeKpis = useMemo(() => {
+    const total = disputes.length;
+    const open = disputes.filter((d) => d.status === "OPEN").length;
+    const underReview = disputes.filter((d) => d.status === "UNDER_REVIEW").length;
+    const closed = disputes.filter((d) => d.status === "RESOLVED" || d.status === "DISMISSED").length;
+    return { total, open, underReview, closed };
+  }, [disputes]);
+
+  const disputeStatusColors: Record<string, string> = {
+    OPEN: "#f59e0b",
+    UNDER_REVIEW: "#6366f1",
+    RESOLVED: "#22c55e",
+    DISMISSED: "#94a3b8",
+    ESCALATED: "#ef4444",
+  };
+  const disputePipelineOrder = ["OPEN", "UNDER_REVIEW", "ESCALATED", "RESOLVED", "DISMISSED"] as const;
+  const disputePipelinePalette = ["#f59e0b", "#6366f1", "#ef4444", "#22c55e", "#94a3b8"] as const;
+
   async function resolve(id: string, resolution: string, status: string) {
     setBusy(id);
     try {
@@ -48,7 +72,25 @@ export function DisputesUI({ disputes: initialDisputes }: { disputes: Dispute[] 
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-16">
+      <div className="grid-4 gap-12">
+        <StatCard label={t("Disputes")} value={disputeKpis.total} />
+        <StatCard label={t("Open")} value={disputeKpis.open} />
+        <StatCard label={t("Under review")} value={disputeKpis.underReview} />
+        <StatCard label={t("Closed")} value={disputeKpis.closed} />
+      </div>
+      {Object.keys(statusCounts).length > 0 && (
+        <div className="grid-2 gap-16">
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Status distribution")}</h3>
+            <DashboardDistributionPie data={statusCounts} colorMap={disputeStatusColors} />
+          </div>
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Pipeline flow")}</h3>
+            <DashboardPipelineBar orderedKeys={disputePipelineOrder} data={statusCounts} palette={disputePipelinePalette} />
+          </div>
+        </div>
+      )}
       <div className="page-toolbar mb-20">
         <p className="muted text-sm" style={{ margin: 0 }}>{disputes.length} {t("total disputes")}</p>
         <div className="page-toolbar-spacer" />

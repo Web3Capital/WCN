@@ -65,7 +65,7 @@ export default async function DataCockpitPage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <span className="eyebrow"><T>Intelligence</T></span>
         <h1><T>Network Health</T></h1>
         <p className="muted"><T>Network-wide metrics for operational intelligence — not vanity metrics.</T></p>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { StatusBadge, EmptyState, FormCard, ConfirmDialog } from "../_components";
+import { useState, useEffect, useMemo } from "react";
+import { StatusBadge, EmptyState, FormCard, ConfirmDialog, StatCard, DashboardDistributionPie, DashboardPipelineBar } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type RiskFlagRow = {
@@ -167,6 +167,31 @@ export function RiskConsole({ initialFlags }: { initialFlags: RiskFlagRow[] }) {
   const [busy, setBusy] = useState(false);
   const [resolveTarget, setResolveTarget] = useState<string | null>(null);
 
+  const severityCounts = useMemo(() => {
+    const c: Record<string, number> = {};
+    for (const f of flags) c[f.severity] = (c[f.severity] ?? 0) + 1;
+    return c;
+  }, [flags]);
+
+  const riskKpis = useMemo(() => {
+    const total = flags.length;
+    const open = flags.filter((f) => !f.resolvedAt).length;
+    const resolved = flags.filter((f) => !!f.resolvedAt).length;
+    const criticalOpen = flags.filter(
+      (f) => !f.resolvedAt && (f.severity === "CRITICAL" || f.severity === "HIGH"),
+    ).length;
+    return { total, open, resolved, criticalOpen };
+  }, [flags]);
+
+  const severityColors: Record<string, string> = {
+    LOW: "#94a3b8",
+    MEDIUM: "#f59e0b",
+    HIGH: "#f97316",
+    CRITICAL: "#ef4444",
+  };
+  const severityOrder = ["LOW", "MEDIUM", "HIGH", "CRITICAL"] as const;
+  const severityPalette = ["#94a3b8", "#f59e0b", "#f97316", "#ef4444"] as const;
+
   const displayed = filter === "all" ? flags : filter === "open" ? flags.filter((f) => !f.resolvedAt) : flags.filter((f) => !!f.resolvedAt);
 
   async function createFlag(e: React.FormEvent) {
@@ -201,7 +226,25 @@ export function RiskConsole({ initialFlags }: { initialFlags: RiskFlagRow[] }) {
   }
 
   return (
-    <div className="mt-20">
+    <div className="flex flex-col gap-16 mt-20">
+      <div className="grid-4 gap-12">
+        <StatCard label={t("Flags")} value={riskKpis.total} />
+        <StatCard label={t("Open")} value={riskKpis.open} />
+        <StatCard label={t("Resolved")} value={riskKpis.resolved} />
+        <StatCard label={t("High / critical (open)")} value={riskKpis.criticalOpen} />
+      </div>
+      {Object.keys(severityCounts).length > 0 && (
+        <div className="grid-2 gap-16">
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Severity distribution")}</h3>
+            <DashboardDistributionPie data={severityCounts} colorMap={severityColors} />
+          </div>
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Severity pipeline")}</h3>
+            <DashboardPipelineBar orderedKeys={severityOrder} data={severityCounts} palette={severityPalette} />
+          </div>
+        </div>
+      )}
       <div className="chip-group mb-16">
         <button className={`chip ${tab === "flags" ? "chip-active" : ""}`} onClick={() => setTab("flags")}>{t("Risk Flags")}</button>
         <button className={`chip ${tab === "rules" ? "chip-active" : ""}`} onClick={() => setTab("rules")}>{t("Rule Engine")}</button>

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { getApiErrorMessageFromJson } from "@/lib/api-error";
-import { StatusBadge, FormCard, EmptyState } from "../_components";
+import { StatusBadge, FormCard, EmptyState, StatCard, DashboardDistributionPie, DashboardPipelineBar, ReadOnlyInlineStrip } from "../_components";
 import { ConfirmDialog } from "../_components/confirm-dialog";
 
 type CycleRow = {
@@ -27,6 +27,31 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
   const [error, setError] = useState<string | null>(null);
   const [lines, setLines] = useState<any[] | null>(null);
   const [reopenOpen, setReopenOpen] = useState(false);
+
+  const cycleStatusCounts = useMemo(() => {
+    const c: Record<string, number> = {};
+    for (const r of rows) c[r.status] = (c[r.status] ?? 0) + 1;
+    return c;
+  }, [rows]);
+  const cycleKpis = useMemo(() => {
+    const total = rows.length;
+    const locked = rows.filter((r) => r.status === "LOCKED" || r.status === "EXPORTED" || r.status === "FINALIZED").length;
+    const draft = rows.filter((r) => r.status === "DRAFT").length;
+    const poolSum = rows.reduce((s, r) => s + (r.pool ?? 0), 0);
+    return { total, locked, draft, poolSum };
+  }, [rows]);
+  const cycleStatusColors: Record<string, string> = {
+    DRAFT: "#94a3b8",
+    RECONCILED: "#6366f1",
+    LOCK_PENDING_APPROVAL: "#f59e0b",
+    LOCKED: "#a855f7",
+    EXPORTED: "#22c55e",
+    REOPEN_PENDING_APPROVAL: "#f97316",
+    REOPENED: "#f59e0b",
+    FINALIZED: "#22c55e",
+  };
+  const cycleOrder = ["DRAFT", "RECONCILED", "LOCK_PENDING_APPROVAL", "LOCKED", "EXPORTED", "FINALIZED"] as const;
+  const cyclePalette = ["#6366f1", "#8b5cf6", "#22c55e", "#f59e0b", "#a855f7", "#94a3b8"] as const;
 
   async function refresh() {
     const res = await fetch("/api/settlement/cycles", { cache: "no-store" });
@@ -116,7 +141,27 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
   }
 
   return (
-    <div className="apps-layout">
+    <div className="flex flex-col gap-16">
+      <div className="grid-4 gap-12">
+        <StatCard label={t("Cycles")} value={cycleKpis.total} />
+        <StatCard label={t("Locked / finalized")} value={cycleKpis.locked} />
+        <StatCard label={t("Draft")} value={cycleKpis.draft} />
+        <StatCard label={t("Total pool")} value={cycleKpis.poolSum.toLocaleString()} />
+      </div>
+      {!readOnly && Object.keys(cycleStatusCounts).length > 0 && (
+        <div className="grid-2 gap-16">
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Status distribution")}</h3>
+            <DashboardDistributionPie data={cycleStatusCounts} colorMap={cycleStatusColors} />
+          </div>
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Pipeline flow")}</h3>
+            <DashboardPipelineBar orderedKeys={cycleOrder} data={cycleStatusCounts} palette={cyclePalette} />
+          </div>
+        </div>
+      )}
+      {readOnly ? <ReadOnlyInlineStrip /> : null}
+      <div className="apps-layout">
       <div>
         {!readOnly ? (
           <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("Create cycle")}>
@@ -255,6 +300,7 @@ export function SettlementConsole({ initial, readOnly = false }: { initial: Cycl
         onConfirm={handleReopen}
         onCancel={() => setReopenOpen(false)}
       />
+      </div>
     </div>
   );
 }

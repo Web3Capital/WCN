@@ -54,7 +54,7 @@ export default async function DashboardIndex() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <span className="eyebrow"><T>Overview</T></span>
         <h1><T>Welcome back</T></h1>
         <p className="muted">

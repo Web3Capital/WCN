@@ -2,7 +2,6 @@ import { getPrisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { ReadOnlyBanner } from "@/app/[locale]/dashboard/_components/read-only-banner";
 import { NodesConsole } from "./ui";
 import { redactNodeForMember } from "@/lib/member-redact";
 import { isAdminRole } from "@/lib/permissions";
@@ -30,7 +29,6 @@ export default async function NodesPage() {
         <p className="muted" style={{ maxWidth: 600 }}>
           <T>Create, review, and manage nodes.</T>
         </p>
-        {!isAdmin ? <ReadOnlyBanner /> : null}
         <div style={{ marginTop: 24 }}>
           <NodesConsole initial={safeNodes} readOnly={!isAdmin} />
         </div>

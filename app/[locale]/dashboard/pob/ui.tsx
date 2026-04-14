@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "@/i18n/routing";
 import { getApiErrorMessageFromJson } from "@/lib/api-error";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
-import { StatusBadge, FormCard, EmptyState } from "../_components";
+import { StatusBadge, FormCard, EmptyState, StatCard, DashboardDistributionPie, DashboardPipelineBar, ReadOnlyInlineStrip } from "../_components";
 
 type TinyRow = { id: string; name?: string; title?: string };
 type EvidenceRow = { id: string; title: string | null; type: string; url: string | null; onchainTx: string | null; taskId: string | null; projectId: string | null; nodeId: string | null };
@@ -231,7 +231,45 @@ export function PobConsole({
     }
   }
 
+  const pobKpis = useMemo(() => {
+    const total = rows.length;
+    const approved = rows.filter((r) => r.status === "APPROVED").length;
+    const pending = rows.filter((r) => r.status === "PENDING" || r.status === "REVIEWING").length;
+    const avgScore = total > 0 ? Math.round(rows.reduce((s, r) => s + r.score, 0) / total) : 0;
+    return { total, approved, pending, avgScore };
+  }, [rows]);
+  const pobStatusCounts = useMemo(() => {
+    const c: Record<string, number> = {};
+    for (const r of rows) c[r.status] = (c[r.status] ?? 0) + 1;
+    return c;
+  }, [rows]);
+  const pobStatusColors: Record<string, string> = {
+    PENDING: "#94a3b8", REVIEWING: "#f59e0b", APPROVED: "#22c55e", REJECTED: "#ef4444",
+  };
+  const pobPalette = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444"] as const;
+  const pobOrder = ["PENDING", "REVIEWING", "APPROVED", "REJECTED"] as const;
+
   return (
+    <div className="flex-col gap-16">
+      <div className="grid-4 gap-12">
+        <StatCard label={t("PoB records")} value={pobKpis.total} />
+        <StatCard label={t("Approved")} value={pobKpis.approved} />
+        <StatCard label={t("Pending review")} value={pobKpis.pending} />
+        <StatCard label={t("Avg score")} value={pobKpis.avgScore || "—"} />
+      </div>
+      {!readOnly && Object.keys(pobStatusCounts).length > 0 && (
+        <div className="grid-2 gap-16">
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Status distribution")}</h3>
+            <DashboardDistributionPie data={pobStatusCounts} colorMap={pobStatusColors} />
+          </div>
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Pipeline flow")}</h3>
+            <DashboardPipelineBar orderedKeys={pobOrder} data={pobStatusCounts} palette={pobPalette} />
+          </div>
+        </div>
+      )}
+      {readOnly ? <ReadOnlyInlineStrip /> : null}
     <div className="apps-layout">
       <div>
         {!readOnly ? (
@@ -640,6 +678,7 @@ export function PobConsole({
           <EmptyState message={t("Select a record.")} />
         )}
       </div>
+    </div>
     </div>
   );
 }

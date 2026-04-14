@@ -35,7 +35,7 @@ export default async function DashboardProfilePage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container" style={{ maxWidth: 720 }}>
+      <div className="container-wide" style={{ maxWidth: 720 }}>
         <span className="eyebrow"><T>Account</T></span>
         <h1><T>Profile</T></h1>
         <p className="muted"><T>Manage your personal information.</T></p>

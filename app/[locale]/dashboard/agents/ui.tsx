@@ -3,7 +3,7 @@
 import { useMemo, useState, useCallback } from "react";
 import { useRouter } from "@/i18n/routing";
 import { Search, ChevronDown, ChevronUp, Trash2, X } from "lucide-react";
-import { StatusBadge, FormCard, EmptyState } from "../_components";
+import { StatusBadge, FormCard, EmptyState, StatCard, DashboardDistributionPie, DashboardPipelineBar, ReadOnlyInlineStrip } from "../_components";
 import { FilterToolbar } from "../_components/filter-toolbar";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
@@ -75,6 +75,23 @@ export function AgentsConsole({
     for (const r of rows) c[r.status] = (c[r.status] || 0) + 1;
     return c;
   }, [rows]);
+
+  const agentKpis = useMemo(() => {
+    const total = rows.length;
+    const active = rows.filter((r) => r.status === "ACTIVE").length;
+    const restricted = rows.filter((r) => r.status === "SUSPENDED" || r.status === "FROZEN").length;
+    const totalRuns = rows.reduce((s, r) => s + (r._count?.runs ?? 0), 0);
+    return { total, active, restricted, totalRuns };
+  }, [rows]);
+
+  const agentStatusColors: Record<string, string> = {
+    ACTIVE: "#22c55e",
+    DISABLED: "#f59e0b",
+    SUSPENDED: "#f97316",
+    FROZEN: "#ef4444",
+  };
+  const agentPipelineOrder = [...AGENT_STATUS] as const;
+  const agentPipelinePalette = ["#22c55e", "#f59e0b", "#f97316", "#ef4444"] as const;
 
   const filtered = useMemo(() => {
     let list = rows;
@@ -175,7 +192,26 @@ export function AgentsConsole({
   const hasFilters = statusFilter !== "ALL" || typeFilter !== "ALL" || search.trim();
 
   return (
-    <div className="flex-col gap-16">
+    <div className="flex flex-col gap-16">
+      <div className="grid-4 gap-12">
+        <StatCard label={t("Agents")} value={agentKpis.total} />
+        <StatCard label={t("Active")} value={agentKpis.active} />
+        <StatCard label={t("Suspended / frozen")} value={agentKpis.restricted} />
+        <StatCard label={t("Total runs")} value={agentKpis.totalRuns} />
+      </div>
+      {!readOnly && Object.keys(statusCounts).length > 0 && (
+        <div className="grid-2 gap-16">
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Status distribution")}</h3>
+            <DashboardDistributionPie data={statusCounts} colorMap={agentStatusColors} />
+          </div>
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Pipeline flow")}</h3>
+            <DashboardPipelineBar orderedKeys={agentPipelineOrder} data={statusCounts} palette={agentPipelinePalette} />
+          </div>
+        </div>
+      )}
+      {readOnly ? <ReadOnlyInlineStrip /> : null}
       {!readOnly && (
         <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("Register agent")}>
           <div className="form mb-14">

@@ -3,7 +3,7 @@
 import { useMemo, useState, useCallback } from "react";
 import { Link, useRouter } from "@/i18n/routing";
 import { Search, ChevronDown, ChevronUp, X } from "lucide-react";
-import { StatusBadge, FormCard, EmptyState } from "../_components";
+import { StatusBadge, FormCard, EmptyState, StatCard, DashboardDistributionPie, DashboardPipelineBar, ReadOnlyInlineStrip } from "../_components";
 import { FilterToolbar } from "../_components/filter-toolbar";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
@@ -104,6 +104,36 @@ export function TasksConsole({
     return c;
   }, [rows]);
 
+  const taskKpis = useMemo(() => {
+    const total = rows.length;
+    const activeWork = rows.filter((r) =>
+      ["OPEN", "ASSIGNED", "IN_PROGRESS", "SUBMITTED", "WAITING_REVIEW", "REWORK"].includes(r.status),
+    ).length;
+    const completed = rows.filter((r) => ["DONE", "CLOSED", "ACCEPTED"].includes(r.status)).length;
+    const terminal = new Set(["DONE", "CLOSED", "ACCEPTED", "CANCELLED"]);
+    const overdue = rows.filter(
+      (r) => r.dueAt && new Date(r.dueAt).getTime() < Date.now() && !terminal.has(r.status),
+    ).length;
+    return { total, activeWork, completed, overdue };
+  }, [rows]);
+
+  const taskStatusColors: Record<string, string> = {
+    DRAFT: "#94a3b8",
+    OPEN: "#6366f1",
+    ASSIGNED: "#8b5cf6",
+    IN_PROGRESS: "#f59e0b",
+    SUBMITTED: "#a855f7",
+    WAITING_REVIEW: "#f97316",
+    ACCEPTED: "#22c55e",
+    REWORK: "#eab308",
+    BLOCKED: "#ef4444",
+    DONE: "#22c55e",
+    CANCELLED: "#64748b",
+    CLOSED: "#0ea5e9",
+  };
+  const taskPipelineOrder = [...TASK_STATUS] as const;
+  const taskPipelinePalette = ["#6366f1", "#8b5cf6", "#f59e0b", "#a855f7", "#f97316", "#22c55e", "#eab308", "#ef4444", "#94a3b8", "#0ea5e9", "#64748b"] as const;
+
   const filtered = useMemo(() => {
     let list = rows;
     if (statusFilter !== "ALL") list = list.filter((r) => r.status === statusFilter);
@@ -193,7 +223,26 @@ export function TasksConsole({
   const hasFilters = statusFilter !== "ALL" || typeFilter !== "ALL" || search.trim();
 
   return (
-    <div className="flex-col gap-16">
+    <div className="flex flex-col gap-16">
+      <div className="grid-4 gap-12">
+        <StatCard label={t("Tasks")} value={taskKpis.total} />
+        <StatCard label={t("In progress")} value={taskKpis.activeWork} />
+        <StatCard label={t("Completed")} value={taskKpis.completed} />
+        <StatCard label={t("Overdue")} value={taskKpis.overdue} />
+      </div>
+      {!readOnly && Object.keys(statusCounts).length > 0 && (
+        <div className="grid-2 gap-16">
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Status distribution")}</h3>
+            <DashboardDistributionPie data={statusCounts} colorMap={taskStatusColors} />
+          </div>
+          <div className="card p-18">
+            <h3 className="mt-0 mb-12">{t("Pipeline flow")}</h3>
+            <DashboardPipelineBar orderedKeys={taskPipelineOrder} data={statusCounts} palette={taskPipelinePalette} />
+          </div>
+        </div>
+      )}
+      {readOnly ? <ReadOnlyInlineStrip /> : null}
       {!readOnly && (
         <FormCard open={showForm} onToggle={() => setShowForm(!showForm)} triggerLabel={t("Create task")}>
           <div className="form mb-14">

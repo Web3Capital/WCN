@@ -39,7 +39,7 @@ export default async function ApplicationDetailPage({ params }: { params: { id: 
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <ApplicationDetail
           application={JSON.parse(JSON.stringify(application))}
           reviews={JSON.parse(JSON.stringify(reviews))}

@@ -2,7 +2,6 @@ import { getPrisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { ReadOnlyBanner } from "@/app/[locale]/dashboard/_components/read-only-banner";
 import { AgentsConsole } from "./ui";
 import { getOwnedNodeIds, memberAgentsWhere } from "@/lib/member-data-scope";
 import { redactAgentForMember, redactNodeForMember } from "@/lib/member-redact";
@@ -49,7 +48,6 @@ export default async function AgentsPage() {
         <p className="muted" style={{ maxWidth: 600 }}>
           <T>Register agents, grant permissions, and inspect execution logs.</T>
         </p>
-        {!isAdmin && <ReadOnlyBanner />}
         <div style={{ marginTop: 24 }}>
           <AgentsConsole
             initial={JSON.parse(JSON.stringify(safeAgents))}

@@ -28,7 +28,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <CampaignDetail campaign={JSON.parse(JSON.stringify(campaign))} />
       </div>
     </div>

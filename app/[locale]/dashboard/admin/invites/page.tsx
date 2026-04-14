@@ -37,7 +37,7 @@ export default async function InvitesPage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <span className="eyebrow"><T>Admin</T></span>
         <h1><T>Invite Management</T></h1>
         <p className="muted"><T>Create and manage invitations to the WCN network.</T></p>

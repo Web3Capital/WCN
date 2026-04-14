@@ -31,7 +31,7 @@ export default async function DisputesPage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <span className="eyebrow"><T>Verification</T></span>
         <h1><T>Disputes</T></h1>
         <DisputesUI disputes={JSON.parse(JSON.stringify(disputes))} />

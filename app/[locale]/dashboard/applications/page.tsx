@@ -26,7 +26,7 @@ export default async function ApplicationsPage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <span className="eyebrow"><T>Admin</T></span>
         <h1><T>Node applications</T></h1>
         <p className="muted">

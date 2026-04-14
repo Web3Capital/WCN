@@ -31,7 +31,7 @@ export default async function NodeBillingPage({ params }: { params: Promise<{ id
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <NodeBillingUI node={JSON.parse(JSON.stringify(node))} isAdmin={isAdmin} />
       </div>
     </div>

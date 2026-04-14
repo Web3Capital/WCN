@@ -39,7 +39,7 @@ export default async function SettlementCycleDetailPage({ params }: { params: Pr
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <SettlementCycleDetailUI
           cycle={JSON.parse(JSON.stringify(cycle))}
           pendingApprovals={JSON.parse(JSON.stringify(pendingApprovals))}

@@ -39,7 +39,7 @@ export default async function UserDetailPage({ params }: { params: { id: string 
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <UserDetail
           user={JSON.parse(JSON.stringify(user))}
           activity={JSON.parse(JSON.stringify(recentActivity))}

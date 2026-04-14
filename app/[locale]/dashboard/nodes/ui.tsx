@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "@/i18n/routing";
 import { Network, Radio, Clock, AlertCircle } from "lucide-react";
-import { StatusBadge, FormCard, EmptyState, StatCard } from "../_components";
+import { StatusBadge, FormCard, EmptyState, StatCard, ReadOnlyInlineStrip } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type NodeRow = {
@@ -118,18 +118,14 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
   }, [rows]);
 
   return (
-    <div className="flex-col gap-16">
+    <div className="flex flex-col gap-16">
       <div className="grid-4 gap-12">
         <StatCard label={t("Total nodes")} value={nodeKpis.total} icon={<Network size={18} />} />
         <StatCard label={t("Live")} value={nodeKpis.live} icon={<Radio size={18} />} />
         <StatCard label={t("In review")} value={nodeKpis.inReview} icon={<Clock size={18} />} />
         <StatCard label={t("Suspended / offboarded")} value={nodeKpis.suspended} icon={<AlertCircle size={18} />} />
       </div>
-      {readOnly && (
-        <div className="card" style={{ padding: "10px 14px", background: "var(--amber-bg)", border: "1px solid color-mix(in oklab, var(--amber) 25%, transparent)" }}>
-          <p className="muted text-sm" style={{ margin: 0 }}>{t("Read-only view. Contact admin for changes.")}</p>
-        </div>
-      )}
+      {readOnly ? <ReadOnlyInlineStrip /> : null}
     <div className="apps-layout">
       <div>
         {!readOnly ? (

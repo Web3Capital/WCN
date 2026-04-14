@@ -19,7 +19,7 @@ export default async function UsersPage() {
   if (!isAdmin) {
     return (
       <div className="dashboard-page section">
-        <div className="container">
+        <div className="container-wide">
           <span className="eyebrow"><T>Admin</T></span>
           <h1><T>Users</T></h1>
           <div className="card" style={{ marginTop: 18, padding: "14px 16px" }}>
@@ -47,7 +47,7 @@ export default async function UsersPage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <span className="eyebrow"><T>Admin</T></span>
         <h1><T>Users</T></h1>
         <p className="muted"><T>Manage user accounts and roles.</T></p>

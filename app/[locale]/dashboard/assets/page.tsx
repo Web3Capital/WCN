@@ -10,7 +10,7 @@ export const metadata = dashboardMeta("Assets", "Asset management");
 export default function AssetsPhase3Page() {
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <PageHeader
           eyebrow="Roadmap"
           title="Assets & on-chain proofs"

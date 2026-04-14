@@ -53,7 +53,7 @@ export default async function PobDetailPage({ params }: { params: { id: string }
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <PobDetail
           record={JSON.parse(JSON.stringify(record))}
           reviews={JSON.parse(JSON.stringify(reviews))}

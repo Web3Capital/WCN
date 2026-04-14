@@ -22,7 +22,7 @@ export default async function DashboardSettingsPage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container" style={{ maxWidth: 720 }}>
+      <div className="container-wide" style={{ maxWidth: 720 }}>
         <span className="eyebrow"><T>Account</T></span>
         <h1><T>Settings</T></h1>
         <p className="muted"><T>Security, sessions, and preferences.</T></p>

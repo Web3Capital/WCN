@@ -44,7 +44,7 @@ export default async function DisputeDetailPage({ params }: { params: { id: stri
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <DisputeDetail
           dispute={JSON.parse(JSON.stringify(dispute))}
           auditLogs={JSON.parse(JSON.stringify(auditLogs))}

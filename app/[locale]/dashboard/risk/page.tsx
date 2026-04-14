@@ -29,7 +29,7 @@ export default async function RiskPage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <span className="eyebrow"><T>Intelligence</T></span>
         <h1><T>Risk & Compliance</T></h1>
         <p className="muted">

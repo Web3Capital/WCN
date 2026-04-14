@@ -2,7 +2,6 @@ import { getPrisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { ReadOnlyBanner } from "@/app/[locale]/dashboard/_components/read-only-banner";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { PobConsole } from "./ui";
 import { getOwnedNodeIds, memberPoBWhere, memberTasksWhere, memberProjectsWhere, memberEvidenceWhere } from "@/lib/member-data-scope";
@@ -46,12 +45,11 @@ export default async function PobPage() {
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <span className="eyebrow"><T>Verification</T></span>
         <h1><T>PoB verification</T></h1>
-        <p className="muted"><T>Record and review proof-of-business outcomes.</T></p>
-        {!isAdmin ? <ReadOnlyBanner /> : null}
-        <div className="card" style={{ marginTop: 18 }}>
+        <p className="muted" style={{ maxWidth: 600 }}><T>Record and review proof-of-business outcomes.</T></p>
+        <div style={{ marginTop: 24 }}>
           <PobConsole
             initial={pob as any}
             tasks={tasks as any}

@@ -31,7 +31,7 @@ export default async function NodeOnboardingPage({ params }: { params: Promise<{
 
   return (
     <div className="dashboard-page section">
-      <div className="container">
+      <div className="container-wide">
         <NodeOnboardingUI node={JSON.parse(JSON.stringify(node))} isAdmin={isAdmin} />
       </div>
     </div>
