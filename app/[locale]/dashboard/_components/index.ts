@@ -13,8 +13,13 @@ export { ReadOnlyBanner } from "./read-only-banner";
 export { ReadOnlyInlineStrip } from "./read-only-inline-strip";
 export { DashboardDistributionPie, DashboardPipelineBar } from "./dashboard-distribution-charts";
 export {
+  NoteReadonlyInset,
+  NoteFeed,
+  NoteComposerRow,
+  NoteSectionCard,
+  InternalNoteField,
   CapitalNotesReadonlyInset,
   CapitalNotesFeed,
   CapitalNotesComposerRow,
-} from "./capital-notes";
-export type { CapitalNoteFeedItem } from "./capital-notes";
+} from "../notes";
+export type { NoteFeedItem, NoteSectionVariant, CapitalNoteFeedItem } from "../notes";

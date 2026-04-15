@@ -4,13 +4,8 @@ import { useEffect, useState, useCallback } from "react";
 import { Link } from "@/i18n/routing";
 import { Clock } from "lucide-react";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
-import {
-  DetailLayout,
-  StatusBadge,
-  StatCard,
-  CapitalNotesComposerRow,
-  CapitalNotesFeed,
-} from "../../_components";
+import { DetailLayout, StatusBadge, StatCard } from "../../_components";
+import { NoteSectionCard, NoteComposerRow, NoteFeed } from "../../notes";
 
 type DealData = {
   id: string;
@@ -427,17 +422,21 @@ export function DealDetail({ deal, nodes, isAdmin }: {
         )}
       </div>
 
-      {/* Communication Notes — Capital-aligned: card p-18, Activity-style feed */}
-      <div className="card p-18 reveal reveal-delay-3">
-        <h3 className="mt-0 mb-12">{t("Communication Notes")} ({localNotes.length})</h3>
-        <CapitalNotesComposerRow
+      {/* Communication Notes — same section shell as Project detail (`card-glass` + NoteFeed) */}
+      <NoteSectionCard
+        title={t("Communication Notes")}
+        count={localNotes.length}
+        variant="glass"
+        className="reveal-delay-3"
+      >
+        <NoteComposerRow
           value={noteText}
           onChange={setNoteText}
           onSubmit={addNote}
           placeholder={t("Add a note...")}
           submitLabel={t("Add")}
         />
-        <CapitalNotesFeed
+        <NoteFeed
           items={localNotes.map((n) => ({
             id: n.id,
             body: n.content,
@@ -445,7 +444,7 @@ export function DealDetail({ deal, nodes, isAdmin }: {
           }))}
           empty={<p className="muted mb-0">{t("No notes yet.")}</p>}
         />
-      </div>
+      </NoteSectionCard>
 
       {/* Admin Panel */}
       {isAdmin && (

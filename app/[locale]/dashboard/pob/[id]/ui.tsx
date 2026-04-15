@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Link } from "@/i18n/routing";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
-import { DetailLayout, StatusBadge, StatCard, CapitalNotesFeed } from "../../_components";
+import { DetailLayout, StatusBadge, StatCard } from "../../_components";
+import { NoteFeed, NoteSectionCard } from "../../notes";
 
 type Attribution = {
   id: string;
@@ -178,10 +179,9 @@ export function PobDetail({
       )}
 
       {record.notes ? (
-        <div className="card p-18">
-          <h3 className="mt-0 mb-12">{t("Notes")}</h3>
+        <NoteSectionCard title={t("Notes")} variant="solid">
           <p className="mt-0 mb-0 text-base" style={{ whiteSpace: "pre-wrap" }}>{record.notes}</p>
-        </div>
+        </NoteSectionCard>
       ) : null}
 
       <div className="grid-2 gap-16">
@@ -244,9 +244,8 @@ export function PobDetail({
       )}
 
       {reviews.length > 0 && (
-        <div className="card p-18">
-          <h3 className="mt-0 mb-12">{t("Review History")}</h3>
-          <CapitalNotesFeed
+        <NoteSectionCard title={t("Review History")} variant="solid">
+          <NoteFeed
             items={reviews.map((r) => ({
               id: r.id,
               body: (
@@ -262,7 +261,7 @@ export function PobDetail({
               ),
             }))}
           />
-        </div>
+        </NoteSectionCard>
       )}
 
       <div className="muted text-xs">

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Link } from "@/i18n/routing";
-import { DetailLayout, StatusBadge, CapitalNotesFeed } from "../../_components";
+import { DetailLayout, StatusBadge } from "../../_components";
+import { InternalNoteField, NoteFeed, NoteSectionCard } from "../../notes";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type ApplicationData = {
@@ -150,25 +151,22 @@ export function ApplicationDetail({
               </select>
             </label>
           </div>
-          <label className="field mt-8">
-            <span className="label">{t("Internal Notes")}</span>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              onBlur={() => updateApp({ reviewNote: notes || null })}
-              placeholder={t("Add review notes...")}
-              rows={4}
-            />
-          </label>
-          <p className="muted mt-4 text-xs">{t("Notes auto-save on blur.")}</p>
+          <InternalNoteField
+            className="mt-8"
+            label={t("Internal Notes")}
+            value={notes}
+            onChange={setNotes}
+            onBlur={(v) => updateApp({ reviewNote: v || null })}
+            placeholder={t("Add review notes...")}
+            hint={t("Notes auto-save on blur.")}
+          />
           {error && <p className="form-error mt-8">{error}</p>}
         </div>
       )}
 
       {reviews.length > 0 && (
-        <div className="card p-18">
-          <h3 className="mt-0 mb-12">{t("Review History")}</h3>
-          <CapitalNotesFeed
+        <NoteSectionCard title={t("Review History")} variant="solid">
+          <NoteFeed
             items={reviews.map((r) => ({
               id: r.id,
               body: (
@@ -184,7 +182,7 @@ export function ApplicationDetail({
               ),
             }))}
           />
-        </div>
+        </NoteSectionCard>
       )}
     </DetailLayout>
   );

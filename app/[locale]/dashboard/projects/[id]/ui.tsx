@@ -5,6 +5,7 @@ import { Link } from "@/i18n/routing";
 import { ExternalLink, FileText, Upload, Clock, MessageCircle } from "lucide-react";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { DetailLayout, StatusBadge, StatCard } from "../../_components";
+import { InternalNoteField, NoteFeed, NoteSectionCard } from "../../notes";
 
 type ActivityEntry = {
   id: string;
@@ -455,37 +456,41 @@ export function ProjectDetail({ project, isAdmin }: { project: ProjectData; isAd
               onBlur={(e) => adminPatch({ riskTags: e.target.value.split(",").map((s: string) => s.trim()).filter(Boolean) })}
             />
           </label>
-          <label className="field">
-            <span className="label">{t("Internal notes")}</span>
-            <textarea
-              defaultValue={project.internalNotes ?? ""}
-              rows={4}
-              onBlur={(e) => adminPatch({ internalNotes: e.target.value })}
-            />
-          </label>
+          <InternalNoteField
+            label={t("Internal notes")}
+            defaultValue={project.internalNotes ?? ""}
+            rows={4}
+            onBlur={(v) => adminPatch({ internalNotes: v })}
+          />
         </div>
       )}
 
-      {/* Activity */}
+      {/* Activity — same line list primitive as `notes/NoteFeed` */}
       {isAdmin && activity.length > 0 && (
-        <div className="card-glass p-18 reveal">
-          <h3 className="mt-0 mb-12">{t("Activity")}</h3>
-          <div className="flex-col gap-8">
-            {activity.map((a) => (
-              <div key={a.id} className="flex items-start gap-8 text-sm" style={{ borderLeft: "2px solid var(--line)", paddingLeft: 12 }}>
-                <div>
+        <NoteSectionCard title={t("Activity")} variant="glass">
+          <NoteFeed
+            items={activity.map((a) => ({
+              id: a.id,
+              body: (
+                <>
                   <span className="font-semibold">{a.action.replace(/_/g, " ")}</span>
-                  {a.metadata && (a.metadata as any).previousStatus && (
-                    <span className="muted"> {(a.metadata as any).previousStatus} → {(a.metadata as any).newStatus}</span>
+                  {a.metadata && (a.metadata as Record<string, unknown>).previousStatus != null && (
+                    <span className="muted">
+                      {" "}
+                      {String((a.metadata as Record<string, string>).previousStatus)} →{" "}
+                      {String((a.metadata as Record<string, string>).newStatus)}
+                    </span>
                   )}
-                  <div className="muted text-xs">
-                    {a.actor?.name || a.actor?.email || t("System")} · {relativeTime(a.createdAt)}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+                </>
+              ),
+              meta: (
+                <>
+                  {a.actor?.name || a.actor?.email || t("System")} · {relativeTime(a.createdAt)}
+                </>
+              ),
+            }))}
+          />
+        </NoteSectionCard>
       )}
     </DetailLayout>
   );

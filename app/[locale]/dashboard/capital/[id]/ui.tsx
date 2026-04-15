@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Link } from "@/i18n/routing";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
-import { DetailLayout, StatusBadge, StatCard, CapitalNotesReadonlyInset } from "../../_components";
+import { DetailLayout, StatusBadge, StatCard } from "../../_components";
+import { NoteReadonlyInset } from "../../notes";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell,
   PieChart, Pie,
@@ -361,7 +362,7 @@ export function CapitalDetail({ profile, isAdmin, analytics }: {
                 </div>
               </div>
               {profile.notes ? (
-                <CapitalNotesReadonlyInset label={t("Notes:")}>{profile.notes}</CapitalNotesReadonlyInset>
+                <NoteReadonlyInset label={t("Notes:")}>{profile.notes}</NoteReadonlyInset>
               ) : null}
             </div>
           </div>

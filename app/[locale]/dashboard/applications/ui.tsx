@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "@/i18n/routing";
 import { StatusBadge, EmptyState } from "../_components";
+import { InternalNoteField } from "../notes";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type Application = {
@@ -13,11 +14,17 @@ type Application = {
   organization: string | null;
   role: string | null;
   nodeType: string | null;
+  territory: string | null;
   resources: string | null;
   lookingFor: string | null;
   linkedin: string | null;
   whyWcn: string | null;
+  pastCases: string | null;
+  references: string | null;
+  boundaryStatement: string | null;
   notes: string | null;
+  escalatedTo: string | null;
+  escalatedAt: string | Date | null;
   createdAt: string | Date;
 };
 
@@ -161,20 +168,16 @@ export function ApplicationsTable({
             </div>
 
             {!readOnly ? (
-              <label className="field mt-14">
-                <span className="label">{t("Internal notes")}</span>
-                <textarea
-                  defaultValue={active.notes ?? ""}
-                  onBlur={(e) => updateApplication(active.id, { notes: e.target.value })}
-                  placeholder={t("Add review notes here…")}
-                  disabled={saving}
-                  rows={4}
-                />
-                <p className="muted mt-4 mb-0 text-sm">
-                  {t("Notes auto-save on blur.")}
-                </p>
-                {error ? <p className="form-error mt-10">{error}</p> : null}
-              </label>
+              <InternalNoteField
+                className="mt-14"
+                label={t("Internal notes")}
+                defaultValue={active.notes ?? ""}
+                onBlur={(v) => updateApplication(active.id, { notes: v })}
+                placeholder={t("Add review notes here…")}
+                disabled={saving}
+                hint={t("Notes auto-save on blur.")}
+                error={error}
+              />
             ) : null}
 
             <div className="mt-14">
