@@ -75,6 +75,13 @@ describe("Node State Machine", () => {
   it("blocks OFFBOARDED -> anything", () => {
     expect(canTransitionNode("OFFBOARDED", "DRAFT")).toBe(false);
   });
+
+  it("allows LIVE <-> WATCHLIST per node network policy", () => {
+    expect(canTransitionNode("LIVE", "WATCHLIST")).toBe(true);
+    expect(canTransitionNode("WATCHLIST", "LIVE")).toBe(true);
+    expect(canTransitionNode("WATCHLIST", "SUSPENDED")).toBe(true);
+    expect(canTransitionNode("CONTRACTING", "PROBATION")).toBe(true);
+  });
 });
 
 describe("Evidence State Machine", () => {

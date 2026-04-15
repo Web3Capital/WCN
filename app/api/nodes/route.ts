@@ -1,4 +1,5 @@
 import "@/lib/core/init";
+import { Prisma } from "@prisma/client";
 import { getPrisma } from "@/lib/prisma";
 import { requireAdmin, requireSignedIn } from "@/lib/admin";
 import { redactNodeForMember } from "@/lib/member-redact";
@@ -114,6 +115,10 @@ export async function POST(req: Request) {
       region: d.region ?? null,
       city: d.city ?? null,
       jurisdiction: d.jurisdiction ?? null,
+      vertical: d.vertical ?? null,
+      ...(d.territoryJson !== undefined
+        ? { territoryJson: d.territoryJson === null ? Prisma.DbNull : (d.territoryJson as Prisma.InputJsonValue) }
+        : {}),
       level: d.level,
       ownerUserId: d.ownerUserId ?? null,
       entityName: d.entityName ?? null,

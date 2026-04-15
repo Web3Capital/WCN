@@ -9,6 +9,7 @@ import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/c
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
 import type { NodeStatus } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { withApiContext } from "@/lib/logger";
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
@@ -61,7 +62,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   const data: Record<string, unknown> = {};
 
   const stringFields = [
-    "name", "description", "region", "city", "jurisdiction",
+    "name", "description", "region", "city", "jurisdiction", "vertical",
     "entityName", "entityType", "contactName", "contactEmail",
     "resourcesOffered", "pastCases", "recommendation", "riskLevel",
     "billingStatus", "depositStatus", "seatFeeStatus",
@@ -79,6 +80,16 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
   if (body?.allowedServices !== undefined) {
     data.allowedServices = Array.isArray(body.allowedServices) ? body.allowedServices.map((s: unknown) => String(s).trim()).filter(Boolean) : [];
+  }
+
+  if (body?.territoryJson !== undefined) {
+    if (body.territoryJson === null) {
+      data.territoryJson = Prisma.DbNull;
+    } else if (typeof body.territoryJson === "object" && !Array.isArray(body.territoryJson)) {
+      data.territoryJson = body.territoryJson as Prisma.InputJsonValue;
+    } else {
+      return apiValidationError([{ path: "territoryJson", message: "territoryJson must be a JSON object or null." }]);
+    }
   }
 
   if (body?.type !== undefined) {

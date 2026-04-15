@@ -5,7 +5,7 @@ const COLORS: Record<string, string> = {
   ACCEPTED: "badge-green",
 
   PENDING: "badge-amber", DRAFT: "badge-amber", REVIEWING: "badge-amber", GENERATED: "badge-amber",
-  SUBMITTED: "badge-amber", RUNNING: "badge-amber", IN_PROGRESS: "badge-amber",
+  SUBMITTED: "badge-amber", RUNNING: "badge-amber", IN_PROGRESS: "badge-amber", WATCHLIST: "badge-amber",
   WAITING_REVIEW: "badge-amber", OPEN: "badge-amber", PROSPECT: "badge-amber",
   PENDING_REVIEW: "badge-amber", CREATED: "badge-amber",
 

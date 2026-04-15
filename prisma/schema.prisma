@@ -58,6 +58,7 @@ enum NodeStatus {
   REJECTED
   CONTRACTING
   LIVE
+  WATCHLIST
   PROBATION
   SUSPENDED
   OFFBOARDED
@@ -754,6 +755,10 @@ model Node {
   region       String?
   city         String?
   jurisdiction String?
+  /// Industry / vertical track (PRD: vertical dimension)
+  vertical     String?
+  /// Structured territory payload, e.g. { region, scope, exclusivity, protectedAccounts }
+  territoryJson Json?
   level        Int     @default(1)
 
   entityName       String?

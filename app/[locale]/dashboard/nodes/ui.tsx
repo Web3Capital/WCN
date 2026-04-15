@@ -31,6 +31,8 @@ type NodeRow = {
   region: string | null;
   city: string | null;
   jurisdiction: string | null;
+  vertical?: string | null;
+  territoryJson?: unknown | null;
   level: number;
   ownerUserId: string | null;
   createdAt: string | Date;
@@ -46,6 +48,7 @@ const NODE_STATUS = [
   "REJECTED",
   "CONTRACTING",
   "LIVE",
+  "WATCHLIST",
   "PROBATION",
   "SUSPENDED",
   "OFFBOARDED",
@@ -62,6 +65,7 @@ const NODE_PIPELINE_COLUMNS = [
   "APPROVED",
   "CONTRACTING",
   "LIVE",
+  "WATCHLIST",
   "ACTIVE",
   "PROBATION",
   "SUSPENDED",
@@ -78,6 +82,7 @@ const NODE_STATUS_COLORS: Record<string, string> = {
   REJECTED: "#ef4444",
   CONTRACTING: "#6366f1",
   LIVE: "#22c55e",
+  WATCHLIST: "#f97316",
   ACTIVE: "#16a34a",
   PROBATION: "#f97316",
   SUSPENDED: "#ef4444",
@@ -91,11 +96,21 @@ const NODE_PIPELINE_BAR_ORDER = [
   "APPROVED",
   "CONTRACTING",
   "LIVE",
+  "WATCHLIST",
   "ACTIVE",
   "PROBATION",
   "SUSPENDED",
   "OFFBOARDED",
 ] as const;
+
+function formatTerritoryJsonDefault(v: unknown): string {
+  if (v == null) return "";
+  try {
+    return JSON.stringify(v, null, 2);
+  } catch {
+    return "";
+  }
+}
 
 const NODE_PIPELINE_PALETTE = [
   "#6366f1",
@@ -132,6 +147,7 @@ export function NodesConsole({
     region: "",
     city: "",
     jurisdiction: "",
+    vertical: "",
   });
 
   const [saving, setSaving] = useState(false);
@@ -225,12 +241,13 @@ export function NodesConsole({
           region: create.region || null,
           city: create.city || null,
           jurisdiction: create.jurisdiction || null,
+          vertical: create.vertical?.trim() || null,
         }),
       });
       const data = await res.json();
       if (!data?.ok) throw new Error(data?.error ?? t("Create failed."));
       await loadNodes("replace");
-      setCreate({ name: "", type: "CITY", status: "SUBMITTED", tags: "", region: "", city: "", jurisdiction: "" });
+      setCreate({ name: "", type: "CITY", status: "SUBMITTED", tags: "", region: "", city: "", jurisdiction: "", vertical: "" });
       setShowForm(false);
     } catch (e: any) {
       setError(e?.message ?? t("Create failed."));
@@ -239,7 +256,7 @@ export function NodesConsole({
     }
   }
 
-  async function onSave(patch: Partial<NodeRow>) {
+  async function onSave(patch: Partial<NodeRow> & { territoryJson?: Record<string, unknown> | null }) {
     if (!selected) return;
     setError(null);
     setSaving(true);
@@ -296,7 +313,8 @@ export function NodesConsole({
         r.type.toLowerCase().includes(q) ||
         (r.region ?? "").toLowerCase().includes(q) ||
         (r.city ?? "").toLowerCase().includes(q) ||
-        (r.jurisdiction ?? "").toLowerCase().includes(q),
+        (r.jurisdiction ?? "").toLowerCase().includes(q) ||
+        (r.vertical ?? "").toLowerCase().includes(q),
     );
   }, [rows, search]);
 
@@ -427,6 +445,14 @@ export function NodesConsole({
                 />
               </label>
             </div>
+            <label className="field">
+              <span className="label">{t("Vertical / industry track")}</span>
+              <input
+                value={create.vertical ?? ""}
+                onChange={(e) => setCreate((s) => ({ ...s, vertical: e.target.value }))}
+                placeholder={t("e.g. DeFi, RWA")}
+              />
+            </label>
             <button className="button" type="button" disabled={creating || !create.name.trim()} onClick={onCreate}>
               {creating ? t("Creating...") : t("Create")}
             </button>
@@ -519,7 +545,8 @@ export function NodesConsole({
                             : r.status === "SUBMITTED" ||
                                 r.status === "UNDER_REVIEW" ||
                                 r.status === "CONTRACTING" ||
-                                r.status === "PROBATION"
+                                r.status === "PROBATION" ||
+                                r.status === "WATCHLIST"
                               ? "status-dot-amber"
                               : ""
                       }`}
@@ -537,6 +564,7 @@ export function NodesConsole({
                         {r.type} · L{r.level}
                         {r.region ? ` · ${r.region}` : ""}
                         {r.city ? ` · ${r.city}` : ""}
+                        {r.vertical ? ` · ${r.vertical}` : ""}
                       </div>
                     </div>
                     <StatusBadge status={r.status} />
@@ -650,6 +678,49 @@ export function NodesConsole({
                     />
                   </label>
                 </div>
+                <label className="field">
+                  <span className="label">{t("Vertical")}</span>
+                  <input
+                    key={selected.id + "vtx"}
+                    defaultValue={selected.vertical ?? ""}
+                    readOnly={readOnly}
+                    disabled={readOnly}
+                    onBlur={readOnly ? undefined : (e) => onSave({ vertical: e.target.value.trim() || null })}
+                  />
+                </label>
+                <label className="field">
+                  <span className="label">{t("Territory JSON")}</span>
+                  <span className="muted text-xs block mb-4">{t("PRD territory object: region, scope, exclusivity, protectedAccounts")}</span>
+                  <textarea
+                    key={selected.id + "terr"}
+                    rows={4}
+                    className="font-mono text-sm"
+                    defaultValue={formatTerritoryJsonDefault(selected.territoryJson)}
+                    readOnly={readOnly}
+                    disabled={readOnly}
+                    onBlur={
+                      readOnly
+                        ? undefined
+                        : (e) => {
+                            const raw = e.target.value.trim();
+                            if (!raw) {
+                              void onSave({ territoryJson: null });
+                              return;
+                            }
+                            try {
+                              const parsed = JSON.parse(raw) as unknown;
+                              if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+                                setError(t("Territory must be a JSON object."));
+                                return;
+                              }
+                              void onSave({ territoryJson: parsed as Record<string, unknown> });
+                            } catch {
+                              setError(t("Invalid JSON for territory."));
+                            }
+                          }
+                    }
+                  />
+                </label>
                 <label className="field">
                   <span className="label">{t("Level")}</span>
                   <input

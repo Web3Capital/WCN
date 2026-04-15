@@ -45,7 +45,7 @@ const CHART_COLORS = ["#6366f1", "#8b5cf6", "#a78bfa", "#c4b5fd", "#e0e7ff"];
 const NODE_COLORS: Record<string, string> = {
   LIVE: "#22c55e", APPROVED: "#22c55e", SUBMITTED: "#f59e0b", UNDER_REVIEW: "#f59e0b",
   SUSPENDED: "#ef4444", OFFBOARDED: "#ef4444", REJECTED: "#ef4444", DRAFT: "#94a3b8",
-  CONTRACTING: "#a855f7", PROBATION: "#f59e0b", NEED_MORE_INFO: "#eab308",
+  CONTRACTING: "#a855f7", PROBATION: "#f59e0b", NEED_MORE_INFO: "#eab308", WATCHLIST: "#f97316",
 };
 
 const DEAL_COLORS: Record<string, string> = {

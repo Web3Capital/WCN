@@ -15,6 +15,8 @@ type NodeData = {
   region: string | null;
   city: string | null;
   jurisdiction: string | null;
+  vertical: string | null;
+  territoryJson: unknown | null;
   description: string | null;
   tags: string[];
   entityName: string | null;
@@ -39,7 +41,7 @@ type NodeData = {
 
 const LIFECYCLE = [
   "DRAFT", "SUBMITTED", "UNDER_REVIEW", "NEED_MORE_INFO", "APPROVED",
-  "CONTRACTING", "LIVE", "PROBATION", "SUSPENDED", "OFFBOARDED", "REJECTED",
+  "CONTRACTING", "LIVE", "WATCHLIST", "PROBATION", "SUSPENDED", "OFFBOARDED", "REJECTED",
 ];
 
 export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean }) {
@@ -72,6 +74,7 @@ export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean
     node.type.replace(/_/g, " "),
     `L${node.level}`,
     [node.region, node.city].filter(Boolean).join(" · ") || null,
+    node.vertical || null,
   ].filter(Boolean) as string[];
 
   return (
@@ -102,6 +105,15 @@ export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean
             {node.region && <div><span className="muted">{t("Region:")}</span> {node.region}</div>}
             {node.city && <div><span className="muted">{t("City:")}</span> {node.city}</div>}
             {node.jurisdiction && <div><span className="muted">{t("Jurisdiction:")}</span> {node.jurisdiction}</div>}
+            {node.vertical && <div><span className="muted">{t("Vertical:")}</span> {node.vertical}</div>}
+            {node.territoryJson != null && typeof node.territoryJson === "object" && (
+              <div>
+                <span className="muted">{t("Territory:")}</span>
+                <pre className="mt-4 mb-0 p-8 text-xs font-mono overflow-auto" style={{ maxHeight: 160, background: "var(--bg-elev)" }}>
+                  {JSON.stringify(node.territoryJson, null, 2)}
+                </pre>
+              </div>
+            )}
             {node.entityName && <div><span className="muted">{t("Entity:")}</span> {node.entityName} {node.entityType ? `(${node.entityType})` : ""}</div>}
             {node.contactName && <div><span className="muted">{t("Contact:")}</span> {node.contactName}</div>}
             {node.contactEmail && <div><span className="muted">{t("Email:")}</span> {node.contactEmail}</div>}

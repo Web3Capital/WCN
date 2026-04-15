@@ -8,7 +8,7 @@ Six roles in the registry: `GLOBAL`, `REGION`, `CITY`, `INDUSTRY`, `FUNCTIONAL`,
 
 ## Lifecycle (`NodeStatus`)
 
-Includes full onboarding and operations path plus legacy `ACTIVE`. Group for UX: draft → review → contract/live → probation → suspend/offboard.
+Includes full onboarding and operations path plus legacy `ACTIVE`. PRD v1.0 adds **`WATCHLIST`** (operational monitoring between Live and Suspended). `CONTRACTING` may transition to **`PROBATION`** or **`LIVE`**. Group for UX: draft → review → contract → live / probation → watchlist → suspend/offboard.
 
 ## Console surfaces
 
