@@ -453,6 +453,7 @@
     "items": {
       "myWorkspace": "工作台",
       "nodes": "节点",
+      "nodeReviewQueue": "节点审核台",
       "projects": "项目",
       "capital": "资本",
       "dealRoom": "交易协作",
@@ -484,6 +485,16 @@
       "accountSettings": "账户设置",
       "siteHome": "官网首页",
       "signOut": "退出登录"
+    },
+    "reviewQueue": {
+      "kpiTotal": "审核队列中",
+      "kpiSubmitted": "已提交",
+      "kpiUnderReview": "审核中",
+      "kpiNeedInfo": "待补充资料",
+      "filterAll": "全部阶段",
+      "openNode": "打开节点",
+      "openReview": "审核",
+      "empty": "当前没有处于这些审核阶段的节点。"
     },
     "search": {
       "placeholder": "搜索节点、项目、交易、任务…"
@@ -524,6 +535,7 @@
     },
     "breadcrumbSegment": {
       "nodes": "节点",
+      "review-queue": "审核台",
       "projects": "项目",
       "capital": "资本",
       "deals": "交易",

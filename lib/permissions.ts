@@ -245,6 +245,11 @@ export function isAdminRole(role: Role): boolean {
   return ADMIN_ROLES.has(role);
 }
 
+/** Node Review Queue (`/dashboard/nodes/review-queue`) — ops + risk + reviewer. */
+export function canAccessNodeReviewQueue(role: Role): boolean {
+  return role === "FOUNDER" || role === "ADMIN" || role === "REVIEWER" || role === "RISK_DESK";
+}
+
 export function requiresTwoFactor(role: Role): boolean {
   return HIGH_PRIV_ROLES.has(role);
 }

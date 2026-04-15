@@ -453,6 +453,7 @@
     "items": {
       "myWorkspace": "Workspace",
       "nodes": "Nodes",
+      "nodeReviewQueue": "Node review queue",
       "projects": "Projects",
       "capital": "Capital",
       "dealRoom": "Deal Room",
@@ -484,6 +485,16 @@
       "accountSettings": "Account settings",
       "siteHome": "Marketing site",
       "signOut": "Sign out"
+    },
+    "reviewQueue": {
+      "kpiTotal": "In review queue",
+      "kpiSubmitted": "Submitted",
+      "kpiUnderReview": "Under review",
+      "kpiNeedInfo": "Need more info",
+      "filterAll": "All stages",
+      "openNode": "Open node",
+      "openReview": "Review",
+      "empty": "No nodes are currently in these review stages."
     },
     "search": {
       "placeholder": "Search nodes, projects, deals, tasks…"
@@ -524,6 +535,7 @@
     },
     "breadcrumbSegment": {
       "nodes": "Nodes",
+      "review-queue": "Review queue",
       "projects": "Projects",
       "capital": "Capital",
       "deals": "Deals",

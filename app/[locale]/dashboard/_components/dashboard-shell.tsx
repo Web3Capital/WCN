@@ -20,6 +20,7 @@ import {
   Landmark,
   LayoutDashboard,
   ListChecks,
+  ListFilter,
   ListTodo,
   Bell,
   LogOut,
@@ -44,7 +45,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { Link, useRouter } from "@/i18n/routing";
 
 type GroupTitleKey = "overview" | "network" | "work" | "verification" | "intelligence" | "admin" | "ecosystem" | "platform";
-type ItemLabelKey = "myWorkspace" | "nodes" | "projects" | "capital" | "dealRoom" | "matches" | "tasks" | "agents" | "evidenceDesk" | "pobRecords" | "disputes" | "settlement" | "dataCockpit" | "riskConsole" | "reputation" | "approvals" | "applications" | "users" | "invites" | "auditLog" | "proposals" | "campaigns" | "apiKeys" | "ingestion";
+type ItemLabelKey = "myWorkspace" | "nodes" | "nodeReviewQueue" | "projects" | "capital" | "dealRoom" | "matches" | "tasks" | "agents" | "evidenceDesk" | "pobRecords" | "disputes" | "settlement" | "dataCockpit" | "riskConsole" | "reputation" | "approvals" | "applications" | "users" | "invites" | "auditLog" | "proposals" | "campaigns" | "apiKeys" | "ingestion";
 
 type NavDef = {
   titleKey: GroupTitleKey;
@@ -62,6 +63,12 @@ const GROUP_DEFS: NavDef[] = [
     titleKey: "network",
     items: [
       { href: "/dashboard/nodes", labelKey: "nodes", icon: <Network size={18} strokeWidth={2} /> },
+      {
+        href: "/dashboard/nodes/review-queue",
+        labelKey: "nodeReviewQueue",
+        icon: <ListFilter size={18} strokeWidth={2} />,
+        roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK"],
+      },
       { href: "/dashboard/projects", labelKey: "projects", icon: <FolderKanban size={18} strokeWidth={2} /> },
       { href: "/dashboard/capital", labelKey: "capital", icon: <Landmark size={18} strokeWidth={2} /> },
       { href: "/dashboard/matches", labelKey: "matches", icon: <GitCompareArrows size={18} strokeWidth={2} /> },

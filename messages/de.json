@@ -453,6 +453,7 @@
     "items": {
       "myWorkspace": "Arbeitsbereich",
       "nodes": "Knoten",
+      "nodeReviewQueue": "Knoten-Prüfwarteschlange",
       "projects": "Projekte",
       "capital": "Kapital",
       "dealRoom": "Deal Room",
@@ -475,6 +476,16 @@
       "campaigns": "Kampagnen",
       "apiKeys": "API Keys",
       "ingestion": "Datenaufnahme"
+    },
+    "reviewQueue": {
+      "kpiTotal": "In Prüfwarteschlange",
+      "kpiSubmitted": "Eingereicht",
+      "kpiUnderReview": "In Prüfung",
+      "kpiNeedInfo": "Weitere Infos nötig",
+      "filterAll": "Alle Phasen",
+      "openNode": "Knoten öffnen",
+      "openReview": "Prüfen",
+      "empty": "Keine Knoten in diesen Prüfphasen."
     },
     "account": {
       "menuAria": "Kontomenü",
@@ -524,6 +535,7 @@
     },
     "breadcrumbSegment": {
       "nodes": "Knoten",
+      "review-queue": "Prüfwarteschlange",
       "projects": "Projekte",
       "capital": "Kapital",
       "deals": "Deals",

@@ -453,6 +453,7 @@
     "items": {
       "myWorkspace": "Рабочее пространство",
       "nodes": "Узлы",
+      "nodeReviewQueue": "Очередь проверки узлов",
       "projects": "Проекты",
       "capital": "Капитал",
       "dealRoom": "Комната сделок",
@@ -475,6 +476,16 @@
       "campaigns": "Кампании",
       "apiKeys": "API-ключи",
       "ingestion": "Загрузка данных"
+    },
+    "reviewQueue": {
+      "kpiTotal": "В очереди проверки",
+      "kpiSubmitted": "Подано",
+      "kpiUnderReview": "На проверке",
+      "kpiNeedInfo": "Нужна информация",
+      "filterAll": "Все этапы",
+      "openNode": "Открыть узел",
+      "openReview": "Проверка",
+      "empty": "Нет узлов на этих этапах проверки."
     },
     "account": {
       "menuAria": "Меню аккаунта",
@@ -524,6 +535,7 @@
     },
     "breadcrumbSegment": {
       "nodes": "Узлы",
+      "review-queue": "Очередь проверки",
       "projects": "Проекты",
       "capital": "Капитал",
       "deals": "Сделки",

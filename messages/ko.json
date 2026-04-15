@@ -453,6 +453,7 @@
     "items": {
       "myWorkspace": "워크스페이스",
       "nodes": "노드",
+      "nodeReviewQueue": "노드 심사 대기열",
       "projects": "프로젝트",
       "capital": "자본",
       "dealRoom": "딜룸",
@@ -475,6 +476,16 @@
       "campaigns": "캠페인",
       "apiKeys": "API 키",
       "ingestion": "데이터 수집"
+    },
+    "reviewQueue": {
+      "kpiTotal": "심사 대기열",
+      "kpiSubmitted": "제출됨",
+      "kpiUnderReview": "심사 중",
+      "kpiNeedInfo": "추가 정보 필요",
+      "filterAll": "모든 단계",
+      "openNode": "노드 열기",
+      "openReview": "심사",
+      "empty": "이 심사 단계에 있는 노드가 없습니다."
     },
     "account": {
       "menuAria": "계정 메뉴",
@@ -524,6 +535,7 @@
     },
     "breadcrumbSegment": {
       "nodes": "노드",
+      "review-queue": "심사 대기열",
       "projects": "프로젝트",
       "capital": "자본",
       "deals": "딜",

@@ -453,6 +453,7 @@
     "items": {
       "myWorkspace": "ワークスペース",
       "nodes": "ノード",
+      "nodeReviewQueue": "ノード審査キュー",
       "projects": "プロジェクト",
       "capital": "資本",
       "dealRoom": "ディールルーム",
@@ -475,6 +476,16 @@
       "campaigns": "キャンペーン",
       "apiKeys": "APIキー",
       "ingestion": "データ取り込み"
+    },
+    "reviewQueue": {
+      "kpiTotal": "審査キュー内",
+      "kpiSubmitted": "提出済み",
+      "kpiUnderReview": "審査中",
+      "kpiNeedInfo": "追加情報が必要",
+      "filterAll": "すべての段階",
+      "openNode": "ノードを開く",
+      "openReview": "審査",
+      "empty": "これらの審査段階にあるノードはありません。"
     },
     "account": {
       "menuAria": "アカウントメニュー",
@@ -524,6 +535,7 @@
     },
     "breadcrumbSegment": {
       "nodes": "ノード",
+      "review-queue": "審査キュー",
       "projects": "プロジェクト",
       "capital": "資本",
       "deals": "ディール",

@@ -453,6 +453,7 @@
     "items": {
       "myWorkspace": "مساحة العمل",
       "nodes": "العقد",
+      "nodeReviewQueue": "قائمة انتظار مراجعة العقد",
       "projects": "المشاريع",
       "capital": "رأس المال",
       "dealRoom": "غرفة الصفقات",
@@ -475,6 +476,16 @@
       "campaigns": "الحملات",
       "apiKeys": "مفاتيح API",
       "ingestion": "استيعاب البيانات"
+    },
+    "reviewQueue": {
+      "kpiTotal": "في قائمة المراجعة",
+      "kpiSubmitted": "مُرسَل",
+      "kpiUnderReview": "قيد المراجعة",
+      "kpiNeedInfo": "بحاجة لمزيد من المعلومات",
+      "filterAll": "كل المراحل",
+      "openNode": "فتح العقدة",
+      "openReview": "مراجعة",
+      "empty": "لا توجد عقد في مراحل المراجعة هذه."
     },
     "account": {
       "menuAria": "قائمة الحساب",
@@ -524,6 +535,7 @@
     },
     "breadcrumbSegment": {
       "nodes": "العقد",
+      "review-queue": "قائمة المراجعة",
       "projects": "المشاريع",
       "capital": "رأس المال",
       "deals": "الصفقات",

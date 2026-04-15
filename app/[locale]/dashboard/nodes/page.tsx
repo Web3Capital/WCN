@@ -4,7 +4,8 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { NodesConsole } from "./ui";
 import { redactNodeForMember } from "@/lib/member-redact";
-import { isAdminRole } from "@/lib/permissions";
+import { isAdminRole, canAccessNodeReviewQueue } from "@/lib/permissions";
+import { Link } from "@/i18n/routing";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
@@ -47,6 +48,15 @@ export default async function NodesPage() {
         <p className="muted">
           <T>Create, review, and manage network nodes, lifecycle, and operations.</T>
         </p>
+        {canAccessNodeReviewQueue(session.user.role) ? (
+          <p className="muted text-sm mt-8">
+            <Link href="/dashboard/nodes/review-queue" className="font-medium" style={{ color: "var(--accent)" }}>
+              <T>Open node review queue</T>
+            </Link>
+            <span className="mx-8">·</span>
+            <T>Submitted, under review, and need-more-info nodes.</T>
+          </p>
+        ) : null}
         <NodesConsole
           initial={safeNodes}
           readOnly={!isAdmin}

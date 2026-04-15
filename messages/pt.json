@@ -453,6 +453,7 @@
     "items": {
       "myWorkspace": "Workspace",
       "nodes": "Nós",
+      "nodeReviewQueue": "Fila de revisão de nós",
       "projects": "Projetos",
       "capital": "Capital",
       "dealRoom": "Sala de deals",
@@ -475,6 +476,16 @@
       "campaigns": "Campanhas",
       "apiKeys": "Chaves de API",
       "ingestion": "Ingestão de dados"
+    },
+    "reviewQueue": {
+      "kpiTotal": "Na fila de revisão",
+      "kpiSubmitted": "Enviados",
+      "kpiUnderReview": "Em revisão",
+      "kpiNeedInfo": "Precisa de mais informações",
+      "filterAll": "Todas as etapas",
+      "openNode": "Abrir nó",
+      "openReview": "Revisar",
+      "empty": "Não há nós nestas etapas de revisão."
     },
     "account": {
       "menuAria": "Menu da conta",
@@ -524,6 +535,7 @@
     },
     "breadcrumbSegment": {
       "nodes": "Nós",
+      "review-queue": "Fila de revisão",
       "projects": "Projetos",
       "capital": "Capital",
       "deals": "Negócios",
