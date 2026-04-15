@@ -1,5 +1,7 @@
 # Node system (WCN)
 
+> **Product baseline:** [Node Network System PRD v1.0](../prd/node-network-system-prd-v1.md)（组织定位、模块、状态机、与其他系统关系、研发 Waves）。本页偏**当前实现**与 API/UI 行为。
+
 ## Types (`NodeType`)
 
 Six roles in the registry: `GLOBAL`, `REGION`, `CITY`, `INDUSTRY`, `FUNCTIONAL`, `AGENT`. They describe network position and capability, not mutually exclusive account types.
@@ -25,4 +27,4 @@ Includes full onboarding and operations path plus legacy `ACTIVE`. Group for UX:
 
 ## UI shell
 
-Align with other dashboard modules: `dashboard-page`, `container-wide`, eyebrow, `StatCard` KPI row, `ReadOnlyInlineStrip` for members, `apps-layout` for master–detail on the registry.
+Align with **Capital** dashboard patterns: `dashboard-page`, `container-wide`, `Network` eyebrow, `StatCard` KPI row (`grid-4 mb-16`), admin status charts, `FilterToolbar` + search + list/pipeline views, amber read-only card for members; registry uses `apps-layout` master–detail; detail uses `DetailLayout` without duplicate eyebrow (see capital detail shell).

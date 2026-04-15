@@ -1,5 +1,7 @@
 # PRD-02: Node Management System
 
+> **Note:** 战略与 v1.0 口径以 **[Node Network System PRD v1.0](./node-network-system-prd-v1.md)** 为准；本文档为早期草案，保留作历史用户故事与字段参考，后续与 v1.0 对齐时以合并/废弃标记更新。
+
 > Status: Draft | Priority: P0 — Core | Owner: CTO Office
 > Dependencies: PRD-01 (Identity & Permission)
 > Affects: PRD-04 to PRD-18 (all business systems)
