@@ -12,14 +12,29 @@ export const dynamic = "force-dynamic";
 
 
 export const metadata = dashboardMeta("Nodes", "Manage network nodes");
+
+const LIST_LIMIT = 100;
+
 export default async function NodesPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
   const isAdmin = isAdminRole(session.user.role);
 
   const prisma = getPrisma();
-  const nodes = await prisma.node.findMany({ orderBy: { createdAt: "desc" }, take: 200 });
-  const safeNodes = isAdmin ? nodes : nodes.map(redactNodeForMember);
+  const [statusGroups, rawNodes] = await Promise.all([
+    prisma.node.groupBy({ by: ["status"], _count: true }),
+    prisma.node.findMany({
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      take: LIST_LIMIT + 1,
+      include: { owner: { select: { id: true, name: true, email: true } } },
+    }),
+  ]);
+
+  const hasMore = rawNodes.length > LIST_LIMIT;
+  const pageNodes = hasMore ? rawNodes.slice(0, LIST_LIMIT) : rawNodes;
+  const nextCursor = hasMore ? pageNodes[pageNodes.length - 1]!.id : null;
+  const statusCounts = Object.fromEntries(statusGroups.map((g) => [g.status, g._count]));
+  const safeNodes = isAdmin ? pageNodes : pageNodes.map(redactNodeForMember);
 
   return (
     <div className="dashboard-page section">
@@ -30,7 +45,16 @@ export default async function NodesPage() {
           <T>Create, review, and manage nodes.</T>
         </p>
         <div style={{ marginTop: 24 }}>
-          <NodesConsole initial={safeNodes} readOnly={!isAdmin} />
+          <NodesConsole
+            initial={safeNodes}
+            readOnly={!isAdmin}
+            initialMeta={{
+              nextCursor,
+              hasMore,
+              limit: LIST_LIMIT,
+              statusCounts,
+            }}
+          />
         </div>
       </div>
     </div>

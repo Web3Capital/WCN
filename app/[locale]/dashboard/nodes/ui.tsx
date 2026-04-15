@@ -1,10 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@/i18n/routing";
 import { Network, Radio, Clock, AlertCircle } from "lucide-react";
 import { StatusBadge, FormCard, EmptyState, StatCard, ReadOnlyInlineStrip } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+
+export type NodesConsoleInitialMeta = {
+  nextCursor: string | null;
+  hasMore: boolean;
+  limit: number;
+  statusCounts: Record<string, number>;
+};
 
 type NodeRow = {
   id: string;
@@ -25,9 +32,18 @@ const NODE_TYPES = ["GLOBAL", "REGION", "CITY", "INDUSTRY", "FUNCTIONAL", "AGENT
 const NODE_STATUS = [
   "DRAFT", "SUBMITTED", "UNDER_REVIEW", "NEED_MORE_INFO", "APPROVED",
   "REJECTED", "CONTRACTING", "LIVE", "PROBATION", "SUSPENDED", "OFFBOARDED",
+  "ACTIVE",
 ] as const;
 
-export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]; readOnly?: boolean }) {
+export function NodesConsole({
+  initial,
+  readOnly = false,
+  initialMeta,
+}: {
+  initial: NodeRow[];
+  readOnly?: boolean;
+  initialMeta?: NodesConsoleInitialMeta;
+}) {
   const { t } = useAutoTranslate();
   const [rows, setRows] = useState<NodeRow[]>(initial);
   const [selectedId, setSelectedId] = useState<string | null>(rows[0]?.id ?? null);
@@ -47,15 +63,73 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadingList, setLoadingList] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("");
+  const [typeFilter, setTypeFilter] = useState("");
+  const [regionFilter, setRegionFilter] = useState("");
+  const [nextCursor, setNextCursor] = useState<string | null>(initialMeta?.nextCursor ?? null);
+  const [hasMoreList, setHasMoreList] = useState(initialMeta?.hasMore ?? false);
+  const [catalogCounts, setCatalogCounts] = useState<Record<string, number>>(initialMeta?.statusCounts ?? {});
 
-  async function refresh() {
-    const res = await fetch("/api/nodes", { cache: "no-store" });
-    const data = await res.json();
-    if (!data?.ok) throw new Error(data?.error ?? t("Failed to load nodes."));
-    const list = data.data ?? [];
-    setRows(list);
-    if (!selectedId && list[0]?.id) setSelectedId(list[0].id);
-  }
+  const listLimit = initialMeta?.limit ?? 100;
+
+  const loadNodes = useCallback(
+    async (mode: "replace" | "append", cursorForAppend: string | null = null) => {
+      setLoadingList(true);
+      setError(null);
+      try {
+        const params = new URLSearchParams();
+        params.set("limit", String(listLimit));
+        params.set("includeCounts", "1");
+        if (statusFilter) params.set("status", statusFilter);
+        if (typeFilter) params.set("type", typeFilter);
+        if (regionFilter.trim()) params.set("region", regionFilter.trim());
+        if (mode === "append" && cursorForAppend) params.set("cursor", cursorForAppend);
+
+        const res = await fetch(`/api/nodes?${params}`, { cache: "no-store" });
+        const data = await res.json();
+        if (!data?.ok) throw new Error(data?.error ?? t("Failed to load nodes."));
+
+        const payload = data.data as {
+          nodes?: NodeRow[];
+          meta?: { nextCursor?: string | null; hasMore?: boolean; limit?: number };
+          statusCounts?: Record<string, number>;
+        };
+        const list = Array.isArray(payload?.nodes) ? payload.nodes : [];
+        if (payload?.statusCounts) setCatalogCounts(payload.statusCounts);
+        const meta = payload?.meta;
+        setNextCursor(meta?.nextCursor ?? null);
+        setHasMoreList(meta?.hasMore ?? false);
+
+        if (mode === "append") {
+          setRows((prev) => {
+            const ids = new Set(prev.map((r) => r.id));
+            return [...prev, ...list.filter((r) => !ids.has(r.id))];
+          });
+        } else {
+          setRows(list);
+          setSelectedId((sid) => {
+            if (sid && list.some((r) => r.id === sid)) return sid;
+            return list[0]?.id ?? null;
+          });
+        }
+      } catch (e: any) {
+        setError(e?.message ?? t("Failed to load nodes."));
+      } finally {
+        setLoadingList(false);
+      }
+    },
+    [listLimit, regionFilter, statusFilter, typeFilter, t],
+  );
+
+  const skipFilterEffect = useRef(true);
+  useEffect(() => {
+    if (skipFilterEffect.current) {
+      skipFilterEffect.current = false;
+      return;
+    }
+    void loadNodes("replace");
+  }, [statusFilter, typeFilter, loadNodes]);
 
   async function onCreate() {
     setError(null);
@@ -80,7 +154,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
       });
       const data = await res.json();
       if (!data?.ok) throw new Error(data?.error ?? t("Create failed."));
-      await refresh();
+      await loadNodes("replace");
       setCreate({ name: "", type: "CITY", status: "SUBMITTED", tags: "", region: "", city: "", jurisdiction: "" });
       setShowForm(false);
     } catch (e: any) {
@@ -102,7 +176,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
       });
       const data = await res.json();
       if (!data?.ok) throw new Error(data?.error ?? t("Save failed."));
-      await refresh();
+      await loadNodes("replace");
     } catch (e: any) {
       setError(e?.message ?? t("Save failed."));
     } finally {
@@ -111,21 +185,85 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
   }
 
   const nodeKpis = useMemo(() => {
+    const keys = Object.keys(catalogCounts);
+    if (keys.length > 0) {
+      const total = keys.reduce((s, k) => s + (catalogCounts[k] ?? 0), 0);
+      const live = catalogCounts.LIVE ?? 0;
+      const inReview =
+        (catalogCounts.SUBMITTED ?? 0) + (catalogCounts.UNDER_REVIEW ?? 0) + (catalogCounts.NEED_MORE_INFO ?? 0);
+      const suspended = (catalogCounts.SUSPENDED ?? 0) + (catalogCounts.OFFBOARDED ?? 0);
+      return {
+        mode: "catalog" as const,
+        total,
+        live,
+        inReview,
+        suspended,
+        pageCount: rows.length,
+      };
+    }
     const live = rows.filter((r) => r.status === "LIVE").length;
     const inReview = rows.filter((r) => ["SUBMITTED", "UNDER_REVIEW", "NEED_MORE_INFO"].includes(r.status)).length;
     const suspended = rows.filter((r) => r.status === "SUSPENDED" || r.status === "OFFBOARDED").length;
-    return { total: rows.length, live, inReview, suspended };
-  }, [rows]);
+    return { mode: "page" as const, total: rows.length, live, inReview, suspended, pageCount: rows.length };
+  }, [catalogCounts, rows]);
+
+  const totalCardSub =
+    nodeKpis.mode === "catalog" && nodeKpis.pageCount !== nodeKpis.total
+      ? t("{{n}} on this page").replace("{{n}}", String(nodeKpis.pageCount))
+      : undefined;
 
   return (
     <div className="flex flex-col gap-16">
       <div className="grid-4 gap-12">
-        <StatCard label={t("Total nodes")} value={nodeKpis.total} icon={<Network size={18} />} />
+        <StatCard label={t("Total nodes")} value={nodeKpis.total} sub={totalCardSub} icon={<Network size={18} />} />
         <StatCard label={t("Live")} value={nodeKpis.live} icon={<Radio size={18} />} />
         <StatCard label={t("In review")} value={nodeKpis.inReview} icon={<Clock size={18} />} />
         <StatCard label={t("Suspended / offboarded")} value={nodeKpis.suspended} icon={<AlertCircle size={18} />} />
       </div>
       {readOnly ? <ReadOnlyInlineStrip /> : null}
+
+      <div className="flex flex-wrap items-end gap-12">
+        <label className="field" style={{ minWidth: 160 }}>
+          <span className="label">{t("Status")}</span>
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+            }}
+          >
+            <option value="">{t("All")}</option>
+            {NODE_STATUS.map((s) => (
+              <option key={s} value={s}>
+                {s.replace(/_/g, " ")}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="field" style={{ minWidth: 160 }}>
+          <span className="label">{t("Type")}</span>
+          <select
+            value={typeFilter}
+            onChange={(e) => {
+              setTypeFilter(e.target.value);
+            }}
+          >
+            <option value="">{t("All")}</option>
+            {NODE_TYPES.map((tp) => (
+              <option key={tp} value={tp}>
+                {tp}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="field" style={{ minWidth: 140, flex: "1 1 160px" }}>
+          <span className="label">{t("Region")}</span>
+          <input value={regionFilter} onChange={(e) => setRegionFilter(e.target.value)} placeholder={t("Filter…")} />
+        </label>
+        <button className="button-secondary" type="button" disabled={loadingList} onClick={() => loadNodes("replace")}>
+          {loadingList ? t("Loading...") : t("Apply filters")}
+        </button>
+      </div>
+
     <div className="apps-layout">
       <div>
         {!readOnly ? (
@@ -187,7 +325,7 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
         ) : null}
 
         <div className="pill mb-10">
-          {t("Nodes")} ({rows.length})
+          {t("Nodes")} ({rows.length}){hasMoreList ? ` · ${t("more available")}` : ""}
         </div>
         <div className="apps-list">
           {rows.map((r) => {
@@ -216,6 +354,16 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
             );
           })}
         </div>
+        {hasMoreList && nextCursor ? (
+          <button
+            className="button-secondary mt-12"
+            type="button"
+            disabled={loadingList}
+            onClick={() => loadNodes("append", nextCursor)}
+          >
+            {loadingList ? t("Loading...") : t("Load more")}
+          </button>
+        ) : null}
       </div>
 
       <div>
@@ -319,8 +467,8 @@ export function NodesConsole({ initial, readOnly = false }: { initial: NodeRow[]
                 onBlur={readOnly ? undefined : (e) => onSave({ level: Number(e.target.value) })}
               />
             </label>
-            <button className="button-secondary" type="button" disabled={saving} onClick={() => refresh()}>
-              {saving ? t("Saving...") : t("Refresh")}
+            <button className="button-secondary" type="button" disabled={loadingList} onClick={() => loadNodes("replace")}>
+              {loadingList ? t("Loading...") : t("Refresh")}
             </button>
             {error ? <p className="form-error">{error}</p> : null}
           </div>

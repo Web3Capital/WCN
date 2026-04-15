@@ -8,6 +8,10 @@ import { apiOk, apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/ap
 import { parseBody, createNodeSchema } from "@/lib/core/validation";
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
+import { buildNodeListFilters, buildNodeListWhere } from "./list-where";
+
+const DEFAULT_LIST_LIMIT = 100;
+const MAX_LIST_LIMIT = 200;
 
 export async function GET(req: Request) {
   const auth = await requireSignedIn();
@@ -19,21 +23,48 @@ export async function GET(req: Request) {
   const status = searchParams.get("status");
   const type = searchParams.get("type");
   const region = searchParams.get("region");
+  const cursorId = searchParams.get("cursor");
+  const includeCounts = searchParams.get("includeCounts") === "1";
+  const limitRaw = parseInt(searchParams.get("limit") || String(DEFAULT_LIST_LIMIT), 10);
+  const limit = Math.min(MAX_LIST_LIMIT, Math.max(1, Number.isFinite(limitRaw) ? limitRaw : DEFAULT_LIST_LIMIT));
 
-  const where: Record<string, unknown> = {};
-  if (status) where.status = status;
-  if (type) where.type = type;
-  if (region) where.region = region;
+  let cursorAnchor: { id: string; createdAt: Date } | null = null;
+  if (cursorId) {
+    cursorAnchor = await prisma.node.findUnique({
+      where: { id: cursorId },
+      select: { id: true, createdAt: true },
+    });
+  }
 
-  const nodes = await prisma.node.findMany({
+  const where = buildNodeListWhere({ status, type, region, cursorAnchor });
+
+  const rows = await prisma.node.findMany({
     where,
-    orderBy: { createdAt: "desc" },
-    take: 200,
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    take: limit + 1,
     include: { owner: { select: { id: true, name: true, email: true } } },
   });
 
+  const hasMore = rows.length > limit;
+  const page = hasMore ? rows.slice(0, limit) : rows;
+  const nextCursor = hasMore ? page[page.length - 1]!.id : null;
+
+  const filterOnly = buildNodeListFilters({ status, type, region });
+  let statusCounts: Record<string, number> | undefined;
+  if (includeCounts) {
+    const groups = await prisma.node.groupBy({
+      by: ["status"],
+      where: filterOnly,
+      _count: true,
+    });
+    statusCounts = {};
+    for (const g of groups) statusCounts[g.status] = g._count;
+  }
+
   return apiOk({
-    nodes: isAdmin ? nodes : nodes.map(redactNodeForMember),
+    nodes: isAdmin ? page : page.map(redactNodeForMember),
+    meta: { nextCursor, hasMore, limit },
+    ...(statusCounts ? { statusCounts } : {}),
   });
 }
 

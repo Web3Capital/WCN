@@ -8,7 +8,13 @@
 // ── Node ────────────────────────────────────────────────────────────────────
 
 export function redactNodeForMember<T extends Record<string, any>>(node: T): T {
-  return { ...node, ownerUserId: null };
+  const n = { ...node } as Record<string, unknown>;
+  n.ownerUserId = null;
+  const owner = n.owner as { id?: string; name?: string | null; email?: string | null } | null | undefined;
+  if (owner && typeof owner === "object") {
+    n.owner = { id: owner.id, name: owner.name ?? null, email: null };
+  }
+  return n as T;
 }
 
 // ── Project ─────────────────────────────────────────────────────────────────
