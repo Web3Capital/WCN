@@ -45,3 +45,19 @@ export function buildNodeListWhere(params: {
   if (empty) return seek;
   return { AND: [filters, seek] };
 }
+
+function isEmptyWhere(w: Prisma.NodeWhereInput): boolean {
+  return !w || (typeof w === "object" && !Array.isArray(w) && Object.keys(w as object).length === 0);
+}
+
+/** Combine filters (e.g. list filters + member scope). */
+export function mergeNodeWhere(a: Prisma.NodeWhereInput, b: Prisma.NodeWhereInput): Prisma.NodeWhereInput {
+  if (isEmptyWhere(a)) return b;
+  if (isEmptyWhere(b)) return a;
+  return { AND: [a, b] };
+}
+
+/** Non-admin list: only nodes owned by this user. */
+export function memberOwnedNodesWhere(userId: string): Prisma.NodeWhereInput {
+  return { ownerUserId: userId };
+}

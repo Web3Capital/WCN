@@ -20,6 +20,7 @@ Includes full onboarding and operations path plus legacy `ACTIVE`. Group for UX:
 
 - `GET /api/nodes` returns `{ nodes, meta: { nextCursor, hasMore, limit }, statusCounts? }` with `includeCounts=1` for filtered `groupBy` counts.
 - Non-admins receive `redactNodeForMember` payloads (including redacted `owner.email`).
+- Non-admin **list** and **counts** are scoped to `ownerUserId = current user` (SSR, `GET /api/nodes`, and `cursor` must refer to an owned row). Detail `GET /api/nodes/[id]` still returns a redacted payload for other nodes when permitted by existing rules.
 - `PATCH /api/nodes/[id]` (admin): writes `NODE_STATUS_CHANGE` when status transitions; `NODE_UPDATE` with `metadata.fields` for other patched columns (auto status side-effect timestamps are not duplicated in `NODE_UPDATE`).
 
 ## UI shell

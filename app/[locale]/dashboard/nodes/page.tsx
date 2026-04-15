@@ -21,9 +21,12 @@ export default async function NodesPage() {
   const isAdmin = isAdminRole(session.user.role);
 
   const prisma = getPrisma();
+  const memberListWhere = isAdmin ? undefined : { ownerUserId: session.user.id };
+
   const [statusGroups, rawNodes] = await Promise.all([
-    prisma.node.groupBy({ by: ["status"], _count: true }),
+    prisma.node.groupBy({ by: ["status"], _count: true, ...(memberListWhere ? { where: memberListWhere } : {}) }),
     prisma.node.findMany({
+      ...(memberListWhere ? { where: memberListWhere } : {}),
       orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       take: LIST_LIMIT + 1,
       include: { owner: { select: { id: true, name: true, email: true } } },
@@ -43,6 +46,11 @@ export default async function NodesPage() {
         <h1><T>Node registry</T></h1>
         <p className="muted" style={{ maxWidth: 600 }}>
           <T>Create, review, and manage nodes.</T>
+          {!isAdmin ? (
+            <span className="block mt-8 text-sm">
+              <T>You are viewing only nodes you own.</T>
+            </span>
+          ) : null}
         </p>
         <div style={{ marginTop: 24 }}>
           <NodesConsole

@@ -276,7 +276,7 @@ Accept: application/vnd.wcn.v2+json
 ### Governance (M03)
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
-| GET/POST | /api/approvals | Auth | Approval requests |
+| GET/POST | /api/approvals | Auth | Approval requests (`GET ?aggregate=1` returns status counts) |
 | PATCH | /api/approvals/:id | Admin | Approve/deny |
 | GET/POST | /api/entity-freeze | Admin | Freeze entity |
 | PATCH | /api/entity-freeze/:id | Admin | Unfreeze |
