@@ -5,6 +5,8 @@ interface FilterToolbarProps<T extends string> {
   active: T;
   onChange: (value: T) => void;
   counts?: Partial<Record<T, number>>;
+  /** When set, overrides the default "ALL" / underscore-to-space labels (e.g. i18n stage names). */
+  filterLabels?: Partial<Record<T, string>>;
   totalLabel?: string;
   totalCount?: number;
 }
@@ -14,6 +16,7 @@ export function FilterToolbar<T extends string>({
   active,
   onChange,
   counts,
+  filterLabels,
   totalLabel = "All",
   totalCount,
 }: FilterToolbarProps<T>) {
@@ -22,7 +25,7 @@ export function FilterToolbar<T extends string>({
       <div className="chip-group">
         {filters.map((f) => {
           const isAll = f === "ALL";
-          const label = isAll ? totalLabel : f.replace(/_/g, " ");
+          const label = isAll ? totalLabel : filterLabels?.[f] ?? f.replace(/_/g, " ");
           const count = isAll ? totalCount : counts?.[f];
           return (
             <button

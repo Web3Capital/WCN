@@ -483,9 +483,22 @@
       "kpiUnderReview": "Em revisão",
       "kpiNeedInfo": "Precisa de mais informações",
       "filterAll": "Todas as etapas",
+      "filterSubmitted": "Enviados",
+      "filterUnderReview": "Em revisão",
+      "filterNeedInfo": "Precisa de mais informações",
       "openNode": "Abrir nó",
       "openReview": "Revisar",
-      "empty": "Não há nós nestas etapas de revisão."
+      "empty": "Não há nós nestas etapas de revisão.",
+      "emptyFiltered": "Nenhum nó corresponde ao filtro de etapa ou à pesquisa.",
+      "truncatedNotice": "Apenas os {limit} nós atualizados mais recentemente são carregados. A fila tem {total} nós — refine com a pesquisa ou abra o registo de nós para listas completas.",
+      "searchPlaceholder": "Pesquisar nome, proprietário, região, vertical…",
+      "searchAria": "Filtrar a lista por texto",
+      "sortLabel": "Ordenar",
+      "sortUpdatedDesc": "Última atualização (mais recente)",
+      "sortUpdatedAsc": "Última atualização (mais antiga)",
+      "sortNameAsc": "Nome (A–Z)",
+      "resultsLine": "{visible} mostrados · {loaded} carregados · {total} na fila",
+      "listHeading": "Nós na fila de revisão"
     },
     "account": {
       "menuAria": "Menu da conta",

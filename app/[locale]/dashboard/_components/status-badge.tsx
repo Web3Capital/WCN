@@ -6,6 +6,7 @@ const COLORS: Record<string, string> = {
 
   PENDING: "badge-amber", DRAFT: "badge-amber", REVIEWING: "badge-amber", GENERATED: "badge-amber",
   SUBMITTED: "badge-amber", RUNNING: "badge-amber", IN_PROGRESS: "badge-amber", WATCHLIST: "badge-amber",
+  UNDER_REVIEW: "badge-purple", NEED_MORE_INFO: "badge-accent",
   WAITING_REVIEW: "badge-amber", OPEN: "badge-amber", PROSPECT: "badge-amber",
   PENDING_REVIEW: "badge-amber", CREATED: "badge-amber",
 

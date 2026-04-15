@@ -13,7 +13,7 @@ Includes full onboarding and operations path plus legacy `ACTIVE`. PRD v1.0 adds
 ## Console surfaces
 
 1. **Registry** — `/dashboard/nodes`: list, filters, KPIs (catalog counts from `groupBy` when available), load-more pagination.
-2. **Review queue** — `/dashboard/nodes/review-queue`: nodes in `SUBMITTED`, `UNDER_REVIEW`, `NEED_MORE_INFO` (Founder / Admin / Reviewer / Risk desk); links to detail and per-node review.
+2. **Review queue** — `/dashboard/nodes/review-queue`: nodes in `SUBMITTED`, `UNDER_REVIEW`, `NEED_MORE_INFO` (Founder / Admin / Reviewer / Risk desk). KPI **total** uses `count` (not row cap); list loads the newest **300** by `updatedAt` with a banner when `total > 300`. Client: stage chips with i18n labels, text search (name / owner / region / vertical / id), sort (updated or name), locale-formatted timestamps, link back to registry.
 3. **Detail** — `/dashboard/nodes/[id]`
 4. **Onboarding** — `/dashboard/nodes/[id]/onboarding`
 5. **Billing** — `/dashboard/nodes/[id]/billing`

@@ -483,9 +483,22 @@
       "kpiUnderReview": "قيد المراجعة",
       "kpiNeedInfo": "بحاجة لمزيد من المعلومات",
       "filterAll": "كل المراحل",
+      "filterSubmitted": "مُرسَل",
+      "filterUnderReview": "قيد المراجعة",
+      "filterNeedInfo": "بحاجة لمزيد من المعلومات",
       "openNode": "فتح العقدة",
       "openReview": "مراجعة",
-      "empty": "لا توجد عقد في مراحل المراجعة هذه."
+      "empty": "لا توجد عقد في مراحل المراجعة هذه.",
+      "emptyFiltered": "لا توجد عقد تطابق مرحلة التصفية أو البحث.",
+      "truncatedNotice": "يُحمّل فقط أحدث {limit} عقدة حسب آخر تحديث. إجمالي القائمة {total} — ضيّق بالبحث أو افتح سجل العقد للقوائم الكاملة.",
+      "searchPlaceholder": "ابحث بالاسم أو المالك أو المنطقة أو القطاع…",
+      "searchAria": "تصفية القائمة نصًا",
+      "sortLabel": "الترتيب",
+      "sortUpdatedDesc": "آخر تحديث (الأحدث أولًا)",
+      "sortUpdatedAsc": "آخر تحديث (الأقدم أولًا)",
+      "sortNameAsc": "الاسم (أ–ي)",
+      "resultsLine": "{visible} معروضة · {loaded} محمّلة · {total} في القائمة",
+      "listHeading": "العقد في قائمة المراجعة"
     },
     "account": {
       "menuAria": "قائمة الحساب",

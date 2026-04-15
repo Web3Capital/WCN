@@ -483,9 +483,22 @@
       "kpiUnderReview": "심사 중",
       "kpiNeedInfo": "추가 정보 필요",
       "filterAll": "모든 단계",
+      "filterSubmitted": "제출됨",
+      "filterUnderReview": "심사 중",
+      "filterNeedInfo": "추가 정보 필요",
       "openNode": "노드 열기",
       "openReview": "심사",
-      "empty": "이 심사 단계에 있는 노드가 없습니다."
+      "empty": "이 심사 단계에 있는 노드가 없습니다.",
+      "emptyFiltered": "현재 단계나 검색과 일치하는 노드가 없습니다.",
+      "truncatedNotice": "최근 업데이트 순으로 최대 {limit}개만 불러옵니다. 대기열에는 총 {total}개가 있습니다. 검색으로 좁히거나 노드 레지스트리에서 전체를 확인하세요.",
+      "searchPlaceholder": "이름, 소유자, 지역, 업종 검색…",
+      "searchAria": "텍스트로 목록 필터",
+      "sortLabel": "정렬",
+      "sortUpdatedDesc": "최근 업데이트(최신순)",
+      "sortUpdatedAsc": "최근 업데이트(오래된순)",
+      "sortNameAsc": "이름(A–Z)",
+      "resultsLine": "{visible}개 표시 · 불러옴 {loaded}개 · 대기열 {total}개",
+      "listHeading": "심사 대기열의 노드"
     },
     "account": {
       "menuAria": "계정 메뉴",

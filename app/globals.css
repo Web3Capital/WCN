@@ -2513,6 +2513,7 @@ html[data-dashboard="true"] .footer {
 .status-dot-blue { background: var(--accent); box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 18%, transparent); }
 .status-dot-accent { background: var(--accent); box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 18%, transparent); }
 .status-dot-purple { background: var(--purple); box-shadow: 0 0 0 3px color-mix(in oklab, var(--purple) 18%, transparent); }
+.status-dot-orange { background: var(--orange); box-shadow: 0 0 0 3px color-mix(in oklab, var(--orange) 18%, transparent); }
 .status-dot-yellow { background: var(--yellow); box-shadow: 0 0 0 3px color-mix(in oklab, var(--yellow) 18%, transparent); }
 .status-dot-pulse { animation: dotPulse 2s ease-in-out infinite; }
 @keyframes dotPulse {

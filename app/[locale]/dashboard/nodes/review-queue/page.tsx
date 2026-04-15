@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
+import { Link } from "@/i18n/routing";
 import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { canAccessNodeReviewQueue } from "@/lib/permissions";
@@ -10,6 +11,7 @@ import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 export const dynamic = "force-dynamic";
 
 const REVIEW_IN = ["SUBMITTED", "UNDER_REVIEW", "NEED_MORE_INFO"] as const;
+const QUEUE_FETCH_LIMIT = 300;
 
 export const metadata = dashboardMeta("Node review queue", "Nodes awaiting review");
 
@@ -21,11 +23,11 @@ export default async function NodeReviewQueuePage() {
   const prisma = getPrisma();
   const where = { status: { in: [...REVIEW_IN] } };
 
-  const [rows, groups] = await Promise.all([
+  const [rows, groups, totalInQueue] = await Promise.all([
     prisma.node.findMany({
       where,
       orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
-      take: 300,
+      take: QUEUE_FETCH_LIMIT,
       include: { owner: { select: { id: true, name: true, email: true } } },
     }),
     prisma.node.groupBy({
@@ -33,6 +35,7 @@ export default async function NodeReviewQueuePage() {
       where,
       _count: true,
     }),
+    prisma.node.count({ where }),
   ]);
 
   const statusCounts: Record<string, number> = {};
@@ -60,7 +63,17 @@ export default async function NodeReviewQueuePage() {
         <p className="muted">
           <T>Nodes in submitted, under review, or need more information — PRD Node Review entry.</T>
         </p>
-        <NodeReviewQueueConsole initialRows={JSON.parse(JSON.stringify(serializable))} statusCounts={statusCounts} />
+        <p className="muted text-sm mt-8">
+          <Link href="/dashboard/nodes" className="font-medium" style={{ color: "var(--accent)" }}>
+            <T>Back to node registry</T>
+          </Link>
+        </p>
+        <NodeReviewQueueConsole
+          initialRows={JSON.parse(JSON.stringify(serializable))}
+          statusCounts={statusCounts}
+          totalInQueue={totalInQueue}
+          fetchLimit={QUEUE_FETCH_LIMIT}
+        />
       </div>
     </div>
   );

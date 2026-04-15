@@ -492,9 +492,22 @@
       "kpiUnderReview": "Under review",
       "kpiNeedInfo": "Need more info",
       "filterAll": "All stages",
+      "filterSubmitted": "Submitted",
+      "filterUnderReview": "Under review",
+      "filterNeedInfo": "Need more info",
       "openNode": "Open node",
       "openReview": "Review",
-      "empty": "No nodes are currently in these review stages."
+      "empty": "No nodes are currently in these review stages.",
+      "emptyFiltered": "No nodes match the current stage filter or search.",
+      "truncatedNotice": "Only the {limit} most recently updated nodes are loaded here. The queue has {total} nodes total — narrow with search or open the node registry for full lists.",
+      "searchPlaceholder": "Search name, owner, region, vertical…",
+      "searchAria": "Filter the list by text",
+      "sortLabel": "Sort",
+      "sortUpdatedDesc": "Last updated (newest)",
+      "sortUpdatedAsc": "Last updated (oldest)",
+      "sortNameAsc": "Name (A–Z)",
+      "resultsLine": "{visible} shown · {loaded} loaded · {total} in queue",
+      "listHeading": "Nodes in the review queue"
     },
     "search": {
       "placeholder": "Search nodes, projects, deals, tasks…"

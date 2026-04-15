@@ -483,9 +483,22 @@
       "kpiUnderReview": "En cours d’examen",
       "kpiNeedInfo": "Informations requises",
       "filterAll": "Toutes les étapes",
+      "filterSubmitted": "Soumis",
+      "filterUnderReview": "En cours d’examen",
+      "filterNeedInfo": "Informations requises",
       "openNode": "Ouvrir le nœud",
       "openReview": "Réviser",
-      "empty": "Aucun nœud dans ces étapes de révision."
+      "empty": "Aucun nœud dans ces étapes de révision.",
+      "emptyFiltered": "Aucun nœud ne correspond au filtre d’étape ou à la recherche.",
+      "truncatedNotice": "Seuls les {limit} nœuds les plus récemment mis à jour sont chargés. La file en compte {total} au total — affinez avec la recherche ou ouvrez le registre des nœuds.",
+      "searchPlaceholder": "Rechercher nom, propriétaire, région, vertical…",
+      "searchAria": "Filtrer la liste par texte",
+      "sortLabel": "Trier",
+      "sortUpdatedDesc": "Dernière mise à jour (plus récent)",
+      "sortUpdatedAsc": "Dernière mise à jour (plus ancien)",
+      "sortNameAsc": "Nom (A–Z)",
+      "resultsLine": "{visible} affichés · {loaded} chargés · {total} en file",
+      "listHeading": "Nœuds dans la file de révision"
     },
     "account": {
       "menuAria": "Menu compte",

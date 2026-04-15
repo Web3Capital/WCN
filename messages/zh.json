@@ -492,9 +492,22 @@
       "kpiUnderReview": "审核中",
       "kpiNeedInfo": "待补充资料",
       "filterAll": "全部阶段",
+      "filterSubmitted": "已提交",
+      "filterUnderReview": "审核中",
+      "filterNeedInfo": "待补充资料",
       "openNode": "打开节点",
       "openReview": "审核",
-      "empty": "当前没有处于这些审核阶段的节点。"
+      "empty": "当前没有处于这些审核阶段的节点。",
+      "emptyFiltered": "没有符合当前阶段或搜索条件的节点。",
+      "truncatedNotice": "此处仅加载按最近更新时间排序的前 {limit} 条。队列共有 {total} 个节点 — 可用搜索缩小范围，或在节点注册表中查看完整列表。",
+      "searchPlaceholder": "搜索名称、负责人、地区、行业…",
+      "searchAria": "按文字筛选列表",
+      "sortLabel": "排序",
+      "sortUpdatedDesc": "最近更新（新→旧）",
+      "sortUpdatedAsc": "最近更新（旧→新）",
+      "sortNameAsc": "名称（A–Z）",
+      "resultsLine": "显示 {visible} 条 · 已加载 {loaded} 条 · 队列共 {total} 条",
+      "listHeading": "审核队列中的节点"
     },
     "search": {
       "placeholder": "搜索节点、项目、交易、任务…"

@@ -483,9 +483,22 @@
       "kpiUnderReview": "審査中",
       "kpiNeedInfo": "追加情報が必要",
       "filterAll": "すべての段階",
+      "filterSubmitted": "提出済み",
+      "filterUnderReview": "審査中",
+      "filterNeedInfo": "追加情報が必要",
       "openNode": "ノードを開く",
       "openReview": "審査",
-      "empty": "これらの審査段階にあるノードはありません。"
+      "empty": "これらの審査段階にあるノードはありません。",
+      "emptyFiltered": "現在の段階または検索に一致するノードはありません。",
+      "truncatedNotice": "直近更新順で最大 {limit} 件のみ読み込みます。キューは合計 {total} 件です。検索で絞り込むか、ノード一覧で全体を確認してください。",
+      "searchPlaceholder": "名称、オーナー、地域、業種などで検索…",
+      "searchAria": "テキストで一覧を絞り込む",
+      "sortLabel": "並べ替え",
+      "sortUpdatedDesc": "更新日時（新しい順）",
+      "sortUpdatedAsc": "更新日時（古い順）",
+      "sortNameAsc": "名前（A–Z）",
+      "resultsLine": "{visible} 件表示 · 読み込み {loaded} 件 · キュー計 {total} 件",
+      "listHeading": "審査キュー内のノード"
     },
     "account": {
       "menuAria": "アカウントメニュー",

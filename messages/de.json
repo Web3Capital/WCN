@@ -483,9 +483,22 @@
       "kpiUnderReview": "In Prüfung",
       "kpiNeedInfo": "Weitere Infos nötig",
       "filterAll": "Alle Phasen",
+      "filterSubmitted": "Eingereicht",
+      "filterUnderReview": "In Prüfung",
+      "filterNeedInfo": "Weitere Infos nötig",
       "openNode": "Knoten öffnen",
       "openReview": "Prüfen",
-      "empty": "Keine Knoten in diesen Prüfphasen."
+      "empty": "Keine Knoten in diesen Prüfphasen.",
+      "emptyFiltered": "Keine Knoten passen zu Filter oder Suche.",
+      "truncatedNotice": "Es werden nur die {limit} zuletzt aktualisierten Knoten geladen. In der Warteschlange sind es {total} — mit Suche eingrenzen oder im Knotenregister die vollständige Liste prüfen.",
+      "searchPlaceholder": "Name, Inhaber:in, Region, Branche suchen…",
+      "searchAria": "Liste per Text filtern",
+      "sortLabel": "Sortierung",
+      "sortUpdatedDesc": "Zuletzt aktualisiert (neueste zuerst)",
+      "sortUpdatedAsc": "Zuletzt aktualisiert (älteste zuerst)",
+      "sortNameAsc": "Name (A–Z)",
+      "resultsLine": "{visible} angezeigt · {loaded} geladen · {total} in der Warteschlange",
+      "listHeading": "Knoten in der Prüfwarteschlange"
     },
     "account": {
       "menuAria": "Kontomenü",

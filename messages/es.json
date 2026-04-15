@@ -483,9 +483,22 @@
       "kpiUnderReview": "En revisión",
       "kpiNeedInfo": "Más información",
       "filterAll": "Todas las etapas",
+      "filterSubmitted": "Enviados",
+      "filterUnderReview": "En revisión",
+      "filterNeedInfo": "Más información",
       "openNode": "Abrir nodo",
       "openReview": "Revisar",
-      "empty": "No hay nodos en estas etapas de revisión."
+      "empty": "No hay nodos en estas etapas de revisión.",
+      "emptyFiltered": "Ningún nodo coincide con el filtro de etapa o la búsqueda.",
+      "truncatedNotice": "Solo se cargan los {limit} nodos actualizados más recientemente. Hay {total} en la cola: acote con la búsqueda o use el registro de nodos para listas completas.",
+      "searchPlaceholder": "Buscar por nombre, propietario, región, vertical…",
+      "searchAria": "Filtrar la lista por texto",
+      "sortLabel": "Ordenar",
+      "sortUpdatedDesc": "Última actualización (más reciente)",
+      "sortUpdatedAsc": "Última actualización (más antigua)",
+      "sortNameAsc": "Nombre (A–Z)",
+      "resultsLine": "{visible} mostrados · {loaded} cargados · {total} en cola",
+      "listHeading": "Nodos en la cola de revisión"
     },
     "account": {
       "menuAria": "Menú de cuenta",
