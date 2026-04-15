@@ -94,6 +94,23 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   const node = await prisma.node.update({ where: { id: params.id }, data });
 
+  const statusChanged = Boolean(data.status && data.status !== existing.status);
+  const statusSideEffectKeys = new Set(["goLiveAt", "offboardedAt", "probationStartAt", "probationEndAt"]);
+  const fieldsForProfileAudit = Object.keys(data).filter((k) => {
+    if (k === "status") return false;
+    if (statusChanged && statusSideEffectKeys.has(k)) return false;
+    return true;
+  });
+  if (fieldsForProfileAudit.length > 0) {
+    await writeAudit({
+      actorUserId: admin.session.user?.id ?? null,
+      action: AuditAction.NODE_UPDATE,
+      targetType: "NODE",
+      targetId: params.id,
+      metadata: { fields: fieldsForProfileAudit },
+    });
+  }
+
   if (data.status && data.status !== existing.status) {
     await prisma.review.create({
       data: {
