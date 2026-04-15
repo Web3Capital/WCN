@@ -72,7 +72,7 @@ export function NodeReviewUI({ node, reviews }: { node: NodeData; reviews: Revie
           </label>
           <label className="field">
             <span className="label">{t("Notes")}</span>
-            <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} />
+            <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} />
           </label>
           {error && <p className="form-error" role="alert">{error}</p>}
           {success && <p style={{ color: "var(--green)", margin: 0, fontSize: 13 }} role="status">{success}</p>}

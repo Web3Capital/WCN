@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Link } from "@/i18n/routing";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
-import { DetailLayout, StatusBadge, StatCard } from "../../_components";
+import { DetailLayout, StatusBadge, StatCard, CapitalNotesFeed } from "../../_components";
 
 type Attribution = {
   id: string;
@@ -177,12 +177,12 @@ export function PobDetail({
         </div>
       )}
 
-      {record.notes && (
+      {record.notes ? (
         <div className="card p-18">
-          <h3 className="mt-0 mb-8">{t("Notes")}</h3>
-          <p className="mt-0 mb-0" style={{ whiteSpace: "pre-wrap" }}>{record.notes}</p>
+          <h3 className="mt-0 mb-12">{t("Notes")}</h3>
+          <p className="mt-0 mb-0 text-base" style={{ whiteSpace: "pre-wrap" }}>{record.notes}</p>
         </div>
-      )}
+      ) : null}
 
       <div className="grid-2 gap-16">
         <div className="card p-18">
@@ -246,22 +246,22 @@ export function PobDetail({
       {reviews.length > 0 && (
         <div className="card p-18">
           <h3 className="mt-0 mb-12">{t("Review History")}</h3>
-          <div className="timeline">
-            {reviews.map((r) => (
-              <div key={r.id} className="timeline-item">
-                <span className="timeline-dot" />
-                <div className="timeline-content">
-                  <div className="text-base">
-                    <span className="font-bold">{r.decision}</span>
-                    {r.notes && <> — {r.notes}</>}
-                  </div>
-                  <div className="timeline-meta">
-                    {r.reviewer?.name || r.reviewer?.email || "system"} · {new Date(r.createdAt).toLocaleString()}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <CapitalNotesFeed
+            items={reviews.map((r) => ({
+              id: r.id,
+              body: (
+                <>
+                  <span className="font-semibold">{r.decision}</span>
+                  {r.notes ? <> — {r.notes}</> : null}
+                </>
+              ),
+              meta: (
+                <>
+                  {r.reviewer?.name || r.reviewer?.email || "system"} · {new Date(r.createdAt).toLocaleString()}
+                </>
+              ),
+            }))}
+          />
         </div>
       )}
 

@@ -12,3 +12,9 @@ export { ConfirmDialog } from "./confirm-dialog";
 export { ReadOnlyBanner } from "./read-only-banner";
 export { ReadOnlyInlineStrip } from "./read-only-inline-strip";
 export { DashboardDistributionPie, DashboardPipelineBar } from "./dashboard-distribution-charts";
+export {
+  CapitalNotesReadonlyInset,
+  CapitalNotesFeed,
+  CapitalNotesComposerRow,
+} from "./capital-notes";
+export type { CapitalNoteFeedItem } from "./capital-notes";

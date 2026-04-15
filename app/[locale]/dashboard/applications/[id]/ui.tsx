@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Link } from "@/i18n/routing";
-import { DetailLayout, StatusBadge } from "../../_components";
+import { DetailLayout, StatusBadge, CapitalNotesFeed } from "../../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
 type ApplicationData = {
@@ -157,6 +157,7 @@ export function ApplicationDetail({
               onChange={(e) => setNotes(e.target.value)}
               onBlur={() => updateApp({ reviewNote: notes || null })}
               placeholder={t("Add review notes...")}
+              rows={4}
             />
           </label>
           <p className="muted mt-4 text-xs">{t("Notes auto-save on blur.")}</p>
@@ -167,22 +168,22 @@ export function ApplicationDetail({
       {reviews.length > 0 && (
         <div className="card p-18">
           <h3 className="mt-0 mb-12">{t("Review History")}</h3>
-          <div className="timeline">
-            {reviews.map((r) => (
-              <div key={r.id} className="timeline-item">
-                <span className="timeline-dot" />
-                <div className="timeline-content">
-                  <div className="text-base">
-                    <span className="font-bold">{r.decision}</span>
-                    {r.notes && <> — {r.notes}</>}
-                  </div>
-                  <div className="timeline-meta">
-                    {r.reviewer?.name || r.reviewer?.email || "system"} · {new Date(r.createdAt).toLocaleString()}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <CapitalNotesFeed
+            items={reviews.map((r) => ({
+              id: r.id,
+              body: (
+                <>
+                  <span className="font-semibold">{r.decision}</span>
+                  {r.notes ? <> — {r.notes}</> : null}
+                </>
+              ),
+              meta: (
+                <>
+                  {r.reviewer?.name || r.reviewer?.email || "system"} · {new Date(r.createdAt).toLocaleString()}
+                </>
+              ),
+            }))}
+          />
         </div>
       )}
     </DetailLayout>

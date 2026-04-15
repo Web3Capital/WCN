@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Link } from "@/i18n/routing";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
-import { DetailLayout, StatusBadge, StatCard } from "../../_components";
+import { DetailLayout, StatusBadge, StatCard, CapitalNotesReadonlyInset } from "../../_components";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell,
   PieChart, Pie,
@@ -360,12 +360,9 @@ export function CapitalDetail({ profile, isAdmin, analytics }: {
                   {profile.contactEmail && <div><span className="muted">{t("Email:")}</span> {profile.contactEmail}</div>}
                 </div>
               </div>
-              {profile.notes && (
-                <div className="mt-12" style={{ borderTop: "1px solid var(--line)", paddingTop: 12 }}>
-                  <span className="muted">{t("Notes:")}</span>
-                  <p className="mt-4 mb-0" style={{ whiteSpace: "pre-wrap" }}>{profile.notes}</p>
-                </div>
-              )}
+              {profile.notes ? (
+                <CapitalNotesReadonlyInset label={t("Notes:")}>{profile.notes}</CapitalNotesReadonlyInset>
+              ) : null}
             </div>
           </div>
 
