@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { DetailLayout, StatusBadge, EmptyState } from "../../../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { formatNodeType } from "@/lib/nodes/node-type-label";
 
 type ReviewData = {
   id: string;
@@ -58,7 +59,7 @@ export function NodeReviewUI({ node, reviews }: { node: NodeData; reviews: Revie
       backHref={`/dashboard/nodes/${node.id}`}
       backLabel={t(`Back to ${node.name}`)}
       title={t(`Review: ${node.name}`)}
-      subtitle={`${node.type} · ${node.status.replace(/_/g, " ")}`}
+      subtitle={`${formatNodeType(node.type, t)} · ${node.status.replace(/_/g, " ")}`}
       badge={<StatusBadge status={node.status} />}
     >
       <div className="card p-18">

@@ -31,34 +31,46 @@ export default async function NodesPage() {
 
   const nodeLayers = [
     {
+      code: "GLOBAL" as const,
       tier: t("tier1Badge"),
       label: t("tier1Label"),
       desc: t("tier1Desc"),
       accent: "accent" as const,
     },
     {
+      code: "REGION" as const,
       tier: t("tier2Badge"),
       label: t("tier2Label"),
       desc: t("tier2Desc"),
       accent: "green" as const,
     },
     {
+      code: "CITY" as const,
       tier: t("tier3Badge"),
       label: t("tier3Label"),
       desc: t("tier3Desc"),
       accent: "amber" as const,
     },
     {
+      code: "INDUSTRY" as const,
       tier: t("tier4Badge"),
       label: t("tier4Label"),
       desc: t("tier4Desc"),
       accent: "purple" as const,
     },
     {
+      code: "FUNCTIONAL" as const,
       tier: t("tier5Badge"),
       label: t("tier5Label"),
       desc: t("tier5Desc"),
       accent: "muted" as const,
+    },
+    {
+      code: "AGENT" as const,
+      tier: t("tier6Badge"),
+      label: t("tier6Label"),
+      desc: t("tier6Desc"),
+      accent: "accent" as const,
     },
   ];
 
@@ -214,10 +226,11 @@ export default async function NodesPage() {
           <div className="nodes-tier-bento card-grid-animated">
             {nodeLayers.map((layer) => (
               <article
-                key={layer.label}
+                key={layer.code}
                 className={`nodes-tier-card nodes-tier-card--${layer.accent}`}
               >
                 <span className={`nodes-tier-badge nodes-tier-badge--${layer.accent}`}>{layer.tier}</span>
+                <code className="nodes-tier-enum">{layer.code}</code>
                 <h3 className="nodes-tier-title">{layer.label}</h3>
                 <p className="nodes-tier-desc">{layer.desc}</p>
               </article>

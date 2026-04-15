@@ -161,11 +161,64 @@ export function ApplicationsTable({
                 <div className="label">{t("Looking for")}</div>
                 <p className="muted" style={{ margin: 0 }}>{active.lookingFor ?? "—"}</p>
               </div>
+              {active.territory && (
+                <div>
+                  <div className="label">{t("Territory")}</div>
+                  <p className="muted" style={{ margin: 0 }}>{active.territory}</p>
+                </div>
+              )}
+              {active.pastCases && (
+                <div>
+                  <div className="label">{t("Past Cases / Track Record")}</div>
+                  <p className="muted" style={{ margin: 0 }}>{active.pastCases}</p>
+                </div>
+              )}
+              {active.references && (
+                <div>
+                  <div className="label">{t("References")}</div>
+                  <p className="muted" style={{ margin: 0 }}>{active.references}</p>
+                </div>
+              )}
+              {active.boundaryStatement && (
+                <div>
+                  <div className="label">{t("Boundary Statement")}</div>
+                  <p className="muted" style={{ margin: 0 }}>{active.boundaryStatement}</p>
+                </div>
+              )}
               <div>
                 <div className="label">{t("Why WCN")}</div>
                 <p className="muted" style={{ margin: 0 }}>{active.whyWcn ?? "—"}</p>
               </div>
             </div>
+
+            {!readOnly && (
+              <div className="mt-14">
+                <div className="label mb-6">{t("Escalation")}</div>
+                {active.escalatedTo ? (
+                  <p className="muted text-sm" style={{ margin: 0 }}>
+                    {t("Escalated to")} <span className="badge badge-yellow text-xs">{active.escalatedTo}</span>
+                    {active.escalatedAt ? ` · ${formatDate(active.escalatedAt)}` : ""}
+                  </p>
+                ) : (
+                  <div className="flex gap-8">
+                    <button
+                      className="button-secondary text-xs"
+                      disabled={saving}
+                      onClick={() => updateApplication(active.id, { escalatedTo: "FOUNDER", escalatedAt: new Date().toISOString() } as any)}
+                    >
+                      {t("Escalate to Founder")}
+                    </button>
+                    <button
+                      className="button-secondary text-xs"
+                      disabled={saving}
+                      onClick={() => updateApplication(active.id, { escalatedTo: "RISK_DESK", escalatedAt: new Date().toISOString() } as any)}
+                    >
+                      {t("Escalate to Risk")}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
             {!readOnly ? (
               <InternalNoteField

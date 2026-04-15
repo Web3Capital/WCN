@@ -3221,21 +3221,18 @@ html[data-dashboard="true"] .footer {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: 14px;
   }
-  .nodes-tier-bento .nodes-tier-card:nth-child(1) {
-    grid-column: span 6;
-  }
-  .nodes-tier-bento .nodes-tier-card:nth-child(2) {
-    grid-column: span 6;
-  }
-  .nodes-tier-bento .nodes-tier-card:nth-child(3) {
+  .nodes-tier-bento .nodes-tier-card:nth-child(n) {
     grid-column: span 4;
   }
-  .nodes-tier-bento .nodes-tier-card:nth-child(4) {
-    grid-column: span 4;
-  }
-  .nodes-tier-bento .nodes-tier-card:nth-child(5) {
-    grid-column: span 4;
-  }
+}
+.nodes-tier-enum {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin: 0 0 10px;
 }
 .nodes-tier-card {
   margin: 0;

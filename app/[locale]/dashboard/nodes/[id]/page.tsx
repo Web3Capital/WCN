@@ -25,6 +25,7 @@ export default async function NodeDetailPage({ params }: { params: { id: string 
       projects: { select: { id: true, name: true, status: true }, take: 30 },
       tasksAsOwner: { select: { id: true, title: true, status: true }, take: 30, orderBy: { createdAt: "desc" } },
       ownedAgents: { select: { id: true, name: true, status: true, type: true } },
+      dealsAsLead: { select: { id: true, title: true, stage: true }, take: 30, orderBy: { createdAt: "desc" } },
       _count: { select: { pobRecords: true, settlementLines: true } },
     },
   });

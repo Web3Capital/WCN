@@ -13,6 +13,7 @@ import {
   DashboardPipelineBar,
 } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { formatNodeType } from "@/lib/nodes/node-type-label";
 
 export type NodesConsoleInitialMeta = {
   nextCursor: string | null;
@@ -408,7 +409,7 @@ export function NodesConsole({
                 <select value={create.type} onChange={(e) => setCreate((s) => ({ ...s, type: e.target.value }))}>
                   {NODE_TYPES.map((v) => (
                     <option key={v} value={v}>
-                      {v}
+                      {formatNodeType(v, t)}
                     </option>
                   ))}
                 </select>
@@ -495,7 +496,7 @@ export function NodesConsole({
             <option value="">{t("All")}</option>
             {NODE_TYPES.map((tp) => (
               <option key={tp} value={tp}>
-                {tp}
+                {formatNodeType(tp, t)}
               </option>
             ))}
           </select>
@@ -561,7 +562,7 @@ export function NodesConsole({
                         {r.name}
                       </Link>
                       <div className="muted text-sm" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        {r.type} · L{r.level}
+                        {formatNodeType(r.type, t)} · L{r.level}
                         {r.region ? ` · ${r.region}` : ""}
                         {r.city ? ` · ${r.city}` : ""}
                         {r.vertical ? ` · ${r.vertical}` : ""}
@@ -615,7 +616,7 @@ export function NodesConsole({
                     >
                       {NODE_TYPES.map((v) => (
                         <option key={v} value={v}>
-                          {v}
+                          {formatNodeType(v, t)}
                         </option>
                       ))}
                     </select>
@@ -777,7 +778,7 @@ export function NodesConsole({
                     >
                       <div className="font-semibold text-sm">{r.name}</div>
                       <div className="muted text-xs">
-                        {r.type} · L{r.level}
+                        {formatNodeType(r.type, t)} · L{r.level}
                         {r.region ? ` · ${r.region}` : ""}
                       </div>
                     </Link>

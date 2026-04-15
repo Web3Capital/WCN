@@ -117,6 +117,10 @@ export function ApplyForm() {
   const [lookingForNote, setLookingForNote] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [whyWcn, setWhyWcn] = useState("");
+  const [pastCases, setPastCases] = useState("");
+  const [references, setReferences] = useState("");
+  const [boundaryStatement, setBoundaryStatement] = useState("");
+  const [territory, setTerritory] = useState("");
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -142,10 +146,14 @@ export function ApplyForm() {
         organization,
         role,
         nodeType: nodeType + (region ? ` | Region: ${region}` : ""),
+        territory: territory || null,
         resources: resourcesFull || null,
         lookingFor: lookingForFull || null,
         linkedin,
         whyWcn,
+        pastCases: pastCases || null,
+        references: references || null,
+        boundaryStatement: boundaryStatement || null,
       }),
     });
 
@@ -291,6 +299,49 @@ export function ApplyForm() {
           className="apply-chip-extra"
         />
       </div>
+
+      <div className="apply-divider" />
+      <div className="apply-section-label">Experience & Territory</div>
+
+      <label className="field">
+        <span className="label">Territory / Region of Focus</span>
+        <input
+          value={territory}
+          onChange={(e) => setTerritory(e.target.value)}
+          placeholder="e.g. Singapore, Hong Kong, UAE, Southeast Asia"
+        />
+      </label>
+
+      <label className="field">
+        <span className="label">Past Cases / Track Record</span>
+        <textarea
+          value={pastCases}
+          onChange={(e) => setPastCases(e.target.value)}
+          placeholder="Describe 2-3 relevant deals, projects, or partnerships you have been involved in."
+          rows={3}
+        />
+      </label>
+
+      <label className="field">
+        <span className="label">References</span>
+        <textarea
+          value={references}
+          onChange={(e) => setReferences(e.target.value)}
+          placeholder="Names and contacts of 1-2 references who can vouch for your work."
+          rows={2}
+        />
+      </label>
+
+      <label className="field">
+        <span className="label">Boundary Statement</span>
+        <span className="apply-hint">What you will and will not do as a node. Helps set expectations.</span>
+        <textarea
+          value={boundaryStatement}
+          onChange={(e) => setBoundaryStatement(e.target.value)}
+          placeholder="e.g. I will focus on sourcing seed-stage DeFi projects in SEA. I will not handle legal or compliance work."
+          rows={3}
+        />
+      </label>
 
       <div className="apply-divider" />
 

@@ -26,9 +26,15 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   const existing = await prisma.application.findUnique({ where: { id: params.id }, select: { id: true, status: true } });
   if (!existing) return apiNotFound("Application");
 
-  const data: { status?: any; notes?: string | null } = {};
+  const data: Record<string, unknown> = {};
   data.status = parsed.data.status;
   if (parsed.data.reviewNote !== undefined) data.notes = parsed.data.reviewNote ?? null;
+
+  // Handle escalation fields (passed outside the zod schema)
+  if (body?.escalatedTo) {
+    data.escalatedTo = String(body.escalatedTo);
+    data.escalatedAt = body.escalatedAt ? new Date(body.escalatedAt) : new Date();
+  }
 
   const updated = await prisma.application.update({
     where: { id: params.id },

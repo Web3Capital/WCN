@@ -449,6 +449,7 @@ model User {
   termsAcceptances     TermsAcceptance[]
   roleAssignmentsGranted RoleAssignment[]  @relation("RoleGrantedBy")
   agentRunsReviewed      AgentRun[]        @relation("AgentRunReviewer")
+  scorecardsReviewed     NodeScorecard[]   @relation("ScorecardReviewer")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -718,17 +719,24 @@ model Application {
   id     String            @id @default(cuid())
   status ApplicationStatus @default(PENDING)
 
-  applicantName String
-  organization  String?
-  role          String?
-  nodeType      String?
-  resources     String?
-  lookingFor    String?
-  linkedin      String?
-  contact       String
-  whyWcn        String?
-  notes         String?
-  workspaceId   String?
+  applicantName     String
+  organization      String?
+  role              String?
+  nodeType          String?
+  territory         String?         // PRD: requested territory
+  resources         String?
+  lookingFor        String?
+  linkedin          String?
+  contact           String
+  whyWcn            String?
+  pastCases         String?         // PRD: past_cases
+  references        String?         // PRD: references
+  boundaryStatement String?         // PRD: boundary_statement
+  complianceDocs    String[]  @default([]) // PRD: compliance_docs (file keys)
+  notes             String?
+  workspaceId       String?
+  escalatedTo       String?         // PRD: escalate_to_founder / escalate_to_risk
+  escalatedAt       DateTime?
 
   userId String?
   user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -804,6 +812,8 @@ model Node {
   dealsAsLead        Deal[]             @relation("DealLeadNode")
   dealParticipations DealParticipant[]
   reputationScore    ReputationScore?
+  scorecards         NodeScorecard[]
+  territories        Territory[]
 
   @@index([type, status, createdAt])
   @@index([ownerUserId])
@@ -1879,4 +1889,61 @@ model Outbox {
 
   @@index([delivered, createdAt])
   @@index([eventName])
+}
+
+// ─── NODE SCORECARD ─────────────────────────────────────────────────────────
+
+enum ScorecardAction {
+  UPGRADE
+  MAINTAIN
+  WATCHLIST
+  DOWNGRADE
+  REMOVE
+}
+
+model NodeScorecard {
+  id                  String          @id @default(cuid())
+  nodeId              String
+  node                Node            @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  period              String          // e.g. "2026-Q1", "2026-03"
+  pipelineScore       Float           @default(0) // Pipeline quality (0-100)
+  closureScore        Float           @default(0) // Deal closure rate (0-100)
+  evidenceScore       Float           @default(0) // PoB / evidence quality (0-100)
+  collaborationScore  Float           @default(0) // Response speed & reliability (0-100)
+  riskScore           Float           @default(0) // Risk / compliance record (0-100)
+  totalScore          Float           @default(0) // Weighted aggregate (0-100)
+  action              ScorecardAction @default(MAINTAIN)
+  notes               String?
+  reviewerId          String?
+  reviewer            User?           @relation("ScorecardReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  createdAt           DateTime        @default(now())
+
+  @@unique([nodeId, period])
+  @@index([nodeId, createdAt])
+  @@index([action])
+}
+
+// ─── TERRITORY ──────────────────────────────────────────────────────────────
+
+model Territory {
+  id                String   @id @default(cuid())
+  nodeId            String
+  node              Node     @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  region            String   // e.g. "Singapore", "HK", "UAE"
+  scope             String   // "Country", "City", "Vertical"
+  exclusivity       String   @default("NONE") // "NONE", "CONDITIONAL", "EXCLUSIVE"
+  protectedAccounts String[] @default([])
+  kpiRequired       Boolean  @default(false)
+  kpiTarget         Json?    // structured KPI targets for exclusivity
+  status            String   @default("ACTIVE") // "ACTIVE", "DISPUTED", "REVOKED"
+  notes             String?
+  approvedBy        String?
+  approvedAt        DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([nodeId, region, scope])
+  @@index([region, scope])
+  @@index([nodeId])
+  @@index([status])
 }

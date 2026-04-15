@@ -3,8 +3,10 @@
 import { useMemo, useState } from "react";
 import { Link } from "@/i18n/routing";
 import { useFormatter, useTranslations } from "next-intl";
+import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { formatNodeType } from "@/lib/nodes/node-type-label";
 import { StatusBadge, EmptyState, FilterToolbar, StatCard } from "../../_components";
-import { ClipboardList, Search } from "lucide-react";
+import { BookOpen, ClipboardList, Search } from "lucide-react";
 
 const REVIEW_STATUSES = ["ALL", "SUBMITTED", "UNDER_REVIEW", "NEED_MORE_INFO"] as const;
 
@@ -41,6 +43,7 @@ export function NodeReviewQueueConsole({
   fetchLimit: number;
 }) {
   const t = useTranslations("dashboard.reviewQueue");
+  const { t: tNodeType } = useAutoTranslate();
   const format = useFormatter();
   const [filter, setFilter] = useState<(typeof REVIEW_STATUSES)[number]>("ALL");
   const [search, setSearch] = useState("");
@@ -100,6 +103,34 @@ export function NodeReviewQueueConsole({
         <StatCard label={t("kpiSubmitted")} value={statusCounts.SUBMITTED ?? 0} />
         <StatCard label={t("kpiUnderReview")} value={statusCounts.UNDER_REVIEW ?? 0} />
         <StatCard label={t("kpiNeedInfo")} value={statusCounts.NEED_MORE_INFO ?? 0} />
+      </div>
+
+      <div
+        className="card"
+        style={{ marginBottom: 24, padding: "16px 20px" }}
+        aria-labelledby="review-queue-cases-heading"
+      >
+        <div className="flex gap-12 items-start">
+          <BookOpen size={20} className="flex-shrink-0" style={{ color: "var(--accent)" }} aria-hidden />
+          <div style={{ minWidth: 0 }}>
+            <h2 id="review-queue-cases-heading" className="text-sm font-bold" style={{ margin: "0 0 8px" }}>
+              {t("casesTitle")}
+            </h2>
+            <p className="muted text-sm" style={{ margin: "0 0 12px" }}>
+              {t("casesIntro")}
+            </p>
+            <ul className="muted text-sm" style={{ margin: 0, paddingLeft: 18 }}>
+              <li style={{ marginBottom: 6 }}>{t("casesBullet1")}</li>
+              <li style={{ marginBottom: 6 }}>{t("casesBullet2")}</li>
+              <li>{t("casesBullet3")}</li>
+            </ul>
+            <p className="text-sm mt-12 mb-0">
+              <Link href="/how-it-works" className="font-medium" style={{ color: "var(--accent)" }}>
+                {t("casesHowItWorks")}
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
 
       <FilterToolbar
@@ -163,7 +194,7 @@ export function NodeReviewQueueConsole({
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div className="font-bold">{r.name}</div>
                   <div className="muted text-sm">
-                    {r.type}
+                    {formatNodeType(r.type, tNodeType)}
                     {r.region ? ` · ${r.region}` : ""}
                     {r.city ? ` · ${r.city}` : ""}
                     {r.vertical ? ` · ${r.vertical}` : ""}
