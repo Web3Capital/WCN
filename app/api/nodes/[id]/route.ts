@@ -9,6 +9,7 @@ import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/c
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
 import type { NodeStatus } from "@prisma/client";
+import { withApiContext } from "@/lib/logger";
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
   const auth = await requireSignedIn();
@@ -32,6 +33,13 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   });
 
   if (!node) return apiNotFound("Node");
+
+  const visibility =
+    isAdmin || node.ownerUserId === auth.session.user?.id ? "full" : "redacted";
+  withApiContext("GET /api/nodes/[id]", {
+    userId: auth.session.user?.id,
+    nodeId: params.id,
+  }).info({ event: "node_detail", visibility }, "node detail");
 
   if (!isAdmin && node.ownerUserId !== auth.session.user?.id) {
     return apiOk(redactNodeForMember(node));
@@ -145,6 +153,18 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       }, { actorId: admin.session.user?.id });
     }
   }
+
+  withApiContext("PATCH /api/nodes/[id]", {
+    actorUserId: admin.session.user?.id ?? undefined,
+    nodeId: params.id,
+  }).info(
+    {
+      event: "node_patch",
+      statusChanged: Boolean(data.status && data.status !== existing.status),
+      profileFieldsUpdated: fieldsForProfileAudit.length,
+    },
+    "node patched",
+  );
 
   return apiOk(node);
 }

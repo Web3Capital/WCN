@@ -9,6 +9,7 @@ import { parseBody, createNodeSchema } from "@/lib/core/validation";
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
 import { buildNodeListFilters, buildNodeListWhere, mergeNodeWhere, memberOwnedNodesWhere } from "./list-where";
+import { withApiContext } from "@/lib/logger";
 
 const DEFAULT_LIST_LIMIT = 100;
 const MAX_LIST_LIMIT = 200;
@@ -71,6 +72,22 @@ export async function GET(req: Request) {
     for (const g of groups) statusCounts[g.status] = g._count;
   }
 
+  const log = withApiContext("GET /api/nodes", {
+    userId: userId ?? undefined,
+    isAdmin,
+  });
+  log.info(
+    {
+      event: "nodes_list",
+      limit,
+      returned: page.length,
+      hasMore,
+      includeCounts,
+      invalidCursor: Boolean(cursorId && !cursorAnchor),
+    },
+    "nodes list",
+  );
+
   return apiOk({
     nodes: isAdmin ? page : page.map(redactNodeForMember),
     meta: { nextCursor, hasMore, limit },
@@ -128,6 +145,11 @@ export async function POST(req: Request) {
       ownerId: node.ownerUserId ?? undefined,
     },
     { actorId: admin.session.user?.id },
+  );
+
+  withApiContext("POST /api/nodes", { actorUserId: admin.session.user?.id ?? undefined }).info(
+    { event: "node_created", nodeId: node.id, type: node.type },
+    "node created",
   );
 
   return apiCreated(node);

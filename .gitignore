@@ -10,3 +10,7 @@ yarn-error.log*
 /lib/generated/prisma
 *.tsbuildinfo
 coverage/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
