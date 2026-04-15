@@ -44,26 +44,19 @@ export default async function NodesPage() {
       <div className="container-wide">
         <span className="eyebrow"><T>Network</T></span>
         <h1><T>Node registry</T></h1>
-        <p className="muted" style={{ maxWidth: 600 }}>
-          <T>Create, review, and manage nodes.</T>
-          {!isAdmin ? (
-            <span className="block mt-8 text-sm">
-              <T>You are viewing only nodes you own.</T>
-            </span>
-          ) : null}
+        <p className="muted">
+          <T>Create, review, and manage network nodes, lifecycle, and operations.</T>
         </p>
-        <div style={{ marginTop: 24 }}>
-          <NodesConsole
-            initial={safeNodes}
-            readOnly={!isAdmin}
-            initialMeta={{
-              nextCursor,
-              hasMore,
-              limit: LIST_LIMIT,
-              statusCounts,
-            }}
-          />
-        </div>
+        <NodesConsole
+          initial={safeNodes}
+          readOnly={!isAdmin}
+          initialMeta={{
+            nextCursor,
+            hasMore,
+            limit: LIST_LIMIT,
+            statusCounts,
+          }}
+        />
       </div>
     </div>
   );

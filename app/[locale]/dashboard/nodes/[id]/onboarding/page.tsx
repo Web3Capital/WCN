@@ -4,7 +4,6 @@ import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { NodeOnboardingUI } from "./ui";
-import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
@@ -33,7 +32,6 @@ export default async function NodeOnboardingPage({ params }: { params: Promise<{
   return (
     <div className="dashboard-page section">
       <div className="container-wide">
-        <span className="eyebrow"><T>Network</T></span>
         <NodeOnboardingUI node={JSON.parse(JSON.stringify(node))} isAdmin={isAdmin} />
       </div>
     </div>

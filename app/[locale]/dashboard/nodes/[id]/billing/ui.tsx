@@ -23,15 +23,15 @@ export function NodeBillingUI({ node, isAdmin }: { node: NodeData; isAdmin: bool
       backLabel={t(`Back to ${node.name}`)}
       title={t(`Billing & Contract: ${node.name}`)}
     >
-      <div className="grid-4">
+      <div className="grid-4 mb-16">
         <StatCard label={t("Billing Status")} value={node.billingStatus ?? t("N/A")} />
         <StatCard label={t("Deposit Status")} value={node.depositStatus ?? t("N/A")} />
         <StatCard label={t("Seat Fee Status")} value={node.seatFeeStatus ?? t("N/A")} />
         <StatCard label={t("Active Seats")} value={node.seats.filter(s => s.status === "ACTIVE").length} />
       </div>
 
-      <div className="card p-20">
-        <h2 className="text-lg font-semibold mb-12 mt-0">{t("Seats")} ({node.seats.length})</h2>
+      <div className="card p-18">
+        <h3 className="mt-0 mb-12">{t("Seats")} ({node.seats.length})</h3>
         {node.seats.length === 0 ? (
           <EmptyState message={t("No seats.")} />
         ) : (
@@ -52,8 +52,8 @@ export function NodeBillingUI({ node, isAdmin }: { node: NodeData; isAdmin: bool
         )}
       </div>
 
-      <div className="card p-20">
-        <h2 className="text-lg font-semibold mb-12 mt-0">{t("Stake Ledger")} ({node.stakeLedger.length})</h2>
+      <div className="card p-18">
+        <h3 className="mt-0 mb-12">{t("Stake Ledger")} ({node.stakeLedger.length})</h3>
         {node.stakeLedger.length === 0 ? (
           <EmptyState message={t("No stake entries.")} />
         ) : (

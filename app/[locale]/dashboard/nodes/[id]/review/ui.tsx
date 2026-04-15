@@ -58,15 +58,11 @@ export function NodeReviewUI({ node, reviews }: { node: NodeData; reviews: Revie
       backHref={`/dashboard/nodes/${node.id}`}
       backLabel={t(`Back to ${node.name}`)}
       title={t(`Review: ${node.name}`)}
-      badge={
-        <span className="flex items-center gap-6">
-          <StatusBadge status={node.status} />
-          <span className="badge">{node.type}</span>
-        </span>
-      }
+      subtitle={`${node.type} · ${node.status.replace(/_/g, " ")}`}
+      badge={<StatusBadge status={node.status} />}
     >
-      <div className="card p-20">
-        <h2 className="text-lg font-semibold mb-12 mt-0">{t("Submit Review")}</h2>
+      <div className="card p-18">
+        <h3 className="mt-0 mb-12">{t("Submit Review")}</h3>
         <form onSubmit={handleSubmit} className="form">
           <label className="field">
             <span className="label">{t("Decision")}</span>
@@ -86,8 +82,8 @@ export function NodeReviewUI({ node, reviews }: { node: NodeData; reviews: Revie
         </form>
       </div>
 
-      <div className="card p-20">
-        <h2 className="text-lg font-semibold mb-12 mt-0">{t("Review History")} ({reviews.length})</h2>
+      <div className="card p-18">
+        <h3 className="mt-0 mb-12">{t("Review History")} ({reviews.length})</h3>
         {reviews.length === 0 ? (
           <EmptyState message={t("No reviews yet.")} />
         ) : (

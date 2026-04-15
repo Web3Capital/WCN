@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Link } from "@/i18n/routing";
+import { FolderKanban, ListTodo, Bot, FileStack } from "lucide-react";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { DetailLayout, StatusBadge, StatCard } from "../../_components";
 
@@ -67,18 +68,30 @@ export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean
     } finally { setBusy(false); }
   }
 
+  const subtitleParts = [
+    node.type.replace(/_/g, " "),
+    `L${node.level}`,
+    [node.region, node.city].filter(Boolean).join(" · ") || null,
+  ].filter(Boolean) as string[];
+
   return (
     <DetailLayout
       backHref="/dashboard/nodes"
       backLabel={t("All Nodes")}
       title={node.name}
-      subtitle={node.owner ? `${t("Owner:")} ${node.owner.name || node.owner.email}` : undefined}
-      badge={
-        <span className="flex items-center gap-6">
-          <StatusBadge status={status} />
-          <span className="badge">{node.type}</span>
-          <span className="badge">L{node.level}</span>
-          {node.riskLevel && <span className="badge badge-red">{node.riskLevel}</span>}
+      subtitle={subtitleParts.length ? subtitleParts.join(" · ") : undefined}
+      badge={<StatusBadge status={status} />}
+      meta={
+        <span className="flex flex-wrap items-center gap-10">
+          {node.owner ? (
+            <span>
+              {t("Owner:")}{" "}
+              <span className="font-medium">{node.owner.name || node.owner.email || "—"}</span>
+            </span>
+          ) : null}
+          {node.riskLevel ? (
+            <span className="badge badge-red text-xs">{node.riskLevel}</span>
+          ) : null}
         </span>
       }
     >
@@ -111,11 +124,11 @@ export function NodeDetail({ node, isAdmin }: { node: NodeData; isAdmin: boolean
         </div>
 
         <div className="flex-col gap-16">
-          <div className="grid-2 gap-12">
-            <StatCard label={t("Projects")} value={node.projects.length} />
-            <StatCard label={t("Tasks")} value={node.tasksAsOwner.length} />
-            <StatCard label={t("PoB records")} value={node._count.pobRecords} />
-            <StatCard label={t("Agents")} value={node.ownedAgents.length} />
+          <div className="grid-4 mb-16">
+            <StatCard label={t("Projects")} value={node.projects.length} icon={<FolderKanban size={16} />} />
+            <StatCard label={t("Tasks")} value={node.tasksAsOwner.length} icon={<ListTodo size={16} />} />
+            <StatCard label={t("PoB records")} value={node._count.pobRecords} icon={<FileStack size={16} />} />
+            <StatCard label={t("Agents")} value={node.ownedAgents.length} icon={<Bot size={16} />} />
           </div>
           {isAdmin && (
             <div className="card p-18">

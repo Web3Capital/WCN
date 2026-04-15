@@ -5,7 +5,6 @@ import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { redactNodeForMember } from "@/lib/member-redact";
 import { NodeDetail } from "./ui";
-import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
@@ -39,7 +38,6 @@ export default async function NodeDetailPage({ params }: { params: { id: string 
   return (
     <div className="dashboard-page section">
       <div className="container-wide">
-        <span className="eyebrow"><T>Network</T></span>
         <NodeDetail node={JSON.parse(JSON.stringify(data))} isAdmin={isAdmin} />
       </div>
     </div>

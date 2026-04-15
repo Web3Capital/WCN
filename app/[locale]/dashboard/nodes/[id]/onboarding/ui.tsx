@@ -55,9 +55,9 @@ export function NodeOnboardingUI({ node, isAdmin }: { node: NodeData; isAdmin: b
       title={t(`Onboarding: ${node.name}`)}
       subtitle={t("Track onboarding progress for the first 14 days.")}
     >
-      <div className="card p-20">
+      <div className="card p-18 mb-16">
         <div className="flex-between mb-12">
-          <h2 className="text-lg font-semibold mt-0 mb-0">{t("Progress")}</h2>
+          <h3 className="mt-0 mb-0">{t("Progress")}</h3>
           <span className="stat-number" style={{ fontSize: 24 }}>{progress}%</span>
         </div>
 
@@ -76,7 +76,7 @@ export function NodeOnboardingUI({ node, isAdmin }: { node: NodeData; isAdmin: b
         </div>
       </div>
 
-      <div className="grid-4">
+      <div className="grid-4 mb-16">
         <StatCard label={t("Projects")} value={node.projects.length} />
         <StatCard label={t("Tasks Owned")} value={node.tasksAsOwner.length} />
         <StatCard label={t("Contract")} value={hasContract ? t("Sent") : t("Pending")} />
