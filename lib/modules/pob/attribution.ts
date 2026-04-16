@@ -239,6 +239,79 @@ export async function calculateAttribution(dealId: string): Promise<AttributionR
   return { pobId, dealId, baseValue, qualityMult, timeMult, finalScore, attributions };
 }
 
+// ─── White Paper §11: v3 PoB Score Formula ─────────────────────
+// PoB Score = Validity × TaskImportance × OutcomeImpact × ScarcityFactor
+
+/** Task type weights for taskImportance dimension */
+const TASK_IMPORTANCE_WEIGHTS: Record<string, number> = {
+  FUNDRAISING: 1.0,
+  LIQUIDITY: 0.9,
+  GROWTH: 0.8,
+  EXECUTION: 0.7,
+  RESEARCH: 0.6,
+  RESOURCE: 0.5,
+  OTHER: 0.4,
+};
+
+/**
+ * Calculate the v3 PoB score using the white paper's four-factor model.
+ */
+export function calculateV3PoBScore(params: {
+  /** 0-1: Evidence completeness & verification strength */
+  validity: number;
+  /** 0-1: Weight of the task in the deal workflow */
+  taskImportance: number;
+  /** 0-1: Measurable business outcome contribution */
+  outcomeImpact: number;
+  /** 0-1: Rarity/replaceability of the contribution */
+  scarcityFactor: number;
+}): number {
+  const raw = params.validity * params.taskImportance * params.outcomeImpact * params.scarcityFactor;
+  // Scale to 0-10000 range then round to 2 decimal places
+  return Math.round(raw * 10000) / 100;
+}
+
+/**
+ * Derive v3 scoring dimensions from deal/evidence context.
+ * Called alongside legacy scoring to populate v3 fields.
+ */
+export function deriveV3Dimensions(context: {
+  approvedEvidenceCount: number;
+  totalEvidenceCount: number;
+  taskType?: string;
+  dealAmount?: number;
+  networkMedianDealAmount?: number;
+  eligibleNodesForTask?: number;
+}): {
+  validity: number;
+  taskImportance: number;
+  outcomeImpact: number;
+  scarcityFactor: number;
+  v3Score: number;
+} {
+  // Validity: ratio of approved evidence to total
+  const validity = context.totalEvidenceCount > 0
+    ? Math.min(context.approvedEvidenceCount / context.totalEvidenceCount, 1)
+    : 0;
+
+  // Task Importance: based on task type
+  const taskImportance = TASK_IMPORTANCE_WEIGHTS[context.taskType ?? "OTHER"] ?? 0.4;
+
+  // Outcome Impact: deal amount relative to network median
+  const median = context.networkMedianDealAmount ?? 1;
+  const outcomeImpact = context.dealAmount
+    ? Math.min(context.dealAmount / (median * 2), 1)
+    : 0.5;
+
+  // Scarcity: inverse of eligible nodes (fewer = more scarce)
+  const eligible = context.eligibleNodesForTask ?? 10;
+  const scarcityFactor = Math.min(1 / Math.max(eligible * 0.1, 0.1), 1);
+
+  const v3Score = calculateV3PoBScore({ validity, taskImportance, outcomeImpact, scarcityFactor });
+
+  return { validity, taskImportance, outcomeImpact, scarcityFactor, v3Score };
+}
+
 /**
  * Get attribution breakdown for a specific PoB record.
  */

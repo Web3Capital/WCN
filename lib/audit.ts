@@ -140,6 +140,14 @@ export const AuditAction = {
 
   // Search
   SEARCH_INDEX_UPDATE: "SEARCH_INDEX_UPDATE",
+
+  // Policy (White Paper §13)
+  POLICY_CREATE: "POLICY_CREATE",
+  POLICY_UPDATE: "POLICY_UPDATE",
+  POLICY_ACTIVATE: "POLICY_ACTIVATE",
+
+  // Ledger (White Paper §12)
+  LEDGER_ENTRY_CREATE: "LEDGER_ENTRY_CREATE",
 } as const;
 
 export async function writeAudit(payload: AuditPayload): Promise<void> {

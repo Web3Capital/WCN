@@ -40,6 +40,25 @@ enum ApplicationStatus {
   REJECTED
 }
 
+// White Paper §08: Identity Layer — four first-class identity types
+enum NodeCategory {
+  HUMAN     // Natural person (Human Node)
+  ORG       // Company, fund, DAO, media, law firm (Org Node)
+  AGENT     // Constrained AI agent (Agent Node)
+  OPERATOR  // Country/city/industry operator (Operator Node)
+}
+
+// White Paper §09: Network Layer — geographic/functional scope dimension
+enum NodeScope {
+  GLOBAL
+  REGION
+  CITY
+  INDUSTRY
+  VERTICAL
+  FUNCTIONAL
+}
+
+// Legacy alias — preserved for migration safety, maps to NodeScope
 enum NodeType {
   GLOBAL
   REGION
@@ -47,6 +66,40 @@ enum NodeType {
   INDUSTRY
   FUNCTIONAL
   AGENT
+}
+
+// White Paper §12: Value Layer — three-ledger economic model
+enum LedgerType {
+  CASH       // Fiat, stablecoin, service fees, success commissions
+  RIGHTS     // Node seats, governance positions, quotas
+  INCENTIVE  // Points, deferred rewards, future equity mapping
+}
+
+enum LedgerAction {
+  CREDIT
+  DEBIT
+  FREEZE
+  UNFREEZE
+  SLASH
+  RELEASE
+  ESCROW
+}
+
+// White Paper §13: Governance Layer — Policy Engine
+enum PolicyScope {
+  GLOBAL        // System-wide
+  WORKSPACE     // Per-workspace
+  NODE_TYPE     // Per node category
+  DEAL_TYPE     // Per deal type
+  SETTLEMENT    // Settlement-specific
+  AGENT_POLICY  // Agent-specific
+}
+
+enum PolicyStatus {
+  DRAFT
+  ACTIVE
+  SUSPENDED
+  RETIRED
 }
 
 enum NodeStatus {
@@ -752,12 +805,16 @@ model Application {
 // ─── NODE ───────────────────────────────────────────────────────────────────
 
 model Node {
-  id          String     @id @default(cuid())
+  id          String       @id @default(cuid())
   type        NodeType
-  status      NodeStatus @default(DRAFT)
+  /// White Paper §08: Identity category (HUMAN/ORG/AGENT/OPERATOR)
+  category    NodeCategory @default(HUMAN)
+  /// White Paper §09: Geographic/functional scope
+  scope       NodeScope?
+  status      NodeStatus   @default(DRAFT)
   name        String
   description String?
-  tags        String[]   @default([])
+  tags        String[]     @default([])
 
   workspaceId  String?
   region       String?
@@ -814,8 +871,10 @@ model Node {
   reputationScore    ReputationScore?
   scorecards         NodeScorecard[]
   territories        Territory[]
+  ledgerEntries      Ledger[]
 
   @@index([type, status, createdAt])
+  @@index([category, status])
   @@index([ownerUserId])
   @@index([workspaceId])
 }
@@ -1116,6 +1175,13 @@ model PoBRecord {
   timeMult     Float @default(1)
   riskDiscount Float @default(1)
   score        Float @default(0)
+
+  /// White Paper §11: PoB Score = Validity × TaskImportance × OutcomeImpact × ScarcityFactor
+  validity       Float? // Evidence completeness & verification strength (0-1)
+  taskImportance Float? // Weight of the task in the deal workflow (0-1)
+  outcomeImpact  Float? // Measurable business outcome contribution (0-1)
+  scarcityFactor Float? // Rarity/replaceability of the contribution (0-1)
+  v3Score        Float? // v3 composite score
 
   taskId String?
   task   Task?   @relation(fields: [taskId], references: [id], onDelete: SetNull)
@@ -1587,6 +1653,14 @@ model ReputationScore {
   components   Json?
   calculatedAt DateTime       @default(now())
 
+  /// White Paper §18: Score = α*Resource + β*Execution + γ*Trust + δ*Stability + ε*Contribution
+  resource     Float? // Quality of real resources (funds, channels, licenses)
+  execution    Float? // Task completion rate, SLA attainment, conversion rate
+  trust        Float? // Evidence completeness, violation rate, dispute outcomes
+  stability    Float? // Tenure, continuous contribution, cooperation repurchase
+  contribution Float? // Verified PoB count, weight, settlement-linked amount
+  v3Score      Float? // v3 composite with configurable weights
+
   @@index([tier, score(sort: Desc)])
 }
 
@@ -1946,4 +2020,98 @@ model Territory {
   @@index([region, scope])
   @@index([nodeId])
   @@index([status])
+}
+
+// ─── LEDGER (White Paper §12: Value Layer — Three-Ledger Model) ────────────
+
+model Ledger {
+  id            String       @id @default(cuid())
+  workspaceId   String?
+  nodeId        String
+  node          Node         @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  /// CASH = fiat/stablecoin; RIGHTS = seats/governance/quotas; INCENTIVE = points/deferred rewards
+  type          LedgerType
+  action        LedgerAction
+  amount        Float        @default(0)
+  currency      String       @default("USD")
+  /// Reference entity ID (deal, settlement, penalty, etc.)
+  reference     String?
+  /// Reference entity type ("DEAL", "SETTLEMENT", "PENALTY", etc.)
+  referenceType String?
+  notes         String?
+  metadata      Json?
+  version       Int          @default(1)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([nodeId, type, createdAt])
+  @@index([workspaceId, type])
+  @@index([reference, referenceType])
+}
+
+// ─── POLICY ENGINE (White Paper §13: Governance Layer) ─────────────────────
+
+model Policy {
+  id            String       @id @default(cuid())
+  workspaceId   String?
+  name          String
+  description   String?
+  scope         PolicyScope
+  /// Scope qualifier (e.g., workspace ID, node category value, deal type)
+  scopeRef      String?
+  /// Array of condition objects: [{field, operator, threshold}]
+  conditions    Json
+  /// Array of action definitions: [{type, params}]
+  actions       Json
+  approvers     String[]     @default([])
+  rollbackLogic Json?
+  priority      Int          @default(0)
+  version       Int          @default(1)
+  status        PolicyStatus @default(DRAFT)
+  createdBy     String?
+  activatedAt   DateTime?
+  retiredAt     DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  evaluations   PolicyEvaluation[]
+
+  @@index([scope, status])
+  @@index([workspaceId, status])
+}
+
+model PolicyEvaluation {
+  id          String   @id @default(cuid())
+  policyId    String
+  policy      Policy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  entityType  String
+  entityId    String
+  /// "PASS" | "FAIL" | "WARN"
+  result      String
+  details     Json?
+  evaluatedAt DateTime @default(now())
+
+  @@index([policyId, evaluatedAt])
+  @@index([entityType, entityId])
+}
+
+// ─── LEARNING LOOP (White Paper §05: Formal Definition, component L) ──────
+
+model LearningSignal {
+  id          String    @id @default(cuid())
+  workspaceId String?
+  /// Signal category: "MATCH_FEEDBACK", "SCORE_ADJUSTMENT", "POLICY_OVERRIDE", etc.
+  signalType  String
+  /// Event name that triggered this signal
+  sourceEvent String
+  entityType  String
+  entityId    String
+  payload     Json
+  processed   Boolean   @default(false)
+  processedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([signalType, processed])
+  @@index([entityType, entityId])
+  @@index([workspaceId, createdAt])
 }
