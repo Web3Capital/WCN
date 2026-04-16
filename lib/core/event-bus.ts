@@ -6,9 +6,22 @@
  *
  * All handlers execute concurrently via Promise.allSettled — a failed
  * handler never blocks the emitter or other handlers.
+ *
+ * Type Safety (v2):
+ * - New code: `eventBus.emit(Events.DEAL_CREATED, { ... })` — payload
+ *   is type-checked via EventMap when the event name is a known literal.
+ * - Legacy code: `eventBus.emit<DealCreatedEvent>(Events.DEAL_CREATED, { ... })`
+ *   — explicit generic still works via overload for backward compatibility.
  */
 
+import type { EventMap } from "./event-types";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type EventPayload = Record<string, any>;
+
+/** Resolve the payload type for an event: typed if in EventMap, else fallback. */
+export type ResolvedPayload<E extends string> =
+  E extends keyof EventMap ? EventMap[E] : EventPayload;
 
 export type EventHandler<T extends EventPayload = EventPayload> = (
   payload: T,
@@ -39,26 +52,27 @@ export class DomainEventBus {
 
   /**
    * Register a handler for a specific event.
+   *
+   * Overload 1 (preferred): infer payload type from EventMap via event name literal.
+   * Overload 2 (legacy): explicit generic payload type — backward compatible.
    */
-  on<T extends EventPayload = EventPayload>(
-    event: string,
-    handler: EventHandler<T>,
-  ): () => void {
-    const entry: HandlerEntry = { handler: handler as EventHandler, once: false };
+  on<E extends keyof EventMap>(event: E, handler: EventHandler<EventMap[E]>): () => void;
+  on<T extends EventPayload = EventPayload>(event: string, handler: EventHandler<T>): () => void;
+  on(event: string, handler: EventHandler): () => void {
+    const entry: HandlerEntry = { handler, once: false };
     const list = this.handlers.get(event) || [];
     list.push(entry);
     this.handlers.set(event, list);
-    return () => this.off(event, handler as EventHandler);
+    return () => this.off(event, handler);
   }
 
   /**
    * Register a one-time handler.
    */
-  once<T extends EventPayload = EventPayload>(
-    event: string,
-    handler: EventHandler<T>,
-  ): void {
-    const entry: HandlerEntry = { handler: handler as EventHandler, once: true };
+  once<E extends keyof EventMap>(event: E, handler: EventHandler<EventMap[E]>): void;
+  once<T extends EventPayload = EventPayload>(event: string, handler: EventHandler<T>): void;
+  once(event: string, handler: EventHandler): void {
+    const entry: HandlerEntry = { handler, once: true };
     const list = this.handlers.get(event) || [];
     list.push(entry);
     this.handlers.set(event, list);
@@ -90,11 +104,15 @@ export class DomainEventBus {
 
   /**
    * Emit a domain event. All matching handlers run concurrently.
-   * Returns results so callers can inspect failures if needed.
+   *
+   * Overload 1 (preferred): payload type-checked via EventMap from event name.
+   * Overload 2 (legacy): explicit generic payload type — backward compatible.
    */
-  async emit<T extends EventPayload = EventPayload>(
+  async emit<E extends keyof EventMap>(event: E, payload: EventMap[E], context?: { actorId?: string; requestId?: string }): Promise<PromiseSettledResult<void>[]>;
+  async emit<T extends EventPayload = EventPayload>(event: string, payload: T, context?: { actorId?: string; requestId?: string }): Promise<PromiseSettledResult<void>[]>;
+  async emit(
     event: string,
-    payload: T,
+    payload: EventPayload,
     context?: { actorId?: string; requestId?: string },
   ): Promise<PromiseSettledResult<void>[]> {
     const meta: EventMeta = {

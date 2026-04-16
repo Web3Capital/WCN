@@ -8,6 +8,7 @@ const mockPrisma = {
   settlementCycle: {
     findUnique: vi.fn(),
     update: vi.fn(),
+    updateMany: vi.fn(),
   },
   poBRecord: {
     findMany: vi.fn(),
@@ -26,6 +27,7 @@ beforeEach(() => {
   mockPrisma.settlementLine.deleteMany.mockResolvedValue({ count: 0 });
   mockPrisma.settlementLine.createMany.mockResolvedValue({ count: 0 });
   mockPrisma.settlementCycle.update.mockResolvedValue({});
+  mockPrisma.settlementCycle.updateMany.mockResolvedValue({ count: 1 });
 });
 
 describe("calculateSettlementForCycle", () => {
@@ -36,6 +38,7 @@ describe("calculateSettlementForCycle", () => {
       endAt: new Date("2026-01-31"),
       pool: 100000,
       status: "DRAFT",
+      version: 1,
     });
 
     mockPrisma.poBRecord.findMany.mockResolvedValue([
@@ -69,6 +72,7 @@ describe("calculateSettlementForCycle", () => {
       endAt: new Date("2026-01-31"),
       pool: 50000,
       status: "DRAFT",
+      version: 1,
     });
 
     mockPrisma.poBRecord.findMany.mockResolvedValue([]);
@@ -85,6 +89,7 @@ describe("calculateSettlementForCycle", () => {
       endAt: new Date("2026-01-31"),
       pool: 200000,
       status: "RECONCILED",
+      version: 1,
     });
 
     mockPrisma.poBRecord.findMany.mockResolvedValue([]);
@@ -106,6 +111,7 @@ describe("calculateSettlementForCycle", () => {
       endAt: new Date("2026-01-31"),
       pool: 100000,
       status: "DRAFT",
+      version: 1,
     });
 
     mockPrisma.poBRecord.findMany.mockResolvedValue([

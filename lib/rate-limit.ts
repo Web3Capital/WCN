@@ -81,7 +81,7 @@ async function check(limiter: Ratelimit | null, identifier: string, failClosed =
 }
 
 export async function rateLimit(identifier: string): Promise<RateLimitResult> {
-  return check(getApiLimiter(), identifier, false);
+  return check(getApiLimiter(), identifier, true);
 }
 
 export async function rateLimitAuth(identifier: string): Promise<RateLimitResult> {
@@ -89,7 +89,7 @@ export async function rateLimitAuth(identifier: string): Promise<RateLimitResult
 }
 
 export async function rateLimitAdmin(identifier: string): Promise<RateLimitResult> {
-  return check(getAdminLimiter(), identifier, false);
+  return check(getAdminLimiter(), identifier, true);
 }
 
 function getSmsLimiter(): Ratelimit | null {

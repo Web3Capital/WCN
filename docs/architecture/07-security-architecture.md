@@ -45,7 +45,7 @@
 │  ─ User object injected into handler context      │
 ├──────────────────────────────────────────────────┤
 │  Layer 3: Permission Middleware                   │
-│  ─ Role check (ADMIN / MEMBER / OBSERVER)         │
+│  ─ Role check (13 roles — see glossary)           │
 │  ─ Node scope check (does user belong to node?)   │
 │  ─ Entity access check (AccessGrant records)      │
 │  ─ Entity freeze check (is entity frozen?)        │
@@ -76,31 +76,48 @@
 
 ```
 Strategy: JWT (stateless)
-  Token contents: { userId, role, accountStatus, nodeId, provider }
+  Token contents: {
+    id,              // User ID
+    provider,        // Auth provider (credentials, google, github, etc.)
+    role,            // Primary platform role (13 roles — see glossary)
+    accountStatus,   // Account lifecycle status
+    nodeIds,         // IDs of all nodes owned by this user
+    activeWorkspaceId, // Currently active workspace context
+    activeRole,      // Currently active role for permission checks
+    refreshedAt      // Last DB refresh timestamp (5-minute sliding window)
+  }
   Expiry: 24 hours (configurable)
-  Refresh: Sliding window — new token on each authenticated request
+  Refresh: DB lookup every 5 minutes to sync role/status/nodeIds changes
   Storage: httpOnly cookie (not localStorage — XSS protection)
-  Revocation: Check accountStatus on critical operations (not cached)
+  Revocation: tokenInvalidatedAt field checked on each DB refresh cycle
 ```
 
 ---
 
 ## Authorization Architecture
 
-### Three-Layer Permission Model
+### Two-Layer Role Model + ABAC + Grants
 
 ```
-Layer 1: RBAC (Role-Based)
-  ─ ADMIN: Full platform access
-  ─ MEMBER: Scoped to own node(s) + participated deals
-  ─ OBSERVER: Read-only access to assigned entities
+Layer 1: Platform Role (User.role — 13 roles)
+  Governance roles: FOUNDER, ADMIN, FINANCE_ADMIN
+  Business roles:   NODE_OWNER, PROJECT_OWNER, CAPITAL_NODE, SERVICE_NODE
+  Operations roles: REVIEWER, RISK_DESK, AGENT_OWNER
+  Access roles:     USER, OBSERVER
+  Internal:         SYSTEM
 
-Layer 2: ABAC (Attribute-Based)
+  See lib/permissions.ts for the complete 13-role × 22-resource permission matrix.
+
+Layer 2: Workspace Role (RoleAssignment table)
+  Users can hold different roles in different workspaces.
+  The active role is tracked via User.activeRole and User.activeWorkspaceId.
+
+Layer 3: ABAC (Attribute-Based)
   ─ Node ownership: Can only modify own node's resources
   ─ Deal participation: Can only access deals they're a participant in
   ─ Entity confidentiality: Confidential entities require explicit grant
 
-Layer 3: Grant-Based (Explicit)
+Layer 4: Grant-Based (Explicit)
   ─ AccessGrant records: Temporary or permanent access to specific entities
   ─ Use case: External advisor needs access to one specific deal
 ```
@@ -130,22 +147,20 @@ function hasPermission(user: User, resource: string, action: string, entityId?: 
 
 ### Permission Matrix
 
-| Resource | ADMIN | MEMBER | OBSERVER |
-|----------|-------|--------|----------|
-| Users | CRUD | Read self | Read self |
-| Nodes | CRUD | Read all, write own | Read assigned |
-| Applications | CRUD | Read own, create | — |
-| Projects | CRUD | Read scoped, write own | Read scoped |
-| Capital | CRUD | Read scoped, write own | Read scoped |
-| Deals | CRUD | Read participated, create | Read assigned |
-| Tasks | CRUD | Read scoped, write assigned | Read scoped |
-| Agents | CRUD | Read scoped | Read scoped |
-| Evidence | CRUD | Read scoped, create own | Read scoped |
-| PoB | CRUD | Read scoped | Read scoped |
-| Settlement | CRUD | Read own | Read own |
-| Risk | CRUD | — | — |
-| Audit | Read | — | — |
-| Notifications | CRUD | Read/write own | Read own |
+The complete permission matrix is defined in code at `lib/permissions.ts`.
+The `POLICIES` constant maps each of the **13 roles** to their allowed
+(Resource, Action) pairs across **22 resources**. See `docs/glossary.md`
+for role definitions.
+
+**Key governance boundaries:**
+
+| Role Category | Roles | Access Summary |
+|---|---|---|
+| **Governance** | FOUNDER, ADMIN, FINANCE_ADMIN | Full access. FINANCE_ADMIN scoped to settlement & financial ops. |
+| **Business** | NODE_OWNER, PROJECT_OWNER, CAPITAL_NODE, SERVICE_NODE | CRUD on own node's projects, deals, tasks, evidence, agents. |
+| **Operations** | REVIEWER, RISK_DESK, AGENT_OWNER | Read + review on evidence, PoB, disputes. AGENT_OWNER manages AI agents. |
+| **Access** | USER, OBSERVER | USER: limited read + self-profile. OBSERVER: read-only on assigned entities. |
+| **Internal** | SYSTEM | Machine-to-machine operations, background jobs, cron tasks. |
 
 ---
 

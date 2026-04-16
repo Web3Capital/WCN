@@ -3,10 +3,10 @@
  */
 
 export { eventBus } from "./event-bus";
-export type { EventPayload, EventHandler, EventMeta } from "./event-bus";
+export type { EventPayload, EventHandler, EventMeta, ResolvedPayload } from "./event-bus";
 
 export { Events } from "./event-types";
-export type { EventName } from "./event-types";
+export type { EventName, EventMap } from "./event-types";
 
 export {
   apiOk,
@@ -38,3 +38,9 @@ export {
 export { parseBody } from "./validation";
 
 export { initWCN } from "./init";
+
+export {
+  OptimisticLockError,
+  updateWithVersion,
+  versionGuard,
+} from "./optimistic-lock";

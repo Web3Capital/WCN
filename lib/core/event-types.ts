@@ -387,3 +387,85 @@ export const Events = {
 } as const;
 
 export type EventName = (typeof Events)[keyof typeof Events];
+
+// ─── Type-Safe Event Map ────────────────────────────────────────
+// Maps each event name constant to its payload interface.
+// Used by DomainEventBus to enforce payload shapes at compile time.
+
+export interface UserStatusChangedEvent {
+  userId: string;
+  oldStatus: string;
+  newStatus: string;
+  changedBy: string;
+}
+
+export interface EventMap {
+  // Identity
+  [Events.USER_CREATED]: UserCreatedEvent;
+  [Events.USER_LOGIN]: UserLoginEvent;
+  [Events.USER_LOGIN_FAILED]: UserLoginFailedEvent;
+  [Events.USER_ROLE_CHANGED]: UserRoleChangedEvent;
+  [Events.USER_SUSPENDED]: UserSuspendedEvent;
+  [Events.USER_STATUS_CHANGED]: UserStatusChangedEvent;
+
+  // Nodes
+  [Events.NODE_CREATED]: NodeCreatedEvent;
+  [Events.NODE_ACTIVATED]: NodeActivatedEvent;
+  [Events.NODE_SUSPENDED]: NodeSuspendedEvent;
+  [Events.NODE_STATUS_CHANGED]: NodeStatusChangedEvent;
+  [Events.APPLICATION_SUBMITTED]: ApplicationSubmittedEvent;
+  [Events.APPLICATION_APPROVED]: ApplicationApprovedEvent;
+
+  // Projects
+  [Events.PROJECT_CREATED]: ProjectCreatedEvent;
+  [Events.PROJECT_UPDATED]: ProjectUpdatedEvent;
+  [Events.PROJECT_STATUS_CHANGED]: ProjectStatusChangedEvent;
+
+  // Capital & Matching
+  [Events.MATCH_GENERATED]: MatchGeneratedEvent;
+  [Events.MATCH_DECLINED]: MatchDeclinedEvent;
+  [Events.MATCH_CONVERTED]: MatchConvertedEvent;
+  [Events.CAPITAL_PROFILE_UPDATED]: CapitalProfileUpdatedEvent;
+
+  // Deals
+  [Events.DEAL_CREATED]: DealCreatedEvent;
+  [Events.DEAL_STAGE_CHANGED]: DealStageChangedEvent;
+  [Events.DEAL_PARTICIPANT_ADDED]: DealParticipantAddedEvent;
+  [Events.DEAL_CLOSED]: DealClosedEvent;
+
+  // Tasks
+  [Events.TASK_CREATED]: TaskCreatedEvent;
+  [Events.TASK_ASSIGNED]: TaskAssignedEvent;
+  [Events.TASK_COMPLETED]: TaskCompletedEvent;
+  [Events.TASK_OVERDUE]: TaskOverdueEvent;
+
+  // Agents
+  [Events.AGENT_RUN_STARTED]: AgentRunStartedEvent;
+  [Events.AGENT_OUTPUT_GENERATED]: AgentOutputGeneratedEvent;
+  [Events.AGENT_OUTPUT_REVIEWED]: AgentOutputReviewedEvent;
+
+  // Proof Desk
+  [Events.EVIDENCE_PACKET_CREATED]: EvidencePacketCreatedEvent;
+  [Events.EVIDENCE_SUBMITTED]: EvidenceSubmittedEvent;
+  [Events.EVIDENCE_APPROVED]: EvidenceApprovedEvent;
+  [Events.EVIDENCE_REJECTED]: EvidenceRejectedEvent;
+
+  // PoB
+  [Events.POB_CREATED]: PoBCreatedEvent;
+  [Events.POB_FLAGGED]: PoBFlaggedEvent;
+  [Events.POB_DISPUTE_RAISED]: PoBDisputeRaisedEvent;
+
+  // Settlement
+  [Events.SETTLEMENT_CYCLE_CREATED]: SettlementCycleCreatedEvent;
+  [Events.SETTLEMENT_CALCULATED]: SettlementCalculatedEvent;
+  [Events.SETTLEMENT_APPROVED]: SettlementApprovedEvent;
+  [Events.SETTLEMENT_DISTRIBUTED]: SettlementDistributedEvent;
+
+  // Governance
+  [Events.APPROVAL_REQUESTED]: ApprovalRequestedEvent;
+  [Events.APPROVAL_GRANTED]: ApprovalGrantedEvent;
+  [Events.ENTITY_FROZEN]: EntityFrozenEvent;
+
+  // Risk
+  [Events.RISK_ALERT_CREATED]: RiskAlertCreatedEvent;
+}

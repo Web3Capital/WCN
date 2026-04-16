@@ -9,6 +9,7 @@ import { getPrisma } from "@/lib/prisma";
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
 import { DealMachine, TransitionError } from "@/lib/core/state-machine";
+import { OptimisticLockError } from "@/lib/core/optimistic-lock";
 import type { DealStage } from "@prisma/client";
 import type { DealCreatedEvent, DealStageChangedEvent, DealClosedEvent } from "@/lib/core/event-types";
 
@@ -127,12 +128,14 @@ export interface UpdateDealInput {
   nextActionDueAt?: string | null;
   riskTags?: string[];
   confidentialityLevel?: string;
+  /** Required for optimistic concurrency control. Pass the version from the last GET. */
+  version: number;
 }
 
 export async function updateDeal(id: string, input: UpdateDealInput, actorId: string) {
   const prisma = getPrisma();
 
-  const existing = await prisma.deal.findUnique({ where: { id }, select: { id: true, stage: true, projectId: true } });
+  const existing = await prisma.deal.findUnique({ where: { id }, select: { id: true, stage: true, projectId: true, version: true } });
   if (!existing) return null;
 
   const data: Record<string, unknown> = {};
@@ -157,7 +160,15 @@ export async function updateDeal(id: string, input: UpdateDealInput, actorId: st
     }
   }
 
-  const deal = await prisma.deal.update({ where: { id }, data });
+  // Optimistic concurrency: WHERE version = expected, SET version = expected + 1
+  const updated = await prisma.deal.updateMany({
+    where: { id, version: input.version },
+    data: { ...data, version: input.version + 1 },
+  });
+  if (updated.count === 0) {
+    throw new OptimisticLockError("Deal", id);
+  }
+  const deal = await prisma.deal.findUniqueOrThrow({ where: { id } });
 
   if (input.stage && input.stage !== existing.stage) {
     await eventBus.emit<DealStageChangedEvent>(Events.DEAL_STAGE_CHANGED, {

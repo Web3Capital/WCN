@@ -49,6 +49,8 @@ export const updateDealSchema = z.object({
   nextActionDueAt: optionalDate,
   riskTags: z.array(z.string()).optional(),
   confidentialityLevel: z.enum(["PUBLIC", "CERTIFIED_NODE", "DEAL_ROOM", "RESTRICTED"]).optional(),
+  /** Required for optimistic concurrency control. Pass the version from the last GET response. */
+  version: z.number().int().min(1),
 });
 
 // ─── Node Schemas ───────────────────────────────────────────────

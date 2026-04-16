@@ -222,13 +222,16 @@ Write path and read path are separated for:
 |---|----------|-------------|
 | 01 | [Design Principles](./01-principles.md) | Architectural axioms and trade-off decisions |
 | 02 | [Layer Architecture](./02-layer-architecture.md) | Detailed 5+1 layer design with interfaces |
-| 03 | [Module Map](./03-module-map.md) | 18-module decomposition, boundaries, dependencies |
+| 03 | [Module Map](./03-module-map.md) | 22-module decomposition, boundaries, dependencies |
 | 04 | [Data Architecture](./04-data-architecture.md) | Data ownership, flow patterns, storage strategy |
 | 05 | [API Architecture](./05-api-architecture.md) | REST conventions, versioning, gateway design |
 | 06 | [Event Architecture](./06-event-architecture.md) | Event bus, domain events, saga patterns |
 | 07 | [Security Architecture](./07-security-architecture.md) | Zero-trust, RBAC, encryption, compliance |
 | 08 | [Deployment & Scaling](./08-deployment-scaling.md) | Infrastructure, CI/CD, horizontal scaling |
 | 09 | [Evolution Roadmap](./09-evolution-roadmap.md) | Phase 1→5 development plan with milestones |
+| 10 | [Compliance Roadmap](./10-compliance-roadmap.md) | Sanctions screening, KYC/KYB, AML, regulatory reporting |
+
+> **See also**: [Glossary](../glossary.md) — Authoritative definitions for all domain terms, enums, roles, and statuses.
 
 ---
 

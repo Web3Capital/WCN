@@ -1,8 +1,11 @@
-# PRD-02: Node Management System
+# PRD-02: Node Management System [DEPRECATED]
 
-> **Note:** 战略与 v1.0 口径以 **[Node Network System PRD v1.0](./node-network-system-prd-v1.md)** 为准；本文档为早期草案，保留作历史用户故事与字段参考，后续与 v1.0 对齐时以合并/废弃标记更新。
+> **DEPRECATED**: This document is superseded by **[Node Network System PRD v1.0](./node-network-system-prd-v1.md)**.
+> Retained for historical reference only. **Do not use for implementation decisions.**
+> All node types, statuses, lifecycle definitions, and role models in v1.0 take precedence.
+> For authoritative term definitions, see **[Glossary](../glossary.md)**.
 
-> Status: Draft | Priority: P0 — Core | Owner: CTO Office
+> Status: **Deprecated** | Superseded By: node-network-system-prd-v1.md
 > Dependencies: PRD-01 (Identity & Permission)
 > Affects: PRD-04 to PRD-18 (all business systems)
 

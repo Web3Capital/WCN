@@ -14,6 +14,7 @@
  */
 
 import { getPrisma } from "@/lib/prisma";
+import { versionGuard } from "@/lib/core/optimistic-lock";
 
 // ─── Configuration ──────────────────────────────────────────────
 
@@ -51,6 +52,7 @@ export async function calculateSettlementForCycle(
 
   const cycle = await prisma.settlementCycle.findUnique({
     where: { id: cycleId },
+    select: { id: true, status: true, pool: true, startAt: true, endAt: true, reconciledAt: true, version: true },
   });
   if (!cycle) throw new Error(`Settlement cycle ${cycleId} not found`);
 
@@ -128,9 +130,9 @@ export async function calculateSettlementForCycle(
       });
     }
 
-    await tx.settlementCycle.update({
-      where: { id: cycleId },
-      data: { reconciledAt: new Date() },
+    // Optimistic concurrency: prevent concurrent recalculations
+    await versionGuard(tx.settlementCycle, "SettlementCycle", cycleId, cycle.version, {
+      reconciledAt: new Date(),
     });
   });
 

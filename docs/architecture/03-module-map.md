@@ -1,12 +1,13 @@
 # 03 — Module Map
 
-> 18 modules, their boundaries, dependencies, interfaces, and filesystem layout.
+> 22 modules, their boundaries, dependencies, interfaces, and filesystem layout.
+> See `docs/glossary.md` for authoritative term definitions.
 
 ---
 
 ## Module Anatomy
 
-Every module follows the same internal structure. Files marked with `*` are present in all 21 modules; others are present where applicable.
+Every module follows the same internal structure. Files marked with `*` are present in all modules; others are present where applicable.
 
 ```
 lib/modules/<module-name>/

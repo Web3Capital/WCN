@@ -307,13 +307,28 @@ export const authOptions: NextAuthOptions = (() => {
         if (user || now - lastRefresh > REFRESH_MS) {
           const id = (token.id ?? user?.id) as string | undefined;
           if (id) {
-            const dbUser = await prisma.user.findUnique({
-              where: { id },
-              select: { role: true, accountStatus: true, tokenInvalidatedAt: true },
-            });
+            const [dbUser, ownedNodes] = await Promise.all([
+              prisma.user.findUnique({
+                where: { id },
+                select: {
+                  role: true,
+                  accountStatus: true,
+                  tokenInvalidatedAt: true,
+                  activeWorkspaceId: true,
+                  activeRole: true,
+                },
+              }),
+              prisma.node.findMany({
+                where: { ownerUserId: id },
+                select: { id: true },
+              }),
+            ]);
             if (dbUser) {
               token.role = dbUser.role;
               token.accountStatus = dbUser.accountStatus;
+              token.activeWorkspaceId = dbUser.activeWorkspaceId ?? null;
+              token.activeRole = dbUser.activeRole ?? dbUser.role;
+              token.nodeIds = ownedNodes.map((n) => n.id);
               if (dbUser.tokenInvalidatedAt) {
                 const iat = token.iat as number | undefined;
                 if (iat && dbUser.tokenInvalidatedAt.getTime() / 1000 > iat) {
@@ -332,6 +347,9 @@ export const authOptions: NextAuthOptions = (() => {
           session.user.id = typeof token.id === "string" ? token.id : "";
           session.user.role = token.role ?? "USER";
           session.user.accountStatus = token.accountStatus ?? "ACTIVE";
+          session.user.nodeIds = (token.nodeIds as string[]) ?? [];
+          session.user.activeWorkspaceId = (token.activeWorkspaceId as string | null) ?? null;
+          session.user.activeRole = token.activeRole ?? token.role ?? "USER";
         }
         return session;
       }

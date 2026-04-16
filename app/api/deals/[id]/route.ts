@@ -4,6 +4,7 @@ import { requireSignedIn, requirePermission } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
 import { apiOk, apiUnauthorized, apiNotFound, apiConflict, zodToApiError } from "@/lib/core/api-response";
 import { TransitionError } from "@/lib/core/state-machine";
+import { OptimisticLockError } from "@/lib/core/optimistic-lock";
 import { parseBody, updateDealSchema } from "@/lib/core/validation";
 import { getDeal, updateDeal } from "@/lib/modules/deals/service";
 import { getOwnedNodeIds } from "@/lib/member-data-scope";
@@ -73,6 +74,9 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         to: err.to,
         validTransitions: err.validTransitions,
       });
+    }
+    if (err instanceof OptimisticLockError) {
+      return apiConflict(err.message, { code: err.code });
     }
     throw err;
   }
