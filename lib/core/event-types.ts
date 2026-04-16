@@ -313,6 +313,50 @@ export interface RiskAlertCreatedEvent {
   reason?: string;
 }
 
+// ─── Policy (White Paper §13) ───────────────────────────────────
+
+export interface PolicyCreatedEvent {
+  policyId: string;
+  scope: string;
+  name: string;
+  createdBy: string;
+}
+
+export interface PolicyStatusChangedEvent {
+  policyId: string;
+  oldStatus: string;
+  newStatus: string;
+  changedBy: string;
+}
+
+export interface PolicyEvaluatedEvent {
+  policyId: string;
+  entityType: string;
+  entityId: string;
+  result: "PASS" | "FAIL" | "WARN";
+}
+
+// ─── Ledger (White Paper §12) ───────────────────────────────────
+
+export interface LedgerEntryCreatedEvent {
+  entryId: string;
+  nodeId: string;
+  type: string;
+  action: string;
+  amount: number;
+  reference?: string;
+}
+
+// ─── Learning Loop (White Paper §05, component L) ───────────────
+
+export interface LearningSignalCapturedEvent {
+  signalId: string;
+  signalType: string;
+  sourceEvent: string;
+  entityType: string;
+  entityId: string;
+}
+
 // ─── Event Name Constants ────────────────────────────────────────
 
 export const Events = {
@@ -384,6 +428,17 @@ export const Events = {
 
   // Risk
   RISK_ALERT_CREATED: "risk.alert_created",
+
+  // Policy (White Paper §13)
+  POLICY_CREATED: "policy.created",
+  POLICY_STATUS_CHANGED: "policy.status_changed",
+  POLICY_EVALUATED: "policy.evaluated",
+
+  // Ledger (White Paper §12)
+  LEDGER_ENTRY_CREATED: "ledger.entry_created",
+
+  // Learning Loop (White Paper §05)
+  LEARNING_SIGNAL_CAPTURED: "learning.signal_captured",
 } as const;
 
 export type EventName = (typeof Events)[keyof typeof Events];
@@ -468,4 +523,15 @@ export interface EventMap {
 
   // Risk
   [Events.RISK_ALERT_CREATED]: RiskAlertCreatedEvent;
+
+  // Policy
+  [Events.POLICY_CREATED]: PolicyCreatedEvent;
+  [Events.POLICY_STATUS_CHANGED]: PolicyStatusChangedEvent;
+  [Events.POLICY_EVALUATED]: PolicyEvaluatedEvent;
+
+  // Ledger
+  [Events.LEDGER_ENTRY_CREATED]: LedgerEntryCreatedEvent;
+
+  // Learning
+  [Events.LEARNING_SIGNAL_CAPTURED]: LearningSignalCapturedEvent;
 }

@@ -93,6 +93,7 @@ import type {
   EvidenceReviewStatus,
   PoBEventStatus,
   SettlementCycleStatus,
+  PolicyStatus,
 } from "@prisma/client";
 
 export const AccountMachine = new StateMachine<AccountStatus>({
@@ -263,3 +264,20 @@ export const canTransitionSettlement = (from: SettlementCycleStatus, to: Settlem
   SettlementMachine.canTransition(from, to);
 export const validNextSettlementStatuses = (from: SettlementCycleStatus) =>
   SettlementMachine.validNext(from);
+
+// White Paper §13: Governance Layer — Policy lifecycle
+export const PolicyMachine = new StateMachine<PolicyStatus>({
+  transitions: {
+    DRAFT: ["ACTIVE", "RETIRED"],
+    ACTIVE: ["SUSPENDED", "RETIRED"],
+    SUSPENDED: ["ACTIVE", "RETIRED"],
+    RETIRED: [],
+  },
+  entityType: "Policy",
+  eventName: "policy.status_changed",
+});
+
+export const canTransitionPolicy = (from: PolicyStatus, to: PolicyStatus) =>
+  PolicyMachine.canTransition(from, to);
+export const validNextPolicyStatuses = (from: PolicyStatus) =>
+  PolicyMachine.validNext(from);

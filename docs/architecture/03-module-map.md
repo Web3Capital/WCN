@@ -1,6 +1,6 @@
 # 03 — Module Map
 
-> 22 modules, their boundaries, dependencies, interfaces, and filesystem layout.
+> 26 modules, their boundaries, dependencies, interfaces, and filesystem layout.
 > See `docs/glossary.md` for authoritative term definitions.
 
 ---
@@ -455,3 +455,52 @@ wcn-nextjs-starter/
 ├── .dependency-cruiser.cjs    # CI boundary enforcement (no cross-module internals, no circular)
 └── middleware.ts              # Auth gate + X-Request-Id injection
 ```
+
+---
+
+## White Paper v3.0 Alignment Modules (M16–M19)
+
+The following modules were added to align with the WCN White Paper v3.0 formal definition `WCN = (I, N, R, D, T, P, S, G, A, L, X)`.
+
+### M16 — `@wcn/policy` (White Paper §13: Governance Layer)
+
+| Attribute | Value |
+|-----------|-------|
+| **Purpose** | Generalized policy evaluation engine — condition testing, action dispatch, versioning, audit trail |
+| **Owns** | `Policy`, `PolicyEvaluation` |
+| **Depends on** | `@wcn/audit` |
+| **Events emitted** | `policy.created`, `policy.status_changed`, `policy.evaluated` |
+| **State machine** | `PolicyMachine` (DRAFT → ACTIVE → SUSPENDED → RETIRED) |
+| **API surface** | `POST/GET /api/policies`, `GET/PATCH /api/policies/:id`, `POST /api/policies/:id/activate`, `POST /api/policies/:id/evaluate` |
+| **Built-in policies** | NO_SELF_VALIDATION, HIGH_VALUE_SETTLEMENT_APPROVAL, AGENT_TOOL_BOUNDARY, CONFLICT_OF_INTEREST, REWARD_ELIGIBILITY |
+
+### M17 — `@wcn/ledger` (White Paper §12: Value Layer)
+
+| Attribute | Value |
+|-----------|-------|
+| **Purpose** | Three-ledger economic model: Cash, Rights, Incentive |
+| **Owns** | `Ledger` |
+| **Depends on** | `@wcn/audit`, `@wcn/nodes` |
+| **Events emitted** | `ledger.entry_created` |
+| **API surface** | `POST/GET /api/ledger`, `GET /api/ledger/balances` |
+
+### M18 — `@wcn/learning` (White Paper §05: component L)
+
+| Attribute | Value |
+|-----------|-------|
+| **Purpose** | Learning loop signal collection — captures feedback from system events for future model improvement |
+| **Owns** | `LearningSignal` |
+| **Depends on** | `@wcn/audit` |
+| **Events consumed** | `match.converted`, `match.declined`, `pob.created`, `policy.evaluated`, `pob.dispute_raised` |
+| **Events emitted** | `learning.signal_captured` |
+| **API surface** | `POST/GET /api/learning/signals` |
+
+### M19 — `@wcn/augmented-node` (White Paper §09: Network Layer)
+
+| Attribute | Value |
+|-----------|-------|
+| **Purpose** | Composite view of node + agent stack as a competitive unit |
+| **Owns** | No own models — reads from `Node`, `Agent`, `AgentPermission`, `ReputationScore`, `Territory` |
+| **Depends on** | `@wcn/nodes`, `@wcn/agents`, `@wcn/reputation` |
+| **API surface** | `GET /api/augmented-nodes/:id` |
+

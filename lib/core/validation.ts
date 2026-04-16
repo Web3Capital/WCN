@@ -644,6 +644,68 @@ export const listMatchesQuerySchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).optional(),
 });
 
+// ─── Policy (White Paper §13) ──────────────────────────────────
+
+export const policyConditionSchema = z.object({
+  field: z.string().min(1),
+  operator: z.enum(["eq", "neq", "gt", "lt", "gte", "lte", "contains", "in"]),
+  threshold: z.union([z.string(), z.number(), z.array(z.string())]),
+});
+
+export const policyActionSchema = z.object({
+  type: z.string().min(1),
+  params: z.record(z.string(), z.unknown()).optional(),
+});
+
+export const createPolicySchema = z.object({
+  name: trimmedString,
+  description: optionalString,
+  scope: z.enum(["GLOBAL", "WORKSPACE", "NODE_TYPE", "DEAL_TYPE", "SETTLEMENT", "AGENT_POLICY"]),
+  scopeRef: optionalString,
+  conditions: z.array(policyConditionSchema).min(1),
+  actions: z.array(policyActionSchema).min(1),
+  approvers: z.array(z.string()).default([]),
+  rollbackLogic: z.record(z.string(), z.unknown()).nullable().optional(),
+  priority: z.number().int().min(0).default(0),
+});
+
+export const updatePolicySchema = createPolicySchema.partial().extend({
+  status: z.enum(["DRAFT", "ACTIVE", "SUSPENDED", "RETIRED"]).optional(),
+});
+
+// ─── Ledger (White Paper §12) ──────────────────────────────────
+
+export const createLedgerEntrySchema = z.object({
+  nodeId: cuid,
+  type: z.enum(["CASH", "RIGHTS", "INCENTIVE"]),
+  action: z.enum(["CREDIT", "DEBIT", "FREEZE", "UNFREEZE", "SLASH", "RELEASE", "ESCROW"]),
+  amount: nonNegativeDecimal,
+  currency: z.string().default("USD"),
+  reference: optionalString,
+  referenceType: optionalString,
+  notes: optionalString,
+});
+
+// ─── Learning Signal (White Paper §05) ─────────────────────────
+
+export const createLearningSignalSchema = z.object({
+  signalType: trimmedString,
+  sourceEvent: trimmedString,
+  entityType: trimmedString,
+  entityId: cuid,
+  payload: z.record(z.string(), z.unknown()),
+});
+
+// ─── Node Category/Scope (White Paper §08-09) ──────────────────
+
+export const updateNodeCategorySchema = z.object({
+  category: z.enum(["HUMAN", "ORG", "AGENT", "OPERATOR"]),
+});
+
+export const updateNodeScopeSchema = z.object({
+  scope: z.enum(["GLOBAL", "REGION", "CITY", "INDUSTRY", "VERTICAL", "FUNCTIONAL"]),
+});
+
 // ─── Helper: Parse or return error ──────────────────────────────
 
 export function parseBody<T>(schema: z.ZodSchema<T>, data: unknown): { ok: true; data: T } | { ok: false; error: z.ZodError } {

@@ -19,6 +19,9 @@ import { initAgentHandlers } from "@/lib/modules/agents/handlers";
 import { initNotificationHandlers } from "@/lib/modules/notification/handlers";
 import { initSearchHandlers } from "@/lib/modules/search/handlers";
 import { initRealtimeHandlers } from "@/lib/modules/realtime/handlers";
+import { initPolicyHandlers } from "@/lib/modules/policy/handlers";
+import { initLedgerHandlers } from "@/lib/modules/ledger/handlers";
+import { initLearningHandlers } from "@/lib/modules/learning/handlers";
 
 let _initialized = false;
 
@@ -42,8 +45,11 @@ export function initEventHandlers(): void {
   initNotificationHandlers();
   initSearchHandlers();
   initRealtimeHandlers();
+  initPolicyHandlers();
+  initLedgerHandlers();
+  initLearningHandlers();
 
   if (process.env.NODE_ENV === "development") {
-    console.log("[WCN] Event handlers initialized (12 modules)");
+    console.log("[WCN] Event handlers initialized (15 modules)");
   }
 }
