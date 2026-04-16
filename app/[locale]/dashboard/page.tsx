@@ -181,7 +181,7 @@ export default async function DashboardIndex() {
               <Link href="/dashboard/settlement" className="module-link">
                 <span className="status-dot status-dot-amber" /> <T>Settlement</T>
               </Link>
-              <Link href="/dashboard/applications" className="module-link">
+              <Link href="/dashboard/node-system/applications" className="module-link">
                 <span className="status-dot" /> <T>Applications</T>
                 {isAdmin ? <span className="muted"> · {applicationCount}</span> : <span className="muted"> · {myApplications}</span>}
               </Link>

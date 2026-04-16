@@ -72,7 +72,7 @@ export function ApplicationDetail({
 
   return (
     <DetailLayout
-      backHref="/dashboard/applications"
+      backHref="/dashboard/node-system/applications"
       backLabel={t("All Applications")}
       title={application.applicantName}
       badge={

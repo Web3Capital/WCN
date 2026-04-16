@@ -24,10 +24,10 @@ export default async function ApplicationDetailPage({ params }: { params: { id: 
     },
   });
 
-  if (!application) redirect("/dashboard/applications");
+  if (!application) redirect("/dashboard/node-system/applications");
 
   if (!isAdmin && application.userId !== session.user.id) {
-    redirect("/dashboard/applications");
+    redirect("/dashboard/node-system/applications");
   }
 
   const reviews = await prisma.review.findMany({

@@ -65,7 +65,7 @@ const NODE_SYSTEM_NAV: NodeSystemNavItem[] = [
   // Layer 1: 准入层
   { href: "/dashboard/node-system", labelKey: "nsOverview", icon: <LayoutDashboard size={18} strokeWidth={2} />, layer: "admission" },
   { href: "/dashboard/node-system/applications", labelKey: "nsApplications", icon: <Inbox size={18} strokeWidth={2} />, layer: "admission" },
-  { href: "/dashboard/node-system/registry", labelKey: "nsRegistry", icon: <Network size={18} strokeWidth={2} />, layer: "admission" },
+  { href: "/dashboard/nodes", labelKey: "nsRegistry", icon: <Network size={18} strokeWidth={2} />, layer: "admission" },
   { href: "/dashboard/node-system/territory", labelKey: "nsTerritory", icon: <Map size={18} strokeWidth={2} />, layer: "admission" },
   { href: "/dashboard/node-system/members", labelKey: "nsMembers", icon: <Users size={18} strokeWidth={2} />, layer: "admission" },
   { href: "/dashboard/node-system/onboarding", labelKey: "nsOnboarding", icon: <Rocket size={18} strokeWidth={2} />, layer: "admission" },
