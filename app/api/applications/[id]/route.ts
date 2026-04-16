@@ -41,19 +41,19 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     data,
   });
 
-  if (data.status !== existing.status) {
+  if (parsed.data.status !== existing.status) {
     await prisma.review.create({
       data: {
         targetType: "APPLICATION",
         targetId: params.id,
-        decision: statusToDecision(data.status),
+        decision: statusToDecision(parsed.data.status),
         notes: parsed.data.reviewNote ?? null,
         status: "RESOLVED",
         reviewerId: session.user?.id ?? null,
       },
     });
 
-    if (data.status === "APPROVED") {
+    if (parsed.data.status === "APPROVED") {
       await eventBus.emit(Events.APPLICATION_APPROVED, {
         applicationId: params.id,
         nodeId: "",

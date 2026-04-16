@@ -162,10 +162,14 @@ export const createApplicationSchema = z.object({
   organization: optionalString,
   role: optionalString,
   nodeType: optionalString,
+  territory: optionalString,
   resources: optionalString,
   lookingFor: optionalString,
   linkedin: optionalString,
   whyWcn: optionalString,
+  pastCases: optionalString,
+  references: optionalString,
+  boundaryStatement: optionalString,
 });
 
 // ─── Risk Schemas ───────────────────────────────────────────────

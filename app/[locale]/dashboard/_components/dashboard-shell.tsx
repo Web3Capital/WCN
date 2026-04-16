@@ -8,8 +8,11 @@ import {
   BarChart3,
   Bot,
   ChevronDown,
+  ChevronRight,
   ClipboardList,
   Database,
+  DollarSign,
+  FileText,
   FolderKanban,
   Gavel,
   GitCompareArrows,
@@ -25,9 +28,11 @@ import {
   Bell,
   LogOut,
   Mail,
+  Map,
   Megaphone,
   Menu,
   Network,
+  Rocket,
   Search,
   Scale,
   Settings,
@@ -37,6 +42,7 @@ import {
   UserCircle,
   Users,
   Vote,
+  Zap,
   X,
 } from "lucide-react";
 import type { Role } from "@prisma/client";
@@ -44,13 +50,212 @@ import { signOut } from "next-auth/react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link, useRouter } from "@/i18n/routing";
 
-type GroupTitleKey = "overview" | "network" | "work" | "verification" | "intelligence" | "admin" | "ecosystem" | "platform";
+type GroupTitleKey = "overview" | "nodeSystem" | "network" | "work" | "verification" | "intelligence" | "admin" | "ecosystem" | "platform";
 type ItemLabelKey = "myWorkspace" | "nodes" | "nodeReviewQueue" | "projects" | "capital" | "dealRoom" | "matches" | "tasks" | "agents" | "evidenceDesk" | "pobRecords" | "disputes" | "settlement" | "dataCockpit" | "riskConsole" | "reputation" | "approvals" | "applications" | "users" | "invites" | "auditLog" | "proposals" | "campaigns" | "apiKeys" | "ingestion";
+
+type NavSection = {
+  sectionKey: string;
+  items: { href: string; labelKey: string; icon?: ReactNode }[];
+};
 
 type NavDef = {
   titleKey: GroupTitleKey;
-  items: { href: string; labelKey: ItemLabelKey; icon: ReactNode; roles?: Role[] }[];
+  items: { href: string; labelKey: ItemLabelKey; icon: ReactNode; roles?: Role[]; sections?: NavSection[] }[];
 };
+
+// ── Node System: 15 sections, 5 layers ──────────────────────────────────────
+// Layer 1: 准入层 (01-06)  Layer 2: 经营层 (07-09)
+// Layer 3: 管理层 (10-13)  Layer 4: 风控层 (14)  Layer 5: 系统层 (15)
+
+const NODE_SYSTEM_SECTIONS: NavSection[] = [
+  // ── 01 节点总览 ────────────────────────────────────────────────
+  {
+    sectionKey: "nsOverview",
+    items: [
+      { href: "/dashboard/node-system", labelKey: "nsOverview", icon: <LayoutDashboard size={16} /> },
+      { href: "/dashboard/node-system/status-board", labelKey: "nsStatusBoard" },
+      { href: "/dashboard/node-system/kpi", labelKey: "nsKpi" },
+    ],
+  },
+  // ── 02 节点申请 ────────────────────────────────────────────────
+  {
+    sectionKey: "nsApplications",
+    items: [
+      { href: "/dashboard/node-system/applications", labelKey: "nsApplications", icon: <Inbox size={16} /> },
+      { href: "/dashboard/node-system/applications/pending", labelKey: "nsAppPending" },
+      { href: "/dashboard/node-system/applications/info-needed", labelKey: "nsAppInfoNeeded" },
+      { href: "/dashboard/node-system/applications/interview", labelKey: "nsAppInterview" },
+      { href: "/dashboard/node-system/applications/risk-review", labelKey: "nsAppRiskReview" },
+      { href: "/dashboard/node-system/applications/approved", labelKey: "nsAppApproved" },
+      { href: "/dashboard/node-system/applications/rejected", labelKey: "nsAppRejected" },
+    ],
+  },
+  // ── 03 节点档案 ────────────────────────────────────────────────
+  {
+    sectionKey: "nsRegistry",
+    items: [
+      { href: "/dashboard/node-system/registry", labelKey: "nsRegistry", icon: <Network size={16} /> },
+      { href: "/dashboard/node-system/registry/genesis", labelKey: "nsGenesis" },
+      { href: "/dashboard/node-system/registry/regional", labelKey: "nsRegional" },
+      { href: "/dashboard/node-system/registry/city", labelKey: "nsCity" },
+      { href: "/dashboard/node-system/registry/vertical", labelKey: "nsVertical" },
+      { href: "/dashboard/node-system/registry/functional", labelKey: "nsFunctional" },
+      { href: "/dashboard/node-system/registry/agent", labelKey: "nsAgent" },
+    ],
+  },
+  // ── 04 Territory管理 ──────────────────────────────────────────
+  {
+    sectionKey: "nsTerritory",
+    items: [
+      { href: "/dashboard/node-system/territory", labelKey: "nsTerritory", icon: <Map size={16} /> },
+      { href: "/dashboard/node-system/territory/region-claims", labelKey: "nsRegionClaims" },
+      { href: "/dashboard/node-system/territory/vertical-claims", labelKey: "nsVerticalClaims" },
+      { href: "/dashboard/node-system/territory/protected", labelKey: "nsProtected" },
+      { href: "/dashboard/node-system/territory/conflicts", labelKey: "nsConflicts" },
+      { href: "/dashboard/node-system/territory/exclusivity", labelKey: "nsExclusivity" },
+    ],
+  },
+  // ── 05 节点成员 ────────────────────────────────────────────────
+  {
+    sectionKey: "nsMembers",
+    items: [
+      { href: "/dashboard/node-system/members", labelKey: "nsMembers", icon: <Users size={16} /> },
+      { href: "/dashboard/node-system/members/owners", labelKey: "nsOwners" },
+      { href: "/dashboard/node-system/members/list", labelKey: "nsMemberList" },
+      { href: "/dashboard/node-system/members/roles", labelKey: "nsRoles" },
+      { href: "/dashboard/node-system/members/invites", labelKey: "nsInvites" },
+      { href: "/dashboard/node-system/members/changelog", labelKey: "nsMemberChangelog" },
+    ],
+  },
+  // ── 06 Onboarding ─────────────────────────────────────────────
+  {
+    sectionKey: "nsOnboarding",
+    items: [
+      { href: "/dashboard/node-system/onboarding", labelKey: "nsOnboarding", icon: <Rocket size={16} /> },
+      { href: "/dashboard/node-system/onboarding/checklist", labelKey: "nsChecklist" },
+      { href: "/dashboard/node-system/onboarding/pending", labelKey: "nsOnbPending" },
+      { href: "/dashboard/node-system/onboarding/go-live", labelKey: "nsGoLive" },
+      { href: "/dashboard/node-system/onboarding/probation", labelKey: "nsProbation" },
+    ],
+  },
+  // ── 07 节点Pipeline（经营层）──────────────────────────────────
+  {
+    sectionKey: "nsPipeline",
+    items: [
+      { href: "/dashboard/node-system/pipeline", labelKey: "nsPipeline", icon: <FolderKanban size={16} /> },
+      { href: "/dashboard/node-system/pipeline/projects", labelKey: "nsPipeProjects" },
+      { href: "/dashboard/node-system/pipeline/capital", labelKey: "nsPipeCapital" },
+      { href: "/dashboard/node-system/pipeline/services", labelKey: "nsPipeServices" },
+      { href: "/dashboard/node-system/pipeline/regional", labelKey: "nsPipeRegional" },
+      { href: "/dashboard/node-system/pipeline/active", labelKey: "nsPipeActive" },
+      { href: "/dashboard/node-system/pipeline/blocked", labelKey: "nsPipeBlocked" },
+    ],
+  },
+  // ── 08 节点协同（经营层）──────────────────────────────────────
+  {
+    sectionKey: "nsCollaboration",
+    items: [
+      { href: "/dashboard/node-system/collaboration", labelKey: "nsCollaboration", icon: <Handshake size={16} /> },
+      { href: "/dashboard/node-system/collaboration/my-deals", labelKey: "nsMyDeals" },
+      { href: "/dashboard/node-system/collaboration/co-deals", labelKey: "nsCoDeals" },
+      { href: "/dashboard/node-system/collaboration/my-tasks", labelKey: "nsMyTasks" },
+      { href: "/dashboard/node-system/collaboration/assigned", labelKey: "nsAssigned" },
+      { href: "/dashboard/node-system/collaboration/cross-node", labelKey: "nsCrossNode" },
+      { href: "/dashboard/node-system/collaboration/agent", labelKey: "nsAgentCollab" },
+    ],
+  },
+  // ── 09 节点PoB（经营层）───────────────────────────────────────
+  {
+    sectionKey: "nsPob",
+    items: [
+      { href: "/dashboard/node-system/pob", labelKey: "nsPob", icon: <ShieldCheck size={16} /> },
+      { href: "/dashboard/node-system/pob/submitted", labelKey: "nsPobSubmitted" },
+      { href: "/dashboard/node-system/pob/info-needed", labelKey: "nsPobInfoNeeded" },
+      { href: "/dashboard/node-system/pob/reviewing", labelKey: "nsPobReviewing" },
+      { href: "/dashboard/node-system/pob/approved", labelKey: "nsPobApproved" },
+      { href: "/dashboard/node-system/pob/rejected", labelKey: "nsPobRejected" },
+      { href: "/dashboard/node-system/pob/disputes", labelKey: "nsPobDisputes" },
+    ],
+  },
+  // ── 10 节点评分（管理层）──────────────────────────────────────
+  {
+    sectionKey: "nsScorecard",
+    items: [
+      { href: "/dashboard/node-system/scorecard", labelKey: "nsScorecard", icon: <BarChart3 size={16} /> },
+      { href: "/dashboard/node-system/scorecard/pipeline-quality", labelKey: "nsPipelineQuality" },
+      { href: "/dashboard/node-system/scorecard/closure-rate", labelKey: "nsClosureRate" },
+      { href: "/dashboard/node-system/scorecard/evidence-quality", labelKey: "nsEvidenceQuality" },
+      { href: "/dashboard/node-system/scorecard/collaboration", labelKey: "nsCollabReliability" },
+      { href: "/dashboard/node-system/scorecard/risk-record", labelKey: "nsRiskRecord" },
+      { href: "/dashboard/node-system/scorecard/monthly", labelKey: "nsMonthly" },
+      { href: "/dashboard/node-system/scorecard/quarterly", labelKey: "nsQuarterly" },
+    ],
+  },
+  // ── 11 节点动作（管理层）──────────────────────────────────────
+  {
+    sectionKey: "nsActions",
+    items: [
+      { href: "/dashboard/node-system/actions", labelKey: "nsActions", icon: <Zap size={16} /> },
+      { href: "/dashboard/node-system/actions/upgrade", labelKey: "nsUpgrade" },
+      { href: "/dashboard/node-system/actions/maintain", labelKey: "nsMaintain" },
+      { href: "/dashboard/node-system/actions/watchlist", labelKey: "nsWatchlist" },
+      { href: "/dashboard/node-system/actions/downgrade", labelKey: "nsDowngrade" },
+      { href: "/dashboard/node-system/actions/freeze", labelKey: "nsFreeze" },
+      { href: "/dashboard/node-system/actions/offboard", labelKey: "nsOffboard" },
+    ],
+  },
+  // ── 12 节点收益（管理层）──────────────────────────────────────
+  {
+    sectionKey: "nsRevenue",
+    items: [
+      { href: "/dashboard/node-system/revenue", labelKey: "nsRevenue", icon: <DollarSign size={16} /> },
+      { href: "/dashboard/node-system/revenue/overview", labelKey: "nsRevenueOverview" },
+      { href: "/dashboard/node-system/revenue/pob-share", labelKey: "nsPobShare" },
+      { href: "/dashboard/node-system/revenue/settlement", labelKey: "nsSettlement" },
+      { href: "/dashboard/node-system/revenue/frozen", labelKey: "nsFrozen" },
+      { href: "/dashboard/node-system/revenue/roi", labelKey: "nsRoi" },
+    ],
+  },
+  // ── 13 节点报告（管理层）──────────────────────────────────────
+  {
+    sectionKey: "nsReports",
+    items: [
+      { href: "/dashboard/node-system/reports", labelKey: "nsReports", icon: <FileText size={16} /> },
+      { href: "/dashboard/node-system/reports/weekly", labelKey: "nsWeekly" },
+      { href: "/dashboard/node-system/reports/monthly", labelKey: "nsReportMonthly" },
+      { href: "/dashboard/node-system/reports/quarterly-review", labelKey: "nsQuarterlyReview" },
+      { href: "/dashboard/node-system/reports/remediation", labelKey: "nsRemediation" },
+      { href: "/dashboard/node-system/reports/archive", labelKey: "nsArchive" },
+    ],
+  },
+  // ── 14 节点风控（风控层）──────────────────────────────────────
+  {
+    sectionKey: "nsRisk",
+    items: [
+      { href: "/dashboard/node-system/risk", labelKey: "nsRisk", icon: <AlertTriangle size={16} /> },
+      { href: "/dashboard/node-system/risk/flagged", labelKey: "nsRiskFlagged" },
+      { href: "/dashboard/node-system/risk/violations", labelKey: "nsViolations" },
+      { href: "/dashboard/node-system/risk/private-settlement", labelKey: "nsPrivateSettlement" },
+      { href: "/dashboard/node-system/risk/duplicate-attribution", labelKey: "nsDuplicateAttribution" },
+      { href: "/dashboard/node-system/risk/anomalies", labelKey: "nsAnomalies" },
+      { href: "/dashboard/node-system/risk/blacklist", labelKey: "nsBlacklist" },
+    ],
+  },
+  // ── 15 节点设置（系统层）──────────────────────────────────────
+  {
+    sectionKey: "nsSettings",
+    items: [
+      { href: "/dashboard/node-system/settings", labelKey: "nsSettings", icon: <Settings size={16} /> },
+      { href: "/dashboard/node-system/settings/types", labelKey: "nsTypeConfig" },
+      { href: "/dashboard/node-system/settings/seats", labelKey: "nsSeatLevels" },
+      { href: "/dashboard/node-system/settings/scoring", labelKey: "nsScoringRules" },
+      { href: "/dashboard/node-system/settings/territory-rules", labelKey: "nsTerritoryRules" },
+      { href: "/dashboard/node-system/settings/permissions", labelKey: "nsPermissions" },
+      { href: "/dashboard/node-system/settings/notifications", labelKey: "nsNotifRules" },
+      { href: "/dashboard/node-system/settings/templates", labelKey: "nsTemplates" },
+    ],
+  },
+];
 
 const GROUP_DEFS: NavDef[] = [
   {
@@ -60,15 +265,20 @@ const GROUP_DEFS: NavDef[] = [
     ],
   },
   {
+    titleKey: "nodeSystem",
+    items: [
+      {
+        href: "/dashboard/node-system",
+        labelKey: "nodes",
+        icon: <Network size={18} strokeWidth={2} />,
+        roles: ["FOUNDER", "ADMIN", "NODE_OWNER", "REVIEWER", "RISK_DESK"],
+        sections: NODE_SYSTEM_SECTIONS,
+      },
+    ],
+  },
+  {
     titleKey: "network",
     items: [
-      { href: "/dashboard/nodes", labelKey: "nodes", icon: <Network size={18} strokeWidth={2} /> },
-      {
-        href: "/dashboard/nodes/review-queue",
-        labelKey: "nodeReviewQueue",
-        icon: <ListFilter size={18} strokeWidth={2} />,
-        roles: ["FOUNDER", "ADMIN", "REVIEWER", "RISK_DESK"],
-      },
       { href: "/dashboard/projects", labelKey: "projects", icon: <FolderKanban size={18} strokeWidth={2} /> },
       { href: "/dashboard/capital", labelKey: "capital", icon: <Landmark size={18} strokeWidth={2} /> },
       { href: "/dashboard/matches", labelKey: "matches", icon: <GitCompareArrows size={18} strokeWidth={2} /> },
@@ -395,6 +605,176 @@ function NotificationBell() {
   );
 }
 
+function NodeSystemNav({
+  sections,
+  pathname,
+  tItems,
+  tNodeSystem,
+}: {
+  sections: NavSection[];
+  pathname: string;
+  tItems: (key: string) => string;
+  /** next-intl translator for `dashboard.nodeSystem` */
+  tNodeSystem: (key: string) => string;
+}) {
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
+  const [masterExpanded, setMasterExpanded] = useState(true);
+
+  // Auto-expand section containing current path
+  useEffect(() => {
+    const newExpanded: Record<string, boolean> = {};
+    let foundSection = false;
+    for (const section of sections) {
+      const sectionHasActive = section.items.some((item) => pathMatches(pathname, item.href));
+      newExpanded[section.sectionKey] = sectionHasActive;
+      if (sectionHasActive) foundSection = true;
+    }
+    if (foundSection) {
+      setExpandedSections(newExpanded);
+    }
+  }, [pathname, sections]);
+
+  const toggleSection = (sectionKey: string) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [sectionKey]: !prev[sectionKey],
+    }));
+  };
+
+  if (!masterExpanded) {
+    return (
+      <div style={{ paddingLeft: 12, paddingRight: 12, paddingTop: 6, paddingBottom: 6 }}>
+        <button
+          type="button"
+          onClick={() => setMasterExpanded(true)}
+          style={{
+            width: "100%",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: "6px 12px",
+            textAlign: "left",
+            fontSize: 12,
+            fontWeight: 600,
+            textTransform: "uppercase",
+            letterSpacing: "0.5px",
+            color: "var(--muted)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <span>Node System</span>
+          <ChevronRight size={14} />
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div style={{ paddingLeft: 12, paddingRight: 12, paddingTop: 6, paddingBottom: 6 }}>
+        <button
+          type="button"
+          onClick={() => setMasterExpanded(false)}
+          style={{
+            width: "100%",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: "6px 12px",
+            textAlign: "left",
+            fontSize: 12,
+            fontWeight: 600,
+            textTransform: "uppercase",
+            letterSpacing: "0.5px",
+            color: "var(--muted)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <span>Node System</span>
+          <ChevronDown size={14} style={{ transform: "rotate(-90deg)" }} />
+        </button>
+      </div>
+
+      {sections.map((section) => {
+        const isExpanded = expandedSections[section.sectionKey] ?? false;
+        const sectionLabel = tNodeSystem(section.sectionKey);
+
+        return (
+          <div key={section.sectionKey}>
+            <button
+              type="button"
+              onClick={() => toggleSection(section.sectionKey)}
+              style={{
+                width: "100%",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "6px 12px",
+                textAlign: "left",
+                fontSize: 12,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: "0.5px",
+                color: "var(--muted)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <span>{sectionLabel}</span>
+              <ChevronRight
+                size={14}
+                style={{
+                  transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)",
+                  transition: "transform 0.2s ease",
+                }}
+              />
+            </button>
+
+            {isExpanded && (
+              <ul className="dashboard-nav-list" style={{ paddingLeft: 0 }}>
+                {section.items.map((item) => {
+                  const active = pathMatches(pathname, item.href);
+                  return (
+                    <li
+                      key={item.href}
+                      style={{
+                        paddingLeft: item.icon ? 0 : 24,
+                      }}
+                    >
+                      <Link
+                        href={item.href as any}
+                        className="dashboard-nav-link"
+                        data-active={active ? "true" : "false"}
+                        aria-current={active ? "page" : undefined}
+                        style={{
+                          fontSize: item.icon ? 14 : 13,
+                          paddingLeft: item.icon ? 12 : 36,
+                        }}
+                      >
+                        {item.icon && (
+                          <span className="dashboard-nav-icon" aria-hidden>
+                            {item.icon}
+                          </span>
+                        )}
+                        {tNodeSystem(item.labelKey)}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function SidebarFooterMenu({
   displayName,
   email,
@@ -492,6 +872,7 @@ export function DashboardShell({
   const tGroups = useTranslations("dashboard.groups");
   const tItems = useTranslations("dashboard.items");
   const tRoles = useTranslations("dashboard.roles");
+  const tNodeSystem = useTranslations("dashboard.nodeSystem");
 
   const tSeg = (key: string) => {
     try { return t(`breadcrumbSegment.${key}`); } catch { return key; }
@@ -548,6 +929,23 @@ export function DashboardShell({
                 return item.roles.includes(role);
               });
               if (visibleItems.length === 0) return null;
+
+              // Special handling for groups with sections (nodeSystem)
+              if (visibleItems.some((item) => item.sections)) {
+                return (
+                  <div key={group.titleKey} className="dashboard-nav-group">
+                    {groupIndex > 0 && <div className="dashboard-nav-divider" />}
+                    <NodeSystemNav
+                      sections={visibleItems[0]?.sections || []}
+                      pathname={pathname}
+                      tItems={tItems}
+                      tNodeSystem={tNodeSystem}
+                    />
+                  </div>
+                );
+              }
+
+              // Standard nav group rendering
               return (
                 <div key={group.titleKey} className="dashboard-nav-group">
                   {groupIndex > 0 && <div className="dashboard-nav-divider" />}

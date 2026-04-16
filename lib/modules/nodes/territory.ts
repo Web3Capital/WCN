@@ -121,7 +121,10 @@ export async function claimTerritory(
       exclusivity: data.exclusivity ?? "NONE",
       protectedAccounts: data.protectedAccounts ?? [],
       kpiRequired: data.exclusivity === "EXCLUSIVE",
-      kpiTarget: data.kpiTarget ?? null,
+      kpiTarget:
+        data.kpiTarget === null || data.kpiTarget === undefined
+          ? undefined
+          : (data.kpiTarget as import("@prisma/client").Prisma.InputJsonValue),
       notes: data.notes ?? null,
       status: "ACTIVE",
     },
