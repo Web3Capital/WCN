@@ -54,7 +54,7 @@ const config = [
   },
   {
     name: "wcn/ignores",
-    ignores: ["node_modules/", ".next/", "prisma/", "metrics/"],
+    ignores: ["node_modules/", ".next/", "prisma/", "metrics/", "coverage/", "lib/generated/"],
   },
 ];
 
