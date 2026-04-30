@@ -10,7 +10,7 @@ import { Footer } from "@/components/footer";
 import { Providers } from "@/components/providers";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
-import { fontSans, fontMono } from "@/app/fonts";
+import { fontSans, fontSerif, fontMono } from "@/app/fonts";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -90,7 +90,8 @@ export default async function LocaleLayout({
 
   const messages = await getMessages();
   const meta = localeMetadata[locale as Locale];
-  const theme = cookies().get("wcn_theme")?.value;
+  const cookieStore = await cookies();
+  const theme = cookieStore.get("wcn_theme")?.value;
   const dataTheme = theme === "light" || theme === "dark" ? theme : "system";
 
   const base = siteUrl.replace(/\/$/, "");
@@ -126,7 +127,7 @@ export default async function LocaleLayout({
       lang={locale}
       dir={meta?.dir ?? "ltr"}
       data-theme={dataTheme}
-      className={`${fontSans.variable} ${fontMono.variable}`}
+      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable}`}
     >
       <head>
         <script
