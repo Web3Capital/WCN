@@ -1,9 +1,11 @@
 /**
  * ManifestoBlock — editorial pull-quote section.
  *
- * The emotional anchor of the home page. A single paragraph, set in
- * Fraunces optical-sized for display, with one large emphasized lead
- * word. Inspired by Stripe Press / The Atlantic feature openings.
+ * The emotional anchor of the home page. A short paragraph (≤3 sentences)
+ * set in Fraunces optical-sized for display, with one large emphasized
+ * lead word. Inspired by Stripe Press / The Atlantic feature openings.
+ *
+ * Lead word uses --text (not voltage) so it doesn't compete with CTA color.
  */
 
 import { WCNGlyph } from "./wcn-glyph";
@@ -13,9 +15,10 @@ type Props = {
   lead: string;
   body: string;
   signature: string;
+  sectionNumber?: string;
 };
 
-export function ManifestoBlock({ eyebrow, lead, body, signature }: Props) {
+export function ManifestoBlock({ eyebrow, lead, body, signature, sectionNumber }: Props) {
   return (
     <section className="section section-manifesto">
       <div className="container">
@@ -23,6 +26,7 @@ export function ManifestoBlock({ eyebrow, lead, body, signature }: Props) {
           <div className="manifesto-mark" aria-hidden>
             <WCNGlyph size={20} variant="ledger" />
           </div>
+          {sectionNumber ? <span className="section-number manifesto-section-number">{sectionNumber}</span> : null}
           <span className="eyebrow eyebrow-plain manifesto-eyebrow">{eyebrow}</span>
           <p className="manifesto-prose">
             <span className="manifesto-lead">{lead}</span>
