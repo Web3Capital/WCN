@@ -4,6 +4,9 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { WCNGlyph } from "@/components/brand/wcn-glyph";
 import { LedgerSpine } from "@/components/brand/ledger-spine";
+import { LedgersInMotion } from "@/components/brand/ledgers-in-motion";
+import { ManifestoBlock } from "@/components/brand/manifesto-block";
+import { VoltageCallout } from "@/components/brand/voltage-callout";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -39,6 +42,13 @@ export default async function HomePage() {
     { color: "var(--ledger-settle)", text: "SETTLE-9028 · SIGNED · proof verified" },
   ];
 
+  const metrics: Array<{ value: string; sup?: string; label: string }> = [
+    { value: "147", label: t("metricNodes") },
+    { value: "12", label: t("metricRegions") },
+    { value: "24.7", sup: "M", label: t("metricSettled") },
+    { value: "99.3", sup: "%", label: t("metricVerified") },
+  ];
+
   return (
     <main>
       {/* ═══ HERO ════════════════════════════════════════════ */}
@@ -49,18 +59,38 @@ export default async function HomePage() {
               <WCNGlyph size={32} variant="ledger" />
             </span>
             <span className="eyebrow eyebrow-plain" style={{ marginBottom: 0 }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--ledger-node)", boxShadow: "0 0 8px color-mix(in oklab, var(--ledger-node) 60%, transparent)" }} aria-hidden />
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "var(--ledger-node)",
+                  boxShadow: "0 0 8px color-mix(in oklab, var(--ledger-node) 60%, transparent)",
+                }}
+                aria-hidden
+              />
               {t("eyebrow")}
             </span>
-            <h1>
-              {t("headline")}
-            </h1>
+            <h1>{t("headline")}</h1>
             <p className="hero-lede">{t("lede")}</p>
             <div className="cta-row cta-centered" style={{ marginTop: "var(--space-6)", justifyContent: "center" }}>
-              <Link href="/apply" className="button button-lg">{t("applyAsNode")}</Link>
-              <Link href="/wiki" className="button-secondary button-lg">{t("readWiki")}</Link>
+              <Link href="/apply" className="button button-lg">
+                {t("applyAsNode")}
+              </Link>
+              <Link href="/wiki" className="button-secondary button-lg">
+                {t("readWiki")}
+              </Link>
             </div>
-            <div style={{ marginTop: "var(--space-5)", display: "inline-flex", alignItems: "center", gap: 12, color: "var(--muted-2)", fontSize: 12 }}>
+            <div
+              style={{
+                marginTop: "var(--space-5)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 12,
+                color: "var(--muted-2)",
+                fontSize: 12,
+              }}
+            >
               <LedgerSpine
                 labels={{
                   node: t("nodeTitle"),
@@ -69,6 +99,23 @@ export default async function HomePage() {
                 }}
               />
               <span style={{ fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>v3.0 · audit-first protocol</span>
+            </div>
+
+            {/* Proof metrics — credibility under CTAs */}
+            <div className="hero-metrics" role="list">
+              {metrics.map((m) => (
+                <div key={m.label} className="hero-metric" role="listitem">
+                  <span className="hero-metric-value tabular">
+                    {m.value}
+                    {m.sup && <sup>{m.sup}</sup>}
+                  </span>
+                  <span className="hero-metric-label">{m.label}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="hero-scroll-cue" aria-hidden>
+              {t("scrollCue")}
             </div>
           </div>
 
@@ -98,17 +145,37 @@ export default async function HomePage() {
         <div className="ledger-ticker-track">
           {[...tickerItems, ...tickerItems].map((item, i) => (
             <span key={i} className="ledger-ticker-item">
-              <span className="status-dot" style={{ background: item.color, boxShadow: `0 0 0 3px color-mix(in oklab, ${item.color} 16%, transparent)` }} />
+              <span
+                className="status-dot"
+                style={{
+                  background: item.color,
+                  boxShadow: `0 0 0 3px color-mix(in oklab, ${item.color} 16%, transparent)`,
+                }}
+              />
               {item.text}
             </span>
           ))}
         </div>
       </section>
 
-      {/* ═══ Designed for trust ═════════════════════════════ */}
+      {/* ═══ № 01 · Three Ledgers in Motion (signature) ═════ */}
+      <section className="section section-ledgers-in-motion">
+        <div className="container">
+          <div className="section-head section-head-numbered">
+            <span className="section-number">{t("sectionNum01")}</span>
+            <span className="eyebrow eyebrow-plain">{t("ledgersInMotionEyebrow")}</span>
+            <h2 style={{ marginTop: 14 }}>{t("ledgersInMotionTitle")}</h2>
+            <p>{t("ledgersInMotionDesc")}</p>
+          </div>
+          <LedgersInMotion caption={t("ledgersInMotionCaption")} />
+        </div>
+      </section>
+
+      {/* ═══ № 02 · Three principles ═══════════════════════ */}
       <section className="section section-alt">
         <div className="container">
-          <div className="section-head">
+          <div className="section-head section-head-numbered">
+            <span className="section-number">{t("sectionNum02")}</span>
             <span className="eyebrow">Designed for</span>
             <h2 style={{ marginTop: 14 }}>{t("designedTitle")}</h2>
             <p>{t("designedDesc")}</p>
@@ -134,10 +201,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ═══ Trusted by ═════════════════════════════════════ */}
+      {/* ═══ № 03 · Built for institutional operators ══════ */}
       <section className="section">
         <div className="container">
-          <div className="section-head">
+          <div className="section-head section-head-numbered">
+            <span className="section-number">{t("sectionNum03")}</span>
             <span className="eyebrow eyebrow-plain">{t("trustedByEyebrow")}</span>
             <h2 style={{ marginTop: 14 }}>{t("trustedByTitle")}</h2>
             <p>{t("trustedByDesc")}</p>
@@ -152,11 +220,20 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ═══ The five-step loop — signature flow ═══════════ */}
-      <section className="section section-alt">
+      {/* ═══ Manifesto — editorial pull ════════════════════ */}
+      <ManifestoBlock
+        eyebrow={t("manifestoEyebrow")}
+        lead={t("manifestoLead")}
+        body={t("manifestoBody")}
+        signature={t("manifestoSign")}
+      />
+
+      {/* ═══ № 04 · The five-step loop ═════════════════════ */}
+      <section className="section">
         <div className="container">
           <div className="card" style={{ padding: "var(--space-7) var(--space-6)", background: "var(--card)", borderColor: "var(--line)" }}>
-            <div className="section-head">
+            <div className="section-head section-head-numbered">
+              <span className="section-number">{t("sectionNum04")}</span>
               <span className="eyebrow">Operating Loop</span>
               <h2 style={{ marginTop: 14 }}>{t("loopTitle")}</h2>
               <p>{t("loopDesc")}</p>
@@ -169,23 +246,34 @@ export default async function HomePage() {
                     <span className="step-name">{step.label}</span>
                     <span className="step-desc">{step.desc}</span>
                   </div>
-                  {index < 4 && <span className="arrow" aria-hidden>→</span>}
+                  {index < 4 && (
+                    <span className="arrow" aria-hidden>
+                      →
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
             <div className="cta-row cta-centered" style={{ marginTop: "var(--space-6)", justifyContent: "center" }}>
-              <Link href="/how-it-works" className="button-secondary">{t("howItWorks")}</Link>
-              <Link href="/nodes" className="button-secondary">{t("exploreNodes")}</Link>
-              <Link href="/apply" className="button">{t("applyAsANode")}</Link>
+              <Link href="/how-it-works" className="button-secondary">
+                {t("howItWorks")}
+              </Link>
+              <Link href="/nodes" className="button-secondary">
+                {t("exploreNodes")}
+              </Link>
+              <Link href="/apply" className="button">
+                {t("applyAsANode")}
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══ Builders say — editorial testimonials ═════════ */}
-      <section className="section">
+      {/* ═══ № 05 · From the network — testimonials ════════ */}
+      <section className="section section-alt">
         <div className="container">
-          <div className="section-head">
+          <div className="section-head section-head-numbered">
+            <span className="section-number">{t("sectionNum05")}</span>
             <span className="eyebrow eyebrow-plain">In their words</span>
             <h2 style={{ marginTop: 14 }}>{t("buildersSay")}</h2>
           </div>
@@ -205,6 +293,17 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ═══ Voltage callout — pre-footer payoff ═══════════ */}
+      <VoltageCallout
+        eyebrow={t("ctaBandEyebrow")}
+        title={t("ctaBandTitle")}
+        desc={t("ctaBandDesc")}
+        primaryLabel={t("ctaBandPrimary")}
+        primaryHref="/apply"
+        secondaryLabel={t("ctaBandSecondary")}
+        secondaryHref="/wiki"
+      />
     </main>
   );
 }

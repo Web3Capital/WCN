@@ -7457,3 +7457,389 @@ html[data-theme="dark"] .spotlight-header-mark { background: var(--paper-50); co
   background: var(--line);
   margin: 0 4px;
 }
+
+/* ============================================================
+   HOME PAGE — SIGNATURE PATTERNS v2 (systematic upgrade)
+   ============================================================ */
+
+/* ── Hero proof metrics bar ───────────────────────────── */
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  width: min(720px, 100%);
+  margin: var(--space-7) auto 0;
+  padding: var(--space-4) 0;
+  border-block: var(--hairline) solid var(--line);
+  background: linear-gradient(90deg, transparent, var(--surface-tint), transparent);
+}
+.hero-metric {
+  text-align: center;
+  position: relative;
+  padding: 0 var(--space-3);
+}
+.hero-metric + .hero-metric::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 12%; bottom: 12%;
+  width: 1px;
+  background: var(--line);
+}
+.hero-metric-value {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 350;
+  letter-spacing: var(--tracking-tighter);
+  line-height: 1.05;
+  color: var(--text);
+  font-variant-numeric: tabular-nums oldstyle-nums;
+}
+.hero-metric-value sup {
+  font-family: var(--font-mono);
+  font-size: 0.55em;
+  font-weight: 500;
+  vertical-align: super;
+  margin-left: 1px;
+  color: var(--voltage-500);
+  letter-spacing: 0;
+}
+.hero-metric-label {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+@media (max-width: 640px) {
+  .hero-metrics { grid-template-columns: repeat(2, 1fr); gap: var(--space-4) 0; padding: var(--space-3) 0; }
+  .hero-metric:nth-child(3)::before { display: none; }
+  .hero-metric-value { font-size: 22px; }
+}
+
+.hero-scroll-cue {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--space-7);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.hero-scroll-cue::after {
+  content: "";
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, var(--line-strong), transparent);
+  animation: scrollCueDrop 2.6s var(--ease-inout) infinite;
+}
+@keyframes scrollCueDrop {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* ── Section number eyebrow (editorial spine) ─────────── */
+.section-number {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--muted-2);
+  margin-right: var(--space-3);
+}
+.section-number::after {
+  content: "";
+  width: 16px;
+  height: 1px;
+  background: var(--line-strong);
+}
+.section-head-numbered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ── LedgersInMotion: signature SVG visualization ─────── */
+.section-ledgers-in-motion {
+  padding: var(--space-9) 0;
+  position: relative;
+  overflow: hidden;
+}
+.section-ledgers-in-motion::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(900px circle at 50% 50%, color-mix(in oklab, var(--voltage-500) 4%, transparent), transparent 60%);
+  pointer-events: none;
+}
+.ledgers-in-motion {
+  position: relative;
+  width: min(880px, 100%);
+  margin: var(--space-6) auto 0;
+}
+.lim-stage {
+  display: block;
+  color: var(--ink-1000);
+}
+html[data-theme="dark"] .lim-stage { color: var(--paper-50); }
+@media (prefers-color-scheme: dark) {
+  html[data-theme="system"] .lim-stage { color: var(--paper-50); }
+}
+.lim-bg { color: var(--ink-1000); }
+html[data-theme="dark"] .lim-bg { color: var(--paper-50); }
+@media (prefers-color-scheme: dark) {
+  html[data-theme="system"] .lim-bg { color: var(--paper-50); }
+}
+.lim-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  fill: var(--text);
+}
+.lim-sublabel {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  fill: var(--muted);
+}
+.lim-receipt-id {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  fill: var(--text);
+  letter-spacing: 0.04em;
+}
+.lim-receipt-status {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.lim-receipt-meta {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  fill: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+/* Animations */
+@media (prefers-reduced-motion: no-preference) {
+  .lim-pulse-1 { animation: limPulseFlow 4.2s var(--ease-inout) infinite; }
+  .lim-pulse-2 { animation: limPulseFlow 4.2s var(--ease-inout) infinite; animation-delay: 1.4s; }
+  .lim-pulse-3 { animation: limPulseFlow 4.2s var(--ease-inout) infinite; animation-delay: 2.8s; }
+  .lim-halo { transform-origin: 360px 140px; animation: limHaloSpin 28s linear infinite; }
+  .lim-aura { animation: limAuraBreath 5.4s var(--ease-inout) infinite; transform-origin: 360px 140px; }
+  .lim-receipt-top { animation: limReceiptDrift 7s var(--ease-inout) infinite; }
+  .lim-receipt-bot { animation: limReceiptDrift 7s var(--ease-inout) infinite; animation-delay: 3.5s; }
+  .lim-node-2 circle:first-of-type { animation: limNodeGlow 4s var(--ease-inout) infinite; }
+}
+@keyframes limPulseFlow {
+  0% { transform: translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(560px); opacity: 0; }
+}
+@keyframes limHaloSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes limAuraBreath {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+@keyframes limReceiptDrift {
+  0%, 100% { transform: translate(180px, 38px); opacity: 0.95; }
+  50% { transform: translate(184px, 34px); opacity: 1; }
+}
+@keyframes limNodeGlow {
+  0%, 100% { stroke-opacity: 1; }
+  50% { stroke-opacity: 0.55; }
+}
+.ledgers-in-motion-caption {
+  margin: var(--space-4) 0 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+/* ── Manifesto block — editorial pull ─────────────────── */
+.section-manifesto {
+  padding: var(--space-10) 0;
+  position: relative;
+  background: var(--bg-elev);
+  border-block: var(--hairline) solid var(--line);
+  isolation: isolate;
+  overflow: hidden;
+}
+.section-manifesto::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--field-grid);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 60% 70% at 50% 50%, black 0%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 50%, black 0%, transparent 80%);
+  opacity: 0.5;
+  z-index: -1;
+}
+.manifesto {
+  width: min(720px, 100%);
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+.manifesto-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--card);
+  border: var(--hairline) solid var(--line);
+  color: var(--text);
+  margin-bottom: var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+.manifesto-eyebrow {
+  margin-bottom: var(--space-5);
+}
+.manifesto-prose {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  font-size: clamp(24px, 3.4vw, 38px);
+  line-height: 1.32;
+  letter-spacing: var(--tracking-tighter);
+  color: var(--text);
+  margin: 0;
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+}
+.manifesto-lead {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--voltage-500);
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  font-size: 1.18em;
+  letter-spacing: -0.025em;
+  margin-right: 0.05em;
+}
+.manifesto-signature {
+  margin-top: var(--space-6);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+/* ── Voltage callout — pre-footer CTA band ────────────── */
+.voltage-callout {
+  position: relative;
+  padding: var(--space-9) 0 var(--space-9);
+  background: var(--ink-1000);
+  color: var(--paper-50);
+  isolation: isolate;
+  overflow: hidden;
+  margin-top: var(--space-9);
+}
+.voltage-callout::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(800px circle at 18% 22%, color-mix(in oklab, var(--ledger-node) 28%, transparent), transparent 60%),
+    radial-gradient(700px circle at 82% 78%, color-mix(in oklab, var(--ledger-deal) 22%, transparent), transparent 55%),
+    radial-gradient(900px circle at 50% 110%, color-mix(in oklab, var(--voltage-500) 30%, transparent), transparent 60%);
+  z-index: -1;
+  opacity: 0.95;
+}
+.voltage-callout::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--field-grid);
+  background-size: 32px 32px;
+  color: var(--paper-50);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 0%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 0%, transparent 75%);
+  opacity: 0.18;
+  z-index: -1;
+}
+html[data-theme="dark"] .voltage-callout,
+html[data-theme="system"] .voltage-callout {
+  background: #050608;
+}
+.voltage-callout-inner {
+  width: min(720px, 100%);
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+.voltage-callout-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, color-mix(in oklab, var(--paper-50) 14%, transparent), color-mix(in oklab, var(--paper-50) 4%, transparent));
+  border: 1px solid color-mix(in oklab, var(--paper-50) 18%, transparent);
+  color: var(--paper-50);
+  margin-bottom: var(--space-4);
+  box-shadow: 0 0 32px color-mix(in oklab, var(--voltage-500) 40%, transparent);
+}
+.voltage-callout-eyebrow {
+  background: color-mix(in oklab, var(--paper-50) 8%, transparent) !important;
+  border-color: color-mix(in oklab, var(--paper-50) 18%, transparent) !important;
+  color: color-mix(in oklab, var(--paper-50) 65%, transparent) !important;
+  margin-bottom: var(--space-3);
+}
+.voltage-callout-title {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 350;
+  line-height: 1.06;
+  letter-spacing: var(--tracking-display);
+  color: var(--paper-50);
+  margin: 0 0 var(--space-3);
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+}
+.voltage-callout-desc {
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.4vw, 17px);
+  line-height: 1.55;
+  letter-spacing: -0.012em;
+  color: color-mix(in oklab, var(--paper-50) 72%, transparent);
+  margin: 0 auto var(--space-5);
+  max-width: 56ch;
+}
+.voltage-callout-actions {
+  margin-top: var(--space-4) !important;
+  justify-content: center;
+}
+.voltage-callout-secondary {
+  background: transparent !important;
+  border-color: color-mix(in oklab, var(--paper-50) 24%, transparent) !important;
+  color: var(--paper-50) !important;
+}
+.voltage-callout-secondary:hover {
+  background: color-mix(in oklab, var(--paper-50) 8%, transparent) !important;
+  border-color: color-mix(in oklab, var(--paper-50) 38%, transparent) !important;
+}
+
+/* The voltage callout sits flush with the footer — no margin gap */
+.voltage-callout + .footer { margin-top: 0; border-top: none; }
+.voltage-callout + .footer::before { background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--voltage-500) 50%, transparent), transparent); }
