@@ -41,7 +41,7 @@ export default async function WikiLandingPage() {
   return (
     <div className="docs-landing">
       <header className="docs-landing-hero">
-        <h1>{t("heading")}</h1>
+        <h1>{t.rich("heading", { em: (chunks) => <em>{chunks}</em> })}</h1>
         <p>{t("subtitle")}</p>
       </header>
 

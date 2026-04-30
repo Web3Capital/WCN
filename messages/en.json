@@ -129,7 +129,7 @@
     "title": "About",
     "metaDesc": "WCN is the business network for Web3 and AI: real operators organize resources, AI agents scale execution, Proof of Business verifies outcomes, and settlement rewards contribution.",
     "eyebrow": "About WCN",
-    "headline": "One network. Real participants.<linebreak></linebreak>Verified outcomes.",
+    "headline": "One network. Real participants. <em>Verified outcomes.</em>",
     "lede": "Web3 Capital Network is a <strong>business network</strong> for the Web3 and AI economy — where real operators connect capital to execution, every outcome is backed by evidence, and settlement traces back to who actually delivered.",
     "subLede": "WCN does not start from a chain and hope for adoption. It starts from organizing real participants, real tasks, and real evidence — then lets identity, assets, and settlement build on verified history.",
     "wikiWhatIs": "What WCN is",
@@ -204,13 +204,14 @@
     "measureStep2": "Who advanced it into structured work",
     "measureStep3": "Who delivered — people and agents",
     "measureStep4": "What evidence exists and who reviewed it",
-    "measureStep5": "Whether the result actually holds"
+    "measureStep5": "Whether the result actually holds",
+    "ctaEyebrow": "Take the next step"
   },
   "howItWorks": {
     "title": "How It Works",
     "metaDesc": "How WCN works: opportunities enter through nodes, work is structured and executed by people and AI agents, outcomes are verified with evidence, and settlement rewards real contribution.",
     "eyebrow": "How It Works",
-    "headline": "From opportunity to proof — in one loop.",
+    "headline": "From opportunity to <em>proof</em> — in one loop.",
     "lede": "WCN is a <strong>business loop</strong>: structure work, execute with people and AI agents, verify with evidence, and record <strong>Proof of Business</strong> — so settlement always follows contribution.",
     "subLede": "Every step below is live in the product: nodes handle intake, tasks and deals carry execution, the Proof Desk handles evidence, and PoB connects operations to long-term value.",
     "loopAtGlance": "The loop at a glance",
@@ -263,13 +264,14 @@
     "layer4Detail": "Distribution is tied to verified contribution curves.",
     "layer5Label": "Asset layer",
     "layer5Desc": "On-chain identity, issuance, liquidity",
-    "layer5Detail": "Long-term instruments and liquidity built on verified history."
+    "layer5Detail": "Long-term instruments and liquidity built on verified history.",
+    "ctaEyebrow": "Begin"
   },
   "nodes": {
     "title": "Node Network — WCN",
     "metaDesc": "Nodes are the operators who power WCN: they bring capital, projects, and services, own execution risk, and earn settlement based on verified outcomes.",
     "eyebrow": "Node Network",
-    "headline": "The operators who power the network.",
+    "headline": "The operators who <em>power</em> the network.",
     "lede": "In WCN, a <strong>node</strong> is the accountable operator behind every deal, every task, and every outcome. Tiers reflect <strong>scope and trust</strong> — earned through verified results, not vanity metrics.",
     "subLede": "Nodes are where the business loop lands in the real economy: they bring in opportunities, own execution, provide evidence, and participate in settlement.",
     "responsibilityLoop": "How nodes operate",
@@ -340,13 +342,14 @@
     "notBullet1": "Passive listings or unverified partner badges",
     "notBullet2": "Anonymous channels with no identity or accountability",
     "notBullet3": "Campaign shells with no ongoing role in the network",
-    "notBullet4": "A substitute for legal, tax, or regulatory obligations"
+    "notBullet4": "A substitute for legal, tax, or regulatory obligations",
+    "ctaEyebrow": "Begin"
   },
   "pob": {
     "title": "Proof of Business (PoB)",
     "metaDesc": "Proof of Business is WCN's verification layer: real outcomes are evidenced, reviewed, attributed, and recorded — creating an auditable path to fair settlement.",
     "eyebrow": "Proof of Business (PoB)",
-    "headline": "Only verified outcomes become value.",
+    "headline": "Only verified outcomes become <em>value</em>.",
     "lede": "PoB is WCN's <strong>verification layer</strong>. It recognizes business outcomes that can be <strong>proved, attributed, and audited</strong> — so settlement always reflects what actually happened.",
     "subLede": "PoB turns real, verifiable results into records the system can admit, track, and use as input for settlement. If it cannot be evidenced, it does not count.",
     "whatPobEnforces": "What PoB enforces",
@@ -424,11 +427,12 @@
     "factorTimeMultName": "Durability",
     "factorTimeMultHint": "How well the outcome holds up over time.",
     "factorRiskDiscountName": "Risk Discount",
-    "factorRiskDiscountHint": "Disputes, anomalies, and flags reduce the score."
+    "factorRiskDiscountHint": "Disputes, anomalies, and flags reduce the score.",
+    "ctaEyebrow": "Begin"
   },
   "auth": {
     "loginTitle": "Sign In — WCN",
-    "welcomeBack": "Welcome back",
+    "welcomeBack": "Welcome <em>back</em>",
     "signInToAccount": "Sign in to your WCN account",
     "oauthAccountLinked": "An account with this email already exists. Please sign in with your original method.",
     "authFailed": "Authentication failed. Please try again.",
@@ -441,14 +445,14 @@
     "applyTitle": "Apply — WCN",
     "applyHeadline": "Apply as a Node",
     "applyDesc": "Join the WCN network as a node operator.",
-    "signupHeadline": "Join WCN",
+    "signupHeadline": "Join the <em>network</em>",
     "signupSubtext": "Create your account to get started"
   },
   "apply": {
     "metaTitle": "Apply as a Node — WCN",
     "metaDescription": "Join the WCN network as a node operator. Apply as a capital, project, service, regional, media, or industry node.",
     "eyebrow": "Join the Network",
-    "headline": "Apply as a node.",
+    "headline": "Apply as a <em>node</em>.",
     "heroDesc": "WCN is an application-based network. Tell us about your organization and resources — our team reviews every application within 48 hours.",
     "howItWorks": "How it works",
     "step1Title": "Submit your application",
@@ -473,7 +477,12 @@
     "industryTitle": "Industry Node",
     "industryDesc": "Exchanges, market makers, custodians, and data providers",
     "tipLabel": "Tip:",
-    "tipMessage": "Applications that describe specific resources and explain how they align with the WCN network have a significantly higher approval rate."
+    "tipMessage": "Applications that describe specific resources and explain how they align with the WCN network have a significantly higher approval rate.",
+    "ctaEyebrow": "Begin",
+    "ctaTitle": "Become part of the network.",
+    "ctaDesc": "Submit your application above. Our review team verifies every node before admission to the registry.",
+    "ctaPrimary": "Read the protocol",
+    "ctaSecondary": "See the loop"
   },
   "dashboard": {
     "brand": "WCN Console",
@@ -811,7 +820,7 @@
   "wiki": {
     "title": "Wiki",
     "description": "WCN complete knowledge base — from project introduction to system architecture, fully understand the Web3 Capital Network.",
-    "heading": "WCN Wiki",
+    "heading": "WCN <em>Wiki</em>",
     "subtitle": "From project definition to system architecture, from node mechanisms to business models — fully understand the design and operation of the Web3 Capital Network.",
     "pages": "pages"
   }

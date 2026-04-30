@@ -204,7 +204,8 @@
     "measureStep2": "Wer Zusammenarbeit in strukturierte Arbeit überführt hat",
     "measureStep3": "Wer die Umsetzung geliefert hat — Menschen und Agenten",
     "measureStep4": "Welche Belege existieren und wer sie geprüft hat",
-    "measureStep5": "Ob das Ergebnis tatsächlich standhält — nicht ob der Thread laut war"
+    "measureStep5": "Ob das Ergebnis tatsächlich standhält — nicht ob der Thread laut war",
+    "ctaEyebrow": "Take the next step"
   },
   "howItWorks": {
     "title": "So funktioniert es",
@@ -263,7 +264,8 @@
     "layer4Detail": "Mechaniken ab Phase 2+ knüpfen Distribution an verifizierte Beitragskurven.",
     "layer5Label": "Vermögensschicht",
     "layer5Desc": "On-Chain-Identität, Emission, Liquidität",
-    "layer5Detail": "Langfristige Instrumente und Liquidität stehen auf verifizierter Historie — nicht auf purem Hype."
+    "layer5Detail": "Langfristige Instrumente und Liquidität stehen auf verifizierter Historie — nicht auf purem Hype.",
+    "ctaEyebrow": "Begin"
   },
   "nodes": {
     "title": "Knotennetzwerk — WCN",
@@ -340,7 +342,8 @@
     "notBullet1": "Passive Verzeichniseinträge oder unverifizierte „Partner“-Badges",
     "notBullet2": "Anonyme Koordinationskanäle ohne Identität und Grenzen",
     "notBullet3": "Kurzfristige Kampagnen-Hüllen ohne laufende Abwicklungsrolle",
-    "notBullet4": "Kein Ersatz für rechtliche, steuerliche oder behördliche Pflichten in Ihrer Rechtsordnung"
+    "notBullet4": "Kein Ersatz für rechtliche, steuerliche oder behördliche Pflichten in Ihrer Rechtsordnung",
+    "ctaEyebrow": "Begin"
   },
   "pob": {
     "title": "Proof of Business (PoB)",
@@ -424,7 +427,8 @@
     "factorTimeMultName": "Zeitmultiplikator",
     "factorTimeMultHint": "Beständigkeit und wie gut das Ergebnis über die Zeit hält.",
     "factorRiskDiscountName": "Rabatt bei Risiko",
-    "factorRiskDiscountHint": "Streitfälle, Anomalien und Richtlinien-Flags reduzieren das wirksame PoB."
+    "factorRiskDiscountHint": "Streitfälle, Anomalien und Richtlinien-Flags reduzieren das wirksame PoB.",
+    "ctaEyebrow": "Begin"
   },
   "auth": {
     "loginTitle": "Anmelden — WCN",
@@ -473,7 +477,12 @@
     "industryTitle": "Branchen-Knoten",
     "industryDesc": "Börse, Market Maker, Verwahrer, Datenanbieter",
     "tipLabel": "Hinweis:",
-    "tipMessage": "Bewerbungen mit konkreten Ressourcenbeschreibungen und klarem Alignment mit dem WCN-Netzwerk haben eine deutlich höhere Genehmigungsrate."
+    "tipMessage": "Bewerbungen mit konkreten Ressourcenbeschreibungen und klarem Alignment mit dem WCN-Netzwerk haben eine deutlich höhere Genehmigungsrate.",
+    "ctaEyebrow": "Begin",
+    "ctaTitle": "Become part of the network.",
+    "ctaDesc": "Submit your application above. Our review team verifies every node before admission to the registry.",
+    "ctaPrimary": "Read the protocol",
+    "ctaSecondary": "See the loop"
   },
   "dashboard": {
     "brand": "WCN Console",

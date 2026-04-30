@@ -204,7 +204,8 @@
     "measureStep2": "Qui a fait passer la collaboration en travail structuré",
     "measureStep3": "Qui a livré l’exécution — personnes et agents",
     "measureStep4": "Quelles preuves existent et qui les a revues",
-    "measureStep5": "Si le résultat tient réellement — pas si le fil de discussion était bruyant"
+    "measureStep5": "Si le résultat tient réellement — pas si le fil de discussion était bruyant",
+    "ctaEyebrow": "Take the next step"
   },
   "howItWorks": {
     "title": "Comment ça marche",
@@ -263,7 +264,8 @@
     "layer4Detail": "Les mécanismes Phase 2+ lient la distribution aux courbes de contribution vérifiées.",
     "layer5Label": "Couche actifs",
     "layer5Desc": "Identité on-chain, émission, liquidité",
-    "layer5Detail": "Instruments long terme et liquidité reposent sur un historique vérifié — pas sur le battage brut."
+    "layer5Detail": "Instruments long terme et liquidité reposent sur un historique vérifié — pas sur le battage brut.",
+    "ctaEyebrow": "Begin"
   },
   "nodes": {
     "title": "Réseau de nœuds — WCN",
@@ -340,7 +342,8 @@
     "notBullet1": "Fiches d’annuaire passives ou badges « partenaire » non vérifiés",
     "notBullet2": "Canaux de coordination anonymes sans identité ni périmètres",
     "notBullet3": "Coques de campagne court terme sans rôle de règlement durable",
-    "notBullet4": "Substituts aux obligations juridiques, fiscales ou réglementaires de votre juridiction"
+    "notBullet4": "Substituts aux obligations juridiques, fiscales ou réglementaires de votre juridiction",
+    "ctaEyebrow": "Begin"
   },
   "pob": {
     "title": "Proof of Business (PoB)",
@@ -424,7 +427,8 @@
     "factorTimeMultName": "Mult. temps",
     "factorTimeMultHint": "Durabilité et tenue du résultat dans le temps.",
     "factorRiskDiscountName": "Décote risque",
-    "factorRiskDiscountHint": "Litiges, anomalies et signalements de politique réduisent le PoB effectif."
+    "factorRiskDiscountHint": "Litiges, anomalies et signalements de politique réduisent le PoB effectif.",
+    "ctaEyebrow": "Begin"
   },
   "auth": {
     "loginTitle": "Connexion — WCN",
@@ -473,7 +477,12 @@
     "industryTitle": "Nœud secteur",
     "industryDesc": "Exchange, teneur de marché, dépositaire, fournisseur de données",
     "tipLabel": "Conseil :",
-    "tipMessage": "Les candidatures avec des descriptions de ressources précises et un alignement clair avec le réseau WCN ont un taux d’approbation nettement plus élevé."
+    "tipMessage": "Les candidatures avec des descriptions de ressources précises et un alignement clair avec le réseau WCN ont un taux d’approbation nettement plus élevé.",
+    "ctaEyebrow": "Begin",
+    "ctaTitle": "Become part of the network.",
+    "ctaDesc": "Submit your application above. Our review team verifies every node before admission to the registry.",
+    "ctaPrimary": "Read the protocol",
+    "ctaSecondary": "See the loop"
   },
   "dashboard": {
     "brand": "Console WCN",

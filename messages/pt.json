@@ -204,7 +204,8 @@
     "measureStep2": "Quem avançou a colaboração para trabalho estruturado",
     "measureStep3": "Quem entregou a execução — pessoas e agentes",
     "measureStep4": "Que evidências existem e quem revisou",
-    "measureStep5": "Se o resultado de fato se sustenta — não se o fio foi barulhento"
+    "measureStep5": "Se o resultado de fato se sustenta — não se o fio foi barulhento",
+    "ctaEyebrow": "Take the next step"
   },
   "howItWorks": {
     "title": "Como funciona",
@@ -263,7 +264,8 @@
     "layer4Detail": "Mecânicas da Fase 2+ amarram distribuição a curvas de contribuição verificada.",
     "layer5Label": "Camada de ativos",
     "layer5Desc": "Identidade on-chain, emissão, liquidez",
-    "layer5Detail": "Instrumentos de longo prazo e liquidez repousam em histórico verificado — não em hype bruto."
+    "layer5Detail": "Instrumentos de longo prazo e liquidez repousam em histórico verificado — não em hype bruto.",
+    "ctaEyebrow": "Begin"
   },
   "nodes": {
     "title": "Rede de nós — WCN",
@@ -340,7 +342,8 @@
     "notBullet1": "Listagens passivas de diretório ou selos de \"parceiro\" não verificados",
     "notBullet2": "Canais anônimos de coordenação sem identidade e limites",
     "notBullet3": "Cascas de campanha de curto prazo sem papel contínuo na liquidação",
-    "notBullet4": "Substitutos para obrigações legais, fiscais ou regulatórias na sua jurisdição"
+    "notBullet4": "Substitutos para obrigações legais, fiscais ou regulatórias na sua jurisdição",
+    "ctaEyebrow": "Begin"
   },
   "pob": {
     "title": "Proof of Business (PoB)",
@@ -424,7 +427,8 @@
     "factorTimeMultName": "Mult temporal",
     "factorTimeMultHint": "Durabilidade e quão bem o resultado se sustenta ao longo do tempo.",
     "factorRiskDiscountName": "Desconto de risco",
-    "factorRiskDiscountHint": "Disputas, anomalias e flags de política reduzem o PoB efetivo."
+    "factorRiskDiscountHint": "Disputas, anomalias e flags de política reduzem o PoB efetivo.",
+    "ctaEyebrow": "Begin"
   },
   "auth": {
     "loginTitle": "Entrar — WCN",
@@ -473,7 +477,12 @@
     "industryTitle": "Nó de indústria",
     "industryDesc": "Exchange, formador de mercado, custodiante, provedor de dados",
     "tipLabel": "Dica:",
-    "tipMessage": "Candidaturas com descrições específicas de recursos e alinhamento claro com a rede WCN têm taxa de aprovação significativamente maior."
+    "tipMessage": "Candidaturas com descrições específicas de recursos e alinhamento claro com a rede WCN têm taxa de aprovação significativamente maior.",
+    "ctaEyebrow": "Begin",
+    "ctaTitle": "Become part of the network.",
+    "ctaDesc": "Submit your application above. Our review team verifies every node before admission to the registry.",
+    "ctaPrimary": "Read the protocol",
+    "ctaSecondary": "See the loop"
   },
   "dashboard": {
     "brand": "WCN Console",
