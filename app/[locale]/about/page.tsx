@@ -19,6 +19,7 @@ import {
   Wrench,
   XCircle,
 } from "lucide-react";
+import { VoltageCallout } from "@/components/brand/voltage-callout";
 
 export async function generateMetadata({
   params: { locale },
@@ -149,6 +150,7 @@ export default async function AboutPage() {
             <h1 className="about-hero-title">
               {t.rich("headline", {
                 linebreak: () => <br />,
+                em: (chunks) => <em>{chunks}</em>,
               })}
             </h1>
             <p className="muted hero-lede about-hero-lede">
@@ -198,7 +200,8 @@ export default async function AboutPage() {
 
       <section className="section section-alt about-clarity">
         <div className="container">
-          <div className="section-head about-section-head">
+          <div className="section-head about-section-head section-head-numbered">
+            <span className="section-number">№ 01</span>
             <span className="eyebrow about-eyebrow">{t("definitionEyebrow")}</span>
             <h2 className="about-section-h2">{t("definitionTitle")}</h2>
             <p className="muted hero-lede about-section-lede">{t("definitionDesc")}</p>
@@ -244,7 +247,8 @@ export default async function AboutPage() {
 
       <section className="section about-windows">
         <div className="container">
-          <div className="section-head about-section-head">
+          <div className="section-head about-section-head section-head-numbered">
+            <span className="section-number">№ 02</span>
             <span className="eyebrow about-eyebrow">{t("whyNowEyebrow")}</span>
             <h2 className="about-section-h2">{t("whyNowTitle")}</h2>
             <p className="muted hero-lede about-section-lede">{t("whyNowDesc")}</p>
@@ -264,7 +268,8 @@ export default async function AboutPage() {
 
       <section className="section section-alt about-structure">
         <div className="container">
-          <div className="section-head about-section-head">
+          <div className="section-head about-section-head section-head-numbered">
+            <span className="section-number">№ 03</span>
             <span className="eyebrow about-eyebrow">{t("diffEyebrow")}</span>
             <h2 className="about-section-h2">{t("diffTitle")}</h2>
             <p className="muted hero-lede about-section-lede">{t("diffDesc")}</p>
@@ -286,6 +291,7 @@ export default async function AboutPage() {
           <div className="card about-measure-card card-grid-animated">
             <div className="about-measure-inner">
               <div>
+                <span className="section-number about-measure-number">№ 04</span>
                 <span className="eyebrow about-eyebrow about-measure-kicker">{t("measureEyebrow")}</span>
                 <h2 className="about-measure-title">{t("measureTitle")}</h2>
                 <p className="muted about-measure-lede">{t("measureDesc")}</p>
@@ -305,7 +311,8 @@ export default async function AboutPage() {
 
       <section className="section section-alt about-foundation">
         <div className="container">
-          <div className="section-head about-section-head">
+          <div className="section-head about-section-head section-head-numbered">
+            <span className="section-number">№ 05</span>
             <span className="eyebrow about-eyebrow">{t("foundationEyebrow")}</span>
             <h2 className="about-section-h2">{t("foundationTitle")}</h2>
             <p className="muted hero-lede about-section-lede">{t("foundationDesc")}</p>
@@ -322,29 +329,15 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="section section-tight about-cta-section">
-        <div className="container">
-          <div className="about-cta-band">
-            <div className="about-cta-copy">
-              <h2 className="about-cta-title">{t("ctaTitle")}</h2>
-              <p className="muted about-cta-desc">{t("ctaDesc")}</p>
-            </div>
-            <div className="about-cta-actions">
-              <Link href="/wiki" className="button">
-                <BookOpen size={18} aria-hidden />
-                {t("openWiki")}
-              </Link>
-              <Link href="/wiki/solution/3-1-wcn-的整体解法" className="button-secondary">
-                {t("systemSolution")}
-              </Link>
-              <Link href="/apply" className="button-secondary">
-                {tNav("applyAsNode")}
-                <ArrowRight size={18} aria-hidden />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <VoltageCallout
+        eyebrow={t("ctaEyebrow")}
+        title={t("ctaTitle")}
+        desc={t("ctaDesc")}
+        primaryLabel={tNav("applyAsNode")}
+        primaryHref="/apply"
+        secondaryLabel={t("openWiki")}
+        secondaryHref="/wiki"
+      />
     </main>
   );
 }

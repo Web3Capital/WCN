@@ -204,7 +204,8 @@
     "measureStep2": "Quién llevó la colaboración a trabajo estructurado",
     "measureStep3": "Quién ejecutó: personas y agentes",
     "measureStep4": "Qué evidencia existe y quién la revisó",
-    "measureStep5": "Si el resultado realmente se sostiene, no si el hilo fue ruidoso"
+    "measureStep5": "Si el resultado realmente se sostiene, no si el hilo fue ruidoso",
+    "ctaEyebrow": "Take the next step"
   },
   "howItWorks": {
     "title": "Cómo funciona",
@@ -263,7 +264,8 @@
     "layer4Detail": "Mecánicas de fase 2+ vinculan la distribución a curvas de contribución verificadas.",
     "layer5Label": "Capa de activos",
     "layer5Desc": "Identidad on-chain, emisión, liquidez",
-    "layer5Detail": "Instrumentos a largo plazo y liquidez descansan en historial verificado, no en hype bruto."
+    "layer5Detail": "Instrumentos a largo plazo y liquidez descansan en historial verificado, no en hype bruto.",
+    "ctaEyebrow": "Begin"
   },
   "nodes": {
     "title": "Red de nodos — WCN",
@@ -340,7 +342,8 @@
     "notBullet1": "Listados pasivos de directorio o insignias de «socio» no verificadas",
     "notBullet2": "Canales de coordinación anónimos sin identidad ni límites",
     "notBullet3": "Envolturas de campaña a corto plazo sin rol continuo en liquidación",
-    "notBullet4": "Sustitutos de obligaciones legales, fiscales o regulatorias en su jurisdicción"
+    "notBullet4": "Sustitutos de obligaciones legales, fiscales o regulatorias en su jurisdicción",
+    "ctaEyebrow": "Begin"
   },
   "pob": {
     "title": "Prueba de negocio (PoB)",
@@ -424,7 +427,8 @@
     "factorTimeMultName": "Mult temporal",
     "factorTimeMultHint": "Durabilidad y cómo se sostiene el resultado en el tiempo.",
     "factorRiskDiscountName": "Descuento por riesgo",
-    "factorRiskDiscountHint": "Litigios, anomalías y marcas de política reducen el PoB efectivo."
+    "factorRiskDiscountHint": "Litigios, anomalías y marcas de política reducen el PoB efectivo.",
+    "ctaEyebrow": "Begin"
   },
   "auth": {
     "loginTitle": "Iniciar sesión — WCN",
@@ -473,7 +477,12 @@
     "industryTitle": "Nodo de industria",
     "industryDesc": "Exchange, creador de mercado, custodio, proveedor de datos",
     "tipLabel": "Consejo:",
-    "tipMessage": "Las solicitudes con descripciones concretas de recursos y alineación clara con la red WCN tienen una tasa de aprobación significativamente mayor."
+    "tipMessage": "Las solicitudes con descripciones concretas de recursos y alineación clara con la red WCN tienen una tasa de aprobación significativamente mayor.",
+    "ctaEyebrow": "Begin",
+    "ctaTitle": "Become part of the network.",
+    "ctaDesc": "Submit your application above. Our review team verifies every node before admission to the registry.",
+    "ctaPrimary": "Read the protocol",
+    "ctaSecondary": "See the loop"
   },
   "dashboard": {
     "brand": "Consola WCN",

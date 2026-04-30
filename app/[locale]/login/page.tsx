@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { authOptions } from "@/lib/auth";
 import { Link, redirect } from "@/i18n/routing";
 import { LoginTabs } from "./login-tabs";
+import { WCNGlyph } from "@/components/brand/wcn-glyph";
 
 export const dynamic = "force-dynamic";
 
@@ -42,7 +43,10 @@ export default async function LoginPage({
     <main className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
-          <h1>{t("welcomeBack")}</h1>
+          <span className="auth-glyph" aria-hidden>
+            <WCNGlyph size={22} variant="ledger" />
+          </span>
+          <h1>{t.rich("welcomeBack", { em: (chunks) => <em>{chunks}</em> })}</h1>
           <p>{t("signInToAccount")}</p>
         </div>
 

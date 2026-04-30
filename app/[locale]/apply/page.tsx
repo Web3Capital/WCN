@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import { Landmark, Box, Wrench, Globe, Megaphone, Factory } from "lucide-react";
 import { ApplyForm } from "./ui";
+import { VoltageCallout } from "@/components/brand/voltage-callout";
 
 const NODE_TYPES: { icon: ReactNode; titleKey: string; descKey: string }[] = [
   { icon: <Landmark size={20} strokeWidth={1.5} />, titleKey: "capitalTitle", descKey: "capitalDesc" },
@@ -40,7 +41,7 @@ export default async function ApplyPage() {
       <div className="container">
         <div className="apply-hero">
           <span className="eyebrow">{t("eyebrow")}</span>
-          <h1>{t("headline")}</h1>
+          <h1>{t.rich("headline", { em: (chunks) => <em>{chunks}</em> })}</h1>
           <p className="apply-hero-desc">{t("heroDesc")}</p>
         </div>
 
@@ -90,6 +91,16 @@ export default async function ApplyPage() {
           </div>
         </div>
       </div>
+
+      <VoltageCallout
+        eyebrow={t("ctaEyebrow")}
+        title={t("ctaTitle")}
+        desc={t("ctaDesc")}
+        primaryLabel={t("ctaPrimary")}
+        primaryHref="/wiki"
+        secondaryLabel={t("ctaSecondary")}
+        secondaryHref="/how-it-works"
+      />
     </main>
   );
 }

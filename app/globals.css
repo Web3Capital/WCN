@@ -6249,18 +6249,40 @@ html[data-theme="dark"] .pob-formula-specbar {
 }
 .auth-header {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: var(--space-6);
+}
+.auth-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: var(--space-3);
+  border-radius: 50%;
+  background: var(--card);
+  border: var(--hairline) solid var(--line);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
 }
 .auth-header h1 {
-  font-size: clamp(26px, 4vw, 36px);
-  font-weight: 820;
-  letter-spacing: -0.035em;
-  line-height: 1.1;
-  margin: 0 0 8px;
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 4vw, var(--type-xl));
+  font-weight: 350;
+  letter-spacing: var(--tracking-tighter);
+  line-height: 1.08;
+  margin: 0 0 var(--space-2);
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+}
+.auth-header h1 em {
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: color-mix(in oklab, var(--voltage-500) 90%, var(--text));
 }
 .auth-header p {
   color: var(--muted);
-  font-size: 15px;
+  font-family: var(--font-sans);
+  font-size: var(--type-sm);
   margin: 0;
 }
 .auth-card {
@@ -7955,3 +7977,84 @@ html[data-theme="dark"],
 
 /* P1-4 follow-up · let badges in eyebrow inherit the calmer palette */
 .eyebrow::before { box-shadow: 0 0 6px color-mix(in oklab, var(--voltage-500) 50%, transparent); }
+
+/* ============================================================
+   OTHER PAGES UPGRADE — section-number variants + docs landing
+   ============================================================ */
+
+/* Section number positioned inside the about-measure card kicker block.
+   Differs from default .section-number which sits in flex section-head. */
+.about-measure-number {
+  display: block;
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--muted-2);
+}
+.about-measure-number::after {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 1px;
+  background: var(--line-strong);
+  vertical-align: middle;
+  margin-inline-start: 8px;
+}
+
+/* Section number positioned inside the pob proof desk inner column */
+.pob-proof-section-number {
+  display: block;
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--muted-2);
+}
+.pob-proof-section-number::after {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 1px;
+  background: var(--line-strong);
+  vertical-align: middle;
+  margin-inline-start: 8px;
+}
+
+/* Docs / Wiki landing hero — apply Sovereign editorial treatment */
+.docs-landing-hero h1 {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  letter-spacing: var(--tracking-tighter);
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+}
+.docs-landing-hero h1 em {
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: color-mix(in oklab, var(--voltage-500) 90%, var(--text));
+}
+
+/* Editorial hero <em> emphasis — applies on every marketing page hero h1 */
+.about-hero-title em,
+.hiw-hero-title em,
+.pob-hero-title em,
+.nodes-hero-title em {
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: color-mix(in oklab, var(--voltage-500) 90%, var(--text));
+}
+
+/* Section <h2> em emphasis (when present) */
+.section-head h2 em,
+.about-section-h2 em,
+.hiw-section-h2 em,
+.pob-section-h2 em {
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: color-mix(in oklab, var(--voltage-500) 90%, var(--text));
+}

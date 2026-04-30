@@ -129,7 +129,7 @@
     "title": "关于",
     "metaDesc": "WCN 是 Web3 与 AI 的商业网络：真实运营者组织资源，AI 代理扩展执行，商业证明验证成果，结算奖励贡献。",
     "eyebrow": "关于 WCN",
-    "headline": "一个网络。真实参与者。<linebreak></linebreak>经验证的成果。",
+    "headline": "一个网络。真实参与者。<em>可验证的成果。</em>",
     "lede": "Web3 Capital Network 是 Web3 与 AI 经济的<strong>商业网络</strong>——真实运营者将资本对接执行，每一个成果都有证据支撑，结算始终可追溯到真正交付的人。",
     "subLede": "WCN 不是先做一条链再期望被采用。它从组织真实参与者、真实任务和真实证据开始——然后让身份、资产和结算建立在可验证的历史之上。",
     "wikiWhatIs": "WCN 是什么",
@@ -204,13 +204,14 @@
     "measureStep2": "谁将其推进为结构化工作",
     "measureStep3": "谁完成了交付——人和代理",
     "measureStep4": "有什么证据，谁审核了它",
-    "measureStep5": "结果是否真正成立"
+    "measureStep5": "结果是否真正成立",
+    "ctaEyebrow": "下一步"
   },
   "howItWorks": {
     "title": "运作方式",
     "metaDesc": "WCN 的运作方式：机会通过节点进入，工作由人和 AI 代理结构化执行，成果通过证据验证，结算奖励真实贡献。",
     "eyebrow": "运作方式",
-    "headline": "从机会到证明——一个闭环。",
+    "headline": "从机会到<em>证据</em>——在一个循环里。",
     "lede": "WCN 是一个<strong>商业闭环</strong>：结构化工作，由人和 AI 代理执行，通过证据验证，记录<strong>商业证明</strong>——让结算始终跟随贡献。",
     "subLede": "以下每一步都已在产品中实现：节点处理准入，任务和交易承载执行，证明工作台处理证据，PoB 将运营连接到长期价值。",
     "loopAtGlance": "循环一览",
@@ -263,13 +264,14 @@
     "layer4Detail": "分配与经验证的贡献曲线挂钩。",
     "layer5Label": "资产层",
     "layer5Desc": "链上身份、发行、流动性",
-    "layer5Detail": "建立在经验证历史之上的长期工具和流动性。"
+    "layer5Detail": "建立在经验证历史之上的长期工具和流动性。",
+    "ctaEyebrow": "开始"
   },
   "nodes": {
     "title": "节点网络 — WCN",
     "metaDesc": "节点是驱动 WCN 的运营者：他们带来资本、项目和服务，承担执行风险，并根据经验证的成果获得结算。",
     "eyebrow": "节点网络",
-    "headline": "驱动网络的运营者。",
+    "headline": "驱动网络的<em>运营者</em>们。",
     "lede": "在 WCN 中，<strong>节点</strong>是每笔交易、每项任务和每个成果背后的负责运营者。层级反映<strong>范围和信任</strong>——通过经验证的结果获得，而非虚荣指标。",
     "subLede": "节点是商业闭环在真实经济中的落地点：他们引入机会，拥有执行权，提供证据，并参与结算。",
     "responsibilityLoop": "节点如何运作",
@@ -340,13 +342,14 @@
     "notBullet1": "被动列表或未经验证的合作伙伴徽章",
     "notBullet2": "没有身份和问责的匿名渠道",
     "notBullet3": "在网络中没有持续角色的活动外壳",
-    "notBullet4": "法律、税务或监管义务的替代品"
+    "notBullet4": "法律、税务或监管义务的替代品",
+    "ctaEyebrow": "开始"
   },
   "pob": {
     "title": "业务证明 (PoB)",
     "metaDesc": "商业证明是 WCN 的验证层：真实成果经过举证、审核、归因和记录——为公平结算创建可审计的路径。",
     "eyebrow": "业务证明 (PoB)",
-    "headline": "只有经验证的成果才能成为价值。",
+    "headline": "只有经验证的成果，才成为<em>价值</em>。",
     "lede": "PoB 是 WCN 的<strong>验证层</strong>。它认可可以被<strong>证明、归因和审计</strong>的商业成果——让结算始终反映真实发生的事情。",
     "subLede": "PoB 将真实、可验证的结果转化为系统可以接纳、追踪并用作结算输入的记录。如果无法举证，就不算数。",
     "whatPobEnforces": "PoB 执行什么",
@@ -424,11 +427,12 @@
     "factorTimeMultName": "持久性",
     "factorTimeMultHint": "成果随时间的持续表现。",
     "factorRiskDiscountName": "风险折减",
-    "factorRiskDiscountHint": "争议、异常和标记会降低分数。"
+    "factorRiskDiscountHint": "争议、异常和标记会降低分数。",
+    "ctaEyebrow": "开始"
   },
   "auth": {
     "loginTitle": "登录 — WCN",
-    "welcomeBack": "欢迎回来",
+    "welcomeBack": "<em>欢迎</em>回来",
     "signInToAccount": "登录您的 WCN 账户",
     "oauthAccountLinked": "使用此邮箱的账户已存在。请使用原始方式登录。",
     "authFailed": "认证失败。请重试。",
@@ -441,14 +445,14 @@
     "applyTitle": "申请 — WCN",
     "applyHeadline": "申请成为节点",
     "applyDesc": "加入 WCN 网络成为节点运营者。",
-    "signupHeadline": "加入 WCN",
+    "signupHeadline": "加入<em>网络</em>",
     "signupSubtext": "创建账户以开始使用"
   },
   "apply": {
     "metaTitle": "申请成为节点 — WCN",
     "metaDescription": "加入 WCN 网络成为节点运营者。申请成为资本、项目、服务、区域、媒体或行业节点。",
     "eyebrow": "加入网络",
-    "headline": "申请成为节点。",
+    "headline": "申请成为<em>节点</em>。",
     "heroDesc": "WCN 是一个基于申请的网络。告诉我们你的组织和资源——我们的团队在 48 小时内审核每份申请。",
     "howItWorks": "如何运作",
     "step1Title": "提交申请",
@@ -473,7 +477,12 @@
     "industryTitle": "行业节点",
     "industryDesc": "交易所、做市商、托管机构和数据提供商",
     "tipLabel": "提示：",
-    "tipMessage": "描述具体资源并说明与 WCN 网络契合度的申请，通过率显著更高。"
+    "tipMessage": "描述具体资源并说明与 WCN 网络契合度的申请，通过率显著更高。",
+    "ctaEyebrow": "开始",
+    "ctaTitle": "成为网络的一部分。",
+    "ctaDesc": "在上方提交申请。我们的审核团队在每个节点入注册库前完成验证。",
+    "ctaPrimary": "阅读协议",
+    "ctaSecondary": "查看循环"
   },
   "dashboard": {
     "brand": "WCN 控制台",
@@ -655,7 +664,7 @@
   "wiki": {
     "title": "Wiki",
     "description": "WCN 完整知识库 — 从项目介绍到系统架构，全面了解 Web3 Capital Network。",
-    "heading": "WCN Wiki",
+    "heading": "WCN <em>百科</em>",
     "subtitle": "从项目定义到系统架构，从节点机制到商业模式 — 全面了解 Web3 Capital Network 的设计与运作方式。",
     "pages": "篇"
   }

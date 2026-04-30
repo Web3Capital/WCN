@@ -204,7 +204,8 @@
     "measureStep2": "協業を構造化された業務へ進めたのは誰か",
     "measureStep3": "実行を届けたのは誰か — 人とエージェント",
     "measureStep4": "どんなエビデンスがあり、誰がレビューしたか",
-    "measureStep5": "結果が実際に成立したか — スレッドが騒がしかったかではない"
+    "measureStep5": "結果が実際に成立したか — スレッドが騒がしかったかではない",
+    "ctaEyebrow": "Take the next step"
   },
   "howItWorks": {
     "title": "仕組み",
@@ -263,7 +264,8 @@
     "layer4Detail": "フェーズ2以降のメカニズムが配分を検証された貢献曲線に結びつけます。",
     "layer5Label": "資産層",
     "layer5Desc": "オンチェーンアイデンティティ、発行、流動性",
-    "layer5Detail": "長期のインストルメントと流動性は検証された履歴の上にあり — 過度な期待や誇大宣伝ではありません。"
+    "layer5Detail": "長期のインストルメントと流動性は検証された履歴の上にあり — 過度な期待や誇大宣伝ではありません。",
+    "ctaEyebrow": "Begin"
   },
   "nodes": {
     "title": "ノードネットワーク — WCN",
@@ -340,7 +342,8 @@
     "notBullet1": "受動的ディレクトリ掲載または未検証の「パートナー」バッジ",
     "notBullet2": "アイデンティティと境界のない匿名調整チャネル",
     "notBullet3": "継続的な決済役割のない短期キャンペーンシェル",
-    "notBullet4": "お客様の法域における法務、税務、規制上の義務の代替ではありません"
+    "notBullet4": "お客様の法域における法務、税務、規制上の義務の代替ではありません",
+    "ctaEyebrow": "Begin"
   },
   "pob": {
     "title": "Proof of Business（PoB）",
@@ -424,7 +427,8 @@
     "factorTimeMultName": "時間倍率",
     "factorTimeMultHint": "耐久性と、時間経過に対する成果の持続性。",
     "factorRiskDiscountName": "リスクディスカウント",
-    "factorRiskDiscountHint": "紛争、異常、ポリシーフラグが実効PoBを下げます。"
+    "factorRiskDiscountHint": "紛争、異常、ポリシーフラグが実効PoBを下げます。",
+    "ctaEyebrow": "Begin"
   },
   "auth": {
     "loginTitle": "ログイン — WCN",
@@ -473,7 +477,12 @@
     "industryTitle": "業界ノード",
     "industryDesc": "取引所、マーケットメーカー、カストディアン、データプロバイダー",
     "tipLabel": "ヒント：",
-    "tipMessage": "具体的なリソース説明とWCNネットワークとの明確な整合がある申請は、承認率が著しく高くなります。"
+    "tipMessage": "具体的なリソース説明とWCNネットワークとの明確な整合がある申請は、承認率が著しく高くなります。",
+    "ctaEyebrow": "Begin",
+    "ctaTitle": "Become part of the network.",
+    "ctaDesc": "Submit your application above. Our review team verifies every node before admission to the registry.",
+    "ctaPrimary": "Read the protocol",
+    "ctaSecondary": "See the loop"
   },
   "dashboard": {
     "brand": "WCNコンソール",
