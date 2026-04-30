@@ -18,9 +18,12 @@ export const TEST_IDS = {
   ownerB: "test-user-owner-b",
   reviewer: "test-user-reviewer",
   finance: "test-user-finance",
+  riskDesk: "test-user-risk-desk",
   // Nodes
   nodeA: "test-node-a", // owned by ownerA
   nodeB: "test-node-b", // owned by ownerB
+  // Agents
+  agentA: "test-agent-a", // owned by nodeA (so ownerA can mutate; RISK_DESK can freeze)
 } as const;
 
 export async function seedTestFixtures() {
@@ -52,6 +55,11 @@ export async function seedTestFixtures() {
     update: { role: "FINANCE_ADMIN" },
     create: { id: TEST_IDS.finance, name: "Test Finance", role: "FINANCE_ADMIN", accountStatus: "ACTIVE" },
   });
+  await prisma.user.upsert({
+    where: { id: TEST_IDS.riskDesk },
+    update: { role: "RISK_DESK" },
+    create: { id: TEST_IDS.riskDesk, name: "Test Risk Desk", role: "RISK_DESK", accountStatus: "ACTIVE" },
+  });
 
   // Nodes — each owned by one of the NODE_OWNER users so we can test IDOR.
   await prisma.node.upsert({
@@ -76,16 +84,33 @@ export async function seedTestFixtures() {
       ownerUserId: TEST_IDS.ownerB,
     },
   });
+
+  // Agent — owned by nodeA. Lets us test:
+  //   - ownerA (NODE_OWNER) can update / trigger runs (matrix update+agent)
+  //   - ownerB (NODE_OWNER) cannot mutate (IDOR)
+  //   - riskDesk can freeze (matrix freeze+agent, disjunctive PATCH gate)
+  await prisma.agent.upsert({
+    where: { id: TEST_IDS.agentA },
+    update: { ownerNodeId: TEST_IDS.nodeA },
+    create: {
+      id: TEST_IDS.agentA,
+      name: "Test Agent A",
+      type: "DEAL",
+      status: "ACTIVE",
+      ownerNodeId: TEST_IDS.nodeA,
+    },
+  });
 }
 
 /** Clean up created entities. Optional — safe to leave in DB across runs. */
 export async function teardownTestFixtures() {
   const prisma = getPrisma();
+  await prisma.agent.deleteMany({ where: { id: { in: [TEST_IDS.agentA] } } });
   await prisma.node.deleteMany({ where: { id: { in: [TEST_IDS.nodeA, TEST_IDS.nodeB] } } });
   await prisma.user.deleteMany({
     where: {
       id: {
-        in: [TEST_IDS.founder, TEST_IDS.ownerA, TEST_IDS.ownerB, TEST_IDS.reviewer, TEST_IDS.finance],
+        in: [TEST_IDS.founder, TEST_IDS.ownerA, TEST_IDS.ownerB, TEST_IDS.reviewer, TEST_IDS.finance, TEST_IDS.riskDesk],
       },
     },
   });
