@@ -9,7 +9,11 @@ export function useRealtimeEvents(handlers?: Record<string, SSEHandler>) {
   const [connected, setConnected] = useState(false);
   const esRef = useRef<EventSource | null>(null);
   const handlersRef = useRef(handlers);
-  handlersRef.current = handlers;
+  // Sync ref AFTER render (react-hooks/refs); writing during render breaks
+  // concurrent-mode invariants because refs are not reactive state.
+  useEffect(() => {
+    handlersRef.current = handlers;
+  });
 
   useEffect(() => {
     const es = new EventSource("/api/realtime");

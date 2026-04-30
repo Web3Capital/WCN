@@ -65,6 +65,8 @@ export default async function PendingPage() {
               <tbody>
                 {nodes.map((node: any) => {
                   const daysInPhase = Math.floor(
+                    // Server component runs once per request — Date.now() is per-request, not per-render
+                    // eslint-disable-next-line react-hooks/purity
                     (Date.now() - new Date(node.createdAt).getTime()) / (1000 * 60 * 60 * 24)
                   );
                   return (

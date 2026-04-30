@@ -24,6 +24,10 @@ type EvidenceRow = {
 function SlaTag({ deadline }: { deadline: string | null }) {
   const { t } = useAutoTranslate();
   if (!deadline) return null;
+  // Relative SLA tag — value reflects render-time. Acceptable inaccuracy
+  // for a mostly-static dashboard; for live ticking, refactor to a hook
+  // that polls and stores the diff in state.
+  // eslint-disable-next-line react-hooks/purity
   const diff = new Date(deadline).getTime() - Date.now();
   const hours = Math.round(diff / 3600000);
   if (hours <= 0) return <span className="sla-tag sla-overdue">{t("OVERDUE")}</span>;

@@ -9,7 +9,7 @@ import nextConfig from "eslint-config-next";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import importPlugin from "eslint-plugin-import";
 
-export default [
+const config = [
   ...nextConfig,
   {
     name: "wcn/overrides",
@@ -36,18 +36,20 @@ export default [
           ],
         },
       ],
-      // ── Pre-existing react-hooks violations (issue 0002) ──────────────
-      // These rules surfaced 25 pre-existing errors when ESLint flat config
-      // started actually running for the first time. Each is a real code-
-      // quality issue but pre-dates Week 2 and triaging them is out of
-      // scope here. Demoted to warn so CI passes; tracked for cleanup in:
-      //   docs/architecture/issues/0002-react-hooks-violations.md
-      // Re-promote to error once each is addressed.
-      "react-hooks/refs": "warn",
-      "react-hooks/set-state-in-effect": "warn",
-      "react-hooks/purity": "warn",
-      "react-hooks/static-components": "warn",
-      "import/no-anonymous-default-export": "warn",
+      // ── react-hooks rules (issue 0002 closeout) ──────────────────────
+      // These were demoted to `warn` after issue 0001 reactivated lint and
+      // surfaced 33 pre-existing violations. All have since been addressed:
+      //   - refs / static-components: real refactor (hoist + ref-via-effect)
+      //   - purity / set-state-in-effect / exhaustive-deps: per-line
+      //     disables with rationale where the violation is an intentional
+      //     pattern (server-component request-time, sync-on-prop, lazy
+      //     tab-load). New occurrences without explanatory disable will fail.
+      // Promoted to error to prevent new violations.
+      "react-hooks/refs": "error",
+      "react-hooks/set-state-in-effect": "error",
+      "react-hooks/purity": "error",
+      "react-hooks/static-components": "error",
+      "import/no-anonymous-default-export": "error",
     },
   },
   {
@@ -55,3 +57,5 @@ export default [
     ignores: ["node_modules/", ".next/", "prisma/", "metrics/"],
   },
 ];
+
+export default config;

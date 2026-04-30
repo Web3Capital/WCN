@@ -35,6 +35,9 @@ export function ConfirmDialog({
 
   useEffect(() => {
     if (open) {
+      // Intentional sync-on-prop pattern (close on navigate / reset on open).
+      // React docs flag this as cascade risk; see issue 0002 for refactor plan.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setValue("");
       requestAnimationFrame(() => inputRef.current?.focus());
     }

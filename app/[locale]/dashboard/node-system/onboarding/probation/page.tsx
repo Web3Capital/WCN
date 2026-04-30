@@ -66,6 +66,8 @@ export default async function ProbationPage() {
                 {nodes.map((node: any) => {
                   const endDate = node.probationEndAt ? new Date(node.probationEndAt) : null;
                   const daysRemaining = endDate
+                    // Server component runs once per request — Date.now() is per-request, not per-render
+                    // eslint-disable-next-line react-hooks/purity
                     ? Math.ceil((endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
                     : null;
 

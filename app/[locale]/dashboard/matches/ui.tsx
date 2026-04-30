@@ -35,6 +35,14 @@ type StatusFilter = (typeof STATUSES)[number];
 type SortKey = "project" | "capital" | "score" | "status" | "createdAt";
 type SortDir = "asc" | "desc";
 
+// Hoisted out of MatchesConsole so each render doesn't create a new
+// component identity (react-hooks/static-components). Takes sortKey/sortDir
+// as props instead of closing over parent state.
+function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; sortDir: SortDir }) {
+  if (sortKey !== col) return <ChevronDown size={12} style={{ opacity: 0.3 }} />;
+  return sortDir === "asc" ? <ChevronUp size={12} /> : <ChevronDown size={12} />;
+}
+
 const PAGE_SIZE = 20;
 
 const MATCH_PIPELINE_ORDER = ["GENERATED", "INTEREST_EXPRESSED", "CONVERTED_TO_DEAL", "DECLINED", "EXPIRED"] as const;
@@ -153,11 +161,6 @@ export function MatchesConsole({
     if (sortKey === key) setSortDir((d) => d === "asc" ? "desc" : "asc");
     else { setSortKey(key); setSortDir(key === "score" ? "desc" : "asc"); }
   }, [sortKey]);
-
-  function SortIcon({ col }: { col: SortKey }) {
-    if (sortKey !== col) return <ChevronDown size={12} style={{ opacity: 0.3 }} />;
-    return sortDir === "asc" ? <ChevronUp size={12} /> : <ChevronDown size={12} />;
-  }
 
   // --- Actions ---
   const performAction = useCallback(async (matchId: string, action: "interest" | "decline" | "convert", dealId?: string) => {
@@ -358,19 +361,19 @@ export function MatchesConsole({
               <tr>
                 <th style={{ width: 32 }} />
                 <th onClick={() => toggleSort("project")} style={{ cursor: "pointer" }}>
-                  <span className="flex items-center gap-4">{t("Project")} <SortIcon col="project" /></span>
+                  <span className="flex items-center gap-4">{t("Project")} <SortIcon col="project" sortKey={sortKey} sortDir={sortDir} /></span>
                 </th>
                 <th onClick={() => toggleSort("capital")} style={{ cursor: "pointer" }}>
-                  <span className="flex items-center gap-4">{t("Capital Profile")} <SortIcon col="capital" /></span>
+                  <span className="flex items-center gap-4">{t("Capital Profile")} <SortIcon col="capital" sortKey={sortKey} sortDir={sortDir} /></span>
                 </th>
                 <th onClick={() => toggleSort("score")} style={{ cursor: "pointer" }}>
-                  <span className="flex items-center gap-4">{t("Score")} <SortIcon col="score" /></span>
+                  <span className="flex items-center gap-4">{t("Score")} <SortIcon col="score" sortKey={sortKey} sortDir={sortDir} /></span>
                 </th>
                 <th onClick={() => toggleSort("status")} style={{ cursor: "pointer" }}>
-                  <span className="flex items-center gap-4">{t("Status")} <SortIcon col="status" /></span>
+                  <span className="flex items-center gap-4">{t("Status")} <SortIcon col="status" sortKey={sortKey} sortDir={sortDir} /></span>
                 </th>
                 <th onClick={() => toggleSort("createdAt")} style={{ cursor: "pointer" }} className="hide-mobile">
-                  <span className="flex items-center gap-4">{t("Created")} <SortIcon col="createdAt" /></span>
+                  <span className="flex items-center gap-4">{t("Created")} <SortIcon col="createdAt" sortKey={sortKey} sortDir={sortDir} /></span>
                 </th>
                 {isAdmin && <th className="hide-mobile">{t("Capital Node")}</th>}
                 <th />
