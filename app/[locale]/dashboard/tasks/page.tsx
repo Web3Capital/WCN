@@ -24,15 +24,31 @@ export default async function TasksPage() {
   const taskWhere = isAdmin ? {} : memberTasksWhere(ownedNodeIds);
   const projectWhere = isAdmin ? {} : memberProjectsWhere(ownedNodeIds);
 
+  // assignments was previously include: { node: true } which pulled every
+  // Node field for every assignment for every task. UI only reads nodeId
+  // (see tasks/ui.tsx:24). Narrowed accordingly.
   const [tasks, projects, nodes] = await Promise.all([
     prisma.task.findMany({
       where: taskWhere,
       orderBy: { createdAt: "desc" },
       take: 200,
-      include: { project: { select: { id: true, name: true } }, ownerNode: { select: { id: true, name: true } }, assignments: { include: { node: true } } },
+      include: {
+        project: { select: { id: true, name: true } },
+        ownerNode: { select: { id: true, name: true } },
+        assignments: { select: { nodeId: true } },
+      },
     }),
-    prisma.project.findMany({ where: projectWhere, orderBy: { createdAt: "desc" }, take: 200 }),
-    prisma.node.findMany({ orderBy: { createdAt: "desc" }, take: 200 }),
+    prisma.project.findMany({
+      where: projectWhere,
+      orderBy: { createdAt: "desc" },
+      take: 200,
+      select: { id: true, name: true },
+    }),
+    prisma.node.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 200,
+      select: { id: true, name: true, type: true },
+    }),
   ]);
 
   const safeTasks = isAdmin ? tasks : tasks.map((t) => redactTaskForMember(t, userId));

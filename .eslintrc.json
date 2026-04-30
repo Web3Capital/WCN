@@ -2,7 +2,25 @@
   "extends": ["next/core-web-vitals"],
   "rules": {
     "no-unused-vars": "off",
-    "@next/next/no-img-element": "warn"
+    "@next/next/no-img-element": "warn",
+    "no-restricted-imports": [
+      "warn",
+      {
+        "paths": [
+          {
+            "name": "@/lib/admin",
+            "importNames": ["requireAdmin"],
+            "message": "requireAdmin only allows FOUNDER+ADMIN regardless of the RBAC matrix in lib/permissions.ts. Use requirePermission(action, resource) + a row-level check from lib/auth/resource-scope.ts. See docs/architecture/adr/0002-rbac-migration-week2.md. (Severity will escalate from warn to error at end of Week 2.)"
+          }
+        ]
+      }
+    ]
   },
+  "overrides": [
+    {
+      "files": ["lib/admin.ts", "lib/admin.*.test.ts"],
+      "rules": { "no-restricted-imports": "off" }
+    }
+  ],
   "ignorePatterns": ["node_modules/", ".next/", "prisma/"]
 }

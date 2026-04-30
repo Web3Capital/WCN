@@ -30,7 +30,25 @@ export default async function NodesPage() {
       ...(memberListWhere ? { where: memberListWhere } : {}),
       orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       take: LIST_LIMIT + 1,
-      include: { owner: { select: { id: true, name: true, email: true } } },
+      // Narrow select: NodesConsole's NodeRow type covers these scalars.
+      // Full row would also include territoryJson / metaJson / walletAddress
+      // / kycStatus etc. that the list view never renders.
+      select: {
+        id: true,
+        name: true,
+        status: true,
+        type: true,
+        level: true,
+        region: true,
+        city: true,
+        jurisdiction: true,
+        vertical: true,
+        description: true,
+        tags: true,
+        createdAt: true,
+        ownerUserId: true,
+        owner: { select: { id: true, name: true, email: true } },
+      },
     }),
     isAdmin
       ? prisma.node.groupBy({ by: ["type"], _count: true, orderBy: { type: "asc" } })

@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/nextjs";
+import { sanitizeSentryEvent } from "./lib/sentry-sanitizer";
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN || process.env.SENTRY_DSN,
@@ -6,4 +7,6 @@ Sentry.init({
   replaysSessionSampleRate: 0,
   replaysOnErrorSampleRate: 1.0,
   enabled: !!process.env.SENTRY_DSN || !!process.env.NEXT_PUBLIC_SENTRY_DSN,
+  sendDefaultPii: false,
+  beforeSend: sanitizeSentryEvent,
 });

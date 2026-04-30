@@ -11,9 +11,12 @@ function constantTimeEquals(a: string, b: string): boolean {
 
 function isValidSecret(secret: string | null): boolean {
   if (!secret) return false;
-  const adminSecret = process.env.ADMIN_API_SECRET || process.env.CRON_SECRET;
-  if (adminSecret && constantTimeEquals(secret, adminSecret)) return true;
-  return false;
+  // Dedicated secret. Do NOT fall back to CRON_SECRET — admin and cron must be
+  // separable so a leaked cron secret cannot reset passwords.
+  const adminSecret = process.env.ADMIN_API_SECRET;
+  if (!adminSecret) return false;
+  if (secret.length !== adminSecret.length) return false;
+  return constantTimeEquals(secret, adminSecret);
 }
 
 export async function GET(req: NextRequest) {
@@ -38,7 +41,6 @@ export async function GET(req: NextRequest) {
       lockedAt: true,
       lockReason: true,
       lastLoginAt: true,
-      passwordHash: true,
     },
   });
 
@@ -55,7 +57,6 @@ export async function GET(req: NextRequest) {
       lockedAt: user.lockedAt,
       lockReason: user.lockReason,
       lastLoginAt: user.lastLoginAt,
-      hasPassword: !!user.passwordHash,
     },
   });
 }

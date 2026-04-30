@@ -47,13 +47,15 @@ function isPublicPath(pathname: string): boolean {
   if (bare.startsWith("/api/v1/")) return true;
   if (bare === "/api/health") return true;
   if (bare === "/api/cron") return true;
-  if (bare === "/api/admin/account-status") return true;
   return false;
 }
 
 const BLOCKED_STATUSES = new Set(["LOCKED", "OFFBOARDED", "SUSPENDED"]);
 const AUTH_PATHS = ["/api/signup", "/api/auth"];
 const ADMIN_PATHS = ["/api/settlement", "/api/approvals", "/api/entity-freeze"];
+// Endpoints authenticated by ADMIN_API_SECRET (not session). Skip session/2FA gate
+// but always apply tight auth rate limit + the route handler validates the secret.
+const SECRET_AUTH_PATHS = ["/api/admin/account-status"];
 
 function getClientIp(req: NextRequest): string {
   return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
@@ -88,6 +90,16 @@ export async function middleware(request: NextRequest) {
 
   // Skip i18n for API routes, static files, and internal Next.js paths
   if (pathname.startsWith("/api/") || pathname.startsWith("/_next")) {
+    const bare = stripLocalePrefix(pathname);
+
+    // Secret-authenticated admin endpoints: tight rate limit, no session required.
+    if (SECRET_AUTH_PATHS.some((p) => bare === p)) {
+      const ip = getClientIp(request);
+      const rl = await rateLimitAuth(ip);
+      if (!rl.success) return withRequestId(rateLimitResponse(rl));
+      return withRequestId(NextResponse.next());
+    }
+
     if (isPublicPath(pathname)) {
       return withRequestId(NextResponse.next());
     }

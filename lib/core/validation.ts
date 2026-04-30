@@ -395,9 +395,26 @@ export const uploadFileSchema = z.object({
   filename: trimmedString,
   entityType: trimmedString,
   entityId: trimmedString,
-  contentType: z.string().default("application/octet-stream"),
-  sizeBytes: z.number().int().min(0).nullable().optional(),
+  // contentType must be supplied — defaulting to octet-stream silently allowed
+  // any binary upload to bypass the MIME allowlist below.
+  contentType: trimmedString,
+  // sizeBytes required — without it the presigned URL cannot bound the upload.
+  sizeBytes: z.number().int().min(0),
   confidentiality: z.enum(["PUBLIC", "CERTIFIED_NODE", "DEAL_ROOM", "RESTRICTED"]).default("PUBLIC"),
+}).superRefine((value, ctx) => {
+  // Lazy require so this validator can live alongside non-upload schemas
+  // without pulling the storage module into every consumer.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { validateUpload } = require("@/lib/modules/storage/constraints") as typeof import("@/lib/modules/storage/constraints");
+  const err = validateUpload({ contentType: value.contentType, sizeBytes: value.sizeBytes });
+  if (!err) return;
+  if (err.code === "MIME_NOT_ALLOWED") {
+    ctx.addIssue({ code: "custom", path: ["contentType"], message: `MIME type not allowed: ${err.mime}` });
+  } else if (err.code === "SIZE_TOO_LARGE") {
+    ctx.addIssue({ code: "custom", path: ["sizeBytes"], message: `File too large: ${err.sizeBytes} > ${err.maxBytes}` });
+  } else if (err.code === "SIZE_REQUIRED") {
+    ctx.addIssue({ code: "custom", path: ["sizeBytes"], message: "sizeBytes is required" });
+  }
 });
 
 export const completeFileUploadSchema = z.object({

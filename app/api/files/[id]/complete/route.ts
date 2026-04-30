@@ -23,13 +23,15 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   }
 
   const d = parsed.data;
+  // Note: scanStatus is intentionally NOT set here. Only the malware scanner
+  // (background worker) may flip it to PASSED. Letting the client set it
+  // would let any uploader self-attest "clean" and bypass scanning.
   const updated = await prisma.file.update({
     where: { id },
     data: {
       sizeBytes: d.sizeBytes ?? file.sizeBytes,
       hash: d.hash ?? file.hash,
       checksumAlgorithm: d.checksumAlgorithm ?? file.checksumAlgorithm,
-      scanStatus: "PASSED",
       previewStatus: d.hasPreview ? "READY" : "PENDING",
     },
   });

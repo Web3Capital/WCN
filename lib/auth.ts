@@ -161,16 +161,8 @@ export const authOptions: NextAuthOptions = (() => {
             return null;
           }
 
-          if (user.twoFactorEnabled) {
-            const totpCode = credentials?.totpCode?.trim();
-            if (!totpCode || !user.twoFactorSecret) {
-              throw new Error("2FA_REQUIRED");
-            }
-            const { TOTPVerify } = await import("@/lib/totp");
-            if (!TOTPVerify(user.twoFactorSecret, totpCode)) {
-              throw new Error("INVALID_2FA_CODE");
-            }
-          }
+          const { enforceTwoFactor } = await import("@/lib/auth/two-factor");
+          enforceTwoFactor(user, credentials?.totpCode);
 
           const headers = req?.headers;
           const loginIp = (headers as any)?.["x-forwarded-for"]?.split(",")[0]?.trim()
@@ -205,43 +197,59 @@ export const authOptions: NextAuthOptions = (() => {
         credentials: {
           message: { label: "Message", type: "text" },
           signature: { label: "Signature", type: "text" },
+          totpCode: { label: "2FA Code", type: "text" },
         },
         async authorize(credentials) {
           if (!credentials?.message || !credentials?.signature) return null;
 
+          // Verify signature in a narrow try/catch — broad catch elsewhere
+          // would swallow legitimate auth-flow errors (2FA_REQUIRED etc.) that
+          // the login UI needs to surface.
+          let address: string;
           try {
             const { SiweMessage } = await import("siwe");
+            const { consumeNonce } = await import("@/lib/modules/siwe/nonce");
             const siweMessage = new SiweMessage(credentials.message);
-            const result = await siweMessage.verify({ signature: credentials.signature });
-            if (!result.success) return null;
-
-            const address = result.data.address.toLowerCase();
-
-            let user = await prisma.user.findUnique({ where: { walletAddress: address } });
-
-            if (!user) {
-              user = await prisma.user.create({
-                data: {
-                  walletAddress: address,
-                  name: `${address.slice(0, 6)}...${address.slice(-4)}`,
-                  accountStatus: "ACTIVE",
-                },
-              });
-            }
-
-            if (user.accountStatus === "LOCKED" || user.accountStatus === "OFFBOARDED" || user.accountStatus === "SUSPENDED") {
-              return null;
-            }
-
-            await prisma.user.update({
-              where: { id: user.id },
-              data: { lastLoginAt: new Date() },
+            const nonceOk = await consumeNonce(siweMessage.nonce);
+            if (!nonceOk) return null;
+            const result = await siweMessage.verify({
+              signature: credentials.signature,
+              nonce: siweMessage.nonce,
             });
-
-            return { id: user.id, email: user.email, name: user.name, image: user.image };
+            if (!result.success) return null;
+            address = result.data.address.toLowerCase();
           } catch {
             return null;
           }
+
+          let user = await prisma.user.findUnique({ where: { walletAddress: address } });
+
+          if (!user) {
+            user = await prisma.user.create({
+              data: {
+                walletAddress: address,
+                name: `${address.slice(0, 6)}...${address.slice(-4)}`,
+                accountStatus: "ACTIVE",
+              },
+            });
+          }
+
+          if (user.accountStatus === "LOCKED" || user.accountStatus === "OFFBOARDED" || user.accountStatus === "SUSPENDED") {
+            return null;
+          }
+
+          // 2FA gate: high-privilege roles can bind a wallet, but must still
+          // present TOTP. Without this, FOUNDER/ADMIN/RISK_DESK could bypass
+          // their twoFactorEnabled flag by signing with a wallet.
+          const { enforceTwoFactor } = await import("@/lib/auth/two-factor");
+          enforceTwoFactor(user, credentials?.totpCode);
+
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { lastLoginAt: new Date() },
+          });
+
+          return { id: user.id, email: user.email, name: user.name, image: user.image };
         },
       }),
 
@@ -252,6 +260,7 @@ export const authOptions: NextAuthOptions = (() => {
         credentials: {
           phone: { label: "Phone", type: "text" },
           code: { label: "Code", type: "text" },
+          totpCode: { label: "2FA Code", type: "text" },
         },
         async authorize(credentials) {
           const phone = credentials?.phone?.trim();
@@ -281,6 +290,13 @@ export const authOptions: NextAuthOptions = (() => {
               await prisma.user.update({ where: { id: user.id }, data: { phoneVerified: new Date() } });
             }
           }
+
+          // 2FA gate: SMS OTP confirms phone possession but not account
+          // ownership when twoFactorEnabled is true. Without this, a phone
+          // takeover (SIM swap) plus knowing the victim's phone number is
+          // enough to bypass TOTP — that defeats the purpose of 2FA.
+          const { enforceTwoFactor } = await import("@/lib/auth/two-factor");
+          enforceTwoFactor(user, credentials?.totpCode);
 
           await prisma.user.update({
             where: { id: user.id },

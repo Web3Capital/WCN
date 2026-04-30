@@ -42,10 +42,10 @@ enum ApplicationStatus {
 
 // White Paper §08: Identity Layer — four first-class identity types
 enum NodeCategory {
-  HUMAN     // Natural person (Human Node)
-  ORG       // Company, fund, DAO, media, law firm (Org Node)
-  AGENT     // Constrained AI agent (Agent Node)
-  OPERATOR  // Country/city/industry operator (Operator Node)
+  HUMAN // Natural person (Human Node)
+  ORG // Company, fund, DAO, media, law firm (Org Node)
+  AGENT // Constrained AI agent (Agent Node)
+  OPERATOR // Country/city/industry operator (Operator Node)
 }
 
 // White Paper §09: Network Layer — geographic/functional scope dimension
@@ -70,9 +70,9 @@ enum NodeType {
 
 // White Paper §12: Value Layer — three-ledger economic model
 enum LedgerType {
-  CASH       // Fiat, stablecoin, service fees, success commissions
-  RIGHTS     // Node seats, governance positions, quotas
-  INCENTIVE  // Points, deferred rewards, future equity mapping
+  CASH // Fiat, stablecoin, service fees, success commissions
+  RIGHTS // Node seats, governance positions, quotas
+  INCENTIVE // Points, deferred rewards, future equity mapping
 }
 
 enum LedgerAction {
@@ -87,12 +87,12 @@ enum LedgerAction {
 
 // White Paper §13: Governance Layer — Policy Engine
 enum PolicyScope {
-  GLOBAL        // System-wide
-  WORKSPACE     // Per-workspace
-  NODE_TYPE     // Per node category
-  DEAL_TYPE     // Per deal type
-  SETTLEMENT    // Settlement-specific
-  AGENT_POLICY  // Agent-specific
+  GLOBAL // System-wide
+  WORKSPACE // Per-workspace
+  NODE_TYPE // Per node category
+  DEAL_TYPE // Per deal type
+  SETTLEMENT // Settlement-specific
+  AGENT_POLICY // Agent-specific
 }
 
 enum PolicyStatus {
@@ -186,9 +186,9 @@ enum TaskStatus {
   BLOCKED
   CANCELLED
   CLOSED
-  OPEN            // legacy
-  WAITING_REVIEW  // legacy
-  DONE            // legacy
+  OPEN // legacy
+  WAITING_REVIEW // legacy
+  DONE // legacy
 }
 
 enum AssignmentRole {
@@ -465,16 +465,16 @@ model User {
   role          Role          @default(USER)
   accountStatus AccountStatus @default(ACTIVE)
 
-  phone         String?       @unique
+  phone         String?   @unique
   phoneVerified DateTime?
-  walletAddress String?       @unique
+  walletAddress String?   @unique
 
   twoFactorSecret  String?
-  twoFactorEnabled Boolean  @default(false)
+  twoFactorEnabled Boolean   @default(false)
   ndaAcceptedAt    DateTime?
   lockedAt         DateTime?
   lockReason       String?
-  failedLoginCount Int      @default(0)
+  failedLoginCount Int       @default(0)
   lastLoginAt      DateTime?
   lastLoginIp      String?
   lastLoginDevice  String?
@@ -487,22 +487,22 @@ model User {
   activeWorkspaceId String?
   activeRole        Role?
 
-  accounts             Account[]
-  kycRecords           KYCRecord[]
-  sessions             Session[]
-  applications         Application[]
-  nodes                Node[]              @relation("NodeOwner")
-  reviews              Review[]
-  confirmations        Confirmation[]
-  auditLogs            AuditLog[]
-  workspaceMemberships WorkspaceMembership[]
-  invitesCreated       Invite[]            @relation("InviteCreator")
-  notifications        Notification[]
-  filesUploaded        File[]              @relation("FileUploader")
-  termsAcceptances     TermsAcceptance[]
-  roleAssignmentsGranted RoleAssignment[]  @relation("RoleGrantedBy")
-  agentRunsReviewed      AgentRun[]        @relation("AgentRunReviewer")
-  scorecardsReviewed     NodeScorecard[]   @relation("ScorecardReviewer")
+  accounts               Account[]
+  kycRecords             KYCRecord[]
+  sessions               Session[]
+  applications           Application[]
+  nodes                  Node[]                @relation("NodeOwner")
+  reviews                Review[]
+  confirmations          Confirmation[]
+  auditLogs              AuditLog[]
+  workspaceMemberships   WorkspaceMembership[]
+  invitesCreated         Invite[]              @relation("InviteCreator")
+  notifications          Notification[]
+  filesUploaded          File[]                @relation("FileUploader")
+  termsAcceptances       TermsAcceptance[]
+  roleAssignmentsGranted RoleAssignment[]      @relation("RoleGrantedBy")
+  agentRunsReviewed      AgentRun[]            @relation("AgentRunReviewer")
+  scorecardsReviewed     NodeScorecard[]       @relation("ScorecardReviewer")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -571,14 +571,14 @@ model Workspace {
 }
 
 model WorkspaceMembership {
-  id          String  @id @default(cuid())
+  id          String    @id @default(cuid())
   userId      String
-  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   workspaceId String
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   territory   String?
   region      String?
-  isPrimary   Boolean @default(false)
+  isPrimary   Boolean   @default(false)
   status      String? // ACTIVE / SUSPENDED / OFFBOARDED
 
   roleAssignments RoleAssignment[]
@@ -591,22 +591,22 @@ model WorkspaceMembership {
 }
 
 model RoleAssignment {
-  id                    String   @id @default(cuid())
+  id                    String              @id @default(cuid())
   workspaceMembershipId String
   membership            WorkspaceMembership @relation(fields: [workspaceMembershipId], references: [id], onDelete: Cascade)
   role                  Role
   grantedById           String?
-  grantedBy             User?    @relation("RoleGrantedBy", fields: [grantedById], references: [id], onDelete: SetNull)
-  grantedAt             DateTime @default(now())
+  grantedBy             User?               @relation("RoleGrantedBy", fields: [grantedById], references: [id], onDelete: SetNull)
+  grantedAt             DateTime            @default(now())
   revokedAt             DateTime?
 
   @@index([workspaceMembershipId, role])
 }
 
 model Invite {
-  id          String    @id @default(cuid())
+  id          String     @id @default(cuid())
   email       String
-  tokenHash   String    @unique
+  tokenHash   String     @unique
   role        Role
   workspaceId String?
   workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
@@ -614,7 +614,7 @@ model Invite {
   activatedAt DateTime?
   revokedAt   DateTime?
   createdById String
-  createdBy   User      @relation("InviteCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  createdBy   User       @relation("InviteCreator", fields: [createdById], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -625,15 +625,15 @@ model Invite {
 // ─── TERMS / NDA ────────────────────────────────────────────────────────────
 
 model TermsAcceptance {
-  id            String            @id @default(cuid())
-  userId        String
-  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  workspaceId   String?
-  documentType  TermsDocumentType
-  documentVer   String
-  acceptedAt    DateTime          @default(now())
-  ipAddress     String?
-  deviceInfo    String?
+  id           String            @id @default(cuid())
+  userId       String
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspaceId  String?
+  documentType TermsDocumentType
+  documentVer  String
+  acceptedAt   DateTime          @default(now())
+  ipAddress    String?
+  deviceInfo   String?
 
   @@index([userId, documentType, documentVer])
 }
@@ -662,17 +662,17 @@ model KYCRecord {
 // ─── ACCESS GRANT ───────────────────────────────────────────────────────────
 
 model AccessGrant {
-  id              String      @id @default(cuid())
-  workspaceId     String
-  entityType      String
-  entityId        String
-  grantedToType   ActorType
-  grantedToId     String
-  grantType       GrantType
-  scope           GrantScope  @default(FULL)
-  expiresAt       DateTime?
-  grantedById     String?
-  createdAt       DateTime    @default(now())
+  id            String     @id @default(cuid())
+  workspaceId   String
+  entityType    String
+  entityId      String
+  grantedToType ActorType
+  grantedToId   String
+  grantType     GrantType
+  scope         GrantScope @default(FULL)
+  expiresAt     DateTime?
+  grantedById   String?
+  createdAt     DateTime   @default(now())
 
   @@index([workspaceId, entityType, entityId])
   @@index([grantedToType, grantedToId])
@@ -682,19 +682,19 @@ model AccessGrant {
 // ─── APPROVAL (DUAL CONTROL) ────────────────────────────────────────────────
 
 model ApprovalAction {
-  id             String             @id @default(cuid())
-  workspaceId    String
-  entityType     String
-  entityId       String
-  actionType     ApprovalActionType
-  requestedById  String
-  approvedById   String?
-  rejectedById   String?
-  status         ApprovalStatus     @default(PENDING)
-  reason         String?
-  createdAt      DateTime           @default(now())
-  decidedAt      DateTime?
-  expiresAt      DateTime?
+  id            String             @id @default(cuid())
+  workspaceId   String
+  entityType    String
+  entityId      String
+  actionType    ApprovalActionType
+  requestedById String
+  approvedById  String?
+  rejectedById  String?
+  status        ApprovalStatus     @default(PENDING)
+  reason        String?
+  createdAt     DateTime           @default(now())
+  decidedAt     DateTime?
+  expiresAt     DateTime?
 
   @@index([workspaceId, entityType, entityId, status])
   @@index([status, createdAt])
@@ -705,17 +705,17 @@ model ApprovalAction {
 // ─── ENTITY FREEZE ──────────────────────────────────────────────────────────
 
 model EntityFreeze {
-  id            String      @id @default(cuid())
-  workspaceId   String
-  entityType    String
-  entityId      String
-  freezeLevel   FreezeLevel
-  reason        String
-  frozenById    String
-  frozenAt      DateTime    @default(now())
-  expiresAt     DateTime?
-  liftedAt      DateTime?
-  liftedById    String?
+  id          String      @id @default(cuid())
+  workspaceId String
+  entityType  String
+  entityId    String
+  freezeLevel FreezeLevel
+  reason      String
+  frozenById  String
+  frozenAt    DateTime    @default(now())
+  expiresAt   DateTime?
+  liftedAt    DateTime?
+  liftedById  String?
 
   @@index([workspaceId, entityType, entityId])
   @@index([liftedAt])
@@ -725,15 +725,15 @@ model EntityFreeze {
 // ─── SEARCH INDEX ───────────────────────────────────────────────────────────
 
 model SearchDocument {
-  id            String   @id @default(cuid())
-  workspaceId   String
-  entityType    String
-  entityId      String
-  title         String
-  subtitle      String?
-  body          String?
-  tags          String[] @default([])
-  updatedAt     DateTime @updatedAt
+  id          String   @id @default(cuid())
+  workspaceId String
+  entityType  String
+  entityId    String
+  title       String
+  subtitle    String?
+  body        String?
+  tags        String[] @default([])
+  updatedAt   DateTime @updatedAt
 
   @@unique([workspaceId, entityType, entityId])
   @@index([workspaceId, entityType])
@@ -742,9 +742,9 @@ model SearchDocument {
 // ─── AUDIT ──────────────────────────────────────────────────────────────────
 
 model AuditLog {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   actorUserId String?
-  actor       User?    @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+  actor       User?   @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
   action      String
   targetType  String
   targetId    String
@@ -776,19 +776,19 @@ model Application {
   organization      String?
   role              String?
   nodeType          String?
-  territory         String?         // PRD: requested territory
+  territory         String? // PRD: requested territory
   resources         String?
   lookingFor        String?
   linkedin          String?
   contact           String
   whyWcn            String?
-  pastCases         String?         // PRD: past_cases
-  references        String?         // PRD: references
-  boundaryStatement String?         // PRD: boundary_statement
+  pastCases         String? // PRD: past_cases
+  references        String? // PRD: references
+  boundaryStatement String? // PRD: boundary_statement
   complianceDocs    String[]  @default([]) // PRD: compliance_docs (file keys)
   notes             String?
   workspaceId       String?
-  escalatedTo       String?         // PRD: escalate_to_founder / escalate_to_risk
+  escalatedTo       String? // PRD: escalate_to_founder / escalate_to_risk
   escalatedAt       DateTime?
 
   userId String?
@@ -816,15 +816,15 @@ model Node {
   description String?
   tags        String[]     @default([])
 
-  workspaceId  String?
-  region       String?
-  city         String?
-  jurisdiction String?
+  workspaceId   String?
+  region        String?
+  city          String?
+  jurisdiction  String?
   /// Industry / vertical track (PRD: vertical dimension)
-  vertical     String?
+  vertical      String?
   /// Structured territory payload, e.g. { region, scope, exclusivity, protectedAccounts }
   territoryJson Json?
-  level        Int     @default(1)
+  level         Int     @default(1)
 
   entityName       String?
   entityType       String?
@@ -854,7 +854,7 @@ model Node {
   updatedAt DateTime @updatedAt
 
   projects           Project[]
-  tasksAsOwner       Task[]             @relation("TaskOwnerNode")
+  tasksAsOwner       Task[]            @relation("TaskOwnerNode")
   assignments        TaskAssignment[]
   evidences          Evidence[]
   pobRecords         PoBRecord[]
@@ -866,7 +866,7 @@ model Node {
   attributions       Attribution[]
   settlementLines    SettlementLine[]
   capitalProfiles    CapitalProfile[]
-  dealsAsLead        Deal[]             @relation("DealLeadNode")
+  dealsAsLead        Deal[]            @relation("DealLeadNode")
   dealParticipations DealParticipant[]
   reputationScore    ReputationScore?
   scorecards         NodeScorecard[]
@@ -877,6 +877,9 @@ model Node {
   @@index([category, status])
   @@index([ownerUserId])
   @@index([workspaceId])
+  // Member view of /dashboard/nodes: where ownerUserId=me orderBy createdAt desc.
+  // Single [ownerUserId] left in place because it covers point-lookups.
+  @@index([ownerUserId, createdAt(sort: Desc)])
 }
 
 // ─── PROJECT ────────────────────────────────────────────────────────────────
@@ -923,33 +926,33 @@ model Project {
 // ─── CAPITAL POOL ───────────────────────────────────────────────────────────
 
 model CapitalProfile {
-  id                String        @id @default(cuid())
-  workspaceId       String?
-  status            CapitalStatus @default(PROSPECT)
-  name              String
-  entity            String?
-  investorType      String?
-  aum               String?
-  investmentFocus   String[]      @default([])
-  ticketMin         Float?
-  ticketMax         Float?
-  instruments       String[]      @default([])
-  jurisdictionLimit String[]      @default([])
-  structurePref     String[]      @default([])
-  blacklist         String[]      @default([])
-  restrictions      String?
+  id                 String        @id @default(cuid())
+  workspaceId        String?
+  status             CapitalStatus @default(PROSPECT)
+  name               String
+  entity             String?
+  investorType       String?
+  aum                String?
+  investmentFocus    String[]      @default([])
+  ticketMin          Float?
+  ticketMax          Float?
+  instruments        String[]      @default([])
+  jurisdictionLimit  String[]      @default([])
+  structurePref      String[]      @default([])
+  blacklist          String[]      @default([])
+  restrictions       String?
   maxConcurrentDeals Int?
-  activeDealCount   Int           @default(0)
-  decisionTimeline  String?
-  totalDeployed     Float         @default(0)
-  totalDeals        Int           @default(0)
-  avgTicketSize     Float?
-  responseSpeed     Int?
-  activityScore     Float?
-  contactName       String?
-  contactEmail      String?
-  notes             String?
-  version           Int           @default(1)
+  activeDealCount    Int           @default(0)
+  decisionTimeline   String?
+  totalDeployed      Float         @default(0)
+  totalDeals         Int           @default(0)
+  avgTicketSize      Float?
+  responseSpeed      Int?
+  activityScore      Float?
+  contactName        String?
+  contactEmail       String?
+  notes              String?
+  version            Int           @default(1)
 
   nodeId String?
   node   Node?   @relation(fields: [nodeId], references: [id], onDelete: SetNull)
@@ -964,6 +967,8 @@ model CapitalProfile {
   @@index([nodeId])
   @@index([workspaceId])
   @@index([investorType])
+  // Dashboard list: where status=? orderBy createdAt desc.
+  @@index([status, createdAt(sort: Desc)])
 }
 
 // ─── DEAL ROOM ──────────────────────────────────────────────────────────────
@@ -1006,6 +1011,9 @@ model Deal {
   @@index([capitalId])
   @@index([leadNodeId])
   @@index([workspaceId])
+  // Dashboard list query: where stage=? orderBy updatedAt desc.
+  // Without this composite, sorting falls back to filesort after a stage scan.
+  @@index([stage, updatedAt(sort: Desc)])
 }
 
 model DealParticipant {
@@ -1043,10 +1051,10 @@ model DealMilestone {
 }
 
 model DealNote {
-  id          String @id @default(cuid())
+  id          String  @id @default(cuid())
   workspaceId String?
   dealId      String
-  deal        Deal   @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  deal        Deal    @relation(fields: [dealId], references: [id], onDelete: Cascade)
   authorId    String
   content     String
 
@@ -1082,8 +1090,8 @@ model Task {
   acceptanceOwner          String?
   acceptanceOwnerActorType ActorType?
   acceptanceOwnerActorId   String?
-  evidenceRequired         String[] @default([])
-  version                  Int      @default(1)
+  evidenceRequired         String[]   @default([])
+  version                  Int        @default(1)
 
   dueAt DateTime?
 
@@ -1129,14 +1137,14 @@ model Evidence {
   url         String?
   onchainTx   String?
 
-  fileId         String?
-  hash           String?
-  version        Int                  @default(1)
-  versionLock    Int                  @default(1)
-  reviewStatus   EvidenceReviewStatus @default(DRAFT)
-  reviewedAt     DateTime?
-  reviewerId     String?
-  slaDeadlineAt  DateTime?
+  fileId        String?
+  hash          String?
+  version       Int                  @default(1)
+  versionLock   Int                  @default(1)
+  reviewStatus  EvidenceReviewStatus @default(DRAFT)
+  reviewedAt    DateTime?
+  reviewerId    String?
+  slaDeadlineAt DateTime?
 
   taskId String?
   task   Task?   @relation(fields: [taskId], references: [id], onDelete: SetNull)
@@ -1165,7 +1173,7 @@ model Evidence {
 // ─── POB ────────────────────────────────────────────────────────────────────
 
 model PoBRecord {
-  id           String @id @default(cuid())
+  id           String  @id @default(cuid())
   workspaceId  String?
   businessType String
 
@@ -1197,16 +1205,16 @@ model PoBRecord {
 
   status PoBRecordStatus @default(PENDING)
 
-  pobEventStatus     PoBEventStatus @default(CREATED)
-  leadNodeId         String?
-  supportingNodeIds  String[]       @default([])
-  beneficiaryEntity  String?
-  resultDate         DateTime?
-  loopType           String?
-  slaDeadlineAt      DateTime?
-  frozenAt           DateTime?
-  frozenReason       String?
-  version            Int            @default(1)
+  pobEventStatus    PoBEventStatus @default(CREATED)
+  leadNodeId        String?
+  supportingNodeIds String[]       @default([])
+  beneficiaryEntity String?
+  resultDate        DateTime?
+  loopType          String?
+  slaDeadlineAt     DateTime?
+  frozenAt          DateTime?
+  frozenReason      String?
+  version           Int            @default(1)
 
   notes String?
 
@@ -1229,12 +1237,12 @@ model PoBRecord {
 // ─── REVIEW / CONFIRMATION / ATTRIBUTION ────────────────────────────────────
 
 model Review {
-  id         String           @id @default(cuid())
+  id          String           @id @default(cuid())
   workspaceId String?
-  targetType ReviewTargetType
-  targetId   String
-  decision   ReviewDecision
-  notes      String?
+  targetType  ReviewTargetType
+  targetId    String
+  decision    ReviewDecision
+  notes       String?
 
   status        ReviewStatus @default(OPEN)
   actorType     ActorType    @default(USER)
@@ -1387,10 +1395,10 @@ model AgentRun {
 }
 
 model AgentLog {
-  id              String   @id @default(cuid())
+  id              String  @id @default(cuid())
   workspaceId     String?
   agentId         String
-  agent           Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agent           Agent   @relation(fields: [agentId], references: [id], onDelete: Cascade)
   ownerNodeId     String
   taskId          String?
   caseId          String?
@@ -1399,7 +1407,7 @@ model AgentLog {
   inputReference  String?
   outputReference String?
   humanApprovalId String?
-  exceptionFlag   Boolean  @default(false)
+  exceptionFlag   Boolean @default(false)
 
   createdAt DateTime @default(now())
 
@@ -1422,15 +1430,15 @@ model SettlementCycle {
   policyVersion Int                   @default(1)
   metadata      Json?
 
-  reconciledAt      DateTime?
-  exportedAt        DateTime?
-  reopenedAt        DateTime?
-  reopenReason      String?
-  lockedById        String?
-  exportedById      String?
-  lockApprovalId    String?
-  reopenApprovalId  String?
-  version           Int       @default(1)
+  reconciledAt     DateTime?
+  exportedAt       DateTime?
+  reopenedAt       DateTime?
+  reopenReason     String?
+  lockedById       String?
+  exportedById     String?
+  lockApprovalId   String?
+  reopenApprovalId String?
+  version          Int       @default(1)
 
   lines SettlementLine[]
 
@@ -1502,21 +1510,21 @@ model Penalty {
 // ─── FILE LAYER ─────────────────────────────────────────────────────────────
 
 model File {
-  id                 String               @id @default(cuid())
-  workspaceId        String?
-  filename           String
-  storageKey         String?
-  storagePath        String?              // legacy
-  mimeType           String?
-  sizeBytes          Int?
-  hash               String?
-  checksumAlgorithm  String?
-  version            Int                  @default(1)
-  confidentiality    ConfidentialityLevel @default(PUBLIC)
-  scanStatus         ScanStatus           @default(PENDING)
-  previewStatus      PreviewStatus        @default(PENDING)
-  retentionClass     String?
-  uploadedVia        String?
+  id                String               @id @default(cuid())
+  workspaceId       String?
+  filename          String
+  storageKey        String?
+  storagePath       String? // legacy
+  mimeType          String?
+  sizeBytes         Int?
+  hash              String?
+  checksumAlgorithm String?
+  version           Int                  @default(1)
+  confidentiality   ConfidentialityLevel @default(PUBLIC)
+  scanStatus        ScanStatus           @default(PENDING)
+  previewStatus     PreviewStatus        @default(PENDING)
+  retentionClass    String?
+  uploadedVia       String?
 
   uploaderUserId String
   uploader       User   @relation("FileUploader", fields: [uploaderUserId], references: [id], onDelete: Cascade)
@@ -1537,10 +1545,10 @@ model File {
 }
 
 model FileAccessLog {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   workspaceId String?
   fileId      String
-  file        File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  file        File    @relation(fields: [fileId], references: [id], onDelete: Cascade)
   userId      String
   action      String
   ipAddress   String?
@@ -1605,16 +1613,16 @@ enum MatchStatus {
 }
 
 model Match {
-  id              String      @id @default(cuid())
-  projectId       String
+  id               String @id @default(cuid())
+  projectId        String
   capitalProfileId String
-  capitalNodeId   String
+  capitalNodeId    String
 
-  score           Float       @default(0)
-  sectorScore     Float       @default(0)
-  stageScore      Float       @default(0)
-  ticketScore     Float       @default(0)
-  jurisdictionScore Float     @default(0)
+  score             Float @default(0)
+  sectorScore       Float @default(0)
+  stageScore        Float @default(0)
+  ticketScore       Float @default(0)
+  jurisdictionScore Float @default(0)
 
   status          MatchStatus @default(GENERATED)
   interestAt      DateTime?
@@ -1622,11 +1630,11 @@ model Match {
   convertedDealId String?
   expiresAt       DateTime?
 
-  project         Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  capitalProfile  CapitalProfile @relation(fields: [capitalProfileId], references: [id], onDelete: Cascade)
+  project        Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  capitalProfile CapitalProfile @relation(fields: [capitalProfileId], references: [id], onDelete: Cascade)
 
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([projectId, capitalProfileId])
   @@index([capitalNodeId])
@@ -1675,11 +1683,11 @@ model ReputationBadge {
 }
 
 model ReputationHistory {
-  id         String   @id @default(cuid())
+  id         String         @id @default(cuid())
   nodeId     String
   score      Float
   tier       ReputationTier
-  snapshotAt DateTime @default(now())
+  snapshotAt DateTime       @default(now())
 
   @@index([nodeId, snapshotAt])
 }
@@ -1712,11 +1720,11 @@ model PaymentExecution {
 }
 
 model PaymentConfig {
-  id            String  @id @default(cuid())
-  nodeId        String  @unique
+  id            String   @id @default(cuid())
+  nodeId        String   @unique
   walletAddress String
-  chain         String  @default("polygon")
-  isVerified    Boolean @default(false)
+  chain         String   @default("polygon")
+  isVerified    Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -1762,14 +1770,14 @@ model NotificationPreference {
 // ─── RISK RULES (Phase 4) ──────────────────────────────────────────────────
 
 model RiskRule {
-  id          String  @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String
   description String?
   entityType  String
   conditions  Json
-  severity    String  @default("MEDIUM")
-  action      String  @default("CREATE_FLAG")
-  enabled     Boolean @default(true)
+  severity    String   @default("MEDIUM")
+  action      String   @default("CREATE_FLAG")
+  enabled     Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -1876,29 +1884,29 @@ model Vote {
 }
 
 model Council {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   name      String
-  memberIds String[] @default([])
+  memberIds String[]  @default([])
   termStart DateTime?
   termEnd   DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 }
 
 // ─── API KEYS (Phase 5: Agent-Native Platform) ────────────────────────
 
 model ApiKey {
-  id          String    @id @default(cuid())
-  name        String
-  keyHash     String    @unique
-  keyPrefix   String
-  userId      String?
-  nodeId      String?
-  scopes      String[]  @default(["read"])
-  rateLimit   Int       @default(60)
-  expiresAt   DateTime?
-  lastUsedAt  DateTime?
-  revokedAt   DateTime?
-  createdAt   DateTime  @default(now())
+  id         String    @id @default(cuid())
+  name       String
+  keyHash    String    @unique
+  keyPrefix  String
+  userId     String?
+  nodeId     String?
+  scopes     String[]  @default(["read"])
+  rateLimit  Int       @default(60)
+  expiresAt  DateTime?
+  lastUsedAt DateTime?
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
 
   @@index([keyHash])
   @@index([userId])
@@ -1915,11 +1923,11 @@ enum IngestionStatus {
 }
 
 model IngestionSource {
-  id          String  @id @default(cuid())
+  id          String    @id @default(cuid())
   name        String
   type        String
   config      Json?
-  enabled     Boolean @default(true)
+  enabled     Boolean   @default(true)
   schedule    String?
   lastRunAt   DateTime?
   createdById String?
@@ -1933,33 +1941,33 @@ model IngestionSource {
 }
 
 model IngestionRun {
-  id          String          @id @default(cuid())
-  sourceId    String
-  source      IngestionSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
-  status      IngestionStatus @default(PENDING)
-  itemsFound  Int             @default(0)
-  itemsNew    Int             @default(0)
-  itemsUpdated Int            @default(0)
-  itemsSkipped Int            @default(0)
-  errorMsg    String?
-  startedAt   DateTime        @default(now())
-  completedAt DateTime?
+  id           String          @id @default(cuid())
+  sourceId     String
+  source       IngestionSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  status       IngestionStatus @default(PENDING)
+  itemsFound   Int             @default(0)
+  itemsNew     Int             @default(0)
+  itemsUpdated Int             @default(0)
+  itemsSkipped Int             @default(0)
+  errorMsg     String?
+  startedAt    DateTime        @default(now())
+  completedAt  DateTime?
 
   @@index([sourceId, status])
 }
 
 // ─── EVENT OUTBOX ────────────────────────────────────────────────
 model Outbox {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   eventName   String
   payload     Json
   actorId     String?
   requestId   String?
-  delivered   Boolean  @default(false)
+  delivered   Boolean   @default(false)
   deliveredAt DateTime?
-  retryCount  Int      @default(0)
+  retryCount  Int       @default(0)
   lastError   String?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
 
   @@index([delivered, createdAt])
   @@index([eventName])
@@ -1976,21 +1984,21 @@ enum ScorecardAction {
 }
 
 model NodeScorecard {
-  id                  String          @id @default(cuid())
-  nodeId              String
-  node                Node            @relation(fields: [nodeId], references: [id], onDelete: Cascade)
-  period              String          // e.g. "2026-Q1", "2026-03"
-  pipelineScore       Float           @default(0) // Pipeline quality (0-100)
-  closureScore        Float           @default(0) // Deal closure rate (0-100)
-  evidenceScore       Float           @default(0) // PoB / evidence quality (0-100)
-  collaborationScore  Float           @default(0) // Response speed & reliability (0-100)
-  riskScore           Float           @default(0) // Risk / compliance record (0-100)
-  totalScore          Float           @default(0) // Weighted aggregate (0-100)
-  action              ScorecardAction @default(MAINTAIN)
-  notes               String?
-  reviewerId          String?
-  reviewer            User?           @relation("ScorecardReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
-  createdAt           DateTime        @default(now())
+  id                 String          @id @default(cuid())
+  nodeId             String
+  node               Node            @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  period             String // e.g. "2026-Q1", "2026-03"
+  pipelineScore      Float           @default(0) // Pipeline quality (0-100)
+  closureScore       Float           @default(0) // Deal closure rate (0-100)
+  evidenceScore      Float           @default(0) // PoB / evidence quality (0-100)
+  collaborationScore Float           @default(0) // Response speed & reliability (0-100)
+  riskScore          Float           @default(0) // Risk / compliance record (0-100)
+  totalScore         Float           @default(0) // Weighted aggregate (0-100)
+  action             ScorecardAction @default(MAINTAIN)
+  notes              String?
+  reviewerId         String?
+  reviewer           User?           @relation("ScorecardReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  createdAt          DateTime        @default(now())
 
   @@unique([nodeId, period])
   @@index([nodeId, createdAt])
@@ -2000,21 +2008,21 @@ model NodeScorecard {
 // ─── TERRITORY ──────────────────────────────────────────────────────────────
 
 model Territory {
-  id                String   @id @default(cuid())
+  id                String    @id @default(cuid())
   nodeId            String
-  node              Node     @relation(fields: [nodeId], references: [id], onDelete: Cascade)
-  region            String   // e.g. "Singapore", "HK", "UAE"
-  scope             String   // "Country", "City", "Vertical"
-  exclusivity       String   @default("NONE") // "NONE", "CONDITIONAL", "EXCLUSIVE"
-  protectedAccounts String[] @default([])
-  kpiRequired       Boolean  @default(false)
-  kpiTarget         Json?    // structured KPI targets for exclusivity
-  status            String   @default("ACTIVE") // "ACTIVE", "DISPUTED", "REVOKED"
+  node              Node      @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  region            String // e.g. "Singapore", "HK", "UAE"
+  scope             String // "Country", "City", "Vertical"
+  exclusivity       String    @default("NONE") // "NONE", "CONDITIONAL", "EXCLUSIVE"
+  protectedAccounts String[]  @default([])
+  kpiRequired       Boolean   @default(false)
+  kpiTarget         Json? // structured KPI targets for exclusivity
+  status            String    @default("ACTIVE") // "ACTIVE", "DISPUTED", "REVOKED"
   notes             String?
   approvedBy        String?
   approvedAt        DateTime?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
   @@unique([nodeId, region, scope])
   @@index([region, scope])
@@ -2074,7 +2082,7 @@ model Policy {
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 
-  evaluations   PolicyEvaluation[]
+  evaluations PolicyEvaluation[]
 
   @@index([scope, status])
   @@index([workspaceId, status])
