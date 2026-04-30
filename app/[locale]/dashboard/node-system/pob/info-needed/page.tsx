@@ -66,6 +66,8 @@ export default async function InfoNeededPage() {
               <tbody>
                 {reviews.map((review: any) => {
                   const daysWaiting = Math.floor(
+                    // Server component runs once per request — Date.now() is per-request, not per-render
+                    // eslint-disable-next-line react-hooks/purity
                     (Date.now() - new Date(review.createdAt).getTime()) / (1000 * 60 * 60 * 24)
                   );
                   return (

@@ -315,12 +315,18 @@ export function NodeDetail({ node: initialNode, isAdmin }: { node: NodeData; isA
     if (activeTab === "scorecard" && !scorecard && !scorecardLoading) {
       fetchScorecard();
     }
+    // Effect is guarded by `!scorecard && !scorecardLoading` — intentionally
+    // depends on activeTab only. Adding fetchScorecard would require useCallback
+    // wrapping; structural refactor tracked in issue 0002.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
   useEffect(() => {
     if (activeTab === "territory" && territories.length === 0 && !territoriesLoading) {
       fetchTerritories();
     }
+    // Same pattern as scorecard effect above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
   const subtitleParts = [

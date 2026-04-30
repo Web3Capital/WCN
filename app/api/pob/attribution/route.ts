@@ -1,12 +1,14 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/admin";
+import { requirePermission } from "@/lib/admin";
+import { isAdminRole } from "@/lib/permissions";
+import { ownsPoB } from "@/lib/auth/resource-scope";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
 
 export async function POST(req: Request) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("update", "pob");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
@@ -15,6 +17,11 @@ export async function POST(req: Request) {
   const items = Array.isArray(body?.items) ? body.items : null;
   if (!pobId || !items) {
     return apiValidationError([{ path: "pobId", message: "Missing pobId or items." }]);
+  }
+
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (!isAdmin && !(await ownsPoB(prisma, auth.session.user!.id, pobId))) {
+    return apiUnauthorized();
   }
 
   const cleaned = items
@@ -45,7 +52,7 @@ export async function POST(req: Request) {
   const attributions = await prisma.attribution.findMany({ where: { pobId }, include: { node: true } });
 
   await writeAudit({
-    actorUserId: admin.session.user?.id ?? null,
+    actorUserId: auth.session.user?.id ?? null,
     action: AuditAction.POB_ATTRIBUTION_SET,
     targetType: "POB",
     targetId: pobId,

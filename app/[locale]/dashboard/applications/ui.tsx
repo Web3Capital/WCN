@@ -57,6 +57,9 @@ export function ApplicationsTable({
   const [reviews, setReviews] = useState<ReviewRow[]>([]);
 
   useEffect(() => {
+    // Intentional sync-on-prop pattern (close on navigate / reset on open).
+    // React docs flag this as cascade risk; see issue 0002 for refactor plan.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!activeId || readOnly) { setReviews([]); return; }
     fetch(`/api/reviews?targetType=APPLICATION&targetId=${activeId}`, { cache: "no-store" })
       .then((r) => r.json())

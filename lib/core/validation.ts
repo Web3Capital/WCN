@@ -404,7 +404,6 @@ export const uploadFileSchema = z.object({
 }).superRefine((value, ctx) => {
   // Lazy require so this validator can live alongside non-upload schemas
   // without pulling the storage module into every consumer.
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { validateUpload } = require("@/lib/modules/storage/constraints") as typeof import("@/lib/modules/storage/constraints");
   const err = validateUpload({ contentType: value.contentType, sizeBytes: value.sizeBytes });
   if (!err) return;

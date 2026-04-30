@@ -1,6 +1,6 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { requirePermission, requireSignedIn } from "@/lib/admin";
 import { ProjectStatus } from "@prisma/client";
 import { getOwnedNodeIds, memberProjectsWhere } from "@/lib/member-data-scope";
 import { redactProjectForMember } from "@/lib/member-redact";
@@ -34,8 +34,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("create", "project");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
@@ -43,6 +43,19 @@ export async function POST(req: Request) {
   if (!parsed.ok) return zodToApiError(parsed.error);
 
   const d = parsed.data;
+
+  // Row-level: non-admin must attach the project to a node they own.
+  // Admin can leave nodeId null (orphan project, e.g. for triage).
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (!isAdmin) {
+    if (!d.nodeId) {
+      return apiUnauthorized();
+    }
+    const ownedNodeIds = await getOwnedNodeIds(prisma, auth.session.user!.id);
+    if (!ownedNodeIds.includes(d.nodeId)) {
+      return apiUnauthorized();
+    }
+  }
   const project = await prisma.project.create({
     data: {
       name: d.name,
@@ -61,7 +74,7 @@ export async function POST(req: Request) {
   });
 
   await writeAudit({
-    actorUserId: admin.session.user?.id ?? null,
+    actorUserId: auth.session.user?.id ?? null,
     action: AuditAction.PROJECT_CREATE,
     targetType: "PROJECT",
     targetId: project.id,
@@ -77,7 +90,7 @@ export async function POST(req: Request) {
       sector: project.sector ?? undefined,
       stage: project.stage,
     },
-    { actorId: admin.session.user?.id },
+    { actorId: auth.session.user?.id },
   );
 
   return apiCreated(project);

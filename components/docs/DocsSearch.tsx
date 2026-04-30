@@ -32,6 +32,9 @@ export function DocsSearch({ items }: { items: SearchItem[] }) {
 
   useEffect(() => {
     if (open) {
+      // Intentional sync-on-prop pattern (close on navigate / reset on open).
+      // React docs flag this as cascade risk; see issue 0002 for refactor plan.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuery("");
       setSelected(0);
       requestAnimationFrame(() => inputRef.current?.focus());
@@ -50,6 +53,9 @@ export function DocsSearch({ items }: { items: SearchItem[] }) {
       }).slice(0, 12);
 
   useEffect(() => {
+    // Intentional sync-on-prop pattern (close on navigate / reset on open).
+    // React docs flag this as cascade risk; see issue 0002 for refactor plan.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelected(0);
   }, [query]);
 

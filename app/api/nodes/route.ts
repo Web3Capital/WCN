@@ -1,7 +1,7 @@
 import "@/lib/core/init";
 import { Prisma } from "@prisma/client";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { requirePermission, requireSignedIn } from "@/lib/admin";
 import { redactNodeForMember } from "@/lib/member-redact";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { isAdminRole } from "@/lib/permissions";
@@ -97,8 +97,10 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  // Matrix gives `create` on `node` only to FOUNDER/ADMIN/SYSTEM, so this is
+  // implicitly admin-only. Self-onboarding flows go via /api/applications/*.
+  const auth = await requirePermission("create", "node");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
@@ -134,7 +136,7 @@ export async function POST(req: Request) {
   });
 
   await writeAudit({
-    actorUserId: admin.session.user?.id ?? null,
+    actorUserId: auth.session.user?.id ?? null,
     action: AuditAction.NODE_CREATE,
     targetType: "NODE",
     targetId: node.id,
@@ -149,10 +151,10 @@ export async function POST(req: Request) {
       name: node.name,
       ownerId: node.ownerUserId ?? undefined,
     },
-    { actorId: admin.session.user?.id },
+    { actorId: auth.session.user?.id },
   );
 
-  withApiContext("POST /api/nodes", { actorUserId: admin.session.user?.id ?? undefined }).info(
+  withApiContext("POST /api/nodes", { actorUserId: auth.session.user?.id ?? undefined }).info(
     { event: "node_created", nodeId: node.id, type: node.type },
     "node created",
   );

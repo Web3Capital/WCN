@@ -18,6 +18,11 @@ export default async function SubmittedPage() {
   if (!isAdminRole(session.user.role)) redirect("/dashboard");
 
   const prisma = getPrisma();
+  // Capture a per-request timestamp once. Server components run once per
+  // request so this is the request-time anchor for relative-time display
+  // (no hydration concern; the rule is conservative for the client case).
+  // eslint-disable-next-line react-hooks/purity
+  const renderedAt = Date.now();
 
   const reviews = await prisma.review.findMany({
     where: {
@@ -66,7 +71,7 @@ export default async function SubmittedPage() {
               <tbody>
                 {reviews.map((review: any) => {
                   const daysPending = Math.floor(
-                    (Date.now() - new Date(review.createdAt).getTime()) / (1000 * 60 * 60 * 24)
+                    (renderedAt - new Date(review.createdAt).getTime()) / (1000 * 60 * 60 * 24)
                   );
                   return (
                     <tr key={review.id}>

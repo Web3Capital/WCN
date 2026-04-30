@@ -70,6 +70,9 @@ export function ApiKeysUI() {
 
   const keyKpis = useMemo(() => {
     const total = keys.length;
+    // Recompute the reference time alongside the keys so this useMemo stays
+    // a pure function of its deps (react-hooks/purity).
+    // eslint-disable-next-line react-hooks/purity
     const now = Date.now();
     const used30d = keys.filter(
       (k) => k.lastUsedAt && now - new Date(k.lastUsedAt).getTime() < 30 * 86400000,

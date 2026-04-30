@@ -1,6 +1,6 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { requirePermission, requireSignedIn } from "@/lib/admin";
 import { TaskStatus } from "@prisma/client";
 import { getOwnedNodeIds, memberTasksWhere } from "@/lib/member-data-scope";
 import { redactTaskForMember } from "@/lib/member-redact";
@@ -36,8 +36,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("create", "task");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
@@ -47,6 +47,21 @@ export async function POST(req: Request) {
   const input = parsed.data;
   const raw = body as Record<string, unknown>;
   const status = raw?.status ? (String(raw.status) as TaskStatus) : undefined;
+
+  // Row-level: non-admin can only create tasks where ownerNode and any
+  // assigned nodes are in their owned set. Otherwise NODE_OWNER could
+  // create work on someone else's node.
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (!isAdmin) {
+    const ownedNodeIds = await getOwnedNodeIds(prisma, auth.session.user!.id);
+    if (input.ownerNodeId && !ownedNodeIds.includes(input.ownerNodeId)) {
+      return apiUnauthorized();
+    }
+    const assigns = input.assignNodeIds ?? [];
+    if (assigns.some((id) => !ownedNodeIds.includes(id))) {
+      return apiUnauthorized();
+    }
+  }
 
   const task = await prisma.task.create({
     data: {
@@ -73,7 +88,7 @@ export async function POST(req: Request) {
   }
 
   await writeAudit({
-    actorUserId: admin.session.user?.id ?? null,
+    actorUserId: auth.session.user?.id ?? null,
     action: AuditAction.TASK_CREATE,
     targetType: "TASK",
     targetId: task.id,
@@ -83,7 +98,7 @@ export async function POST(req: Request) {
   await eventBus.emit(
     Events.TASK_CREATED,
     { taskId: task.id, dealId: task.dealId ?? undefined, title: task.title },
-    { actorId: admin.session.user?.id }
+    { actorId: auth.session.user?.id }
   );
 
   return apiCreated({ taskId: task.id });

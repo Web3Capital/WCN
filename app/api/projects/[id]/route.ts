@@ -1,7 +1,8 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { requirePermission, requireSignedIn } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
+import { ownsProject } from "@/lib/auth/resource-scope";
 import { redactProjectForMember } from "@/lib/member-redact";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiNotFound, apiValidationError, zodToApiError } from "@/lib/core/api-response";
@@ -35,8 +36,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("update", "project");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
@@ -45,6 +46,12 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   const existing = await prisma.project.findUnique({ where: { id: params.id }, select: { id: true, status: true } });
   if (!existing) return apiNotFound("Project");
+
+  // Row-level: non-admin must own the project (linked to one of their nodes).
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (!isAdmin && !(await ownsProject(prisma, auth.session.user!.id, params.id))) {
+    return apiUnauthorized();
+  }
 
   const d = parsed.data;
 
@@ -79,7 +86,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   if (d.status && d.status !== existing.status) {
     await writeAudit({
-      actorUserId: admin.session.user?.id ?? null,
+      actorUserId: auth.session.user?.id ?? null,
       action: AuditAction.PROJECT_STATUS_CHANGE,
       targetType: "PROJECT",
       targetId: params.id,
@@ -90,15 +97,17 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       projectId: params.id,
       oldStatus: existing.status,
       newStatus: d.status,
-    }, { actorId: admin.session.user?.id });
+    }, { actorId: auth.session.user?.id });
   }
 
   return apiOk(project);
 }
 
 export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  // Matrix gives `delete` on project only to FOUNDER/ADMIN/SYSTEM, so this
+  // is implicitly admin-only without an extra isAdmin guard.
+  const auth = await requirePermission("delete", "project");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const project = await prisma.project.findUnique({
@@ -120,7 +129,7 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
   await prisma.project.delete({ where: { id: params.id } });
 
   await writeAudit({
-    actorUserId: admin.session.user?.id ?? null,
+    actorUserId: auth.session.user?.id ?? null,
     action: AuditAction.PROJECT_DELETE,
     targetType: "PROJECT",
     targetId: params.id,

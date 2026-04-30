@@ -16,7 +16,6 @@
 
 import type { EventMap } from "./event-types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type EventPayload = Record<string, any>;
 
 /** Resolve the payload type for an event: typed if in EventMap, else fallback. */
