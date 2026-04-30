@@ -1,7 +1,8 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { requirePermission, requireSignedIn } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
+import { ownsTask } from "@/lib/auth/resource-scope";
 import { canTransitionTask } from "@/lib/state-machines/task";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
@@ -44,14 +45,33 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("update", "task");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const existing = await prisma.task.findUnique({ where: { id: params.id }, select: { id: true, status: true, dealId: true } });
   if (!existing) return apiNotFound("Task");
+
+  // Row-level: non-admin must own the task. Reassigning ownerNodeId
+  // away from the user's owned set is admin-only — otherwise a
+  // NODE_OWNER could "steal" a task by reassigning it to themselves
+  // (or "give it away" to another node).
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (!isAdmin) {
+    const userId = auth.session.user!.id;
+    if (!(await ownsTask(prisma, userId, params.id))) {
+      return apiUnauthorized();
+    }
+    if (body?.ownerNodeId !== undefined) {
+      const ownedNodeIds = await getOwnedNodeIds(prisma, userId);
+      const target = body.ownerNodeId ? String(body.ownerNodeId) : null;
+      if (target && !ownedNodeIds.includes(target)) {
+        return apiUnauthorized();
+      }
+    }
+  }
 
   const data: Record<string, unknown> = {};
   if (body?.title !== undefined) data.title = String(body.title).trim();
@@ -96,7 +116,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   if (data.status && data.status !== existing.status) {
     await writeAudit({
-      actorUserId: admin.session.user?.id ?? null,
+      actorUserId: auth.session.user?.id ?? null,
       action: AuditAction.TASK_STATUS_CHANGE,
       targetType: "TASK",
       targetId: params.id,
@@ -107,7 +127,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       await eventBus.emit(Events.TASK_COMPLETED, {
         taskId: params.id,
         dealId: existing.dealId ?? undefined,
-      }, { actorId: admin.session.user?.id });
+      }, { actorId: auth.session.user?.id });
     }
   }
 
