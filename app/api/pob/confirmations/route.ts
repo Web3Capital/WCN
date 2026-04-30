@@ -1,12 +1,19 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/admin";
+import { requirePermission } from "@/lib/admin";
+import { isAdminRole } from "@/lib/permissions";
+import { ownsPoB } from "@/lib/auth/resource-scope";
+import { getOwnedNodeIds } from "@/lib/member-data-scope";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiCreated, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
 
 export async function POST(req: Request) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  // Confirmations are reviewer-style attestations on a PoB. Permission is
+  // "review" on pob, which the matrix grants to REVIEWER + RISK_DESK +
+  // admins, plus NODE_OWNER on PoBs they own (handled by the row-level
+  // check below).
+  const auth = await requirePermission("review", "pob");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
@@ -37,7 +44,7 @@ export async function POST(req: Request) {
   });
 
   await writeAudit({
-    actorUserId: admin.session.user?.id ?? null,
+    actorUserId: auth.session.user?.id ?? null,
     action: AuditAction.POB_CONFIRMATION_CREATE,
     targetType: "POB",
     targetId: pobId,
