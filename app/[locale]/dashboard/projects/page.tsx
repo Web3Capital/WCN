@@ -23,14 +23,31 @@ export default async function ProjectsPage() {
   const ownedNodeIds = isAdmin ? [] : await getOwnedNodeIds(prisma, userId);
   const projectWhere = isAdmin ? {} : memberProjectsWhere(ownedNodeIds);
 
+  // ProjectsConsole reads id/name/sector/stage/status/internalScore/createdAt
+  // (see projects/ui.tsx). Project model has many additional scalar/JSON
+  // fields the list view doesn't render — narrow accordingly.
   const [projects, nodes] = await Promise.all([
     prisma.project.findMany({
       where: projectWhere,
       orderBy: { createdAt: "desc" },
       take: 200,
-      include: { node: { select: { id: true, name: true } } },
+      select: {
+        id: true,
+        name: true,
+        sector: true,
+        stage: true,
+        status: true,
+        internalScore: true,
+        createdAt: true,
+        nodeId: true,
+        node: { select: { id: true, name: true } },
+      },
     }),
-    prisma.node.findMany({ orderBy: { createdAt: "desc" }, take: 200 }),
+    prisma.node.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 200,
+      select: { id: true, name: true, type: true },
+    }),
   ]);
 
   const safeProjects = isAdmin ? projects : projects.map((p) => redactProjectForMember(p, userId));
