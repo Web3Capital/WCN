@@ -1,6 +1,6 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { requirePermission, requireSignedIn } from "@/lib/admin";
 import { redactSettlementCycleForMember } from "@/lib/member-redact";
 import { isAdminRole } from "@/lib/permissions";
 import { AuditAction, writeAudit } from "@/lib/audit";
@@ -22,8 +22,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("create", "settlement");
+  if (!auth.ok) return apiUnauthorized();
   const prisma = getPrisma();
   const rawBody = await req.json().catch(() => ({}));
   const o = typeof rawBody === "object" && rawBody !== null ? (rawBody as Record<string, unknown>) : {};
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
   });
 
   await writeAudit({
-    actorUserId: admin.session.user?.id ?? null,
+    actorUserId: auth.session.user?.id ?? null,
     action: AuditAction.SETTLEMENT_CYCLE_CREATE,
     targetType: "SETTLEMENT_CYCLE",
     targetId: cycle.id,
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
       periodStart: cycle.startAt.toISOString(),
       periodEnd: cycle.endAt.toISOString(),
     },
-    { actorId: admin.session.user?.id }
+    { actorId: auth.session.user?.id }
   );
 
   return apiCreated({ cycle });
