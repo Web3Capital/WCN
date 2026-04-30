@@ -1,0 +1,45 @@
+{
+  "date": "2026-04-30",
+  "label": "week-1-day-3",
+  "git": { "branch": "claude/recursing-raman-762674", "sha": "26bc864", "ahead_of_main": 9 },
+  "code": {
+    "dashboard_ts_files": 174,
+    "dashboard_page_tsx": 104,
+    "dashboard_ui_tsx": 43,
+    "api_route_files": 128,
+    "use_client_files": 77,
+    "use_server_files": 0,
+    "lib_module_dirs": 27
+  },
+  "prisma": {
+    "schema_lines": 2125,
+    "models": 70,
+    "enums": 60,
+    "indexes_declared": 154
+  },
+  "security": {
+    "requireAdmin_calls": 76,
+    "requirePermission_calls": 104,
+    "routes_with_zod": 15,
+    "ratelimit_refs": 4
+  },
+  "perf": {
+    "prisma_include_in_dashboard": 83,
+    "prisma_select_in_dashboard": 171,
+    "json_parse_stringify_files": 29,
+    "force_dynamic_files": 105,
+    "unstable_cache_or_revalidate_files": 0
+  },
+  "ai": {
+    "generateText_or_Object_files": 1,
+    "streamText_or_Object_files": 0
+  },
+  "tests": {
+    "unit_test_files": 21,
+    "e2e_spec_files": 1
+  },
+  "debt": {
+    "todo_fixme_xxx": 1,
+    "any_type_occurrences": 214
+  }
+}
