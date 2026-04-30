@@ -5,7 +5,7 @@ Q1 stabilization (PR #4). Closes done-criterion #5 of [ADR-0003](../docs/archite
 
 ## What's here
 
-7 spec files:
+9 spec files:
 
 | Spec | Domain | What it covers |
 |---|---|---|
@@ -16,6 +16,8 @@ Q1 stabilization (PR #4). Closes done-criterion #5 of [ADR-0003](../docs/archite
 | `rbac-settlement.spec.ts` | `/api/settlement/cycles` | FINANCE_ADMIN positive (capability unlocked W2) + NODE_OWNER negative |
 | `rbac-reviews.spec.ts` | `/api/reviews` | REVIEWER positive (capability unlocked W2) + USER negative + unauth |
 | `rbac-policies.spec.ts` | `/api/policies` | FOUNDER positive + NODE_OWNER negative + USER read-widening |
+| `rbac-nodes.spec.ts` | `/api/nodes/[id]` PATCH | NODE_OWNER profile-fields positive + 5-field privileged-field gate (status/ownerUserId/level/type/riskLevel) + IDOR + admin override + unauth |
+| `rbac-agents.spec.ts` | `/api/agents/[id]` PATCH | Disjunctive gate: NODE_OWNER own-agent update positive + IDOR + RISK_DESK freeze positive (any agent) + RISK_DESK update negative + unauth |
 
 ## Fixtures
 
@@ -65,11 +67,6 @@ For the specs to actually pass against a real DB:
   cover those individually.
 - **Concurrent IDOR via timing** (TOCTOU between gate and DB write). Would
   need adversarial harness; out of scope.
-- **Privileged-field gate on nodes/[id] PATCH** (status / type / level
-  cannot be flipped by NODE_OWNER) — not covered yet; should be added
-  as `rbac-nodes.spec.ts` in a follow-up.
-- **Disjunctive freeze gate on agents/[id] PATCH** (RISK_DESK can freeze
-  any agent) — not covered yet.
 
 ## Status awareness
 
