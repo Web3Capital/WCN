@@ -1,6 +1,6 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { requirePermission, requireSignedIn } from "@/lib/admin";
 import { getOwnedNodeIds, memberPoBWhere } from "@/lib/member-data-scope";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { isAdminRole } from "@/lib/permissions";
@@ -56,14 +56,31 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("create", "pob");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const businessType = String(body?.businessType ?? "").trim();
   if (!businessType) return apiValidationError([{ path: "businessType", message: "Missing businessType." }]);
+
+  // Row-level scope: non-admin must reference one of their own nodes.
+  // Without this, a NODE_OWNER could attribute work to a node they don't own
+  // and bypass the matrix's intent.
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (!isAdmin) {
+    const ownedNodeIds = await getOwnedNodeIds(prisma, auth.session.user!.id);
+    if (ownedNodeIds.length === 0) return apiUnauthorized();
+    const claimedNodeId = body?.nodeId ? String(body.nodeId) : null;
+    const claimedLeadNodeId = body?.leadNodeId ? String(body.leadNodeId) : null;
+    if (!claimedNodeId || !ownedNodeIds.includes(claimedNodeId)) {
+      return apiValidationError([{ path: "nodeId", message: "PoB must be attributed to a node you own." }]);
+    }
+    if (claimedLeadNodeId && !ownedNodeIds.includes(claimedLeadNodeId)) {
+      return apiValidationError([{ path: "leadNodeId", message: "Lead node must be one you own." }]);
+    }
+  }
 
   const baseValue = Number(body?.baseValue ?? 0);
   const weight = Number(body?.weight ?? 1);
@@ -104,7 +121,7 @@ export async function POST(req: Request) {
   });
 
   await writeAudit({
-    actorUserId: admin.session.user?.id ?? null,
+    actorUserId: auth.session.user?.id ?? null,
     action: AuditAction.POB_UPDATE,
     targetType: "POB",
     targetId: record.id,
@@ -116,7 +133,7 @@ export async function POST(req: Request) {
     dealId: record.dealId ?? undefined,
     totalValue: score,
     attributions: [],
-  }, { actorId: admin.session.user?.id });
+  }, { actorId: auth.session.user?.id });
 
   return apiCreated(record);
 }

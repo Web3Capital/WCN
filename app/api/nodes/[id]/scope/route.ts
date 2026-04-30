@@ -1,13 +1,13 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/admin";
+import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiNotFound, zodToApiError } from "@/lib/core/api-response";
 import { parseBody, updateNodeScopeSchema } from "@/lib/core/validation";
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("manage", "node");
+  if (!auth.ok) return apiUnauthorized();
 
   const { id } = await params;
   const body = await req.json();
@@ -24,7 +24,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   });
 
   await writeAudit({
-    actorUserId: admin.session.user?.id ?? "system",
+    actorUserId: auth.session.user?.id ?? "system",
     action: AuditAction.NODE_UPDATE,
     targetType: "NODE",
     targetId: id,

@@ -2,10 +2,11 @@ import "@/lib/core/init";
 import type { Prisma } from "@prisma/client";
 import { PoBRecordStatus } from "@prisma/client";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { requirePermission, requireSignedIn } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { getOwnedNodeIds, memberPoBWhere } from "@/lib/member-data-scope";
+import { ownsPoB } from "@/lib/auth/resource-scope";
 import { assertPoBStatusValue, canTransitionPoBStatus, pobTransitionErrorMessage } from "@/lib/pob-state";
 import { canTransitionPoB } from "@/lib/state-machines/evidence-pob";
 import { apiOk, apiUnauthorized, apiNotFound, apiValidationError, apiConflict } from "@/lib/core/api-response";
@@ -46,14 +47,20 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("update", "pob");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const existing = await prisma.poBRecord.findUnique({ where: { id: params.id } });
   if (!existing) return apiNotFound("PoBRecord");
+
+  // Row-level scope: non-admin must own the PoB (linked node/task/project).
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (!isAdmin && !(await ownsPoB(prisma, auth.session.user!.id, params.id))) {
+    return apiUnauthorized();
+  }
 
   const data: Prisma.PoBRecordUpdateInput = {};
   if (body?.notes !== undefined) data.notes = body.notes ? String(body.notes) : null;
@@ -106,13 +113,13 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         decision: decision as any,
         notes: data.notes !== undefined ? (data.notes as string | null) : null,
         status: "RESOLVED",
-        reviewerId: admin.session.user?.id ?? null,
+        reviewerId: auth.session.user?.id ?? null,
       },
     });
   }
 
   await writeAudit({
-    actorUserId: admin.session.user?.id ?? null,
+    actorUserId: auth.session.user?.id ?? null,
     action: AuditAction.POB_STATUS_CHANGE,
     targetType: "POB",
     targetId: params.id,

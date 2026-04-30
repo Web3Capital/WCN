@@ -1,6 +1,6 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/admin";
+import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiNotFound, zodToApiError } from "@/lib/core/api-response";
 import { parseBody, updateUserRoleSchema } from "@/lib/core/validation";
@@ -9,8 +9,8 @@ import { Events } from "@/lib/core/event-types";
 import type { Role } from "@prisma/client";
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("update", "user");
+  if (!auth.ok) return apiUnauthorized();
 
   const body = await req.json().catch(() => ({}));
   const parsed = parseBody(updateUserRoleSchema, body);
@@ -27,7 +27,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   });
 
   await writeAudit({
-    actorUserId: admin.session.user?.id ?? null,
+    actorUserId: auth.session.user?.id ?? null,
     action: AuditAction.USER_ROLE_CHANGE,
     targetType: "USER",
     targetId: params.id,
@@ -38,8 +38,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     userId: params.id,
     oldRole: existing.role,
     newRole: parsed.data.role,
-    changedBy: admin.session.user?.id ?? "system",
-  }, { actorId: admin.session.user?.id });
+    changedBy: auth.session.user?.id ?? "system",
+  }, { actorId: auth.session.user?.id });
 
   return apiOk(updated);
 }

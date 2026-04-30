@@ -1,7 +1,8 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { requirePermission, requireSignedIn } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
+import { ownsNode } from "@/lib/auth/resource-scope";
 import { canTransitionNode } from "@/lib/state-machines/node";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { redactNodeForMember } from "@/lib/member-redact";
@@ -50,14 +51,32 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("update", "node");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const existing = await prisma.node.findUnique({ where: { id: params.id }, select: { id: true, status: true } });
   if (!existing) return apiNotFound("Node");
+
+  // Row-level + privileged-field gate.
+  // Non-admin (NODE_OWNER) can edit profile fields on their own node, but
+  // status transitions (LIVE / OFFBOARDED / PROBATION / SUSPENDED / etc.) are
+  // review decisions and remain admin-only — otherwise a NODE_OWNER could
+  // self-promote to LIVE bypassing review.
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (!isAdmin) {
+    if (!(await ownsNode(prisma, auth.session.user!.id, params.id))) {
+      return apiUnauthorized();
+    }
+    const adminOnlyFields = ["status", "ownerUserId", "level", "type", "riskLevel"];
+    for (const f of adminOnlyFields) {
+      if (body?.[f] !== undefined) {
+        return apiUnauthorized();
+      }
+    }
+  }
 
   const data: Record<string, unknown> = {};
 
@@ -122,7 +141,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   });
   if (fieldsForProfileAudit.length > 0) {
     await writeAudit({
-      actorUserId: admin.session.user?.id ?? null,
+      actorUserId: auth.session.user?.id ?? null,
       action: AuditAction.NODE_UPDATE,
       targetType: "NODE",
       targetId: params.id,
@@ -138,12 +157,12 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         decision: data.status === "REJECTED" || data.status === "OFFBOARDED" ? "REJECT" : data.status === "NEED_MORE_INFO" ? "NEEDS_CHANGES" : "APPROVE",
         notes: body?.notes ? String(body.notes) : null,
         status: "RESOLVED",
-        reviewerId: admin.session.user?.id ?? null,
+        reviewerId: auth.session.user?.id ?? null,
       },
     });
 
     await writeAudit({
-      actorUserId: admin.session.user?.id ?? null,
+      actorUserId: auth.session.user?.id ?? null,
       action: AuditAction.NODE_STATUS_CHANGE,
       targetType: "NODE",
       targetId: params.id,
@@ -154,19 +173,19 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       nodeId: params.id,
       oldStatus: existing.status,
       newStatus: String(data.status),
-      changedBy: admin.session.user?.id ?? "system",
-    }, { actorId: admin.session.user?.id });
+      changedBy: auth.session.user?.id ?? "system",
+    }, { actorId: auth.session.user?.id });
 
     if (data.status === "LIVE") {
       await eventBus.emit(Events.NODE_ACTIVATED, {
         nodeId: params.id,
-        activatedBy: admin.session.user?.id ?? "system",
-      }, { actorId: admin.session.user?.id });
+        activatedBy: auth.session.user?.id ?? "system",
+      }, { actorId: auth.session.user?.id });
     }
   }
 
   withApiContext("PATCH /api/nodes/[id]", {
-    actorUserId: admin.session.user?.id ?? undefined,
+    actorUserId: auth.session.user?.id ?? undefined,
     nodeId: params.id,
   }).info(
     {

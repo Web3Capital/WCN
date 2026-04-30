@@ -1,12 +1,12 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/admin";
+import { requirePermission } from "@/lib/admin";
 import { apiOk, apiUnauthorized } from "@/lib/core/api-response";
 import type { Prisma } from "@prisma/client";
 
 export async function GET(req: Request) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("read", "review");
+  if (!auth.ok) return apiUnauthorized();
 
   const url = new URL(req.url);
   const targetType = url.searchParams.get("targetType");

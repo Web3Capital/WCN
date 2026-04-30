@@ -1,6 +1,7 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { requirePermission, requireSignedIn } from "@/lib/admin";
+import { ownsAgent } from "@/lib/auth/resource-scope";
 import { AgentRunStatus } from "@prisma/client";
 import { getOwnedNodeIds, memberAgentRunsWhere } from "@/lib/member-data-scope";
 import { redactAgentForMember } from "@/lib/member-redact";
@@ -30,14 +31,23 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  // Triggering an agent run is an "update" of the agent — AGENT_OWNER /
+  // NODE_OWNER on their own agents, plus admins. Matrix grants `update+agent`
+  // accordingly.
+  const auth = await requirePermission("update", "agent");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
 
   const agentId = String(body?.agentId ?? "").trim();
   if (!agentId) return apiValidationError([{ path: "agentId", message: "Missing agentId." }]);
+
+  // Row-level: non-admin must own the agent.
+  const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
+  if (!isAdmin && !(await ownsAgent(prisma, auth.session.user!.id, agentId))) {
+    return apiUnauthorized();
+  }
 
   const run = await prisma.agentRun.create({
     data: {
@@ -56,8 +66,8 @@ export async function POST(req: Request) {
     runId: run.id,
     agentId,
     agentType: run.agent?.type ?? "",
-    triggeredBy: admin.session.user?.id ?? "system",
-  }, { actorId: admin.session.user?.id });
+    triggeredBy: auth.session.user?.id ?? "system",
+  }, { actorId: auth.session.user?.id });
 
   return apiCreated(run);
 }
