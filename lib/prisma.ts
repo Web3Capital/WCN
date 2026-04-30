@@ -22,9 +22,13 @@ export function getPrisma() {
   }
 
   const sslEnabled = process.env.NODE_ENV === "production" || url.includes("sslmode=require");
+  // Default max=2 per instance. On Vercel Fluid Compute the runtime keeps many
+  // function instances warm; with max=10 we'd exhaust Postgres `max_connections=100`
+  // at ~10 concurrent instances. A connection pooler (PgBouncer / Neon pooler /
+  // Prisma Accelerate) should sit in front for production. Override with DB_POOL_MAX.
   const pool = new Pool({
     connectionString: url,
-    max: Number(process.env.DB_POOL_MAX) || 10,
+    max: Number(process.env.DB_POOL_MAX) || 2,
     idleTimeoutMillis: Number(process.env.DB_POOL_IDLE_TIMEOUT) || 30000,
     connectionTimeoutMillis: Number(process.env.DB_POOL_CONNECT_TIMEOUT) || 5000,
     ...(sslEnabled && {
