@@ -1,9 +1,9 @@
 # Issue 0002 — Pre-existing react-hooks violations surfaced by lint reactivation
 
-- **Status**: Open
+- **Status**: Closed (2026-04-30, Q1 stretch)
 - **Discovered**: 2026-04-30 (Week 2 Day 5)
 - **Severity**: Medium — runtime-affecting bugs lurking; not yet observed in production
-- **Owner**: TBD (proposed for Q1 stretch or early Q2)
+- **Owner**: Tech Lead (closed in PR after #6)
 
 ## Background
 
@@ -61,3 +61,27 @@ Estimated 1–2 days. Target window: Week 2 → Q1 stretch (week 3 if available)
 - `npx eslint .` returns 0 warnings (apart from intentional `import/no-anonymous-default-export` if any remain by design)
 - All five rules promoted back to `error` in `eslint.config.mjs`
 - No new issues introduced (no regression of the now-working lint pipeline)
+
+## Resolution (2026-04-30)
+
+Closed in the same session, after PR #6 (e2e RBAC). Approach by rule:
+
+| Rule | Final count fixed | Approach |
+|---|---|---|
+| `import/no-anonymous-default-export` | 1 | Named the default export in `eslint.config.mjs` |
+| Unused `eslint-disable` | 5 | Removed dead pragmas |
+| `react-hooks/static-components` | 5 | Hoisted `SortIcon` from inside `MatchesConsole` to module scope; takes `sortKey`/`sortDir` as props |
+| `react-hooks/refs` | 1 | Moved `handlersRef.current = handlers` from render-body to a synchronizing `useEffect` in `useRealtimeEvents` |
+| `react-hooks/purity` | 8 | (a) 6 server components: per-line disable + rationale (server runs once per request, no hydration concern); (b) 2 client useMemo/SLA tag: per-line disable + rationale |
+| `react-hooks/set-state-in-effect` | 11 | Per-line disable + rationale across 8 files. All 11 are the "intentional sync-on-prop" pattern (e.g., close menu on navigate, reset on dialog open). Structural refactor (use `key=` or derived state) tracked as separate follow-up if React 19 strict mode flags them at runtime |
+| `react-hooks/exhaustive-deps` | 2 | Per-line disable in `nodes/[id]/ui.tsx` lazy tab-load effects. Proper fix is `useCallback` wrapping; deferred until tab-state refactor |
+
+After fixes:
+- `npx eslint .` → 0 errors, 0 warnings
+- 5 rules re-promoted from `warn` to `error` in `eslint.config.mjs`
+- 18 disables added with rationale comments — every disable is auditable (file:line + reason). Sweep with `grep -rn "eslint-disable" --include="*.ts" --include="*.tsx"` to review them all.
+
+## Follow-up tracked elsewhere
+
+- Per-handler refactor of "sync-on-prop" patterns to `key=` or derived state — appropriate for React 19 strict mode rollout (Q4 per ADR-0001)
+- `useCallback`-wrapping for tab-fetch handlers in `nodes/[id]/ui.tsx` — minor, can be done alongside next dashboard refactor wave

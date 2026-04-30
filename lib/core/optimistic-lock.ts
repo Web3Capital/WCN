@@ -40,7 +40,6 @@ export class OptimisticLockError extends Error {
  * @returns The freshly-fetched entity after the update
  */
 export async function updateWithVersion<T>(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   model: any,
   entityType: string,
   id: string,
@@ -70,7 +69,6 @@ export async function updateWithVersion<T>(
  * @throws OptimisticLockError if 0 rows matched.
  */
 export async function versionGuard(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   txModel: any,
   entityType: string,
   id: string,

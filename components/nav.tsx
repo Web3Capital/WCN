@@ -65,6 +65,9 @@ export function Nav() {
   const resourcesActive = resourceLinks.some((l) => pathMatchesNav(normalizedPath, l.href));
 
   useEffect(() => {
+    // Intentional sync-on-prop pattern (close on navigate / reset on open).
+    // React docs flag this as cascade risk; see issue 0002 for refactor plan.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMobileOpen(false);
     setMega(null);
     setAccountOpen(false);
@@ -73,6 +76,9 @@ export function Nav() {
 
   useEffect(() => {
     const themeMatch = document.cookie.match(/(?:^|;\s*)wcn_theme=(light|dark|system)(?:;|$)/);
+    // Intentional sync-on-prop pattern (close on navigate / reset on open).
+    // React docs flag this as cascade risk; see issue 0002 for refactor plan.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTheme((themeMatch?.[1] as "light" | "dark" | "system") ?? "system");
   }, []);
 

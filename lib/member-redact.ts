@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
  * Pure redaction functions for member (non-admin) payloads.
  * Each function returns a shallow-cloned object with sensitive fields nulled.
