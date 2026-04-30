@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { locales, localeMetadata, type Locale } from "@/i18n/config";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { WCNGlyph } from "@/components/brand/wcn-glyph";
 
 function UserAvatar({ name }: { name: string }) {
   const letter = (name || "?").charAt(0).toUpperCase();
@@ -120,9 +121,15 @@ export function Nav() {
   return (
     <header className="nav">
       <div className="container nav-inner" ref={shellRef}>
-        <Link href="/" className="brand">
-          <span className="brand-mark">W³</span>
-          <span>WCN</span>
+        <Link href="/" className="brand" aria-label="WCN — World Citizen Network">
+          <span className="brand-mark">
+            <WCNGlyph size={16} />
+          </span>
+          <span className="brand-wordmark">
+            <span>WCN</span>
+            <span className="brand-divider" aria-hidden />
+            <span className="brand-tagline">Citizen Ledger</span>
+          </span>
         </Link>
         <button
           type="button"

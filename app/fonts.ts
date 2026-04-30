@@ -1,4 +1,4 @@
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, Fraunces, JetBrains_Mono } from "next/font/google";
 
 export const fontSans = Inter({
   subsets: ["latin", "latin-ext"],
@@ -16,6 +16,20 @@ export const fontSans = Inter({
     "Helvetica Neue",
     "Arial",
     "sans-serif",
+  ],
+});
+
+export const fontSerif = Fraunces({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-serif",
+  display: "swap",
+  axes: ["SOFT", "opsz"],
+  fallback: [
+    "Tiempos Headline",
+    "Iowan Old Style",
+    "Georgia",
+    "Times New Roman",
+    "serif",
   ],
 });
 
