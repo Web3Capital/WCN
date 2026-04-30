@@ -10,6 +10,7 @@ import { Footer } from "@/components/footer";
 import { Providers } from "@/components/providers";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
+import { fontSans, fontMono } from "@/app/fonts";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -121,7 +122,12 @@ export default async function LocaleLayout({
   };
 
   return (
-    <html lang={locale} dir={meta?.dir ?? "ltr"} data-theme={dataTheme}>
+    <html
+      lang={locale}
+      dir={meta?.dir ?? "ltr"}
+      data-theme={dataTheme}
+      className={`${fontSans.variable} ${fontMono.variable}`}
+    >
       <head>
         <script
           type="application/ld+json"
