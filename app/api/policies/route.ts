@@ -1,6 +1,6 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { requirePermission, requireSignedIn } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { isAdminRole } from "@/lib/permissions";
 import { apiOk, apiCreated, apiUnauthorized, apiForbidden, zodToApiError } from "@/lib/core/api-response";
@@ -31,8 +31,8 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("create", "policy");
+  if (!auth.ok) return apiUnauthorized();
 
   const body = await req.json();
   const parsed = parseBody(createPolicySchema, body);
@@ -44,11 +44,11 @@ export async function POST(req: Request) {
     description: description ?? undefined,
     scopeRef: scopeRef ?? undefined,
     rollbackLogic: rollbackLogic ?? undefined,
-    createdBy: admin.session.user?.id,
+    createdBy: auth.session.user?.id,
   });
 
   await writeAudit({
-    actorUserId: admin.session.user?.id ?? "system",
+    actorUserId: auth.session.user?.id ?? "system",
     action: AuditAction.POLICY_CREATE,
     targetType: "POLICY",
     targetId: policy.id,

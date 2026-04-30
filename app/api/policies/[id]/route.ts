@@ -1,13 +1,15 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/admin";
+import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiNotFound, zodToApiError } from "@/lib/core/api-response";
 import { parseBody, updatePolicySchema } from "@/lib/core/validation";
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  // Reading policy detail is allowed for any signed-in role — they may need
+  // to know what governs them. Matrix grants `read+policy` via ALL_READ.
+  const auth = await requirePermission("read", "policy");
+  if (!auth.ok) return apiUnauthorized();
 
   const { id } = await params;
   const prisma = getPrisma();
@@ -21,8 +23,8 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
 }
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("update", "policy");
+  if (!auth.ok) return apiUnauthorized();
 
   const { id } = await params;
   const body = await req.json();
@@ -45,7 +47,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   });
 
   await writeAudit({
-    actorUserId: admin.session.user?.id ?? "system",
+    actorUserId: auth.session.user?.id ?? "system",
     action: AuditAction.POLICY_UPDATE,
     targetType: "POLICY",
     targetId: id,
