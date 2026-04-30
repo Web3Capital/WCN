@@ -211,8 +211,16 @@ export const authOptions: NextAuthOptions = (() => {
 
           try {
             const { SiweMessage } = await import("siwe");
+            const { consumeNonce } = await import("@/lib/modules/siwe/nonce");
             const siweMessage = new SiweMessage(credentials.message);
-            const result = await siweMessage.verify({ signature: credentials.signature });
+            // Atomically consume the nonce BEFORE verifying. If another worker
+            // already consumed it (replay), bail out without doing crypto work.
+            const nonceOk = await consumeNonce(siweMessage.nonce);
+            if (!nonceOk) return null;
+            const result = await siweMessage.verify({
+              signature: credentials.signature,
+              nonce: siweMessage.nonce,
+            });
             if (!result.success) return null;
 
             const address = result.data.address.toLowerCase();
