@@ -25,7 +25,10 @@ export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Read theme cookie on mount to hydrate UI; intentional sync-on-mount.
+    // Same pattern as documented in docs/architecture/issues/0002-react-hooks-violations.md.
     const m = document.cookie.match(/(?:^|;\s*)wcn_theme=(light|dark|system)(?:;|$)/);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTheme((m?.[1] as Theme) ?? "system");
     setMounted(true);
   }, []);
