@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
+import { WCNGlyph } from "@/components/brand/wcn-glyph";
 
 export function Footer() {
   const t = useTranslations("footer");
@@ -12,11 +13,17 @@ export function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div className="footer-col">
-            <div className="brand">
-              <span className="brand-mark">W³</span>
-              <span>WCN</span>
-            </div>
-            <p className="muted footer-tagline">{t("tagline")}</p>
+            <Link href="/" className="brand" aria-label="WCN — World Citizen Network">
+              <span className="brand-mark">
+                <WCNGlyph size={16} />
+              </span>
+              <span className="brand-wordmark">
+                <span>WCN</span>
+                <span className="brand-divider" aria-hidden />
+                <span className="brand-tagline">Citizen Ledger</span>
+              </span>
+            </Link>
+            <p className="footer-tagline">{t("tagline")}</p>
           </div>
           <div className="footer-col">
             <h4>{t("product")}</h4>
@@ -45,9 +52,16 @@ export function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p className="muted footer-copyright">
+          <p className="footer-copyright">
             {t("copyright", { year: new Date().getFullYear() })}
           </p>
+          <span className="footer-meta">
+            <span>v3.0 · Sovereign</span>
+            <span className="footer-meta-dot" aria-hidden />
+            <span>audit-first protocol</span>
+            <span className="footer-meta-dot" aria-hidden />
+            <span>three-ledger model</span>
+          </span>
         </div>
       </div>
     </footer>
