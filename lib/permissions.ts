@@ -23,7 +23,8 @@ export type Resource =
   | "access_grant"
   | "entity_freeze"
   | "terms"
-  | "search";
+  | "search"
+  | "policy";
 
 export type Action =
   | "read"
@@ -45,6 +46,8 @@ const ALL_READ: PolicyMap = {
   evidence: ["read"],
   pob: ["read"],
   notification: ["read"],
+  // Everyone can read the policy catalog — they need to know what governs them.
+  policy: ["read"],
 };
 
 const FULL_ACCESS: Action[] = ["read", "create", "update", "delete", "review", "export", "freeze", "override", "manage"];
@@ -74,6 +77,7 @@ const POLICIES: Record<string, PolicyMap> = {
     entity_freeze: FULL_ACCESS,
     terms: FULL_ACCESS,
     search: ["read"],
+    policy: FULL_ACCESS,
   },
   ADMIN: {
     node: FULL_ACCESS,
@@ -99,6 +103,7 @@ const POLICIES: Record<string, PolicyMap> = {
     entity_freeze: FULL_ACCESS,
     terms: FULL_ACCESS,
     search: ["read"],
+    policy: FULL_ACCESS,
   },
   FINANCE_ADMIN: {
     ...ALL_READ,
@@ -157,6 +162,8 @@ const POLICIES: Record<string, PolicyMap> = {
     deal: ["read"],
     approval: ["read", "create", "update"],
     entity_freeze: ["read", "create"],
+    // Reviewers run policy evaluations as part of their workflow.
+    policy: ["read", "review"],
   },
   RISK_DESK: {
     ...ALL_READ,
@@ -174,6 +181,7 @@ const POLICIES: Record<string, PolicyMap> = {
     entity_freeze: FULL_ACCESS,
     approval: ["read", "create", "update"],
     file: ["read"],
+    policy: ["read", "review"],
   },
   AGENT_OWNER: {
     ...ALL_READ,
@@ -214,6 +222,7 @@ const POLICIES: Record<string, PolicyMap> = {
     entity_freeze: FULL_ACCESS,
     terms: FULL_ACCESS,
     search: FULL_ACCESS,
+    policy: FULL_ACCESS,
   },
   USER: {
     ...ALL_READ,

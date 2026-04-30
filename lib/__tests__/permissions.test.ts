@@ -45,6 +45,37 @@ describe("Permissions (RBAC)", () => {
     it("returns false for unknown role", () => {
       expect(can("FAKE_ROLE" as Role, "read", "node")).toBe(false);
     });
+
+    describe("policy resource", () => {
+      it("FOUNDER + ADMIN + SYSTEM have full access", () => {
+        for (const role of ["FOUNDER", "ADMIN", "SYSTEM"] as Role[]) {
+          expect(can(role, "read", "policy")).toBe(true);
+          expect(can(role, "create", "policy")).toBe(true);
+          expect(can(role, "update", "policy")).toBe(true);
+          expect(can(role, "delete", "policy")).toBe(true);
+          expect(can(role, "manage", "policy")).toBe(true);
+        }
+      });
+
+      it("REVIEWER + RISK_DESK can read and run evaluations", () => {
+        for (const role of ["REVIEWER", "RISK_DESK"] as Role[]) {
+          expect(can(role, "read", "policy")).toBe(true);
+          expect(can(role, "review", "policy")).toBe(true);
+          // But cannot create/update/delete the policy catalog itself.
+          expect(can(role, "create", "policy")).toBe(false);
+          expect(can(role, "update", "policy")).toBe(false);
+          expect(can(role, "delete", "policy")).toBe(false);
+        }
+      });
+
+      it("USER + NODE_OWNER + others have read-only", () => {
+        for (const role of ["USER", "NODE_OWNER", "PROJECT_OWNER", "CAPITAL_NODE", "SERVICE_NODE", "OBSERVER"] as Role[]) {
+          expect(can(role, "read", "policy")).toBe(true);
+          expect(can(role, "create", "policy")).toBe(false);
+          expect(can(role, "review", "policy")).toBe(false);
+        }
+      });
+    });
   });
 
   describe("canAny", () => {
