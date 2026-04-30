@@ -1,6 +1,6 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireAdmin, requireSignedIn } from "@/lib/admin";
+import { requirePermission, requireSignedIn } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import { isAdminRole } from "@/lib/permissions";
 import {
@@ -38,8 +38,8 @@ export async function POST(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("manage", "node");
+  if (!auth.ok) return apiUnauthorized();
 
   const body = await req.json().catch(() => ({}));
 
@@ -55,7 +55,7 @@ export async function POST(
     });
 
     await writeAudit({
-      actorUserId: admin.session.user?.id ?? null,
+      actorUserId: auth.session.user?.id ?? null,
       action: AuditAction.TERRITORY_CLAIM,
       targetType: "TERRITORY",
       targetId: territory.id,
