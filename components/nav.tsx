@@ -2,12 +2,13 @@
 
 import { usePathname as useNextPathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
-import { ChevronDown, Menu, Moon, Sun, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { isAdminRole } from "@/lib/permissions";
 import { useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { locales, localeMetadata, type Locale } from "@/i18n/config";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 function UserAvatar({ name }: { name: string }) {
   const letter = (name || "?").charAt(0).toUpperCase();
@@ -35,7 +36,6 @@ export function Nav() {
   const [mega, setMega] = useState<MegaKey>(null);
   const [accountOpen, setAccountOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark" | "system">("system");
   const langRef = useRef<HTMLDivElement>(null);
   const navId = useId();
   const networkPanelId = useId();
@@ -72,11 +72,6 @@ export function Nav() {
   }, [normalizedPath]);
 
   useEffect(() => {
-    const themeMatch = document.cookie.match(/(?:^|;\s*)wcn_theme=(light|dark|system)(?:;|$)/);
-    setTheme((themeMatch?.[1] as "light" | "dark" | "system") ?? "system");
-  }, []);
-
-  useEffect(() => {
     function onDoc(e: MouseEvent) {
       if (shellRef.current && !shellRef.current.contains(e.target as Node)) {
         setMega(null);
@@ -107,17 +102,6 @@ export function Nav() {
   function switchLocale(next: Locale) {
     setLangOpen(false);
     router.replace(intlPathname, { locale: next });
-  }
-
-  async function toggleTheme() {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    await fetch("/api/theme", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ theme: next }),
-    });
-    window.location.reload();
   }
 
   const displayName = session?.user?.name || session?.user?.email || "Account";
@@ -231,14 +215,7 @@ export function Nav() {
           </div>
 
           <div className="nav-utils">
-            <button
-              type="button"
-              className="theme-toggle"
-              aria-label={theme === "dark" ? t("switchToLight") : t("switchToDark")}
-              onClick={toggleTheme}
-            >
-              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
+            <ThemeToggle />
             <div className="lang-toggle" ref={langRef}>
               <button
                 type="button"

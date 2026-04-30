@@ -1,8 +1,50 @@
-/* Theme tokens
-  - default tokens are light
-  - html[data-theme="dark"] forces dark
-  - html[data-theme="system"] follows OS preference via media query
-*/
+/* ============================================================================
+   GLOBAL STYLESHEET — Web3 Capital Network
+   ----------------------------------------------------------------------------
+   ARCHITECTURE
+   - This file is the single CSS entry. New code SHOULD prefer Tailwind utilities
+     over adding more class definitions here. Migration is gradual; both coexist.
+   - Tailwind Preflight is DISABLED (see tailwind.config.ts) — the reset below
+     owns global element baseline styles.
+   - Cascade: handwritten CSS below is in the unlayered cascade (highest priority);
+     Tailwind utilities sit in @layer utilities (lower priority on collision).
+     Net effect: existing class names always win, new utility classes work where
+     no class-collision exists.
+
+   TABLE OF CONTENTS                                                       LINES
+   ----------------------------------------------------------------------------
+   1. Tailwind directives                                                  ~16
+   2. Theme tokens (CSS variables) — light/dark/system                  ~22-128
+   3. Base reset, body, typography, links                              ~130-205
+   4. Layout primitives (.container, .container-wide)                  ~206-220
+   5. Marketing landing — hero/cards/testimonial/logo grid             ~221-728
+   6. DOCS WIKI SYSTEM                                                ~729-1808
+        - shell, sidebar, breadcrumb, article, TOC, search, MDX
+   7. Common patterns (re-used across pages)                         ~1809-1891
+        - .docs-nav-btn, .footer, .pill, .cta-row, .list-clean,
+          form inputs, .apps-layout (NOT legacy — actively used)
+   8. DASHBOARD CONSOLE                                              ~1892-3036
+        - sidebar, top bar, breadcrumb, search, badges, tables,
+          stats, cockpit, KPI cards, filters, timeline, tabs
+   9. Marketing sub-pages                                            ~3037-5177
+        - hero orb, /nodes, /about, /how-it-works, /pob, animated cards
+  10. Footer grid + misc utilities                                   ~5178-5550
+  11. Auth (login/signup) and Apply pages                            ~5371-end
+  12. RTL icon mirror block                                            ~end-15
+
+   FUTURE CLEANUP (tracked in U6 playbook)
+   - Split sections 5-11 into per-domain files under app/styles/*.css
+   - Migrate component-level styles to shadcn primitives + Tailwind utilities
+============================================================================ */
+
+/* 1. Tailwind directives ------------------------------------------------- */
+@tailwind components;
+@tailwind utilities;
+
+/* 2. Theme tokens
+   - default tokens are light
+   - html[data-theme="dark"] forces dark
+   - html[data-theme="system"] follows OS preference via media query        */
 :root {
   --max: 980px;
   --max-wide: 1200px;
@@ -125,7 +167,7 @@ html[data-theme="dark"] .nav { background: rgba(29, 29, 31, 0.8); }
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  font-family: "SF Pro Display", "SF Pro Text", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-sans), "SF Pro Display", "SF Pro Text", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans", "Noto Sans CJK SC", "Noto Sans Arabic", sans-serif;
   font-size: 17px;
   line-height: 1.47;
   letter-spacing: -0.022em;
@@ -410,7 +452,7 @@ a { color: inherit; text-decoration: none; }
   font-family: inherit;
   color: var(--text);
   cursor: pointer;
-  text-align: left;
+  text-align: start;
   transition: background var(--dur-1) var(--ease-out);
 }
 .account-menu-signout:hover {
@@ -512,7 +554,7 @@ a { color: inherit; text-decoration: none; }
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
-  text-align: left;
+  text-align: start;
   font-size: 13px;
   color: var(--text);
   transition: background var(--dur-2) var(--ease-out);
@@ -781,7 +823,7 @@ p, li { color: var(--muted); line-height: 1.47; font-size: 17px; }
   top: 0;
   height: 100vh;
   overflow-y: auto;
-  border-right: 1px solid var(--line);
+  border-inline-end: 1px solid var(--line);
   background: color-mix(in oklab, var(--bg-soft) 92%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -851,7 +893,7 @@ p, li { color: var(--muted); line-height: 1.47; font-size: 17px; }
   cursor: pointer;
   border-radius: var(--radius-sm);
   transition: background var(--dur-1) var(--ease-out), color var(--dur-1) var(--ease-out);
-  text-align: left;
+  text-align: start;
   font-family: inherit;
 }
 .docs-sidebar-chapter:hover {
@@ -864,7 +906,7 @@ p, li { color: var(--muted); line-height: 1.47; font-size: 17px; }
   color: var(--accent);
 }
 .docs-sidebar-chevron {
-  margin-left: auto;
+  margin-inline-start: auto;
   color: var(--muted);
   opacity: 0.6;
   transition: transform var(--dur-2) var(--ease-out), opacity var(--dur-2) var(--ease-out);
@@ -885,7 +927,7 @@ p, li { color: var(--muted); line-height: 1.47; font-size: 17px; }
   line-height: 1.5;
   text-decoration: none;
   transition: all var(--dur-1) var(--ease-out);
-  border-left: 2px solid transparent;
+  border-inline-start: 2px solid transparent;
 }
 .docs-sidebar-link:hover {
   color: var(--text);
@@ -894,7 +936,7 @@ p, li { color: var(--muted); line-height: 1.47; font-size: 17px; }
 .docs-sidebar-link.active {
   color: var(--accent);
   background: color-mix(in oklab, var(--accent) 8%, transparent);
-  border-left-color: var(--accent);
+  border-inline-start-color: var(--accent);
   font-weight: 600;
 }
 
@@ -1051,7 +1093,7 @@ p, li { color: var(--muted); line-height: 1.47; font-size: 17px; }
   margin: 0 0 16px;
 }
 .docs-article-body ul, .docs-article-body ol {
-  padding-left: 24px;
+  padding-inline-start: 24px;
   margin: 0 0 16px;
 }
 .docs-article-body li {
@@ -1079,7 +1121,7 @@ p, li { color: var(--muted); line-height: 1.47; font-size: 17px; }
   padding-top: 0;
 }
 .docs-article-body blockquote:not(.docs-statement) {
-  border-left: 3px solid var(--accent);
+  border-inline-start: 3px solid var(--accent);
   padding: 16px 22px;
   margin: 24px 0;
   color: var(--text);
@@ -1091,7 +1133,7 @@ p, li { color: var(--muted); line-height: 1.47; font-size: 17px; }
   box-shadow: var(--shadow-sm);
 }
 .docs-article-body code {
-  font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+  font-family: var(--font-mono), "SF Mono", "Fira Code", "Cascadia Code", monospace;
   font-size: 0.88em;
   background: var(--bg-elev);
   padding: 3px 7px;
@@ -1122,10 +1164,10 @@ p, li { color: var(--muted); line-height: 1.47; font-size: 17px; }
   list-style: none;
   padding: 0;
   margin: 0;
-  border-left: 1px solid var(--line);
+  border-inline-start: 1px solid var(--line);
 }
 .docs-toc-list li[data-level="3"] {
-  padding-left: 12px;
+  padding-inline-start: 12px;
 }
 .docs-toc-link {
   display: block;
@@ -1134,15 +1176,15 @@ p, li { color: var(--muted); line-height: 1.47; font-size: 17px; }
   color: var(--muted);
   text-decoration: none;
   transition: all var(--dur-1) ease;
-  border-left: 2px solid transparent;
-  margin-left: -1px;
+  border-inline-start: 2px solid transparent;
+  margin-inline-start: -1px;
 }
 .docs-toc-link:hover {
   color: var(--text);
 }
 .docs-toc-link.active {
   color: var(--accent);
-  border-left-color: var(--accent);
+  border-inline-start-color: var(--accent);
   font-weight: 600;
 }
 
@@ -1176,8 +1218,8 @@ p, li { color: var(--muted); line-height: 1.47; font-size: 17px; }
   max-width: 48%;
 }
 .docs-page-nav-next {
-  text-align: right;
-  margin-left: auto;
+  text-align: end;
+  margin-inline-start: auto;
 }
 .docs-page-nav-btn:hover {
   border-color: color-mix(in oklab, var(--accent) 22%, var(--line));
@@ -1223,7 +1265,7 @@ p, li { color: var(--muted); line-height: 1.47; font-size: 17px; }
   box-shadow: var(--shadow-md);
 }
 .docs-search-trigger kbd {
-  margin-left: auto;
+  margin-inline-start: auto;
   padding: 2px 6px;
   border-radius: 4px;
   background: var(--bg);
@@ -1305,7 +1347,7 @@ p, li { color: var(--muted); line-height: 1.47; font-size: 17px; }
   padding: 10px 14px;
   border: none;
   background: none;
-  text-align: left;
+  text-align: start;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background var(--dur-1) ease;
@@ -1553,8 +1595,8 @@ a.docs-card:hover::after { opacity: 1; transform: translateX(2px); }
   flex-direction: column;
   gap: 0;
   margin: 24px 0;
-  border-left: 2px solid color-mix(in oklab, var(--accent) 25%, var(--line));
-  padding-left: 0;
+  border-inline-start: 2px solid color-mix(in oklab, var(--accent) 25%, var(--line));
+  padding-inline-start: 0;
 }
 .docs-step {
   display: flex;
@@ -1598,7 +1640,7 @@ a.docs-card:hover::after { opacity: 1; transform: translateX(2px); }
 
 /* Statement */
 .docs-statement {
-  border-left: 4px solid var(--amber);
+  border-inline-start: 4px solid var(--amber);
   background: var(--amber-bg);
   padding: 18px 22px;
   border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
@@ -1800,11 +1842,13 @@ a.docs-card:hover::after { opacity: 1; transform: translateX(2px); }
   }
 }
 
-/* Legacy compat: keep old class names from breaking */
+/* 7. Common patterns (NOT legacy — used by 13+ .tsx files as of 2026-04).
+   docs-nav-btn / .footer / .pill / .cta-row / .list-clean / .apps-row /
+   form input baseline. New code: prefer shadcn primitives + Tailwind for these. */
 .docs-layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; }
 .docs-nav-footer { display: flex; justify-content: space-between; gap: 16px; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--line); }
 .docs-nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 14px 18px; border-radius: var(--radius-md); border: 1px solid var(--line); background: var(--card); text-decoration: none; color: var(--text); transition: all var(--dur-2) var(--ease-out); min-width: 0; flex: 1; max-width: 50%; }
-.docs-nav-btn:last-child { text-align: right; margin-left: auto; }
+.docs-nav-btn:last-child { text-align: end; margin-inline-start: auto; }
 .docs-nav-btn:hover { border-color: color-mix(in oklab, var(--accent) 22%, var(--line)); background: color-mix(in oklab, var(--accent) 4%, transparent); }
 .docs-nav-btn-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
 .docs-nav-btn span:not(.docs-nav-btn-label) { font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -1864,7 +1908,7 @@ input:focus, textarea:focus, select:focus { border-color: color-mix(in oklab, va
   border: 1px solid var(--line);
   background: color-mix(in oklab, var(--bg) 90%, transparent);
   cursor: pointer;
-  text-align: left;
+  text-align: start;
   transition: background var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out);
 }
 .apps-row:hover {
@@ -1928,7 +1972,7 @@ html[data-dashboard="true"] .footer {
 .dashboard-sidebar {
   width: 240px;
   flex-shrink: 0;
-  border-right: 1px solid var(--line);
+  border-inline-end: 1px solid var(--line);
   background: var(--bg);
   position: sticky;
   top: 0;
@@ -2094,7 +2138,7 @@ html[data-dashboard="true"] .footer {
 }
 /* ── Context-switch: arrow indicator on Node System item ── */
 .dashboard-nav-switch-arrow {
-  margin-left: auto;
+  margin-inline-start: auto;
   opacity: 0.4;
   flex-shrink: 0;
   transition: opacity var(--dur-1);
@@ -2105,7 +2149,7 @@ button.dashboard-nav-link {
   border: none;
   background: none;
   cursor: pointer;
-  text-align: left;
+  text-align: start;
   font-family: inherit;
 }
 .dashboard-sidebar-footer {
@@ -2122,7 +2166,7 @@ button.dashboard-nav-link {
   border-top: 1px solid var(--line);
   background: none;
   cursor: pointer;
-  text-align: left;
+  text-align: start;
   transition: background 0.15s;
 }
 .dashboard-footer-trigger:hover {
@@ -2384,7 +2428,7 @@ button.dashboard-nav-link {
   cursor: pointer;
   font-size: 13px;
   color: var(--text);
-  text-align: left;
+  text-align: start;
   transition: background var(--dur-1) var(--ease-out);
 }
 .search-result-btn:hover { background: var(--line); }
@@ -2582,7 +2626,7 @@ button.dashboard-nav-link {
   font-size: 13px;
 }
 .data-table th {
-  text-align: left;
+  text-align: start;
   padding: 10px 14px;
   font-size: 11px;
   font-weight: 700;
@@ -2819,7 +2863,7 @@ button.dashboard-nav-link {
 /* —— Timeline —— */
 .timeline {
   position: relative;
-  padding-left: 24px;
+  padding-inline-start: 24px;
 }
 .timeline::before {
   content: "";
@@ -3121,7 +3165,7 @@ button.dashboard-nav-link {
   gap: 28px;
   align-items: stretch;
   margin-top: 8px;
-  text-align: left;
+  text-align: start;
 }
 @media (min-width: 1069px) {
   .nodes-hero-grid {
@@ -3253,7 +3297,7 @@ button.dashboard-nav-link {
 }
 .nodes-list {
   margin: 0;
-  padding-left: 1.15em;
+  padding-inline-start: 1.15em;
   color: var(--muted);
   font-size: 15px;
   line-height: 1.75;
@@ -3304,19 +3348,19 @@ button.dashboard-nav-link {
   box-shadow: var(--shadow-md);
 }
 .nodes-tier-card--accent {
-  border-left: 3px solid var(--accent);
+  border-inline-start: 3px solid var(--accent);
 }
 .nodes-tier-card--green {
-  border-left: 3px solid var(--green);
+  border-inline-start: 3px solid var(--green);
 }
 .nodes-tier-card--amber {
-  border-left: 3px solid var(--amber);
+  border-inline-start: 3px solid var(--amber);
 }
 .nodes-tier-card--purple {
-  border-left: 3px solid var(--purple);
+  border-inline-start: 3px solid var(--purple);
 }
 .nodes-tier-card--muted {
-  border-left: 3px solid color-mix(in oklab, var(--muted) 50%, var(--line));
+  border-inline-start: 3px solid color-mix(in oklab, var(--muted) 50%, var(--line));
 }
 .nodes-tier-badge {
   display: inline-flex;
@@ -3508,8 +3552,8 @@ button.dashboard-nav-link {
   line-height: 1.05;
   letter-spacing: -0.04em;
   max-width: 22ch;
-  margin-left: auto;
-  margin-right: auto;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
 }
 .about-hero-lede {
   font-size: clamp(17px, 1.3vw, 20px);
@@ -3535,7 +3579,7 @@ button.dashboard-nav-link {
   display: grid;
   gap: clamp(24px, 3vw, 40px);
   align-items: start;
-  text-align: left;
+  text-align: start;
 }
 @media (min-width: 1069px) {
   .about-hero-grid {
@@ -3730,7 +3774,7 @@ button.dashboard-nav-link {
 }
 .about-list {
   margin: 0;
-  padding-left: 1.15em;
+  padding-inline-start: 1.15em;
   color: var(--muted);
   font-size: 15px;
   line-height: 1.72;
@@ -4027,8 +4071,8 @@ button.dashboard-nav-link {
   line-height: 1.03;
   letter-spacing: -0.042em;
   max-width: 18ch;
-  margin-left: auto;
-  margin-right: auto;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
 }
 .hiw-hero-lede {
   font-size: clamp(17px, 1.3vw, 20px);
@@ -4054,7 +4098,7 @@ button.dashboard-nav-link {
   display: grid;
   gap: clamp(24px, 3vw, 40px);
   align-items: start;
-  text-align: left;
+  text-align: start;
 }
 @media (min-width: 1069px) {
   .hiw-hero-grid {
@@ -4305,19 +4349,19 @@ button.dashboard-nav-link {
   transform: translateY(-1px);
 }
 .hiw-layer-shell--accent .hiw-layer-inner {
-  border-left: 3px solid var(--accent);
+  border-inline-start: 3px solid var(--accent);
 }
 .hiw-layer-shell--purple .hiw-layer-inner {
-  border-left: 3px solid var(--purple);
+  border-inline-start: 3px solid var(--purple);
 }
 .hiw-layer-shell--amber .hiw-layer-inner {
-  border-left: 3px solid var(--amber);
+  border-inline-start: 3px solid var(--amber);
 }
 .hiw-layer-shell--green .hiw-layer-inner {
-  border-left: 3px solid var(--green);
+  border-inline-start: 3px solid var(--green);
 }
 .hiw-layer-shell--muted .hiw-layer-inner {
-  border-left: 3px solid color-mix(in oklab, var(--muted) 45%, var(--line));
+  border-inline-start: 3px solid color-mix(in oklab, var(--muted) 45%, var(--line));
 }
 .hiw-layer-badge {
   flex-shrink: 0;
@@ -4514,8 +4558,8 @@ button.dashboard-nav-link {
   line-height: 1.02;
   letter-spacing: -0.045em;
   max-width: 14ch;
-  margin-left: auto;
-  margin-right: auto;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
 }
 .pob-hero-lede {
   font-size: clamp(17px, 1.35vw, 20px);
@@ -4542,7 +4586,7 @@ button.dashboard-nav-link {
   gap: clamp(24px, 3vw, 40px);
   align-items: stretch;
   margin-top: 0;
-  text-align: left;
+  text-align: start;
 }
 @media (min-width: 1069px) {
   .pob-hero-grid {
@@ -4703,7 +4747,7 @@ html[data-theme="dark"] .pob-pillars-panel {
 }
 .pob-list {
   margin: 0;
-  padding-left: 1.15em;
+  padding-inline-start: 1.15em;
   color: var(--muted);
   font-size: 15px;
   line-height: 1.75;
@@ -5290,7 +5334,7 @@ html[data-theme="dark"] .pob-formula-specbar {
 }
 .notif-card-unread {
   background: color-mix(in oklab, var(--accent) 5%, transparent);
-  border-left: 3px solid var(--accent);
+  border-inline-start: 3px solid var(--accent);
 }
 .notif-card-head {
   display: flex;
@@ -5757,7 +5801,7 @@ html[data-theme="dark"] .pob-formula-specbar {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
-  padding-right: 36px;
+  padding-inline-end: 36px;
   cursor: pointer;
 }
 .apply-submit {
@@ -5951,7 +5995,7 @@ html[data-theme="dark"] .pob-formula-specbar {
 
 /* Text */
 .text-center { text-align: center; }
-.text-right { text-align: right; }
+.text-right { text-align: end; }
 .text-xs { font-size: 11px; } .text-sm { font-size: 13px; } .text-base { font-size: 14px; }
 .text-lg { font-size: 16px; } .text-xl { font-size: 20px; }
 .font-mono { font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace; }
@@ -6042,15 +6086,14 @@ html[data-theme="dark"] .dashboard-onboarding-checklist-item {
   margin-top: 0.25rem;
 }
 
-/* RTL (Arabic) */
-html[dir="rtl"] { direction: rtl; text-align: right; }
-html[dir="rtl"] .dashboard-sidebar { left: auto; right: 0; border-right: none; border-left: 1px solid var(--line); }
-html[dir="rtl"] .dashboard-main { margin-left: 0; margin-right: var(--sidebar-w, 240px); }
-
-html[dir="rtl"] .breadcrumb-slash { transform: scaleX(-1); }
-html[dir="rtl"] .arrow { transform: scaleX(-1); }
-html[dir="rtl"] .nav-dropdown-chevron { margin-left: 0; margin-right: 4px; }
-html[dir="rtl"] .cta-row { flex-direction: row-reverse; }
-@media (max-width: 734px) {
-  html[dir="rtl"] .dashboard-main { margin-right: 0; }
+/* RTL (Arabic) — most layout is now handled by logical properties (margin-inline-start, etc).
+   This block only covers things that genuinely need a horizontal flip: directional icons. */
+html[dir="rtl"] .breadcrumb-slash,
+html[dir="rtl"] .arrow,
+html[dir="rtl"] .arrow-icon,
+html[dir="rtl"] svg.lucide-chevron-right,
+html[dir="rtl"] svg.lucide-chevron-left,
+html[dir="rtl"] svg.lucide-arrow-right,
+html[dir="rtl"] svg.lucide-arrow-left {
+  transform: scaleX(-1);
 }
