@@ -7457,3 +7457,501 @@ html[data-theme="dark"] .spotlight-header-mark { background: var(--paper-50); co
   background: var(--line);
   margin: 0 4px;
 }
+
+/* ============================================================
+   HOME PAGE — SIGNATURE PATTERNS v2 (systematic upgrade)
+   ============================================================ */
+
+/* ── Hero proof metrics bar ───────────────────────────── */
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  width: min(720px, 100%);
+  margin: var(--space-7) auto 0;
+  padding: var(--space-4) 0;
+  border-block: var(--hairline) solid var(--line);
+  background: linear-gradient(90deg, transparent, var(--surface-tint), transparent);
+}
+.hero-metric {
+  text-align: center;
+  position: relative;
+  padding: 0 var(--space-3);
+}
+.hero-metric + .hero-metric::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 12%; bottom: 12%;
+  width: 1px;
+  background: var(--line);
+}
+.hero-metric-value {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 350;
+  letter-spacing: var(--tracking-tighter);
+  line-height: 1.05;
+  color: var(--text);
+  font-variant-numeric: tabular-nums oldstyle-nums;
+}
+.hero-metric-value sup {
+  font-family: var(--font-mono);
+  font-size: 0.55em;
+  font-weight: 500;
+  vertical-align: super;
+  margin-left: 1px;
+  color: var(--voltage-500);
+  letter-spacing: 0;
+}
+.hero-metric-label {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+@media (max-width: 640px) {
+  .hero-metrics { grid-template-columns: repeat(2, 1fr); gap: var(--space-4) 0; padding: var(--space-3) 0; }
+  .hero-metric:nth-child(3)::before { display: none; }
+  .hero-metric-value { font-size: 22px; }
+}
+
+.hero-scroll-cue {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--space-7);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.hero-scroll-cue::after {
+  content: "";
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, var(--line-strong), transparent);
+  animation: scrollCueDrop 2.6s var(--ease-inout) infinite;
+}
+@keyframes scrollCueDrop {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* ── Section number eyebrow (editorial spine) ─────────── */
+.section-number {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--muted-2);
+  margin-right: var(--space-3);
+}
+.section-number::after {
+  content: "";
+  width: 16px;
+  height: 1px;
+  background: var(--line-strong);
+}
+.section-head-numbered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ── LedgersInMotion: signature SVG (simplified to 6 elements) ─── */
+.section-ledgers-in-motion {
+  padding: var(--space-9) 0;
+  position: relative;
+  overflow: hidden;
+}
+.ledgers-in-motion {
+  position: relative;
+  width: min(720px, 100%);
+  margin: var(--space-6) auto 0;
+}
+.lim-stage { display: block; color: var(--text); }
+.lim-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  fill: var(--muted);
+  transition: fill var(--dur-2) var(--ease-out);
+}
+
+/* Hover affordances on each ledger node */
+.lim-node { cursor: default; }
+.lim-node circle:first-of-type {
+  transition: stroke-width var(--dur-2) var(--ease-out), filter var(--dur-2) var(--ease-out);
+}
+.lim-node:hover circle:first-of-type {
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 6px color-mix(in oklab, currentColor 30%, transparent));
+}
+.lim-node:hover .lim-label { fill: var(--text); }
+.lim-node-1:hover circle:first-of-type { color: var(--ledger-node); }
+.lim-node-2:hover circle:first-of-type { color: var(--ledger-deal); }
+.lim-node-3:hover circle:first-of-type { color: var(--ledger-settle); }
+
+/* Single voltage pulse — animation pause-able via section visibility */
+@media (prefers-reduced-motion: no-preference) {
+  .lim-pulse {
+    animation: limPulseFlow 5s var(--ease-inout) infinite;
+    animation-play-state: var(--lim-anim-state, running);
+  }
+}
+@keyframes limPulseFlow {
+  0% { transform: translateX(0); opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { transform: translateX(560px); opacity: 0; }
+}
+
+.ledgers-in-motion-caption {
+  margin: var(--space-4) 0 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--muted-2);
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .ledgers-in-motion svg { aspect-ratio: 720 / 220; }
+  .lim-label { font-size: 9px; }
+}
+
+/* ── Manifesto block — editorial pull ─────────────────── */
+.section-manifesto {
+  padding: var(--space-10) 0;
+  position: relative;
+  background: var(--bg-elev);
+  border-block: var(--hairline) solid var(--line);
+  isolation: isolate;
+  overflow: hidden;
+}
+.section-manifesto::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--field-grid);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 60% 70% at 50% 50%, black 0%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 50%, black 0%, transparent 80%);
+  opacity: 0.5;
+  z-index: -1;
+}
+.manifesto {
+  width: min(720px, 100%);
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+.manifesto-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--card);
+  border: var(--hairline) solid var(--line);
+  color: var(--text);
+  margin-bottom: var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+.manifesto-eyebrow {
+  margin-bottom: var(--space-5);
+}
+.manifesto-prose {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  font-size: clamp(24px, 3.4vw, 38px);
+  line-height: 1.32;
+  letter-spacing: var(--tracking-tighter);
+  color: var(--text);
+  margin: 0;
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+}
+.manifesto-lead {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text);
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  font-size: 1.22em;
+  letter-spacing: -0.028em;
+  margin-right: 0.06em;
+}
+.manifesto-section-number {
+  margin: 0 0 var(--space-3);
+}
+.manifesto-section-number::after { display: none; }
+.manifesto-signature {
+  margin-top: var(--space-6);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+/* ── Voltage callout — pre-footer CTA band ────────────── */
+.voltage-callout {
+  position: relative;
+  padding: var(--space-9) 0 var(--space-9);
+  background: var(--ink-1000);
+  color: var(--paper-50);
+  isolation: isolate;
+  overflow: hidden;
+  margin-top: var(--space-9);
+}
+.voltage-callout::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(800px circle at 18% 22%, color-mix(in oklab, var(--ledger-node) 28%, transparent), transparent 60%),
+    radial-gradient(700px circle at 82% 78%, color-mix(in oklab, var(--ledger-deal) 22%, transparent), transparent 55%),
+    radial-gradient(900px circle at 50% 110%, color-mix(in oklab, var(--voltage-500) 30%, transparent), transparent 60%);
+  z-index: -1;
+  opacity: 0.95;
+}
+.voltage-callout::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--field-grid);
+  background-size: 32px 32px;
+  color: var(--paper-50);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 0%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 0%, transparent 75%);
+  opacity: 0.18;
+  z-index: -1;
+}
+html[data-theme="dark"] .voltage-callout,
+html[data-theme="system"] .voltage-callout {
+  background: #050608;
+}
+.voltage-callout-inner {
+  width: min(720px, 100%);
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+.voltage-callout-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, color-mix(in oklab, var(--paper-50) 14%, transparent), color-mix(in oklab, var(--paper-50) 4%, transparent));
+  border: 1px solid color-mix(in oklab, var(--paper-50) 18%, transparent);
+  color: var(--paper-50);
+  margin-bottom: var(--space-4);
+  box-shadow: 0 0 32px color-mix(in oklab, var(--voltage-500) 40%, transparent);
+}
+.voltage-callout-eyebrow {
+  background: color-mix(in oklab, var(--paper-50) 8%, transparent) !important;
+  border-color: color-mix(in oklab, var(--paper-50) 18%, transparent) !important;
+  color: color-mix(in oklab, var(--paper-50) 65%, transparent) !important;
+  margin-bottom: var(--space-3);
+}
+.voltage-callout-title {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 350;
+  line-height: 1.06;
+  letter-spacing: var(--tracking-display);
+  color: var(--paper-50);
+  margin: 0 0 var(--space-3);
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+}
+.voltage-callout-desc {
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.4vw, 17px);
+  line-height: 1.55;
+  letter-spacing: -0.012em;
+  color: color-mix(in oklab, var(--paper-50) 72%, transparent);
+  margin: 0 auto var(--space-5);
+  max-width: 56ch;
+}
+.voltage-callout-actions {
+  margin-top: var(--space-4) !important;
+  justify-content: center;
+}
+.voltage-callout-secondary {
+  background: transparent !important;
+  border-color: color-mix(in oklab, var(--paper-50) 24%, transparent) !important;
+  color: var(--paper-50) !important;
+}
+.voltage-callout-secondary:hover {
+  background: color-mix(in oklab, var(--paper-50) 8%, transparent) !important;
+  border-color: color-mix(in oklab, var(--paper-50) 38%, transparent) !important;
+}
+
+/* The voltage callout sits flush with the footer — no margin gap */
+.voltage-callout + .footer { margin-top: 0; border-top: none; }
+.voltage-callout + .footer::before { background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--voltage-500) 50%, transparent), transparent); }
+
+/* ============================================================
+   STRESS-TEST FIX-UPS — color calm · mobile · honesty caption
+   ============================================================ */
+
+/* P1-4 · Calm the three-ledger palette: drop saturation ~40%.
+   Voltage cobalt remains the only strong accent on the page. */
+:root {
+  --ledger-node:   #6E72D4;  /* was #5B5FE9 — desaturated 38% */
+  --ledger-node-bg: color-mix(in oklab, #6E72D4 8%, transparent);
+  --ledger-deal:   #C2843B;  /* was #D97706 — desaturated 42% */
+  --ledger-deal-bg: color-mix(in oklab, #C2843B 8%, transparent);
+  --ledger-settle: #4D9670;  /* was #0F9D58 — desaturated 45% */
+  --ledger-settle-bg: color-mix(in oklab, #4D9670 8%, transparent);
+}
+html[data-theme="dark"],
+@media (prefers-color-scheme: dark) {
+  html[data-theme="system"] {
+    --ledger-node:   #9295E0;
+    --ledger-node-bg: color-mix(in oklab, #9295E0 12%, transparent);
+    --ledger-deal:   #D6A661;
+    --ledger-deal-bg: color-mix(in oklab, #D6A661 12%, transparent);
+    --ledger-settle: #6BB48C;
+    --ledger-settle-bg: color-mix(in oklab, #6BB48C 12%, transparent);
+  }
+}
+
+/* P3-4 · Sample telemetry caption — honest disclaimer above ticker */
+.ticker-honesty {
+  display: block;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  margin: 0 0 var(--space-2);
+  opacity: 0.7;
+}
+
+/* P0/P1 · Architecture grade strip — replaces fake "trusted by" labels */
+.section-architecture-grade {
+  padding: var(--space-7) 0;
+  border-block: var(--hairline) solid var(--line-soft);
+  background: var(--bg);
+}
+.architecture-grade-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-7);
+  width: min(880px, 100%);
+  margin: 0 auto;
+}
+.architecture-grade-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  position: relative;
+  padding-right: var(--space-5);
+}
+.architecture-grade-label::after {
+  content: "";
+  position: absolute;
+  right: 0; top: 50%;
+  width: 24px; height: 1px;
+  background: var(--line-strong);
+  transform: translateY(-50%);
+}
+.architecture-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: var(--type-sm);
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: -0.005em;
+}
+.architecture-badge::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ledger-color, var(--voltage-500));
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ledger-color, var(--voltage-500)) 14%, transparent);
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .architecture-grade-inner { gap: var(--space-3) var(--space-5); }
+  .architecture-grade-label::after { display: none; }
+  .architecture-grade-label { padding-right: 0; }
+}
+
+/* P2-1 · Utility classes (replace inline styles) ────────── */
+.u-mt-3  { margin-top: var(--space-3) !important; }
+.u-mt-4  { margin-top: var(--space-4) !important; }
+.u-mt-5  { margin-top: var(--space-5) !important; }
+.u-mt-6  { margin-top: var(--space-6) !important; }
+.u-mt-7  { margin-top: var(--space-7) !important; }
+.u-mt-neg-7 { margin-top: calc(var(--space-7) * -1) !important; }
+.u-cta-row-centered { justify-content: center; }
+.u-flex-center { display: inline-flex; align-items: center; gap: var(--space-3); }
+.u-meta-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: var(--space-5);
+  color: var(--muted-2);
+  font-size: 12px;
+}
+.u-meta-strip-version {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+/* P1-1 · Hero — remove the static prism block (now redundant
+   with LedgersInMotion). Hero becomes 5 layers max. */
+.hero .ledger-prism { display: none; }
+
+/* P2-4 · Mobile breakpoints for hero-metrics and section-head */
+@media (max-width: 640px) {
+  .hero { padding-block: var(--space-7) var(--space-5); }
+  .hero-metrics {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3) 0;
+    margin-top: var(--space-5);
+  }
+  .hero-metric:nth-child(3)::before { display: none; }
+  .section-head { padding-inline: var(--space-3); }
+}
+
+/* P1-6 · Animation budget — pause heavy animations off-viewport.
+   We attach CSS counter-style via `data-anim-paused` attribute toggled
+   from a small client snippet that uses IntersectionObserver. The
+   default state is "running"; pause flips it. */
+[data-anim-paused="true"] .lim-pulse,
+[data-anim-paused="true"] .ledger-ticker-track,
+[data-anim-paused="true"] .hero-orb::before {
+  animation-play-state: paused !important;
+}
+
+/* Make section-head-numbered tighter so the hero feels less busy */
+.section-head-numbered { gap: var(--space-1); }
+.section-head-numbered .section-number { margin-right: 0; }
+
+/* P1-4 follow-up · let badges in eyebrow inherit the calmer palette */
+.eyebrow::before { box-shadow: 0 0 6px color-mix(in oklab, var(--voltage-500) 50%, transparent); }
