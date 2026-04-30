@@ -1,5 +1,5 @@
 import "@/lib/core/init";
-import { requireAdmin } from "@/lib/admin";
+import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
 import {
   apiOk,
@@ -17,8 +17,8 @@ export async function PATCH(
   req: Request,
   { params }: { params: { territoryId: string } }
 ) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("manage", "node");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
@@ -35,7 +35,7 @@ export async function PATCH(
     const territory = await updateTerritory(params.territoryId, body);
 
     await writeAudit({
-      actorUserId: admin.session.user?.id ?? null,
+      actorUserId: auth.session.user?.id ?? null,
       action: AuditAction.TERRITORY_UPDATE,
       targetType: "TERRITORY",
       targetId: territory.id,
@@ -58,8 +58,8 @@ export async function DELETE(
   req: Request,
   { params }: { params: { territoryId: string } }
 ) {
-  const admin = await requireAdmin();
-  if (!admin.ok) return apiUnauthorized();
+  const auth = await requirePermission("manage", "node");
+  if (!auth.ok) return apiUnauthorized();
 
   const prisma = getPrisma();
   const body = await req.json().catch(() => ({}));
@@ -81,7 +81,7 @@ export async function DELETE(
     const territory = await revokeTerritory(params.territoryId, reason);
 
     await writeAudit({
-      actorUserId: admin.session.user?.id ?? null,
+      actorUserId: auth.session.user?.id ?? null,
       action: AuditAction.TERRITORY_REVOKE,
       targetType: "TERRITORY",
       targetId: territory.id,
