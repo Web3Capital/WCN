@@ -17,7 +17,7 @@ jobs:
           node-version: 22
           cache: npm
 
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
 
       - name: Prisma Generate
         run: npx prisma generate
@@ -45,7 +45,7 @@ jobs:
           node-version: 22
           cache: npm
 
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
 
       - name: Prisma Generate
         run: npx prisma generate
@@ -89,7 +89,7 @@ jobs:
           node-version: 22
           cache: npm
 
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
 
       - name: Prisma Generate
         run: npx prisma generate
