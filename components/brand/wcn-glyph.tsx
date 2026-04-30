@@ -2,9 +2,19 @@ type GlyphProps = {
   size?: number;
   className?: string;
   variant?: "mark" | "outline" | "ledger";
+  /**
+   * If provided, the SVG renders with role="img" + aria-label and an internal
+   * <title>, so it is announced by AT as a logo. If omitted, the glyph is
+   * treated as decorative (aria-hidden + non-focusable).
+   */
+  label?: string;
 };
 
-export function WCNGlyph({ size = 16, className, variant = "mark" }: GlyphProps) {
+export function WCNGlyph({ size = 16, className, variant = "mark", label }: GlyphProps) {
+  const a11y = label
+    ? { role: "img" as const, "aria-label": label }
+    : { "aria-hidden": true as const, focusable: false as const };
+
   if (variant === "ledger") {
     return (
       <svg
@@ -14,8 +24,9 @@ export function WCNGlyph({ size = 16, className, variant = "mark" }: GlyphProps)
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className={className}
-        aria-hidden="true"
+        {...a11y}
       >
+        {label ? <title>{label}</title> : null}
         <path d="M12 2.5L21 7.5V16.5L12 21.5L3 16.5V7.5L12 2.5Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" fill="none" opacity="0.45" />
         <path d="M12 2.5L21 7.5L12 12.5L3 7.5L12 2.5Z" fill="currentColor" opacity="0.18" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
         <path d="M3 7.5V16.5L12 21.5V12.5L3 7.5Z" fill="currentColor" opacity="0.12" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
@@ -33,8 +44,9 @@ export function WCNGlyph({ size = 16, className, variant = "mark" }: GlyphProps)
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className={className}
-        aria-hidden="true"
+        {...a11y}
       >
+        {label ? <title>{label}</title> : null}
         <path d="M12 3L21 8L12 13L3 8L12 3Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
         <path d="M3 8V16L12 21L21 16V8" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
         <path d="M12 13V21" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
@@ -50,8 +62,9 @@ export function WCNGlyph({ size = 16, className, variant = "mark" }: GlyphProps)
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      aria-hidden="true"
+      {...a11y}
     >
+      {label ? <title>{label}</title> : null}
       <path
         d="M12 3L21 8V16L12 21L3 16V8L12 3Z"
         fill="currentColor"

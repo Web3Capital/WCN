@@ -12,6 +12,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Link } from "@/i18n/routing";
+import { VoltageCallout } from "@/components/brand/voltage-callout";
 
 export async function generateMetadata({
   params: { locale },
@@ -68,7 +69,9 @@ export default async function HowItWorksPage() {
         <div className="container hiw-hero-container">
           <div className="section-head hiw-hero-intro">
             <span className="eyebrow hiw-eyebrow">{t("eyebrow")}</span>
-            <h1 className="hiw-hero-title">{t("headline")}</h1>
+            <h1 className="hiw-hero-title">
+              {t.rich("headline", { em: (chunks) => <em>{chunks}</em> })}
+            </h1>
             <p className="muted hero-lede hiw-hero-lede">
               {t.rich("lede", {
                 strong: (chunks) => <strong className="hiw-strong">{chunks}</strong>,
@@ -112,7 +115,8 @@ export default async function HowItWorksPage() {
 
       <section className="section section-alt hiw-loop-section">
         <div className="container">
-          <div className="section-head hiw-section-head">
+          <div className="section-head hiw-section-head section-head-numbered">
+            <span className="section-number">№ 01</span>
             <span className="eyebrow hiw-eyebrow">{t("operatingLoopEyebrow")}</span>
             <h2 className="hiw-section-h2">{t("operatingLoopTitle")}</h2>
             <p className="muted hero-lede hiw-section-lede">{t("operatingLoopDesc")}</p>
@@ -134,7 +138,8 @@ export default async function HowItWorksPage() {
 
       <section className="section hiw-layers-section">
         <div className="container">
-          <div className="section-head hiw-section-head">
+          <div className="section-head hiw-section-head section-head-numbered">
+            <span className="section-number">№ 02</span>
             <span className="eyebrow hiw-eyebrow">{t("archEyebrow")}</span>
             <h2 className="hiw-section-h2">{t("archTitle")}</h2>
             <p className="muted hero-lede hiw-section-lede">{t("archDesc")}</p>
@@ -185,25 +190,15 @@ export default async function HowItWorksPage() {
         </div>
       </section>
 
-      <section className="section section-tight hiw-cta-section">
-        <div className="container">
-          <div className="hiw-cta-band">
-            <div className="hiw-cta-copy">
-              <h2 className="hiw-cta-title">{t("ctaTitle")}</h2>
-              <p className="muted hiw-cta-desc">{t("ctaDesc")}</p>
-            </div>
-            <div className="hiw-cta-actions">
-              <Link href="/apply" className="button">
-                {t("applyAsNodeButton")}
-                <ArrowRight size={18} aria-hidden />
-              </Link>
-              <Link href="/wiki" className="button-secondary">
-                {t("openWiki")}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <VoltageCallout
+        eyebrow={t("ctaEyebrow")}
+        title={t("ctaTitle")}
+        desc={t("ctaDesc")}
+        primaryLabel={t("applyAsNodeButton")}
+        primaryHref="/apply"
+        secondaryLabel={t("openWiki")}
+        secondaryHref="/wiki"
+      />
     </main>
   );
 }

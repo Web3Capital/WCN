@@ -42,8 +42,8 @@
   },
   "home": {
     "eyebrow": "Orchestrateur institutionnel mondial pour Web3 et l’IA",
-    "headline": "Web3 × AI. Redéfinir le fonctionnement de l'économie mondiale.",
-    "lede": "Web3 Capital Network (WCN) transforme le capital, les ressources et l’exécution fragmentés en un réseau mondial structuré, vérifiable et réglable.",
+    "headline": "Capital meets <em>proof</em>.",
+    "lede": "WCN is the protocol that replaces spreadsheets and goodwill with evidence — from registry to settlement.",
     "applyAsNode": "Postuler comme nœud",
     "readWiki": "Consulter le wiki",
     "nodeTitle": "Nœud",
@@ -89,7 +89,41 @@
     "testimonial2": "Le modèle PoB a changé notre façon de suivre les contributions. La preuve d’abord est la seule voie viable.",
     "testimonial2Author": "— Partenaire financier",
     "testimonial3": "L’exécution par agents avec pistes d’audit permet à nos outils IA de s’intégrer proprement aux flux institutionnels.",
-    "testimonial3Author": "— Responsable de lab IA"
+    "testimonial3Author": "— Responsable de lab IA",
+    "metricNodes": "Active nodes",
+    "metricRegions": "Regions",
+    "metricSettled": "Total settled",
+    "metricVerified": "PoB verified",
+    "scrollCue": "Scroll to explore",
+    "ledgersInMotionEyebrow": "The protocol in motion",
+    "ledgersInMotionTitle": "Three ledgers, one continuous flow.",
+    "ledgersInMotionDesc": "A node enters the registry. Capital matches a deal. Work is verified. Settlement closes the loop. Every step is auditable, every contributor recognized.",
+    "ledgersInMotionCaption": "A live cycle: registry → capital → settlement.",
+    "manifestoEyebrow": "What we believe",
+    "manifestoLead": "Trust",
+    "manifestoBody": "should be earned by evidence, not granted by reputation. The global economy is moving onchain. Coordination should follow.",
+    "manifestoSign": "— The World Citizen Network",
+    "ctaBandEyebrow": "Begin",
+    "ctaBandTitle": "Become a node in the network.",
+    "ctaBandDesc": "Apply to operate as a verified node, propose a deal, or run service workflows backed by Proof of Business.",
+    "ctaBandPrimary": "Apply as a node",
+    "ctaBandSecondary": "Read the white paper",
+    "sectionNum01": "№ 01",
+    "sectionNum02": "№ 02",
+    "sectionNum03": "№ 03",
+    "sectionNum04": "№ 04",
+    "sectionNum05": "№ 05",
+    "ledePost": "Three ledgers. One audit trail. Zero handshake-trust.",
+    "loopCtaLearn": "See the protocol",
+    "loopCtaExplore": "Browse the registry",
+    "voltageBegin": "Begin your registry entry",
+    "voltageReadProtocol": "Read the protocol",
+    "tickerCaption": "Sample telemetry — illustrative event format",
+    "architectureBadgeAuditFirst": "Audit-first",
+    "architectureBadgeThreeLedger": "Three-ledger",
+    "architectureBadgePoB": "Proof of Business",
+    "architectureBadgeDAOReady": "DAO-ready",
+    "architectureGroupTitle": "Architecture grade"
   },
   "about": {
     "title": "À propos",
@@ -170,7 +204,8 @@
     "measureStep2": "Qui a fait passer la collaboration en travail structuré",
     "measureStep3": "Qui a livré l’exécution — personnes et agents",
     "measureStep4": "Quelles preuves existent et qui les a revues",
-    "measureStep5": "Si le résultat tient réellement — pas si le fil de discussion était bruyant"
+    "measureStep5": "Si le résultat tient réellement — pas si le fil de discussion était bruyant",
+    "ctaEyebrow": "Take the next step"
   },
   "howItWorks": {
     "title": "Comment ça marche",
@@ -229,7 +264,8 @@
     "layer4Detail": "Les mécanismes Phase 2+ lient la distribution aux courbes de contribution vérifiées.",
     "layer5Label": "Couche actifs",
     "layer5Desc": "Identité on-chain, émission, liquidité",
-    "layer5Detail": "Instruments long terme et liquidité reposent sur un historique vérifié — pas sur le battage brut."
+    "layer5Detail": "Instruments long terme et liquidité reposent sur un historique vérifié — pas sur le battage brut.",
+    "ctaEyebrow": "Begin"
   },
   "nodes": {
     "title": "Réseau de nœuds — WCN",
@@ -306,7 +342,8 @@
     "notBullet1": "Fiches d’annuaire passives ou badges « partenaire » non vérifiés",
     "notBullet2": "Canaux de coordination anonymes sans identité ni périmètres",
     "notBullet3": "Coques de campagne court terme sans rôle de règlement durable",
-    "notBullet4": "Substituts aux obligations juridiques, fiscales ou réglementaires de votre juridiction"
+    "notBullet4": "Substituts aux obligations juridiques, fiscales ou réglementaires de votre juridiction",
+    "ctaEyebrow": "Begin"
   },
   "pob": {
     "title": "Proof of Business (PoB)",
@@ -390,7 +427,8 @@
     "factorTimeMultName": "Mult. temps",
     "factorTimeMultHint": "Durabilité et tenue du résultat dans le temps.",
     "factorRiskDiscountName": "Décote risque",
-    "factorRiskDiscountHint": "Litiges, anomalies et signalements de politique réduisent le PoB effectif."
+    "factorRiskDiscountHint": "Litiges, anomalies et signalements de politique réduisent le PoB effectif.",
+    "ctaEyebrow": "Begin"
   },
   "auth": {
     "loginTitle": "Connexion — WCN",
@@ -439,7 +477,12 @@
     "industryTitle": "Nœud secteur",
     "industryDesc": "Exchange, teneur de marché, dépositaire, fournisseur de données",
     "tipLabel": "Conseil :",
-    "tipMessage": "Les candidatures avec des descriptions de ressources précises et un alignement clair avec le réseau WCN ont un taux d’approbation nettement plus élevé."
+    "tipMessage": "Les candidatures avec des descriptions de ressources précises et un alignement clair avec le réseau WCN ont un taux d’approbation nettement plus élevé.",
+    "ctaEyebrow": "Begin",
+    "ctaTitle": "Become part of the network.",
+    "ctaDesc": "Submit your application above. Our review team verifies every node before admission to the registry.",
+    "ctaPrimary": "Read the protocol",
+    "ctaSecondary": "See the loop"
   },
   "dashboard": {
     "brand": "Console WCN",

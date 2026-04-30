@@ -7,6 +7,7 @@ import { SignupForm } from "./ui";
 import { OAuthButtons, WalletLoginButton } from "../login/oauth-buttons";
 import { PhoneLoginForm } from "../login/phone-form";
 import { SignupTabs } from "./signup-tabs";
+import { WCNGlyph } from "@/components/brand/wcn-glyph";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +36,10 @@ export default async function SignupPage({
     <main className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
-          <h1>{t("signupHeadline")}</h1>
+          <span className="auth-glyph" aria-hidden>
+            <WCNGlyph size={22} variant="ledger" />
+          </span>
+          <h1>{t.rich("signupHeadline", { em: (chunks) => <em>{chunks}</em> })}</h1>
           <p>{t("signupSubtext")}</p>
         </div>
 

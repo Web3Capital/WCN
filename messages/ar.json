@@ -42,8 +42,8 @@
   },
   "home": {
     "eyebrow": "محرّك تنسيق مؤسسي عالمي لـ Web3 وAI",
-    "headline": "Web3 × AI. إعادة تعريف آلية عمل الاقتصاد العالمي",
-    "lede": "تحوّل Web3 Capital Network (WCN) رأس المال والموارد والتنفيذ المجزّأ إلى شبكة عالمية منظّمة وقابلة للتحقّق والتسوية.",
+    "headline": "Capital meets <em>proof</em>.",
+    "lede": "WCN is the protocol that replaces spreadsheets and goodwill with evidence — from registry to settlement.",
     "applyAsNode": "التقدّم كعقدة",
     "readWiki": "اقرأ الـ Wiki",
     "nodeTitle": "عقدة",
@@ -89,7 +89,41 @@
     "testimonial2": "غيّر نموذج PoB طريقة تفكيرنا في تتبّع المساهمة. الإثبات أولاً هو السبيل الوحيد.",
     "testimonial2Author": "— شريك رأس مال",
     "testimonial3": "تنفيذ الوكلاء مع مسارات تدقيق يعني أن أدوات AI لدينا تندمج بسلاسة في سير العمل المؤسسي.",
-    "testimonial3Author": "— قائد مختبر AI"
+    "testimonial3Author": "— قائد مختبر AI",
+    "metricNodes": "Active nodes",
+    "metricRegions": "Regions",
+    "metricSettled": "Total settled",
+    "metricVerified": "PoB verified",
+    "scrollCue": "Scroll to explore",
+    "ledgersInMotionEyebrow": "The protocol in motion",
+    "ledgersInMotionTitle": "Three ledgers, one continuous flow.",
+    "ledgersInMotionDesc": "A node enters the registry. Capital matches a deal. Work is verified. Settlement closes the loop. Every step is auditable, every contributor recognized.",
+    "ledgersInMotionCaption": "A live cycle: registry → capital → settlement.",
+    "manifestoEyebrow": "What we believe",
+    "manifestoLead": "Trust",
+    "manifestoBody": "should be earned by evidence, not granted by reputation. The global economy is moving onchain. Coordination should follow.",
+    "manifestoSign": "— The World Citizen Network",
+    "ctaBandEyebrow": "Begin",
+    "ctaBandTitle": "Become a node in the network.",
+    "ctaBandDesc": "Apply to operate as a verified node, propose a deal, or run service workflows backed by Proof of Business.",
+    "ctaBandPrimary": "Apply as a node",
+    "ctaBandSecondary": "Read the white paper",
+    "sectionNum01": "№ 01",
+    "sectionNum02": "№ 02",
+    "sectionNum03": "№ 03",
+    "sectionNum04": "№ 04",
+    "sectionNum05": "№ 05",
+    "ledePost": "Three ledgers. One audit trail. Zero handshake-trust.",
+    "loopCtaLearn": "See the protocol",
+    "loopCtaExplore": "Browse the registry",
+    "voltageBegin": "Begin your registry entry",
+    "voltageReadProtocol": "Read the protocol",
+    "tickerCaption": "Sample telemetry — illustrative event format",
+    "architectureBadgeAuditFirst": "Audit-first",
+    "architectureBadgeThreeLedger": "Three-ledger",
+    "architectureBadgePoB": "Proof of Business",
+    "architectureBadgeDAOReady": "DAO-ready",
+    "architectureGroupTitle": "Architecture grade"
   },
   "about": {
     "title": "حول",
@@ -170,7 +204,8 @@
     "measureStep2": "من قدّم التعاون إلى عمل منظّم",
     "measureStep3": "من نفّذ التنفيذ—بشراً ووكلاء",
     "measureStep4": "ما الأدلة الموجودة ومن راجعها",
-    "measureStep5": "هل النتيجة قائمة فعلاً—لا هل كان الموضوع صاخباً"
+    "measureStep5": "هل النتيجة قائمة فعلاً—لا هل كان الموضوع صاخباً",
+    "ctaEyebrow": "Take the next step"
   },
   "howItWorks": {
     "title": "كيف يعمل",
@@ -229,7 +264,8 @@
     "layer4Detail": "آليات المرحلة 2+ تربط التوزيع بمنحنيات مساهمة مُتحقَّق منها.",
     "layer5Label": "طبقة الأصول",
     "layer5Desc": "هويّة على السلسلة، إصدار، سيولة",
-    "layer5Detail": "الأدوات طويلة الأجل والسيولة تقف على تاريخ مُتحقَّق منه—لا ضجيج خام."
+    "layer5Detail": "الأدوات طويلة الأجل والسيولة تقف على تاريخ مُتحقَّق منه—لا ضجيج خام.",
+    "ctaEyebrow": "Begin"
   },
   "nodes": {
     "title": "شبكة العقد — WCN",
@@ -306,7 +342,8 @@
     "notBullet1": "قوائم دليل سلبية أو شارات «شريك» غير مُتحقَّق منها",
     "notBullet2": "قنوات تنسيق مجهولة بلا هويّة وحدود",
     "notBullet3": "أغلفة حملات قصيرة الأجل بلا دور تسوية مستمر",
-    "notBullet4": "بديل عن الالتزامات القانونية أو الضريبية أو التنظيمية في اختصاصك"
+    "notBullet4": "بديل عن الالتزامات القانونية أو الضريبية أو التنظيمية في اختصاصك",
+    "ctaEyebrow": "Begin"
   },
   "pob": {
     "title": "إثبات الأعمال (PoB)",
@@ -390,7 +427,8 @@
     "factorTimeMultName": "مضاعف الزمن",
     "factorTimeMultHint": "الدوام ومدى بقاء النتيجة مع الزمن.",
     "factorRiskDiscountName": "خصم المخاطر",
-    "factorRiskDiscountHint": "النزاعات والشذوذ وعلامات السياسة تخفّض PoB الفعّال."
+    "factorRiskDiscountHint": "النزاعات والشذوذ وعلامات السياسة تخفّض PoB الفعّال.",
+    "ctaEyebrow": "Begin"
   },
   "auth": {
     "loginTitle": "تسجيل الدخول — WCN",
@@ -439,7 +477,12 @@
     "industryTitle": "عقدة قطاع",
     "industryDesc": "بورصة، صانع سوق، أمين حفظ، مزوّد بيانات",
     "tipLabel": "نصيحة:",
-    "tipMessage": "الطلبات ذات وصف موارد محدّد وتوافق واضح مع شبكة WCN لها معدل موافقة أعلى بكثير."
+    "tipMessage": "الطلبات ذات وصف موارد محدّد وتوافق واضح مع شبكة WCN لها معدل موافقة أعلى بكثير.",
+    "ctaEyebrow": "Begin",
+    "ctaTitle": "Become part of the network.",
+    "ctaDesc": "Submit your application above. Our review team verifies every node before admission to the registry.",
+    "ctaPrimary": "Read the protocol",
+    "ctaSecondary": "See the loop"
   },
   "dashboard": {
     "brand": "WCN Console",

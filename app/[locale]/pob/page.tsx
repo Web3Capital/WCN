@@ -15,6 +15,7 @@ import {
   Split,
   XCircle,
 } from "lucide-react";
+import { VoltageCallout } from "@/components/brand/voltage-callout";
 
 export async function generateMetadata({
   params: { locale },
@@ -111,7 +112,9 @@ export default async function PobPage() {
         <div className="container pob-hero-container">
           <div className="section-head pob-hero-intro">
             <span className="eyebrow pob-eyebrow">{t("eyebrow")}</span>
-            <h1 className="pob-hero-title">{t("headline")}</h1>
+            <h1 className="pob-hero-title">
+              {t.rich("headline", { em: (chunks) => <em>{chunks}</em> })}
+            </h1>
             <p className="muted hero-lede pob-hero-lede">
               {t.rich("lede", {
                 strong: (chunks) => <strong className="pob-strong">{chunks}</strong>,
@@ -158,7 +161,8 @@ export default async function PobPage() {
 
       <section className="section section-alt pob-boundaries">
         <div className="container">
-          <div className="section-head pob-section-head">
+          <div className="section-head pob-section-head section-head-numbered">
+            <span className="section-number">№ 01</span>
             <span className="eyebrow pob-eyebrow">{t("boundariesEyebrow")}</span>
             <h2 className="pob-section-h2">{t("boundariesTitle")}</h2>
             <p className="muted hero-lede pob-section-lede">
@@ -206,7 +210,8 @@ export default async function PobPage() {
 
       <section className="section pob-verify">
         <div className="container">
-          <div className="section-head pob-section-head">
+          <div className="section-head pob-section-head section-head-numbered">
+            <span className="section-number">№ 02</span>
             <span className="eyebrow pob-eyebrow">{t("verificationEyebrow")}</span>
             <h2 className="pob-section-h2">{t("verificationTitle")}</h2>
             <p className="muted hero-lede pob-section-lede">{t("verificationDesc")}</p>
@@ -234,6 +239,7 @@ export default async function PobPage() {
                 <ShieldCheck size={26} strokeWidth={2} />
               </div>
               <div>
+                <span className="section-number pob-proof-section-number">№ 03</span>
                 <span className="eyebrow pob-eyebrow pob-proof-eyebrow">{t("proofDeskEyebrow")}</span>
                 <h2 className="pob-proof-desk-title">{t("proofDeskTitle")}</h2>
                 <p className="muted pob-proof-desk-lede">{t("proofDeskDesc")}</p>
@@ -263,7 +269,8 @@ export default async function PobPage() {
 
       <section className="section pob-scoring">
         <div className="container">
-          <div className="section-head pob-section-head">
+          <div className="section-head pob-section-head section-head-numbered">
+            <span className="section-number">№ 04</span>
             <span className="eyebrow pob-eyebrow">{t("scoringEyebrow")}</span>
             <h2 className="pob-section-h2">{t("scoringTitle")}</h2>
             <p className="muted hero-lede pob-section-lede">{t("scoringDesc")}</p>
@@ -318,29 +325,15 @@ export default async function PobPage() {
         </div>
       </section>
 
-      <section className="section section-tight pob-cta-section">
-        <div className="container">
-          <div className="pob-cta-band">
-            <div className="pob-cta-copy">
-              <h2 className="pob-cta-title">{t("ctaTitle")}</h2>
-              <p className="muted pob-cta-desc">{t("ctaDesc")}</p>
-            </div>
-            <div className="pob-cta-actions">
-              <Link href="/apply" className="button">
-                {tCommon("applyAsNode")}
-                <ArrowRight size={18} aria-hidden />
-              </Link>
-              <Link href="/wiki" className="button-secondary">
-                {t("openWiki")}
-              </Link>
-              <Link href="/nodes" className="button-secondary">
-                <Network size={18} aria-hidden />
-                {t("nodeNetwork")}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <VoltageCallout
+        eyebrow={t("ctaEyebrow")}
+        title={t("ctaTitle")}
+        desc={t("ctaDesc")}
+        primaryLabel={tCommon("applyAsNode")}
+        primaryHref="/apply"
+        secondaryLabel={t("openWiki")}
+        secondaryHref="/wiki"
+      />
     </main>
   );
 }

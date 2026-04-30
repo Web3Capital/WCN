@@ -12,6 +12,7 @@ import {
   UserCheck,
   XCircle,
 } from "lucide-react";
+import { VoltageCallout } from "@/components/brand/voltage-callout";
 
 export async function generateMetadata({
   params: { locale },
@@ -136,7 +137,7 @@ export default async function NodesPage() {
         <div className="container">
           <div className="section-head">
             <span className="eyebrow">{t("eyebrow")}</span>
-            <h1>{t("headline")}</h1>
+            <h1>{t.rich("headline", { em: (chunks) => <em>{chunks}</em> })}</h1>
             <p className="muted hero-lede">
               {t.rich("lede", {
                 strong: (chunks) => <strong className="nodes-strong">{chunks}</strong>,
@@ -185,7 +186,8 @@ export default async function NodesPage() {
 
       <section className="section section-alt">
         <div className="container">
-          <div className="section-head">
+          <div className="section-head section-head-numbered">
+            <span className="section-number">№ 01</span>
             <span className="eyebrow">{t("clarityEyebrow")}</span>
             <h2>{t("clarityTitle")}</h2>
           </div>
@@ -218,7 +220,8 @@ export default async function NodesPage() {
 
       <section className="section">
         <div className="container">
-          <div className="section-head">
+          <div className="section-head section-head-numbered">
+            <span className="section-number">№ 02</span>
             <span className="eyebrow">{t("hierarchyEyebrow")}</span>
             <h2>{t("hierarchyTitle")}</h2>
             <p className="muted hero-lede">{t("hierarchyDesc")}</p>
@@ -241,7 +244,8 @@ export default async function NodesPage() {
 
       <section className="section section-alt">
         <div className="container">
-          <div className="section-head">
+          <div className="section-head section-head-numbered">
+            <span className="section-number">№ 03</span>
             <span className="eyebrow">{t("lifecycleEyebrow")}</span>
             <h2>{t("lifecycleTitle")}</h2>
             <p className="muted hero-lede">{t("lifecycleDesc")}</p>
@@ -263,7 +267,8 @@ export default async function NodesPage() {
 
       <section className="section">
         <div className="container">
-          <div className="section-head">
+          <div className="section-head section-head-numbered">
+            <span className="section-number">№ 04</span>
             <span className="eyebrow">{t("governanceEyebrow")}</span>
             <h2>{t("governanceTitle")}</h2>
           </div>
@@ -278,28 +283,15 @@ export default async function NodesPage() {
         </div>
       </section>
 
-      <section className="section section-tight section-alt">
-        <div className="container">
-          <div className="nodes-cta-band">
-            <div className="nodes-cta-copy">
-              <h2 className="nodes-cta-title">{t("ctaTitle")}</h2>
-              <p className="muted nodes-cta-desc">{t("ctaDesc")}</p>
-            </div>
-            <div className="nodes-cta-actions">
-              <Link href="/apply" className="button">
-                {tCommon("applyAsNode")}
-                <ArrowRight size={18} aria-hidden />
-              </Link>
-              <Link href="/wiki" className="button-secondary">
-                {t("openWiki")}
-              </Link>
-              <Link href="/pob" className="button-secondary">
-                {t("pobCta")}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <VoltageCallout
+        eyebrow={t("ctaEyebrow")}
+        title={t("ctaTitle")}
+        desc={t("ctaDesc")}
+        primaryLabel={tCommon("applyAsNode")}
+        primaryHref="/apply"
+        secondaryLabel={t("openWiki")}
+        secondaryHref="/wiki"
+      />
     </main>
   );
 }
