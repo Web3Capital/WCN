@@ -97,8 +97,17 @@ jobs:
       - name: Prisma Generate
         run: npx prisma generate
 
-      - name: Prisma Migrate
-        run: npx prisma migrate deploy
+      - name: Prisma DB Push (e2e schema sync)
+        # `db push` syncs schema -> ephemeral CI DB directly without reading
+        # migration history. The repo's migration history has a baseline gap
+        # (20260410000000_baseline_sync_all is empty SQL because the team
+        # used `prisma db push` during early development; tables created via
+        # push were never captured as CREATE TABLE migrations). As a result,
+        # `migrate deploy` cannot run end-to-end on a fresh DB.
+        # Production deploys remain on `migrate deploy` against real prod;
+        # only the ephemeral e2e DB uses push.
+        # Prisma 7 dropped --skip-generate; client was already generated above.
+        run: npx prisma db push --accept-data-loss
 
       - name: Install Playwright Chromium
         run: npx playwright install chromium --with-deps
