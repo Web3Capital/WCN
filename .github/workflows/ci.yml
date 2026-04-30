@@ -106,7 +106,8 @@ jobs:
         # `migrate deploy` cannot run end-to-end on a fresh DB.
         # Production deploys remain on `migrate deploy` against real prod;
         # only the ephemeral e2e DB uses push.
-        run: npx prisma db push --skip-generate --accept-data-loss
+        # Prisma 7 dropped --skip-generate; client was already generated above.
+        run: npx prisma db push --accept-data-loss
 
       - name: Install Playwright Chromium
         run: npx playwright install chromium --with-deps
