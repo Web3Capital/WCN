@@ -17,9 +17,15 @@ type Props = {
   kicker: string;
   title: ReactNode;
   lede?: ReactNode;
+  /**
+   * If true, the first letter of the lede paragraph renders as a magazine
+   * drop-letter (Fraunces italic, ~4em). Editorial convention: dropcap
+   * belongs on the article opening, not on later sub-paragraphs.
+   */
+  ledeDropcap?: boolean;
 };
 
-export function EditorialMasthead({ issueNumber, issueDate, kicker, title, lede }: Props) {
+export function EditorialMasthead({ issueNumber, issueDate, kicker, title, lede, ledeDropcap }: Props) {
   return (
     <header className="editorial-masthead" data-anim-host>
       <div className="container">
@@ -30,7 +36,11 @@ export function EditorialMasthead({ issueNumber, issueDate, kicker, title, lede 
         </div>
         <p className="editorial-masthead-kicker">{kicker}</p>
         <h1 className="editorial-masthead-title">{title}</h1>
-        {lede ? <p className="editorial-masthead-lede">{lede}</p> : null}
+        {lede ? (
+          <p className={`editorial-masthead-lede${ledeDropcap ? " editorial-masthead-lede-dropcap" : ""}`}>
+            {lede}
+          </p>
+        ) : null}
         <span className="editorial-masthead-rule-end" aria-hidden />
       </div>
     </header>

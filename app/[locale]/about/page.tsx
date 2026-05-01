@@ -73,11 +73,11 @@ export default async function AboutPage() {
   ];
 
   const layers = [
-    { n: 1, label: t("archLayer1"), sub: t("archLayer1Sub") },
-    { n: 2, label: t("archLayer2"), sub: t("archLayer2Sub") },
-    { n: 3, label: t("archLayer3"), sub: t("archLayer3Sub") },
-    { n: 4, label: t("archLayer4"), sub: t("archLayer4Sub") },
-    { n: 5, label: t("archLayer5"), sub: t("archLayer5Sub") },
+    { n: 1, label: t("archLayer1"), sub: t("archLayer1Sub"), flow: "POST /api/pob — RSC route handler" },
+    { n: 2, label: t("archLayer2"), sub: t("archLayer2Sub"), flow: "requirePermission(create, pob) + ownership scope" },
+    { n: 3, label: t("archLayer3"), sub: t("archLayer3Sub"), flow: "PolicyMachine.evaluate → ledger.write(POB_CREATED)" },
+    { n: 4, label: t("archLayer4"), sub: t("archLayer4Sub"), flow: "outbox.enqueue → emit { type: 'pob.created', v: 1 }" },
+    { n: 5, label: t("archLayer5"), sub: t("archLayer5Sub"), flow: "Postgres tx commits — Outbox processor drains" },
   ];
 
   const structuralPillars: { title: string; body: string; icon: ReactNode }[] = [
@@ -111,6 +111,7 @@ export default async function AboutPage() {
         lede={t.rich("lede", {
           strong: (chunks) => <strong>{chunks}</strong>,
         })}
+        ledeDropcap
       />
 
       {/* ═══ Three pillars dropcap intro (no number — prologue) ═══ */}
@@ -118,7 +119,7 @@ export default async function AboutPage() {
         <div className="container">
           <div className="about-intro-grid">
             <div className="about-intro-prose">
-              <p className="about-intro-dropcap">{t("subLede")}</p>
+              <p className="about-intro-prose-body">{t("subLede")}</p>
               <div className="about-intro-actions">
                 <Link href="/wiki/project-intro/1-1-wcn-是什么" className="button-secondary">
                   <BookOpen size={17} aria-hidden />
@@ -284,7 +285,10 @@ export default async function AboutPage() {
             <h2 className="about-section-h2">{t("archTitle")}</h2>
             <p className="muted hero-lede about-section-lede">{t("archDesc")}</p>
           </div>
-          <ArchitectureLayers layers={layers} />
+          <ArchitectureLayers
+            layers={layers}
+            flowExample='A node owner submitting a Proof of Business — every layer leaves a trace.'
+          />
         </div>
       </section>
 

@@ -17,15 +17,25 @@ type Layer = {
   n: number;
   label: string;
   sub: string;
+  /** Optional: what flows through this layer (mono code/event signature) */
+  flow?: string;
 };
 
 type Props = {
   layers: Layer[];
+  /** Optional caption shown above the diagram describing the example request */
+  flowExample?: string;
 };
 
-export function ArchitectureLayers({ layers }: Props) {
+export function ArchitectureLayers({ layers, flowExample }: Props) {
   return (
     <div className="architecture-layers" data-anim-host>
+      {flowExample ? (
+        <p className="architecture-flow-example">
+          <span className="architecture-flow-example-label">Example request</span>
+          <span className="architecture-flow-example-text">{flowExample}</span>
+        </p>
+      ) : null}
       <div className="architecture-rail" aria-hidden>
         <span className="architecture-rail-pulse" />
       </div>
@@ -36,6 +46,9 @@ export function ArchitectureLayers({ layers }: Props) {
             <div className="architecture-layer-text">
               <h3 className="architecture-layer-label">{layer.label}</h3>
               <p className="architecture-layer-sub">{layer.sub}</p>
+              {layer.flow ? (
+                <code className="architecture-layer-flow">{layer.flow}</code>
+              ) : null}
             </div>
           </li>
         ))}
