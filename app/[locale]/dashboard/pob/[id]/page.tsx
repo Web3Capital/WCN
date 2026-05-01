@@ -20,7 +20,7 @@ export default async function PobDetailPage(props: { params: Promise<{ id: strin
   const isAdmin = isAdminRole(session.user.role);
 
   if (!isAdmin) {
-    const ownedNodeIds = await getOwnedNodeIds(prisma, session.user.id);
+    const ownedNodeIds = await getOwnedNodeIds(prisma, session.user.id, { workspaceId: session.user.activeWorkspaceId });
     const allowed = await prisma.poBRecord.findFirst({
       where: { id: params.id, ...memberPoBWhere(ownedNodeIds) },
       select: { id: true },

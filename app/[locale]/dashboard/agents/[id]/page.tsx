@@ -20,7 +20,7 @@ export default async function AgentDetailPage({ params }: { params: Promise<{ id
   const isAdmin = isAdminRole(session.user.role);
 
   if (!isAdmin) {
-    const ownedNodeIds = await getOwnedNodeIds(prisma, session.user.id);
+    const ownedNodeIds = await getOwnedNodeIds(prisma, session.user.id, { workspaceId: session.user.activeWorkspaceId });
     const scoped = await prisma.agent.findFirst({
       where: { id, ownerNodeId: { in: ownedNodeIds } },
       select: { id: true },

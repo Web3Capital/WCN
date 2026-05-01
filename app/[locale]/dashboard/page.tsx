@@ -37,7 +37,7 @@ export default async function DashboardIndex() {
     prisma.application.count({ where: { userId } }),
     isAdmin
       ? Promise.resolve(null)
-      : getOwnedNodeIds(prisma, userId).then((ids) => scopedSummaryCounts(prisma, userId, ids)),
+      : getOwnedNodeIds(prisma, userId, { workspaceId: session.user.activeWorkspaceId }).then((ids) => scopedSummaryCounts(prisma, userId, ids)),
     isAdmin
       ? prisma.auditLog.findMany({ orderBy: { createdAt: "desc" }, take: 8, include: { actor: { select: { name: true, email: true } } } })
       : Promise.resolve([])
