@@ -8936,3 +8936,106 @@ html[data-theme="dark"],
   .architecture-flow-example { flex-direction: column; gap: 4px; padding: var(--space-3); }
   .architecture-layer-flow { font-size: 10px; white-space: normal; }
 }
+
+/* ============================================================
+   HOME — STRESS-TEST UNIVERSAL FIXES (en-first)
+   ============================================================ */
+
+/* Universal #2 · Loop step icons color-coded by ledger.
+   The base .step-icon already paints in voltage; per-tone overrides
+   recolor the icon background + stroke for a 3-ledger story:
+     node   → indigo   (entry)
+     deal   → amber    (capital match + proof verification)
+     voltage→ cobalt   (work execution)
+     settle → green    (closure)                              */
+.step-tone-node .step-icon {
+  background: color-mix(in oklab, var(--ledger-node) 8%, transparent);
+  color: var(--ledger-node);
+  border-color: color-mix(in oklab, var(--ledger-node) 22%, transparent);
+}
+.step-tone-deal .step-icon {
+  background: color-mix(in oklab, var(--ledger-deal) 8%, transparent);
+  color: var(--ledger-deal);
+  border-color: color-mix(in oklab, var(--ledger-deal) 22%, transparent);
+}
+.step-tone-voltage .step-icon {
+  /* keep default voltage tones — already defined in .step-icon */
+}
+.step-tone-settle .step-icon {
+  background: color-mix(in oklab, var(--ledger-settle) 8%, transparent);
+  color: var(--ledger-settle);
+  border-color: color-mix(in oklab, var(--ledger-settle) 22%, transparent);
+}
+
+/* Universal #3 · Loop section breathes without an outer card wrap.
+   The card frame was creating ~250px of dead space. Now the steps
+   sit directly on the section background, with proper grid breathing
+   from section-head + flow + cta-row. */
+.section-loop {
+  padding-block: var(--space-9);
+}
+.section-loop .loop-flow {
+  width: min(1040px, 100%);
+  margin-inline: auto;
+}
+@media (max-width: 880px) {
+  .section-loop .loop-flow {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .section-loop .arrow { display: none; }
+}
+
+/* Universal #4 · Hero meta strip — split into two rows.
+   Old: ledger-spine + version cramped on one flex line.
+   New: spine on its own row, version below in mono microtype. */
+.hero-meta-spine {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-5);
+}
+.hero-meta-version {
+  text-align: center;
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--muted-2);
+  text-transform: uppercase;
+}
+
+/* Universal #1 · Architecture badge dots — strengthen on dark mode.
+   The 4 dots are already ledger-coded (node/deal/settle/voltage)
+   but appear too similar in dark mode. Bump size + add halo. */
+.architecture-badge::before {
+  width: 7px;
+  height: 7px;
+  box-shadow:
+    0 0 0 3px color-mix(in oklab, var(--ledger-color, var(--voltage-500)) 14%, transparent),
+    0 0 8px color-mix(in oklab, var(--ledger-color, var(--voltage-500)) 50%, transparent);
+}
+
+/* Universal #5 · Voltage callout differentiation.
+   Old: nearly identical to hero (clamp 32-56px h2, dual CTA).
+   New: smaller h2 (clamp 28-40px), serif weight 350 (lighter than
+   hero 320), more horizontal density. Reads as a quiet outro line
+   rather than a second hero cathedral. */
+.voltage-callout {
+  padding-block: var(--space-7);
+}
+.voltage-callout-title {
+  font-size: clamp(28px, 3.6vw, 40px) !important;
+  font-weight: 350 !important;
+  line-height: 1.12 !important;
+  font-variation-settings: "opsz" 144, "SOFT" 80 !important;
+  max-width: 22ch;
+  margin-inline: auto;
+}
+.voltage-callout-desc {
+  font-size: clamp(14px, 1.2vw, 15px) !important;
+  max-width: 48ch !important;
+}
+.voltage-callout-glyph {
+  width: 40px !important;
+  height: 40px !important;
+}
