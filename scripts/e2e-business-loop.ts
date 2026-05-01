@@ -28,6 +28,7 @@ async function cleanup(ids: {
   nodeCapitalId?: string;
   dealId?: string;
   userId?: string;
+  capitalUserId?: string;
 }) {
   try {
     if (ids.dealId) await prisma.deal.delete({ where: { id: ids.dealId } }).catch((e) => console.error("[e2e cleanup]", e));
@@ -63,6 +64,21 @@ async function main() {
     log(CHECK, `User created: ${user.id}`);
     passed++;
 
+    // The matching engine's anti-gaming gate (lib/modules/risk/anti-gaming
+    // checkSelfDealing) flags lead and capital nodes that share an owner
+    // as SAME_OWNER (HIGH risk) and refuses to generate matches. Creating
+    // a second user for the capital side is required for the matching
+    // step to produce any rows. Both users are cleaned up at the end.
+    const capitalUser = await prisma.user.create({
+      data: {
+        email: `e2e-test-cap-${Date.now()}@wcn.network`,
+        name: "E2E Test Capital User",
+        role: "CAPITAL_NODE",
+      },
+    });
+    ids.capitalUserId = capitalUser.id;
+    log(CHECK, `Capital user created: ${capitalUser.id}`);
+
     // ─── Step 2: Create nodes ────────────────────────────────
     console.log("\nStep 2: Create nodes");
 
@@ -82,7 +98,7 @@ async function main() {
         name: "E2E Capital Node",
         type: "INDUSTRY",
         status: "ACTIVE",
-        ownerUserId: user.id,
+        ownerUserId: capitalUser.id,
       },
     });
     ids.nodeCapitalId = capitalNode.id;
