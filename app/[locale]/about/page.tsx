@@ -293,7 +293,7 @@ export default async function AboutPage() {
         eyebrow={t("genesisEyebrow")}
         quote={t("genesisQuote")}
         attribution={t("genesisAttribution")}
-        ref={t.raw("genesisRef") as string}
+        documentRef={t.raw("genesisRef") as string}
       />
 
       {/* ═══ Voltage callout — payoff (no number) ═══════════════ */}
