@@ -1,74 +1,50 @@
 import "@/lib/core/init";
-import { getPrisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiUnauthorized, apiNotFound, zodToApiError } from "@/lib/core/api-response";
+import {
+  apiOk,
+  apiUnauthorized,
+  apiForbidden,
+  apiNotFound,
+  apiBusinessError,
+  zodToApiError,
+} from "@/lib/core/api-response";
 import { parseBody, reviewApplicationSchema } from "@/lib/core/validation";
-import { eventBus } from "@/lib/core/event-bus";
-import { Events } from "@/lib/core/event-types";
+import { approveApplication } from "@/lib/use-cases/approve-application";
 
-function statusToDecision(s: string) {
-  if (s === "APPROVED") return "APPROVE" as const;
-  if (s === "REJECTED") return "REJECT" as const;
-  return "NEEDS_CHANGES" as const;
-}
-
+/**
+ * Review an application (approve or reject). Thin wrapper over the
+ * `approveApplication` Application Service. All orchestration —
+ * RBAC, state-machine validation, outbox emission, audit, and
+ * post-commit dispatch — lives in the use-case.
+ */
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
-  if (session?.user?.role !== "ADMIN") return apiUnauthorized();
+  if (!session?.user?.id || !session.user.role) return apiUnauthorized();
 
   const body = await req.json().catch(() => ({}));
   const parsed = parseBody(reviewApplicationSchema, body);
   if (!parsed.ok) return zodToApiError(parsed.error);
 
-  const prisma = getPrisma();
-  const existing = await prisma.application.findUnique({ where: { id: params.id }, select: { id: true, status: true } });
-  if (!existing) return apiNotFound("Application");
+  const decision = parsed.data.status === "APPROVED" ? "APPROVE" : "REJECT";
 
-  const data: Record<string, unknown> = {};
-  data.status = parsed.data.status;
-  if (parsed.data.reviewNote !== undefined) data.notes = parsed.data.reviewNote ?? null;
-
-  // Handle escalation fields (passed outside the zod schema)
-  if (body?.escalatedTo) {
-    data.escalatedTo = String(body.escalatedTo);
-    data.escalatedAt = body.escalatedAt ? new Date(body.escalatedAt) : new Date();
-  }
-
-  const updated = await prisma.application.update({
-    where: { id: params.id },
-    data,
+  const result = await approveApplication({
+    actorUserId: session.user.id,
+    actorRole: session.user.role,
+    applicationId: params.id,
+    decision,
+    reviewNote: parsed.data.reviewNote ?? undefined,
+    requestId: req.headers.get("x-request-id") ?? undefined,
   });
 
-  if (parsed.data.status !== existing.status) {
-    await prisma.review.create({
-      data: {
-        targetType: "APPLICATION",
-        targetId: params.id,
-        decision: statusToDecision(parsed.data.status),
-        notes: parsed.data.reviewNote ?? null,
-        status: "RESOLVED",
-        reviewerId: session.user?.id ?? null,
-      },
-    });
+  if (result.ok) return apiOk(result);
 
-    if (parsed.data.status === "APPROVED") {
-      await eventBus.emit(Events.APPLICATION_APPROVED, {
-        applicationId: params.id,
-        nodeId: "",
-        approvedBy: session.user?.id ?? "system",
-      }, { actorId: session.user?.id });
-    }
+  switch (result.code) {
+    case "FORBIDDEN":
+      return apiForbidden(result.message);
+    case "NOT_FOUND":
+      return apiNotFound("Application");
+    case "APPLICATION_INVALID_TRANSITION":
+      return apiBusinessError(result.code, result.message, result.details);
   }
-
-  await writeAudit({
-    actorUserId: session.user?.id ?? null,
-    action: AuditAction.APPLICATION_STATUS_CHANGE,
-    targetType: "APPLICATION",
-    targetId: params.id,
-    metadata: { previousStatus: existing.status, newStatus: updated.status, notes: data.notes },
-  });
-
-  return apiOk(updated);
 }

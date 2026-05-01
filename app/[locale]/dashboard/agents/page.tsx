@@ -20,7 +20,7 @@ export default async function AgentsPage() {
   const userId = session.user.id;
 
   const prisma = getPrisma();
-  const ownedNodeIds = isAdmin ? [] : await getOwnedNodeIds(prisma, userId);
+  const ownedNodeIds = isAdmin ? [] : await getOwnedNodeIds(prisma, userId, { workspaceId: session.user.activeWorkspaceId });
   const agentWhere = isAdmin ? {} : memberAgentsWhere(ownedNodeIds);
 
   const [agents, nodes] = await Promise.all([
