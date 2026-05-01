@@ -37,6 +37,7 @@ async function cleanup(ids: {
     if (ids.nodeLeadId) await prisma.node.delete({ where: { id: ids.nodeLeadId } }).catch((e) => console.error("[e2e cleanup]", e));
     if (ids.nodeCapitalId) await prisma.node.delete({ where: { id: ids.nodeCapitalId } }).catch((e) => console.error("[e2e cleanup]", e));
     if (ids.userId) await prisma.user.delete({ where: { id: ids.userId } }).catch((e) => console.error("[e2e cleanup]", e));
+    if (ids.capitalUserId) await prisma.user.delete({ where: { id: ids.capitalUserId } }).catch((e) => console.error("[e2e cleanup]", e));
   } catch (e) { console.error("[e2e cleanup] outer", e); }
 }
 
@@ -344,6 +345,7 @@ async function main() {
       if (ids.nodeLeadId) await prisma.node.delete({ where: { id: ids.nodeLeadId } }).catch((e) => console.error("[e2e cleanup]", e));
       if (ids.nodeCapitalId) await prisma.node.delete({ where: { id: ids.nodeCapitalId } }).catch((e) => console.error("[e2e cleanup]", e));
       if (ids.userId) await prisma.user.delete({ where: { id: ids.userId } }).catch((e) => console.error("[e2e cleanup]", e));
+      if (ids.capitalUserId) await prisma.user.delete({ where: { id: ids.capitalUserId } }).catch((e) => console.error("[e2e cleanup]", e));
       console.log("Cleanup complete.\n");
     } catch (e) {
       console.error("Cleanup error:", e);
