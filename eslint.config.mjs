@@ -8,6 +8,7 @@
 import nextConfig from "eslint-config-next";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import importPlugin from "eslint-plugin-import";
+import tsEslintPlugin from "@typescript-eslint/eslint-plugin";
 
 const config = [
   ...nextConfig,
@@ -16,6 +17,7 @@ const config = [
     plugins: {
       "react-hooks": reactHooksPlugin,
       import: importPlugin,
+      "@typescript-eslint": tsEslintPlugin,
     },
     rules: {
       "no-unused-vars": "off",
@@ -50,6 +52,11 @@ const config = [
       "react-hooks/purity": "error",
       "react-hooks/static-components": "error",
       "import/no-anonymous-default-export": "error",
+      // Catch new `any` in code review without forcing a 239-site refactor.
+      // Per Q1 close-out: existing 239 occurrences stay; the rule prevents
+      // the trend from worsening. Pay down systematically alongside other
+      // refactors. Ratchet to error once the count drops below 50 or so.
+      "@typescript-eslint/no-explicit-any": "warn",
     },
   },
   {
