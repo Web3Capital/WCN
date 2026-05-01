@@ -74,8 +74,24 @@ export interface ApplicationSubmittedEvent {
 
 export interface ApplicationApprovedEvent {
   applicationId: string;
-  nodeId: string;
+  nodeId: string | null;
   approvedBy: string;
+  previousStatus: string;
+  reviewNote?: string;
+  /** Audit handler convention. */
+  entityType: "APPLICATION";
+  entityId: string;
+}
+
+export interface ApplicationRejectedEvent {
+  applicationId: string;
+  nodeId: string | null;
+  rejectedBy: string;
+  previousStatus: string;
+  reviewNote?: string;
+  /** Audit handler convention. */
+  entityType: "APPLICATION";
+  entityId: string;
 }
 
 // ─── Projects (M04) ──────────────────────────────────────────────
@@ -375,6 +391,7 @@ export const Events = {
   NODE_STATUS_CHANGED: "node.status_changed",
   APPLICATION_SUBMITTED: "application.submitted",
   APPLICATION_APPROVED: "application.approved",
+  APPLICATION_REJECTED: "application.rejected",
 
   // Projects
   PROJECT_CREATED: "project.created",
@@ -470,6 +487,7 @@ export interface EventMap {
   [Events.NODE_STATUS_CHANGED]: NodeStatusChangedEvent;
   [Events.APPLICATION_SUBMITTED]: ApplicationSubmittedEvent;
   [Events.APPLICATION_APPROVED]: ApplicationApprovedEvent;
+  [Events.APPLICATION_REJECTED]: ApplicationRejectedEvent;
 
   // Projects
   [Events.PROJECT_CREATED]: ProjectCreatedEvent;
