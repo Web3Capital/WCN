@@ -95,11 +95,12 @@ export async function GET(req: NextRequest) {
     results.agents = { error: e instanceof Error ? e.message : "Failed" };
   }
 
-  // 3. Process outbox events
+  // 3. Process outbox events (also driven by /api/cron/outbox at higher
+  //    frequency; daily call here is a backstop + handles the cleanup pass).
   try {
     const { processOutbox, cleanupOutbox } = await import("@/lib/core/outbox");
-    const processed = await processOutbox();
-    results.outbox = { processed };
+    const { delivered, failed, dlq } = await processOutbox();
+    results.outbox = { delivered, failed, dlq };
 
     // Weekly cleanup (run on Sundays)
     if (new Date().getDay() === 0) {
