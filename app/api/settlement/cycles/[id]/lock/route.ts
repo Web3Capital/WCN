@@ -1,82 +1,50 @@
 import "@/lib/core/init";
-import { getPrisma } from "@/lib/prisma";
-import { requirePermission } from "@/lib/admin";
-import { canTransitionSettlement } from "@/lib/state-machines/settlement";
-import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
-import { eventBus } from "@/lib/core/event-bus";
-import { Events } from "@/lib/core/event-types";
-import type { SettlementApprovedEvent } from "@/lib/core/event-types";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import {
+  apiOk,
+  apiUnauthorized,
+  apiForbidden,
+  apiNotFound,
+  apiBusinessError,
+} from "@/lib/core/api-response";
+import { lockSettlementCycle } from "@/lib/use-cases/lock-settlement-cycle";
 
+/**
+ * Lock a settlement cycle. Thin wrapper over the
+ * `lockSettlementCycle` Application Service. All orchestration —
+ * RBAC, SM validation, ApprovalAction creation (request mode),
+ * transactional outbox emission, audit, and post-commit dispatch —
+ * lives in the use-case.
+ */
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const auth = await requirePermission("update", "settlement");
-  if (!auth.ok) return apiUnauthorized();
 
-  const prisma = getPrisma();
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || !session.user.role) return apiUnauthorized();
+
   const body = await req.json().catch(() => ({}));
-  const dualControl = body?.dualControl === true;
+  const mode: "direct" | "request" = body?.dualControl === true ? "request" : "direct";
+  const reason = typeof body?.reason === "string" ? body.reason : undefined;
 
-  const cycle = await prisma.settlementCycle.findUnique({ where: { id } });
-  if (!cycle) return apiNotFound("SettlementCycle");
-
-  if (cycle.status === "LOCKED" || cycle.status === "EXPORTED" || cycle.status === "FINALIZED") {
-    return apiOk({ idempotent: true, cycle });
-  }
-
-  if (dualControl) {
-    if (!canTransitionSettlement(cycle.status, "LOCK_PENDING_APPROVAL")) {
-      return apiValidationError([{ path: "status", message: `Cannot request lock from ${cycle.status}.` }]);
-    }
-
-    const approval = await prisma.approvalAction.create({
-      data: {
-        workspaceId: cycle.workspaceId ?? "",
-        entityType: "SETTLEMENT_CYCLE",
-        entityId: id,
-        actionType: "LOCK",
-        requestedById: auth.session.user!.id,
-        reason: body?.reason ?? null,
-      },
-    });
-
-    await prisma.settlementCycle.update({
-      where: { id },
-      data: { status: "LOCK_PENDING_APPROVAL", lockApprovalId: approval.id },
-    });
-
-    await writeAudit({
-      actorUserId: auth.session.user?.id ?? null,
-      action: AuditAction.SETTLEMENT_LOCK_APPROVAL,
-      targetType: "SETTLEMENT_CYCLE",
-      targetId: id,
-      metadata: { approvalId: approval.id, previousStatus: cycle.status },
-    });
-
-    return apiOk({ pendingApproval: true, approvalId: approval.id });
-  }
-
-  if (!canTransitionSettlement(cycle.status, "LOCKED")) {
-    return apiValidationError([{ path: "status", message: `Cannot lock from ${cycle.status}. Must be RECONCILED.` }]);
-  }
-
-  const updated = await prisma.settlementCycle.update({
-    where: { id },
-    data: { status: "LOCKED", lockedById: auth.session.user?.id ?? null },
-  });
-
-  await writeAudit({
-    actorUserId: auth.session.user?.id ?? null,
-    action: AuditAction.SETTLEMENT_CYCLE_LOCK,
-    targetType: "SETTLEMENT_CYCLE",
-    targetId: updated.id,
-    metadata: { previousStatus: cycle.status },
-  });
-
-  await eventBus.emit<SettlementApprovedEvent>(Events.SETTLEMENT_APPROVED, {
+  const result = await lockSettlementCycle({
+    actorUserId: session.user.id,
+    actorRole: session.user.role,
     cycleId: id,
-    approvedBy: auth.session.user?.id ?? "system",
-  }, { actorId: auth.session.user?.id });
+    mode,
+    reason,
+    requestId: req.headers.get("x-request-id") ?? undefined,
+  });
 
-  return apiOk({ idempotent: false, cycle: updated });
+  if (result.ok) return apiOk(result);
+
+  switch (result.code) {
+    case "FORBIDDEN":
+      return apiForbidden(result.message);
+    case "NOT_FOUND":
+      return apiNotFound("SettlementCycle");
+    case "SETTLEMENT_INVALID_STATE":
+    case "WORKSPACE_REQUIRED":
+      return apiBusinessError(result.code, result.message, result.details);
+  }
 }
