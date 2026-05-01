@@ -44,10 +44,14 @@ const mockPrisma = {
         where,
         orderBy,
         take,
+        cursor,
+        skip,
       }: {
         where: { delivered: boolean; retryCount?: { lt?: number; gte?: number } };
         orderBy?: { createdAt: "asc" | "desc" };
         take?: number;
+        cursor?: { id: string };
+        skip?: number;
       }) => {
         let rows = Array.from(outboxStore.values()).filter((r) => r.delivered === where.delivered);
         if (where.retryCount?.lt !== undefined) {
@@ -59,8 +63,24 @@ const mockPrisma = {
         if (orderBy?.createdAt === "asc") {
           rows.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
         }
+        if (cursor?.id) {
+          const idx = rows.findIndex((r) => r.id === cursor.id);
+          if (idx >= 0) rows = rows.slice(idx + (skip ?? 0));
+        }
         if (take) rows = rows.slice(0, take);
         return rows;
+      },
+    ),
+    findUnique: vi.fn(
+      async ({ where, select }: { where: { id: string }; select?: Record<string, boolean> }) => {
+        const row = outboxStore.get(where.id);
+        if (!row) return null;
+        if (!select) return row;
+        const out: Record<string, unknown> = {};
+        for (const [k, v] of Object.entries(select)) {
+          if (v) out[k] = (row as unknown as Record<string, unknown>)[k];
+        }
+        return out;
       },
     ),
     update: vi.fn(
@@ -158,6 +178,9 @@ import {
   getOutboxMetrics,
   cleanupOutbox,
   writeToOutbox,
+  listDlqEvents,
+  requeueOutboxEvent,
+  discardOutboxEvent,
 } from "../outbox";
 
 function seed(rows: Partial<OutboxRow>[]): void {
@@ -384,5 +407,91 @@ describe("writeToOutbox", () => {
       "outbox_events_written_total",
       { event: "node.created" },
     );
+  });
+});
+
+describe("listDlqEvents", () => {
+  it("returns only events with retryCount >= DLQ_THRESHOLD, oldest first", async () => {
+    const t0 = new Date("2026-04-01T00:00:00Z");
+    const t1 = new Date("2026-04-02T00:00:00Z");
+    seed([
+      { id: "fresh", retryCount: 0, createdAt: t1 },
+      { id: "stuck-old", retryCount: DLQ_THRESHOLD, createdAt: t0 },
+      { id: "stuck-new", retryCount: DLQ_THRESHOLD + 1, createdAt: t1 },
+      { id: "delivered", retryCount: DLQ_THRESHOLD, delivered: true },
+    ]);
+
+    const rows = await listDlqEvents();
+    expect(rows.map((r) => r.id)).toEqual(["stuck-old", "stuck-new"]);
+  });
+
+  it("respects limit (clamps to [1, 100]) and supports cursor pagination", async () => {
+    const base = Date.now();
+    seed(
+      Array.from({ length: 5 }, (_, i) => ({
+        id: `s_${i}`,
+        retryCount: DLQ_THRESHOLD,
+        createdAt: new Date(base + i * 1000),
+      })),
+    );
+
+    const page1 = await listDlqEvents({ limit: 2 });
+    // listDlqEvents takes limit + 1 to detect hasMore.
+    expect(page1.map((r) => r.id)).toEqual(["s_0", "s_1", "s_2"]);
+
+    const page2 = await listDlqEvents({ limit: 2, cursor: "s_1" });
+    expect(page2.map((r) => r.id)).toEqual(["s_2", "s_3", "s_4"]);
+  });
+
+  it("returns empty when no DLQ events", async () => {
+    seed([{ id: "fresh", retryCount: 0 }]);
+    expect(await listDlqEvents()).toEqual([]);
+  });
+});
+
+describe("requeueOutboxEvent", () => {
+  it("resets retryCount and lastError on a stuck event", async () => {
+    seed([{ id: "stuck", retryCount: DLQ_THRESHOLD + 2, lastError: "boom" }]);
+    const r = await requeueOutboxEvent("stuck");
+    expect(r).not.toBeNull();
+    expect(outboxStore.get("stuck")?.retryCount).toBe(0);
+    expect(outboxStore.get("stuck")?.lastError).toBeNull();
+  });
+
+  it("returns null for an event still in normal retry (not yet DLQ)", async () => {
+    seed([{ id: "trying", retryCount: DLQ_THRESHOLD - 1 }]);
+    const r = await requeueOutboxEvent("trying");
+    expect(r).toBeNull();
+    expect(outboxStore.get("trying")?.retryCount).toBe(DLQ_THRESHOLD - 1);
+  });
+
+  it("returns null for a delivered event (no resurrection)", async () => {
+    seed([{ id: "done", retryCount: DLQ_THRESHOLD, delivered: true }]);
+    expect(await requeueOutboxEvent("done")).toBeNull();
+  });
+
+  it("returns null for a non-existent id", async () => {
+    expect(await requeueOutboxEvent("nope")).toBeNull();
+  });
+});
+
+describe("discardOutboxEvent", () => {
+  it("tombstones a stuck event without dispatching", async () => {
+    seed([{ id: "stuck", retryCount: DLQ_THRESHOLD }]);
+    const r = await discardOutboxEvent("stuck");
+    expect(r).not.toBeNull();
+    expect(outboxStore.get("stuck")?.delivered).toBe(true);
+    expect(outboxStore.get("stuck")?.deliveredAt).toBeInstanceOf(Date);
+    expect(hoisted.eventBusEmit).not.toHaveBeenCalled();
+  });
+
+  it("returns null for an event still in normal retry", async () => {
+    seed([{ id: "trying", retryCount: DLQ_THRESHOLD - 1 }]);
+    expect(await discardOutboxEvent("trying")).toBeNull();
+  });
+
+  it("returns null for already-delivered event", async () => {
+    seed([{ id: "done", retryCount: DLQ_THRESHOLD, delivered: true }]);
+    expect(await discardOutboxEvent("done")).toBeNull();
   });
 });

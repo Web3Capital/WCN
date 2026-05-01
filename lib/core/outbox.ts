@@ -149,6 +149,78 @@ export async function getOutboxDlqDepth(): Promise<number> {
 }
 
 /**
+ * Page through dead-letter events, oldest first. Used by the admin
+ * triage surface (`/api/admin/outbox/dlq`).
+ */
+export async function listDlqEvents(opts: {
+  limit?: number;
+  cursor?: string;
+} = {}) {
+  const prisma = getPrisma();
+  const limit = Math.min(Math.max(opts.limit ?? 25, 1), 100);
+  return prisma.outbox.findMany({
+    where: { delivered: false, retryCount: { gte: DLQ_THRESHOLD } },
+    orderBy: { createdAt: "asc" },
+    take: limit + 1, // +1 to compute hasMore
+    ...(opts.cursor ? { skip: 1, cursor: { id: opts.cursor } } : {}),
+    select: {
+      id: true,
+      eventName: true,
+      payload: true,
+      actorId: true,
+      requestId: true,
+      retryCount: true,
+      lastError: true,
+      createdAt: true,
+    },
+  });
+}
+
+/**
+ * Reset a stuck event so the poller will pick it up again. Use when
+ * the underlying handler has been fixed and the event is now safe to
+ * deliver. Records who requeued for audit. Returns the updated row, or
+ * null if the event isn't actually stuck (defensive — operators
+ * shouldn't requeue active retries).
+ */
+export async function requeueOutboxEvent(id: string) {
+  const prisma = getPrisma();
+  const before = await prisma.outbox.findUnique({
+    where: { id },
+    select: { id: true, delivered: true, retryCount: true },
+  });
+  if (!before) return null;
+  if (before.delivered) return null;
+  if (before.retryCount < DLQ_THRESHOLD) return null;
+  return prisma.outbox.update({
+    where: { id },
+    data: { retryCount: 0, lastError: null },
+  });
+}
+
+/**
+ * Mark a stuck event as delivered without actually dispatching. Use
+ * when the event is no longer relevant (e.g. the target entity has
+ * been deleted, or the event was a duplicate). Equivalent to a
+ * tombstone — the row stays in the table for the retention window so
+ * audit can see it, but the poller skips it.
+ */
+export async function discardOutboxEvent(id: string) {
+  const prisma = getPrisma();
+  const before = await prisma.outbox.findUnique({
+    where: { id },
+    select: { id: true, delivered: true, retryCount: true },
+  });
+  if (!before) return null;
+  if (before.delivered) return null;
+  if (before.retryCount < DLQ_THRESHOLD) return null;
+  return prisma.outbox.update({
+    where: { id },
+    data: { delivered: true, deliveredAt: new Date() },
+  });
+}
+
+/**
  * Clean up old delivered events (retention policy).
  * Call from a weekly cron job.
  */
