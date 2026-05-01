@@ -21,7 +21,17 @@ export function getPrisma() {
     throw new Error("POSTGRES_URL must be a direct postgres:// connection string (not prisma+postgres).");
   }
 
-  const sslEnabled = process.env.NODE_ENV === "production" || url.includes("sslmode=require");
+  // SSL policy: explicit URL parameters win, else default to SSL-on in
+  // production. The pre-existing rule "NODE_ENV=production → SSL" applied
+  // even when the URL or environment did not support SSL — e.g. e2e CI
+  // runs `next start` (production mode) against a plain `postgres:16-alpine`
+  // service container that has no TLS, causing every Prisma call to fail
+  // with "The server does not support SSL connections". An explicit
+  // `sslmode=disable` in the URL now overrides the production default.
+  const sslExplicitlyDisabled = url.includes("sslmode=disable");
+  const sslEnabled =
+    !sslExplicitlyDisabled &&
+    (process.env.NODE_ENV === "production" || url.includes("sslmode=require"));
   // Default max=2 per instance. On Vercel Fluid Compute the runtime keeps many
   // function instances warm; with max=10 we'd exhaust Postgres `max_connections=100`
   // at ~10 concurrent instances. A connection pooler (PgBouncer / Neon pooler /
