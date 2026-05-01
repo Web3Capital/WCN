@@ -1,10 +1,36 @@
 import type { PrismaClient, Prisma } from "@prisma/client";
 
-/** Collect IDs of nodes owned by `userId`. */
-export async function getOwnedNodeIds(prisma: PrismaClient, userId: string): Promise<string[]> {
+/**
+ * Optional scope hints for member-data-scope helpers.
+ *
+ * Tenant scoping (Phase 1, app-layer enforcement — see `prisma/schema.prisma`
+ * near `model Workspace`):
+ *
+ * - `workspaceId: string`  → restrict node ownership lookup to that workspace.
+ *   Downstream `member*Where` predicates inherit the scope transitively
+ *   because they JOIN through `node.id ∈ ownedNodeIds`.
+ * - `workspaceId: null` or omitted → no workspace filter (cross-workspace
+ *   visibility). Safe today because no UI workspace switcher is exposed.
+ *   Once the switcher ships, every call site that omits `workspaceId` must
+ *   be reviewed — see `lib/auth/workspace-context.ts`.
+ */
+export interface ScopeOptions {
+  workspaceId?: string | null;
+}
+
+/** Collect IDs of nodes owned by `userId`, optionally scoped to a workspace. */
+export async function getOwnedNodeIds(
+  prisma: PrismaClient,
+  userId: string,
+  opts: ScopeOptions = {},
+): Promise<string[]> {
+  const where: Prisma.NodeWhereInput = { ownerUserId: userId };
+  if (opts.workspaceId) {
+    where.workspaceId = opts.workspaceId;
+  }
   const nodes = await prisma.node.findMany({
-    where: { ownerUserId: userId },
-    select: { id: true }
+    where,
+    select: { id: true },
   });
   return nodes.map((n) => n.id);
 }
