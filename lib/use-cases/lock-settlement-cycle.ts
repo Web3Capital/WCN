@@ -35,7 +35,6 @@ import { writeToOutbox, processOutbox } from "@/lib/core/outbox";
 import { Events } from "@/lib/core/event-types";
 import { canTransitionSettlement } from "@/lib/core/state-machine";
 import { can } from "@/lib/permissions";
-import { AuditAction, writeAudit } from "@/lib/audit";
 
 export type LockSettlementMode = "direct" | "request";
 
@@ -189,6 +188,12 @@ export async function lockSettlementCycle(
       {
         cycleId: cycle.id,
         approvedBy: input.actorUserId,
+        // Audit-handler convention (lib/core/handlers/audit.ts): the
+        // onAny audit row reads `payload.entityType` / `payload.entityId`
+        // for targetType / targetId. Without these, the consolidated
+        // audit row would fall back to "SYSTEM" / "unknown".
+        entityType: "SETTLEMENT_CYCLE",
+        entityId: cycle.id,
       },
       { actorId: input.actorUserId, requestId: input.requestId },
     );
@@ -216,29 +221,20 @@ export async function lockSettlementCycle(
     };
   }
 
-  // Backwards-compatible explicit audit row. The audit handler subscribed
-  // to the event bus via `onAny` will also write a row when the outbox
-  // dispatches; same dual-write pattern as approve-application.
-  // Consolidating to event-driven audit is a separate cleanup PR.
-  const auditAction =
-    ok.newStatus === "LOCK_PENDING_APPROVAL"
-      ? AuditAction.SETTLEMENT_LOCK_APPROVAL
-      : AuditAction.SETTLEMENT_CYCLE_LOCK;
-
-  await writeAudit({
-    actorUserId: input.actorUserId,
-    action: auditAction,
-    targetType: "SETTLEMENT_CYCLE",
-    targetId: ok.cycleId,
-    metadata: {
-      mode: input.mode,
-      previousStatus: ok.previousStatus,
-      newStatus: ok.newStatus,
-      approvalId: ok.approvalId ?? null,
-      reason: input.reason ?? null,
-    },
-    requestId: input.requestId ?? null,
-  });
+  // Audit consolidation (resolves system-design doc §12 open question
+  // #2). The explicit `writeAudit` is intentionally absent: the outbox
+  // event written in-tx will fire through the `eventBus.onAny` audit
+  // handler at `lib/core/handlers/audit.ts` on dispatch. Resulting rows:
+  //   - direct mode → action="settlement.approved",
+  //                   targetType="SETTLEMENT_CYCLE",
+  //                   targetId=cycle.id
+  //   - request mode → action="approval.requested",
+  //                    targetType="SETTLEMENT_CYCLE",
+  //                    targetId=cycle.id (from payload entityType/entityId)
+  //
+  // Reports filtering by the legacy `SETTLEMENT_CYCLE_LOCK` /
+  // `SETTLEMENT_LOCK_APPROVAL` action labels MUST be migrated — see
+  // PR description for the action-label mapping table.
 
   void processOutbox(10).catch((err) => {
     console.error("[lock-settlement-cycle] post-commit dispatch failed", err);

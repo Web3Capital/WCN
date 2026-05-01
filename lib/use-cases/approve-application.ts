@@ -21,12 +21,13 @@
  *     a different concern (in-flight review status), not approve/reject.
  *     Belongs in a separate `escalateApplication` use-case.
  *
- * Audit double-write notice: the audit handler subscribed to the event bus
- * via `onAny` will write a row when the outbox event is dispatched. The
- * explicit `writeAudit` below preserves the legacy `APPLICATION_STATUS_CHANGE`
- * action label that may already be referenced by reports/queries; both rows
- * point at the same target. Consolidating to a single audit row is a
- * separate cleanup PR.
+ * Audit: the canonical audit row is written by the `eventBus.onAny`
+ * subscriber at `lib/core/handlers/audit.ts` when the outbox event is
+ * dispatched. The action label is the event name itself (e.g.
+ * "application.approved"); targetType / targetId come from the payload's
+ * entityType / entityId fields. No explicit `writeAudit` is called from
+ * this use-case — see the comment at the post-tx section for the
+ * consolidation rationale.
  */
 import "@/lib/core/init";
 import type { ApplicationStatus, Role } from "@prisma/client";
@@ -34,7 +35,6 @@ import { getPrisma } from "@/lib/prisma";
 import { writeToOutbox, processOutbox } from "@/lib/core/outbox";
 import { Events } from "@/lib/core/event-types";
 import { canAccessNodeReviewQueue } from "@/lib/permissions";
-import { AuditAction, writeAudit } from "@/lib/audit";
 
 export type ApproveApplicationDecision = "APPROVE" | "REJECT";
 
@@ -194,18 +194,18 @@ export async function approveApplication(
     return txResult;
   }
 
-  await writeAudit({
-    actorUserId: input.actorUserId,
-    action: AuditAction.APPLICATION_STATUS_CHANGE,
-    targetType: "APPLICATION",
-    targetId: input.applicationId,
-    metadata: {
-      previousStatus: txResult.previousApplicationStatus,
-      newStatus: txResult.newApplicationStatus,
-      reviewNote: input.reviewNote ?? null,
-    },
-    requestId: input.requestId ?? null,
-  });
+  // Audit consolidation (resolves system-design doc §12 open question
+  // #2 — "Audit row consolidation"). The explicit `writeAudit` is
+  // intentionally absent: the outbox event written in-tx will fire
+  // through the `eventBus.onAny` audit handler at
+  // `lib/core/handlers/audit.ts` on dispatch, producing the canonical
+  // audit row with action="application.approved" (or .rejected),
+  // targetType="APPLICATION", targetId=input.applicationId.
+  //
+  // The pre-existing dual-write (explicit AuditAction.APPLICATION_STATUS_CHANGE
+  // + onAny-derived "application.approved") was a hold-over from the
+  // pre-outbox era. Reports filtering by the legacy uppercase action
+  // label MUST be migrated — see PR description.
 
   void processOutbox(10).catch((err) => {
     console.error("[approve-application] post-commit dispatch failed", err);

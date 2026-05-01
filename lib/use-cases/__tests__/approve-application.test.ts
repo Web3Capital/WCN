@@ -227,7 +227,7 @@ describe("approveApplication — orchestration on APPROVE", () => {
     applicationStore.set("app_ok", { id: "app_ok", status: "REVIEWING" });
   });
 
-  it("updates application + creates review + writes outbox event + writes audit + dispatches", async () => {
+  it("updates application + creates review + writes outbox event + dispatches (audit via onAny, not explicit)", async () => {
     const r = await approveApplication({
       actorUserId: "u_admin",
       actorRole: "ADMIN",
@@ -270,14 +270,12 @@ describe("approveApplication — orchestration on APPROVE", () => {
     });
     expect(ctx).toEqual({ actorId: "u_admin", requestId: "req_xyz" });
 
-    expect(hoisted.mockWriteAudit).toHaveBeenCalledOnce();
-    expect(hoisted.mockWriteAudit.mock.calls[0][0]).toMatchObject({
-      action: "APPLICATION_STATUS_CHANGE",
-      targetType: "APPLICATION",
-      targetId: "app_ok",
-      actorUserId: "u_admin",
-      requestId: "req_xyz",
-    });
+    // Audit row is now written by the eventBus.onAny subscriber at
+    // lib/core/handlers/audit.ts when processOutbox dispatches the
+    // event — NOT by an explicit writeAudit from this use-case. The
+    // payload above carries entityType/entityId so the audit row
+    // resolves correctly on the receiving side.
+    expect(hoisted.mockWriteAudit).not.toHaveBeenCalled();
 
     expect(hoisted.mockProcessOutbox).toHaveBeenCalledOnce();
   });

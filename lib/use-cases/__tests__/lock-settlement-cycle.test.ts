@@ -252,13 +252,15 @@ describe("lockSettlementCycle — direct mode", () => {
     expect(payload).toMatchObject({ cycleId: "c_ok", approvedBy: "u_admin" });
     expect(ctx).toEqual({ actorId: "u_admin", requestId: "req_xyz" });
 
-    expect(hoisted.mockWriteAudit).toHaveBeenCalledOnce();
-    expect(hoisted.mockWriteAudit.mock.calls[0][0]).toMatchObject({
-      action: "SETTLEMENT_CYCLE_LOCK",
-      targetType: "SETTLEMENT_CYCLE",
-      targetId: "c_ok",
-      actorUserId: "u_admin",
-      requestId: "req_xyz",
+    // Audit comes from the onAny subscriber on event dispatch, not from
+    // an explicit writeAudit in this use-case. The settlement.approved
+    // payload carries entityType / entityId so the audit row resolves
+    // to ("SETTLEMENT_CYCLE", "c_ok") on the receiving side.
+    expect(hoisted.mockWriteAudit).not.toHaveBeenCalled();
+    expect(payload).toMatchObject({
+      cycleId: "c_ok",
+      entityType: "SETTLEMENT_CYCLE",
+      entityId: "c_ok",
     });
 
     expect(hoisted.mockProcessOutbox).toHaveBeenCalledOnce();
@@ -325,10 +327,8 @@ describe("lockSettlementCycle — request mode (dual control)", () => {
       requestedBy: "u_fin",
     });
 
-    // Audit uses the approval-flavored action label
-    expect(hoisted.mockWriteAudit.mock.calls[0][0]).toMatchObject({
-      action: "SETTLEMENT_LOCK_APPROVAL",
-    });
+    // Audit handled by onAny on dispatch; no explicit writeAudit.
+    expect(hoisted.mockWriteAudit).not.toHaveBeenCalled();
   });
 
   it("rejects request mode when cycle has no workspace (no silent empty-string write)", async () => {
