@@ -37,7 +37,7 @@ function isPublicPath(pathname: string): boolean {
   if (bare.startsWith("/wiki")) return true;
   if (bare.startsWith("/api/auth")) return true;
   if (bare.startsWith("/api/signup")) return true;
-  if (bare.startsWith("/api/applications") && bare === "/api/applications") return true;
+  if (bare === "/api/applications") return true;
   if (bare.startsWith("/api/theme")) return true;
   if (bare.startsWith("/api/lang")) return true;
   if (bare.startsWith("/api/invites/")) return true;
@@ -185,6 +185,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)",
   ],
 };

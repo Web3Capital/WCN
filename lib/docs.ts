@@ -41,6 +41,22 @@ interface ChapterMeta {
   slug?: string;
 }
 
+export interface SearchIndexEntry {
+  title: string;
+  description?: string;
+  href: string;
+  chapter: string;
+  body: string;
+}
+
+interface DocsCache {
+  docs: DocEntry[];
+  chapters: ChapterEntry[];
+  docsBySlug: Map<string, DocEntry>;
+  docIndexByHref: Map<string, number>;
+  searchIndex: SearchIndexEntry[];
+}
+
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
@@ -75,12 +91,35 @@ function extractHeadings(mdx: string): { id: string; text: string; level: number
 /*  Core API                                                           */
 /* ------------------------------------------------------------------ */
 
-let _cache: { docs: DocEntry[]; chapters: ChapterEntry[] } | null = null;
+let _cache: DocsCache | null = null;
 
-function loadAll(): { docs: DocEntry[]; chapters: ChapterEntry[] } {
+function toSearchIndex(doc: DocEntry): SearchIndexEntry {
+  return {
+    title: doc.meta.title,
+    description: doc.meta.description,
+    href: doc.href,
+    chapter: doc.chapterTitle,
+    body: doc.content
+      .replace(/<[^>]+>/g, "")
+      .replace(/import\s.*?from\s.*?\n/g, "")
+      .replace(/\{\/\*.*?\*\/\}/g, "")
+      .slice(0, 2000),
+  };
+}
+
+function loadAll(): DocsCache {
   if (_cache) return _cache;
 
-  if (!fs.existsSync(CONTENT_ROOT)) return { docs: [], chapters: [] };
+  if (!fs.existsSync(CONTENT_ROOT)) {
+    _cache = {
+      docs: [],
+      chapters: [],
+      docsBySlug: new Map(),
+      docIndexByHref: new Map(),
+      searchIndex: [],
+    };
+    return _cache;
+  }
 
   const chapterDirs = fs
     .readdirSync(CONTENT_ROOT, { withFileTypes: true })
@@ -151,7 +190,21 @@ function loadAll(): { docs: DocEntry[]; chapters: ChapterEntry[] } {
   }
 
   chapters.sort((a, b) => a.order - b.order);
-  _cache = { docs: allDocs, chapters };
+  const docsBySlug = new Map<string, DocEntry>();
+  const docIndexByHref = new Map<string, number>();
+
+  for (const [index, doc] of allDocs.entries()) {
+    docsBySlug.set(doc.slug.join("/"), doc);
+    docIndexByHref.set(doc.href, index);
+  }
+
+  _cache = {
+    docs: allDocs,
+    chapters,
+    docsBySlug,
+    docIndexByHref,
+    searchIndex: allDocs.map(toSearchIndex),
+  };
   return _cache;
 }
 
@@ -164,16 +217,16 @@ export function getChapters(): ChapterEntry[] {
 }
 
 export function getDocBySlug(slugParts: string[]): DocEntry | undefined {
-  const target = slugParts.join("/");
-  return getAllDocs().find((d) => d.slug.join("/") === target);
+  return loadAll().docsBySlug.get(slugParts.join("/"));
 }
 
 export function getAdjacentDocs(doc: DocEntry): { prev: DocEntry | null; next: DocEntry | null } {
-  const all = getAllDocs();
-  const idx = all.findIndex((d) => d.href === doc.href);
+  const { docs, docIndexByHref } = loadAll();
+  const idx = docIndexByHref.get(doc.href);
+  if (idx === undefined) return { prev: null, next: null };
   return {
-    prev: idx > 0 ? all[idx - 1] : null,
-    next: idx < all.length - 1 ? all[idx + 1] : null,
+    prev: idx > 0 ? docs[idx - 1] : null,
+    next: idx < docs.length - 1 ? docs[idx + 1] : null,
   };
 }
 
@@ -181,16 +234,6 @@ export function getDocHeadings(content: string) {
   return extractHeadings(content);
 }
 
-export function buildSearchIndex(): { title: string; description?: string; href: string; chapter: string; body: string }[] {
-  return getAllDocs().map((d) => ({
-    title: d.meta.title,
-    description: d.meta.description,
-    href: d.href,
-    chapter: d.chapterTitle,
-    body: d.content
-      .replace(/<[^>]+>/g, "")
-      .replace(/import\s.*?from\s.*?\n/g, "")
-      .replace(/\{\/\*.*?\*\/\}/g, "")
-      .slice(0, 2000),
-  }));
+export function buildSearchIndex(): SearchIndexEntry[] {
+  return loadAll().searchIndex;
 }

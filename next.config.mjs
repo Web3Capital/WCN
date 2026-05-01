@@ -7,6 +7,7 @@ const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === "tr
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: { ignoreDuringBuilds: true },
+  poweredByHeader: false,
   experimental: {
     optimizePackageImports: ["lucide-react", "recharts", "date-fns"],
   },
