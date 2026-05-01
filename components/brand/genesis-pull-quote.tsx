@@ -15,11 +15,17 @@ type Props = {
   eyebrow: string;
   quote: string;
   attribution: string;
-  /** A reference string. May contain HTML entities (e.g. `&#8470;` for №) */
-  ref: string;
+  /**
+   * A reference string. May contain HTML entities (e.g. `&#8470;` for №).
+   *
+   * Named `documentRef` (not `ref`) because `ref` is a React-reserved prop
+   * name — passing it as a regular string prop throws "Refs cannot be used
+   * in Server Components" at runtime under React 19 / RSC.
+   */
+  documentRef: string;
 };
 
-export function GenesisPullQuote({ eyebrow, quote, attribution, ref }: Props) {
+export function GenesisPullQuote({ eyebrow, quote, attribution, documentRef }: Props) {
   return (
     <section className="section section-genesis" data-anim-host>
       <div className="container">
@@ -35,7 +41,7 @@ export function GenesisPullQuote({ eyebrow, quote, attribution, ref }: Props) {
           </blockquote>
           <figcaption className="genesis-figcaption">
             <span className="genesis-attribution">{attribution}</span>
-            <span className="genesis-ref" dangerouslySetInnerHTML={{ __html: ref }} />
+            <span className="genesis-ref" dangerouslySetInnerHTML={{ __html: documentRef }} />
           </figcaption>
         </figure>
       </div>
