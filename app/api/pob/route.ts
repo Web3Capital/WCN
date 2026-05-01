@@ -7,6 +7,7 @@ import { isAdminRole } from "@/lib/permissions";
 import { apiOk, apiCreated, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
+import { writeOutbox } from "@/lib/core/outbox/write";
 import { PoBRecordStatus } from "@prisma/client";
 
 function computeScore(input: {
@@ -101,23 +102,41 @@ export async function POST(req: Request) {
   const now = new Date();
   const slaDeadline = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000);
 
-  const record = await prisma.poBRecord.create({
-    data: {
-      businessType,
-      baseValue, weight, qualityMult, timeMult, riskDiscount, score,
-      status: initialStatus,
-      notes: body?.notes ? String(body.notes) : null,
-      taskId: body?.taskId ? String(body.taskId) : null,
-      projectId: body?.projectId ? String(body.projectId) : null,
-      nodeId: body?.nodeId ? String(body.nodeId) : null,
-      dealId: body?.dealId ? String(body.dealId) : null,
-      leadNodeId: body?.leadNodeId ? String(body.leadNodeId) : null,
-      supportingNodeIds: Array.isArray(body?.supportingNodeIds) ? body.supportingNodeIds.map((s: unknown) => String(s)) : [],
-      beneficiaryEntity: body?.beneficiaryEntity ? String(body.beneficiaryEntity) : null,
-      resultDate: body?.resultDate ? new Date(String(body.resultDate)) : null,
-      loopType: body?.loopType ? String(body.loopType) : null,
-      slaDeadlineAt: slaDeadline,
-    },
+  // Phase A (ADR-0004): create the PoB record + outbox row in one transaction
+  // so the domain event commits atomically with the entity. If the outbox write
+  // fails, the PoB row is rolled back — preventing the "DB write succeeded but
+  // event lost" failure mode the in-memory bus has.
+  const record = await prisma.$transaction(async (tx) => {
+    const created = await tx.poBRecord.create({
+      data: {
+        businessType,
+        baseValue, weight, qualityMult, timeMult, riskDiscount, score,
+        status: initialStatus,
+        notes: body?.notes ? String(body.notes) : null,
+        taskId: body?.taskId ? String(body.taskId) : null,
+        projectId: body?.projectId ? String(body.projectId) : null,
+        nodeId: body?.nodeId ? String(body.nodeId) : null,
+        dealId: body?.dealId ? String(body.dealId) : null,
+        leadNodeId: body?.leadNodeId ? String(body.leadNodeId) : null,
+        supportingNodeIds: Array.isArray(body?.supportingNodeIds) ? body.supportingNodeIds.map((s: unknown) => String(s)) : [],
+        beneficiaryEntity: body?.beneficiaryEntity ? String(body.beneficiaryEntity) : null,
+        resultDate: body?.resultDate ? new Date(String(body.resultDate)) : null,
+        loopType: body?.loopType ? String(body.loopType) : null,
+        slaDeadlineAt: slaDeadline,
+      },
+    });
+
+    await writeOutbox(tx, Events.POB_CREATED, {
+      pobId: created.id,
+      dealId: created.dealId ?? undefined,
+      projectId: created.projectId ?? undefined,
+      nodeId: created.nodeId ?? undefined,
+      score,
+      totalValue: score,
+      attributions: [],
+    }, { actorId: auth.session.user?.id ?? null });
+
+    return created;
   });
 
   await writeAudit({
@@ -128,6 +147,10 @@ export async function POST(req: Request) {
     metadata: { businessType, score, nodeId: record.nodeId, dealId: record.dealId },
   });
 
+  // ADR-0004 Phase A: in-process bus stays during migration. The outbox row
+  // (above) is the source of truth; this emit is a transitional convenience
+  // for handlers not yet ported to consume from the Inngest stream. Removed
+  // in Phase F.
   await eventBus.emit(Events.POB_CREATED, {
     pobId: record.id,
     dealId: record.dealId ?? undefined,
