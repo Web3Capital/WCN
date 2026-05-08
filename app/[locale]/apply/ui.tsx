@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -90,8 +92,9 @@ function MultiSelect({
           type="button"
           className={`apply-chip${selected.includes(opt) ? " active" : ""}`}
           onClick={() => toggle(opt)}
+          aria-pressed={selected.includes(opt)}
         >
-          <span className="apply-chip-check">
+          <span className="apply-chip-check" aria-hidden>
             {selected.includes(opt) ? "✓" : "+"}
           </span>
           {opt}
@@ -101,7 +104,14 @@ function MultiSelect({
   );
 }
 
+/** Required marker — small mono microtype, never breaks the label flow */
+function Required() {
+  const t = useTranslations("apply");
+  return <span className="apply-required-hint" aria-hidden> · {t("requiredHint")}</span>;
+}
+
 export function ApplyForm() {
+  const t = useTranslations("apply");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
 
@@ -168,60 +178,87 @@ export function ApplyForm() {
   }
 
   if (status === "success") {
+    // Receipt-card pattern: institutional confirmation, not a marketing toast.
+    const referenceId = `APP-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-${Math.floor(Math.random() * 9000 + 1000)}`;
     return (
       <div className="apply-success" role="status" aria-live="polite">
-        <div className="apply-success-icon">✓</div>
-        <h3>Application submitted</h3>
-        <p>
-          Thank you for your interest in WCN. Our team will review your
-          application and reach out within 48 hours.
-        </p>
+        <div className="apply-receipt">
+          <div className="apply-receipt-header">
+            <span className="apply-receipt-label">{t("successReceiptLabel")}</span>
+            <span className="apply-receipt-id">{referenceId}</span>
+          </div>
+          <h3 className="apply-success-title">{t("successTitle")}</h3>
+          <p className="apply-success-body">{t("successBody")}</p>
+          <div className="apply-receipt-meta">
+            <div>
+              <span className="apply-receipt-meta-label">Status</span>
+              <span className="apply-receipt-meta-value apply-receipt-meta-value-pending">
+                {t("successReceiptStatus")}
+              </span>
+            </div>
+            <div>
+              <span className="apply-receipt-meta-label">Filed</span>
+              <span className="apply-receipt-meta-value">
+                {new Date().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="apply-success-continue">
+          <span className="apply-success-continue-label">{t("successContinueLabel")}</span>
+          <div className="apply-success-continue-actions">
+            <Link href="/wiki" className="button-secondary">{t("successContinueRead")}</Link>
+            <Link href="/nodes" className="button-secondary">{t("successContinueExplore")}</Link>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <form onSubmit={onSubmit} className="form apply-form">
-      <div className="apply-section-label">Basic Information</div>
+      <div className="apply-section-label">{t("sectionBasic")}</div>
 
       <div className="apply-row">
         <label className="field">
-          <span className="label">Full Name *</span>
+          <span className="label">
+            {t("fieldFullName")}<Required />
+          </span>
           <input
             value={applicantName}
             onChange={(e) => setApplicantName(e.target.value)}
             required
-            placeholder="Your full name"
+            placeholder={t("fieldFullNamePh")}
           />
         </label>
         <label className="field">
-          <span className="label">Contact *</span>
+          <span className="label">
+            {t("fieldContact")}<Required />
+          </span>
           <input
             value={contact}
             onChange={(e) => setContact(e.target.value)}
             required
-            placeholder="Email, Telegram, or WeChat"
+            placeholder={t("fieldContactPh")}
           />
         </label>
       </div>
 
       <div className="apply-row">
         <label className="field">
-          <span className="label">Organization</span>
+          <span className="label">{t("fieldOrganization")}</span>
           <input
             value={organization}
             onChange={(e) => setOrganization(e.target.value)}
-            placeholder="Company or fund name"
+            placeholder={t("fieldOrganizationPh")}
           />
         </label>
         <label className="field">
-          <span className="label">Role</span>
+          <span className="label">{t("fieldRole")}</span>
           <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="">Select your role...</option>
+            <option value="">{t("fieldRolePh")}</option>
             {ROLES.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
+              <option key={r} value={r}>{r}</option>
             ))}
           </select>
         </label>
@@ -229,48 +266,46 @@ export function ApplyForm() {
 
       <div className="apply-row">
         <label className="field">
-          <span className="label">Node Type *</span>
+          <span className="label">
+            {t("fieldNodeType")}<Required />
+          </span>
           <select
             value={nodeType}
             onChange={(e) => setNodeType(e.target.value)}
             required
           >
-            <option value="">Select node type...</option>
-            {NODE_TYPES.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
+            <option value="">{t("fieldNodeTypePh")}</option>
+            {NODE_TYPES.map((nt) => (
+              <option key={nt} value={nt}>{nt}</option>
             ))}
           </select>
         </label>
         <label className="field">
-          <span className="label">Region</span>
+          <span className="label">{t("fieldRegion")}</span>
           <select value={region} onChange={(e) => setRegion(e.target.value)}>
-            <option value="">Select primary region...</option>
+            <option value="">{t("fieldRegionPh")}</option>
             {REGIONS.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
+              <option key={r} value={r}>{r}</option>
             ))}
           </select>
         </label>
       </div>
 
       <label className="field">
-        <span className="label">LinkedIn / Website</span>
+        <span className="label">{t("fieldLinkedin")}</span>
         <input
           value={linkedin}
           onChange={(e) => setLinkedin(e.target.value)}
-          placeholder="https://linkedin.com/in/... or website URL"
+          placeholder={t("fieldLinkedinPh")}
         />
       </label>
 
       <div className="apply-divider" />
-      <div className="apply-section-label">Resources & Needs</div>
+      <div className="apply-section-label">{t("sectionResources")}</div>
 
       <div className="field">
-        <span className="label">Resources you can provide</span>
-        <span className="apply-hint">Select all that apply</span>
+        <span className="label">{t("fieldResources")}</span>
+        <span className="apply-hint">{t("selectAllThatApply")}</span>
         <MultiSelect
           options={RESOURCE_OPTIONS}
           selected={resources}
@@ -279,14 +314,14 @@ export function ApplyForm() {
         <input
           value={resourcesNote}
           onChange={(e) => setResourcesNote(e.target.value)}
-          placeholder="Other resources (optional)"
+          placeholder={t("fieldResourcesOther")}
           className="apply-chip-extra"
         />
       </div>
 
       <div className="field">
-        <span className="label">What you are looking for</span>
-        <span className="apply-hint">Select all that apply</span>
+        <span className="label">{t("fieldLookingFor")}</span>
+        <span className="apply-hint">{t("selectAllThatApply")}</span>
         <MultiSelect
           options={LOOKING_FOR_OPTIONS}
           selected={lookingFor}
@@ -295,73 +330,72 @@ export function ApplyForm() {
         <input
           value={lookingForNote}
           onChange={(e) => setLookingForNote(e.target.value)}
-          placeholder="Other needs (optional)"
+          placeholder={t("fieldLookingForOther")}
           className="apply-chip-extra"
         />
       </div>
 
       <div className="apply-divider" />
-      <div className="apply-section-label">Experience & Territory</div>
+      <div className="apply-section-label">{t("sectionExperience")}</div>
 
       <label className="field">
-        <span className="label">Territory / Region of Focus</span>
+        <span className="label">{t("fieldTerritory")}</span>
         <input
           value={territory}
           onChange={(e) => setTerritory(e.target.value)}
-          placeholder="e.g. Singapore, Hong Kong, UAE, Southeast Asia"
+          placeholder={t("fieldTerritoryPh")}
         />
       </label>
 
       <label className="field">
-        <span className="label">Past Cases / Track Record</span>
+        <span className="label">{t("fieldPastCases")}</span>
         <textarea
           value={pastCases}
           onChange={(e) => setPastCases(e.target.value)}
-          placeholder="Describe 2-3 relevant deals, projects, or partnerships you have been involved in."
+          placeholder={t("fieldPastCasesPh")}
           rows={3}
         />
       </label>
 
       <label className="field">
-        <span className="label">References</span>
+        <span className="label">{t("fieldReferences")}</span>
         <textarea
           value={references}
           onChange={(e) => setReferences(e.target.value)}
-          placeholder="Names and contacts of 1-2 references who can vouch for your work."
+          placeholder={t("fieldReferencesPh")}
           rows={2}
         />
       </label>
 
       <label className="field">
-        <span className="label">Boundary Statement</span>
-        <span className="apply-hint">What you will and will not do as a node. Helps set expectations.</span>
+        <span className="label">{t("fieldBoundary")}</span>
+        <span className="apply-hint">{t("fieldBoundaryHint")}</span>
         <textarea
           value={boundaryStatement}
           onChange={(e) => setBoundaryStatement(e.target.value)}
-          placeholder="e.g. I will focus on sourcing seed-stage DeFi projects in SEA. I will not handle legal or compliance work."
+          placeholder={t("fieldBoundaryPh")}
           rows={3}
         />
       </label>
 
       <div className="apply-divider" />
+      <div className="apply-section-label">{t("sectionMotivation")}</div>
 
       <label className="field">
-        <span className="label">Why WCN?</span>
+        <span className="label">{t("fieldWhy")}</span>
         <textarea
           value={whyWcn}
           onChange={(e) => setWhyWcn(e.target.value)}
-          placeholder="What drew you to WCN? How do you see yourself contributing to and benefiting from the network?"
+          placeholder={t("fieldWhyPh")}
           rows={4}
         />
       </label>
 
       {error ? (
-        <p className="form-error" role="alert">
-          {error}
-        </p>
+        <p className="form-error" role="alert">{error}</p>
       ) : null}
       <button className="button apply-submit" type="submit" disabled={status === "submitting"}>
-        {status === "submitting" ? "Submitting..." : "Submit Application"}
+        {status === "submitting" ? t("submitting") : t("submit")}
       </button>
     </form>
   );

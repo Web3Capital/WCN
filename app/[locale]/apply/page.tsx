@@ -4,14 +4,15 @@ import { getTranslations } from "next-intl/server";
 import { Landmark, Box, Wrench, Globe, Megaphone, Factory } from "lucide-react";
 import { ApplyForm } from "./ui";
 import { VoltageCallout } from "@/components/brand/voltage-callout";
+import { WCNGlyph } from "@/components/brand/wcn-glyph";
 
 const NODE_TYPES: { icon: ReactNode; titleKey: string; descKey: string }[] = [
-  { icon: <Landmark size={20} strokeWidth={1.5} />, titleKey: "capitalTitle", descKey: "capitalDesc" },
-  { icon: <Box size={20} strokeWidth={1.5} />, titleKey: "projectTitle", descKey: "projectDesc" },
-  { icon: <Wrench size={20} strokeWidth={1.5} />, titleKey: "serviceTitle", descKey: "serviceDesc" },
-  { icon: <Globe size={20} strokeWidth={1.5} />, titleKey: "regionalTitle", descKey: "regionalDesc" },
-  { icon: <Megaphone size={20} strokeWidth={1.5} />, titleKey: "mediaTitle", descKey: "mediaDesc" },
-  { icon: <Factory size={20} strokeWidth={1.5} />, titleKey: "industryTitle", descKey: "industryDesc" },
+  { icon: <Landmark size={18} strokeWidth={1.4} />, titleKey: "capitalTitle", descKey: "capitalDesc" },
+  { icon: <Box size={18} strokeWidth={1.4} />, titleKey: "projectTitle", descKey: "projectDesc" },
+  { icon: <Wrench size={18} strokeWidth={1.4} />, titleKey: "serviceTitle", descKey: "serviceDesc" },
+  { icon: <Globe size={18} strokeWidth={1.4} />, titleKey: "regionalTitle", descKey: "regionalDesc" },
+  { icon: <Megaphone size={18} strokeWidth={1.4} />, titleKey: "mediaTitle", descKey: "mediaDesc" },
+  { icon: <Factory size={18} strokeWidth={1.4} />, titleKey: "industryTitle", descKey: "industryDesc" },
 ];
 
 const STEPS = [
@@ -37,13 +38,19 @@ export default async function ApplyPage() {
   const t = await getTranslations("apply");
 
   return (
-    <main className="apply-page">
+    <main className="apply-page apply-page-sovereign">
       <div className="container">
-        <div className="apply-hero">
-          <span className="eyebrow">{t("eyebrow")}</span>
+        <header className="apply-hero apply-hero-sovereign">
+          <span className="apply-hero-glyph" aria-hidden>
+            <WCNGlyph size={20} variant="ledger" />
+          </span>
+          <span className="eyebrow eyebrow-plain apply-hero-eyebrow">
+            <span className="status-dot apply-hero-eyebrow-dot" aria-hidden />
+            {t("eyebrow")}
+          </span>
           <h1>{t.rich("headline", { em: (chunks) => <em>{chunks}</em> })}</h1>
           <p className="apply-hero-desc">{t("heroDesc")}</p>
-        </div>
+        </header>
 
         <div className="apply-layout">
           <div className="apply-form-col">
@@ -52,14 +59,14 @@ export default async function ApplyPage() {
             </div>
           </div>
 
-          <div className="apply-info-col">
-            <div className="card apply-info-card">
-              <h3 className="apply-info-title">{t("howItWorks")}</h3>
+          <aside className="apply-info-col">
+            <div className="apply-info-card">
+              <span className="apply-info-kicker">№ 01 — {t("howItWorks")}</span>
               <div className="apply-steps">
                 {STEPS.map((step) => (
                   <div key={step.num} className="apply-step">
-                    <span className="apply-step-num">{step.num}</span>
-                    <div>
+                    <span className="apply-step-num" aria-hidden>{step.num}</span>
+                    <div className="apply-step-text">
                       <strong>{t(step.titleKey)}</strong>
                       <p>{t(step.descKey)}</p>
                     </div>
@@ -68,12 +75,12 @@ export default async function ApplyPage() {
               </div>
             </div>
 
-            <div className="card apply-info-card">
-              <h3 className="apply-info-title">{t("nodeTypesTitle")}</h3>
+            <div className="apply-info-card">
+              <span className="apply-info-kicker">№ 02 — {t("nodeTypesTitle")}</span>
               <div className="apply-node-types">
                 {NODE_TYPES.map((node) => (
                   <div key={node.titleKey} className="apply-node-type">
-                    <span className="apply-node-icon">{node.icon}</span>
+                    <span className="apply-node-icon" aria-hidden>{node.icon}</span>
                     <div>
                       <strong>{t(node.titleKey)}</strong>
                       <p>{t(node.descKey)}</p>
@@ -83,12 +90,11 @@ export default async function ApplyPage() {
               </div>
             </div>
 
-            <div className="card apply-info-card apply-tip-card">
-              <p>
-                <strong>{t("tipLabel")}</strong> {t("tipMessage")}
-              </p>
+            <div className="apply-tip-card">
+              <span className="apply-tip-kicker">{t("tipLabel")}</span>
+              <p>{t("tipMessage")}</p>
             </div>
-          </div>
+          </aside>
         </div>
       </div>
 
