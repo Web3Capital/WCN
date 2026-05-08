@@ -26,12 +26,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function HomePage() {
   const t = await getTranslations("home");
 
-  const steps = [
-    { icon: <Network size={18} />, label: t("stepNodeLabel"), desc: t("stepNodeDesc") },
-    { icon: <Workflow size={18} />, label: t("stepDealLabel"), desc: t("stepDealDesc") },
-    { icon: <FileCheck size={18} />, label: t("stepTaskLabel"), desc: t("stepTaskDesc") },
-    { icon: <ShieldCheck size={18} />, label: t("stepProofLabel"), desc: t("stepProofDesc") },
-    { icon: <Scale size={18} />, label: t("stepSettlementLabel"), desc: t("stepSettlementDesc") },
+  const steps: Array<{ icon: React.ReactNode; label: string; desc: string; tone: "node" | "deal" | "voltage" | "settle" }> = [
+    { tone: "node",     icon: <Network     size={18} strokeWidth={1.5} />, label: t("stepNodeLabel"),       desc: t("stepNodeDesc") },
+    { tone: "deal",     icon: <Workflow    size={18} strokeWidth={1.5} />, label: t("stepDealLabel"),       desc: t("stepDealDesc") },
+    { tone: "voltage",  icon: <FileCheck   size={18} strokeWidth={1.5} />, label: t("stepTaskLabel"),       desc: t("stepTaskDesc") },
+    { tone: "deal",     icon: <ShieldCheck size={18} strokeWidth={1.5} />, label: t("stepProofLabel"),      desc: t("stepProofDesc") },
+    { tone: "settle",   icon: <Scale       size={18} strokeWidth={1.5} />, label: t("stepSettlementLabel"), desc: t("stepSettlementDesc") },
   ];
 
   // Sample telemetry — clearly labeled as illustrative, not real volumes.
@@ -92,7 +92,7 @@ export default async function HomePage() {
                 {t("readWiki")}
               </Link>
             </div>
-            <div className="u-meta-strip">
+            <div className="hero-meta-spine">
               <LedgerSpine
                 labels={{
                   node: t("nodeTitle"),
@@ -100,8 +100,8 @@ export default async function HomePage() {
                   settle: t("settlementTitle"),
                 }}
               />
-              <span className="u-meta-strip-version">v3.0 · audit-first</span>
             </div>
+            <div className="hero-meta-version">v3.0 · audit-first</div>
           </div>
         </div>
       </section>
@@ -198,40 +198,38 @@ export default async function HomePage() {
       />
 
       {/* ═══ № 04 · The five-step loop ═════════════════════ */}
-      <section className="section">
+      <section className="section section-loop">
         <div className="container">
-          <div className="card" style={{ padding: "var(--space-7) var(--space-6)" }}>
-            <div className="section-head section-head-numbered">
-              <span className="section-number">{t("sectionNum04")}</span>
-              <span className="eyebrow">Operating Loop</span>
-              <h2 className="u-mt-3">{t("loopTitle")}</h2>
-              <p>{t("loopDesc")}</p>
-            </div>
-            <div className="flow flow-centered u-mt-6">
-              {steps.map((step, index) => (
-                <div key={step.label} style={{ display: "contents" }}>
-                  <div className="step step-vertical">
-                    <span className="step-icon">{step.icon}</span>
-                    <span className="step-name">{step.label}</span>
-                    <span className="step-desc">{step.desc}</span>
-                  </div>
-                  {index < 4 && (
-                    <span className="arrow" aria-hidden>
-                      →
-                    </span>
-                  )}
+          <div className="section-head section-head-numbered">
+            <span className="section-number">{t("sectionNum04")}</span>
+            <span className="eyebrow">Operating Loop</span>
+            <h2 className="u-mt-3">{t("loopTitle")}</h2>
+            <p>{t("loopDesc")}</p>
+          </div>
+          <div className="flow flow-centered loop-flow u-mt-6">
+            {steps.map((step, index) => (
+              <div key={step.label} style={{ display: "contents" }}>
+                <div className={`step step-vertical step-tone-${step.tone}`}>
+                  <span className="step-icon">{step.icon}</span>
+                  <span className="step-name">{step.label}</span>
+                  <span className="step-desc">{step.desc}</span>
                 </div>
-              ))}
-            </div>
-            {/* Loop section is for LEARNING not converting — only learning links here */}
-            <div className="cta-row cta-centered u-mt-6 u-cta-row-centered">
-              <Link href="/how-it-works" className="button-secondary">
-                {t("loopCtaLearn")}
-              </Link>
-              <Link href="/nodes" className="button-secondary">
-                {t("loopCtaExplore")}
-              </Link>
-            </div>
+                {index < 4 && (
+                  <span className="arrow" aria-hidden>
+                    →
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+          {/* Loop section is for LEARNING not converting — only learning links here */}
+          <div className="cta-row cta-centered u-mt-6 u-cta-row-centered">
+            <Link href="/how-it-works" className="button-secondary">
+              {t("loopCtaLearn")}
+            </Link>
+            <Link href="/nodes" className="button-secondary">
+              {t("loopCtaExplore")}
+            </Link>
           </div>
         </div>
       </section>
