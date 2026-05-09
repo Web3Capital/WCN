@@ -20,7 +20,10 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:generate": "prisma generate",
-    "db:seed": "npx tsx prisma/seed.ts"
+    "db:seed": "npx tsx prisma/seed.ts",
+    "check:metrics": "tsx scripts/metrics-gate.ts",
+    "check:metrics:report": "tsx scripts/metrics-gate.ts --report",
+    "check:metrics:update": "tsx scripts/metrics-gate.ts --update"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.68",
