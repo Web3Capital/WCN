@@ -7,6 +7,7 @@ import { isAdminRole } from "@/lib/permissions";
 import { DashboardShell } from "./_components/dashboard-shell";
 import { Spotlight } from "./_components/spotlight";
 import { AutoTranslateProvider } from "@/lib/i18n/auto-translate-provider";
+import { loadCachedTranslations } from "@/lib/i18n/auto-translate";
 
 export const metadata: Metadata = {
   title: "Console · WCN",
@@ -27,6 +28,10 @@ export default async function DashboardLayout({
   }
 
   const t = await getTranslations("dashboard.overview");
+  const activeLocale = locale ?? "en";
+  // Load auto-translate cache server-side so cached strings render correctly
+  // on first paint instead of flashing English while the client hydrates.
+  const initialTranslations = loadCachedTranslations(activeLocale);
   const u = session.user;
   return (
     <DashboardShell
@@ -35,7 +40,7 @@ export default async function DashboardLayout({
       role={u.role!}
       isAdmin={isAdminRole(u.role!)}
     >
-      <AutoTranslateProvider locale={locale ?? "en"}>
+      <AutoTranslateProvider locale={activeLocale} initial={initialTranslations}>
         {children}
       </AutoTranslateProvider>
       <Spotlight />

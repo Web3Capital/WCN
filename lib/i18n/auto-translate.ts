@@ -38,6 +38,18 @@ function loadCache(locale: string): CacheMap {
   return {};
 }
 
+/**
+ * Load the auto-translate cache for a locale, server-side only.
+ * Used to seed the AutoTranslateProvider so cached strings render correctly
+ * during SSR (instead of flashing English on first paint).
+ *
+ * Returns an empty object for `en` (passthrough) or any unknown locale.
+ */
+export function loadCachedTranslations(locale: string): CacheMap {
+  if (locale === "en" || !locale) return {};
+  return loadCache(locale);
+}
+
 function saveCache(locale: string, cache: CacheMap) {
   ensureCacheDir();
   const filePath = getCacheFilePath(locale);
