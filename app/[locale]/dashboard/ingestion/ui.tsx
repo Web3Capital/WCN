@@ -53,6 +53,7 @@ export function IngestionUI() {
 
   async function handleCreate() {
     let parsedConfig: Record<string, unknown> = {};
+    // Intentional: parse error from user JSON input; alerted to caller, not captured.
     try { parsedConfig = JSON.parse(form.config); } catch { return alert(t("Invalid JSON config")); }
 
     const res = await fetch("/api/ingestion", {

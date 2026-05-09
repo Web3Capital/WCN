@@ -67,7 +67,7 @@ export function ApprovalsUI() {
         setApprovals((prev) => prev.map((a) => (a.id === id ? { ...a, status: decision, decidedAt: new Date().toISOString() } : a)));
         refreshCounts();
       }
-    } catch { /* ignore */ }
+    } catch (err) { captureClientError("Approvals.decide", err, { id, decision }); }
     setBusy(null);
   }
 

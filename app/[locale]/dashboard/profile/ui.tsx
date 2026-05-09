@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { StatusBadge } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 
 type UserProfile = {
   id: string;
@@ -41,7 +42,8 @@ export function ProfilePage({ user }: { user: UserProfile }) {
       });
       const data = await res.json();
       setMsg(data.ok ? t("Profile updated.") : (data.error?.message || t("Failed.")));
-    } catch {
+    } catch (err) {
+      captureClientError("Profile.update", err);
       setMsg(t("Network error."));
     }
     setBusy(false);

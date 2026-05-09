@@ -214,7 +214,7 @@ function GlobalSearch() {
         const res = await fetch(`/api/search?q=${encodeURIComponent(value)}`);
         const data = await res.json();
         if (data.ok) setResults(data.data?.results ?? data.data ?? []);
-      } catch { /* ignore */ }
+      } catch (err) { captureClientError("Dashboard.spotlightSearch", err); }
     }, 300);
   }, []);
 

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link } from "@/i18n/routing";
 import { StatusBadge, FilterToolbar, EmptyState } from "../../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 
 type PendingRun = {
   id: string; status: string; outputType: string | null; outputs: any; inputs: any;
@@ -59,7 +60,7 @@ export function ReviewQueueUI({ pendingRuns: initialPending, recentReviewed: ini
         body: JSON.stringify({ reviewStatus, reviewNotes }),
       });
       if (res.ok) window.location.reload();
-    } catch { /* ignore */ }
+    } catch (err) { captureClientError("AgentReview.submit", err, { runId }); }
     setBusy(false);
   }
 

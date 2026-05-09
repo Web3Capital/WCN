@@ -5,6 +5,7 @@ import { Link } from "@/i18n/routing";
 import { Search, ChevronDown, ChevronUp, X, RefreshCw, TrendingUp, Target, Handshake, Clock, LayoutGrid, Table2 } from "lucide-react";
 import { StatusBadge, FilterToolbar, EmptyState, StatCard, ConfirmDialog, DashboardDistributionPie, DashboardPipelineBar } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 
 type MatchRow = {
   id: string;
@@ -180,7 +181,8 @@ export function MatchesConsole({
       } else {
         setError(data.error?.message || data.error || t("Action failed."));
       }
-    } catch {
+    } catch (err) {
+      captureClientError("Matches.action", err, { matchId });
       setError(t("Network error."));
     }
     setBusy(null);
@@ -199,7 +201,8 @@ export function MatchesConsole({
       if (!data.ok) {
         setError(data.error?.message || data.error || t("Regeneration failed."));
       }
-    } catch {
+    } catch (err) {
+      captureClientError("Matches.regenerate", err, { projectId });
       setError(t("Network error."));
     }
     setRegenerating(null);

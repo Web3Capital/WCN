@@ -5,6 +5,7 @@ import { Link } from "@/i18n/routing";
 import { DetailLayout, StatusBadge } from "../../_components";
 import { InternalNoteField, NoteFeed, NoteSectionCard } from "../../notes";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 
 type ApplicationData = {
   id: string;
@@ -64,7 +65,8 @@ export function ApplicationDetail({
       } else {
         setError(data.error?.message || data.error || t("Update failed."));
       }
-    } catch {
+    } catch (err) {
+      captureClientError("ApplicationDetail.update", err);
       setError(t("Network error."));
     }
     setBusy(false);

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Link } from "@/i18n/routing";
 import { StatusBadge, EmptyState, ConfirmDialog, StatCard, DashboardDistributionPie, DashboardPipelineBar } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 
 type Dispute = {
   id: string;
@@ -67,7 +68,7 @@ export function DisputesUI({ disputes: initialDisputes }: { disputes: Dispute[] 
           d.id === id ? { ...d, status, resolution, resolvedAt: new Date().toISOString() } : d
         ));
       }
-    } catch { /* ignore */ }
+    } catch (err) { captureClientError("Disputes.resolve", err, { id }); }
     setBusy(null);
   }
 

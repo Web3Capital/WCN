@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Link } from "@/i18n/routing";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 import { DetailLayout, StatusBadge, StatCard } from "../../_components";
 import { NoteFeed, NoteSectionCard } from "../../notes";
 
@@ -100,7 +101,8 @@ export function PobDetail({
       } else {
         setError(data.error?.message || data.error || t("Update failed."));
       }
-    } catch {
+    } catch (err) {
+      captureClientError("PoBDetail.update", err);
       setError(t("Network error."));
     }
     setBusy(false);

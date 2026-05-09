@@ -112,7 +112,8 @@ export function DealDetail({ deal, nodes, isAdmin }: {
       const data = await res.json();
       if (data.ok) setStage(s);
       else setError(data.error || t("Transition failed."));
-    } catch {
+    } catch (err) {
+      captureClientError("DealDetail.transition", err, { dealId: deal.id });
       setError(t("Transition failed."));
     } finally { setBusy(false); }
   }, [deal.id, t]);
@@ -130,7 +131,8 @@ export function DealDetail({ deal, nodes, isAdmin }: {
       if (!data.ok) setAdminMsg(data.error ?? t("Save failed."));
       else setAdminMsg(t("Saved"));
       setTimeout(() => setAdminMsg(null), 2000);
-    } catch {
+    } catch (err) {
+      captureClientError("DealDetail.adminPatch", err, { dealId: deal.id });
       setAdminMsg(t("Save failed."));
     } finally { setAdminSaving(false); }
   }, [deal.id, t]);

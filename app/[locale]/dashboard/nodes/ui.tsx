@@ -109,6 +109,8 @@ function formatTerritoryJsonDefault(v: unknown): string {
   try {
     return JSON.stringify(v, null, 2);
   } catch {
+    // Intentional: territory JSON may contain circular refs in dev fixtures;
+    // empty string is a safe fallback for the textarea default.
     return "";
   }
 }
@@ -716,6 +718,8 @@ export function NodesConsole({
                               }
                               void onSave({ territoryJson: parsed as Record<string, unknown> });
                             } catch {
+                              // Intentional: parse error from user JSON input;
+                              // surface to the form, no need to capture.
                               setError(t("Invalid JSON for territory."));
                             }
                           }
