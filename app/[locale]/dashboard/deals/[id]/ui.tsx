@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "@/i18n/routing";
 import { Clock } from "lucide-react";
+import { captureClientError } from "@/lib/observability/client-error";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { DetailLayout, StatusBadge, StatCard } from "../../_components";
 import { NoteSectionCard, NoteComposerRow, NoteFeed } from "../../notes";
@@ -95,7 +96,7 @@ export function DealDetail({ deal, nodes, isAdmin }: {
     fetch(`/api/deals/${deal.id}/activity`)
       .then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.json(); })
       .then((d) => { if (d.ok) setActivity(d.data?.activity ?? []); })
-      .catch((err) => console.error("[Deal] activity fetch failed", err));
+      .catch((err) => captureClientError("Deal.activityFetch", err, { dealId: deal.id }));
   }, [deal.id, isAdmin]);
 
   const transitionStage = useCallback(async (s: string) => {

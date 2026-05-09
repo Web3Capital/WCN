@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { StatusBadge, EmptyState } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 
 type Notification = {
   id: string;
@@ -32,7 +33,7 @@ export function NotificationsUI({ notifications }: { notifications: Notification
       });
       if (!res.ok) throw new Error(`Mark read failed: ${res.status}`);
       setItems(items.map((n) => ({ ...n, readAt: n.readAt || new Date().toISOString() })));
-    } catch (err) { console.error("[Notifications] mark all read failed", err); }
+    } catch (err) { captureClientError("Notifications.markAllRead", err); }
     setBusy(false);
   }
 

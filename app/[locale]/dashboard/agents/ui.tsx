@@ -3,6 +3,7 @@
 import { useMemo, useState, useCallback } from "react";
 import { useRouter } from "@/i18n/routing";
 import { Search, ChevronDown, ChevronUp, Trash2, X } from "lucide-react";
+import { captureClientError } from "@/lib/observability/client-error";
 import { StatusBadge, FormCard, EmptyState, StatCard, DashboardDistributionPie, DashboardPipelineBar, ReadOnlyInlineStrip } from "../_components";
 import { FilterToolbar } from "../_components/filter-toolbar";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
@@ -137,7 +138,7 @@ export function AgentsConsole({
       if (!data?.ok) throw new Error(data?.error ?? t("Failed to load agents."));
       setRows(data.data ?? []);
     } catch (err) {
-      console.error("[Agents] refresh failed", err);
+      captureClientError("Agents.refresh", err);
     } finally {
       setLoading(false);
     }

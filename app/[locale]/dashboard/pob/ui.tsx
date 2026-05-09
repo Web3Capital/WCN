@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "@/i18n/routing";
 import { getApiErrorMessageFromJson } from "@/lib/api-error";
+import { captureClientError } from "@/lib/observability/client-error";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { StatusBadge, FormCard, EmptyState, StatCard, DashboardDistributionPie, DashboardPipelineBar, ReadOnlyInlineStrip } from "../_components";
 
@@ -78,7 +79,7 @@ export function PobConsole({
     fetch(`/api/reviews?targetType=POB&targetId=${selectedId}`, { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => { if (d?.ok) setPobReviews(d.data ?? []); })
-      .catch((err) => console.error("[PoB] review fetch failed", err));
+      .catch((err) => captureClientError("PoB.reviewFetch", err, { selectedId }));
   }, [selectedId, readOnly]);
 
   async function refresh() {

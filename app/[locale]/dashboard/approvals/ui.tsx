@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { StatusBadge, FilterToolbar, EmptyState, LoadingState, StatCard, DashboardDistributionPie, DashboardPipelineBar } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 
 type Approval = {
   id: string;
@@ -34,7 +35,7 @@ export function ApprovalsUI() {
       .then((d) => {
         if (d?.ok && d.data && typeof d.data === "object") setStatusCounts(d.data as Record<string, number>);
       })
-      .catch((err) => console.error("[Approvals] aggregate failed", err));
+      .catch((err) => captureClientError("Approvals.aggregate", err));
   }, []);
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export function ApprovalsUI() {
     fetch(`/api/approvals?status=${filter}`)
       .then((r) => r.json())
       .then((d) => { if (d.ok) setApprovals(d.data ?? []); })
-      .catch((err) => console.error("[Approvals] fetch failed", err))
+      .catch((err) => captureClientError("Approvals.fetch", err, { filter }))
       .finally(() => setLoading(false));
   }, [filter]);
 

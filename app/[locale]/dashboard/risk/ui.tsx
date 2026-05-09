@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { StatusBadge, EmptyState, FormCard, ConfirmDialog, StatCard, DashboardDistributionPie, DashboardPipelineBar } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 
 type RiskFlagRow = {
   id: string;
@@ -44,7 +45,7 @@ function RiskRulesTab() {
       return r.json();
     }).then((d) => {
       if (d.ok) setRules(d.data);
-    }).catch((err) => console.error("[Risk]", err));
+    }).catch((err) => captureClientError("Risk.rulesFetch", err));
   }, []);
 
   async function createRule(e: React.FormEvent) {

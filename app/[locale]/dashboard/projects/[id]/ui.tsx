@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "@/i18n/routing";
 import { ExternalLink, FileText, Upload, Clock, MessageCircle } from "lucide-react";
+import { captureClientError } from "@/lib/observability/client-error";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { DetailLayout, StatusBadge, StatCard } from "../../_components";
 import { InternalNoteField, NoteFeed, NoteSectionCard } from "../../notes";
@@ -101,14 +102,14 @@ export function ProjectDetail({ project, isAdmin }: { project: ProjectData; isAd
     fetch(`/api/projects/${project.id}/activity`)
       .then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.json(); })
       .then((d) => { if (d.ok) setActivity(d.data?.activity ?? []); })
-      .catch((err) => console.error("[Project] activity fetch failed", err));
+      .catch((err) => captureClientError("Project.activityFetch", err, { projectId: project.id }));
   }, [project.id, isAdmin]);
 
   useEffect(() => {
     fetch(`/api/projects/${project.id}/files`)
       .then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.json(); })
       .then((d) => { if (d.ok) setFiles(d.data?.files ?? []); })
-      .catch((err) => console.error("[Project] files fetch failed", err));
+      .catch((err) => captureClientError("Project.filesFetch", err, { projectId: project.id }));
   }, [project.id]);
 
   const updateStatus = useCallback(async (newStatus: string) => {
