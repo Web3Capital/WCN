@@ -61,7 +61,20 @@ const config = [
   },
   {
     name: "wcn/ignores",
-    ignores: ["node_modules/", ".next/", "prisma/", "metrics/", "coverage/", "lib/generated/"],
+    ignores: [
+      "node_modules/",
+      ".next/",
+      "**/.next/**",
+      ".claude/",
+      ".claude/**",
+      "prisma/",
+      "metrics/",
+      "coverage/",
+      "test-results/",
+      "playwright-report/",
+      "blob-report/",
+      "lib/generated/",
+    ],
   },
 ];
 

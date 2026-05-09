@@ -16,3 +16,9 @@ coverage/
 /blob-report/
 /playwright/.cache/
 .env*.local
+
+# LibreOffice / Office editor temp & lock files (generated when editing
+# files inside the WCN/ strategy folder). Tracked-file noise; safe to ignore.
+**/.~lock.*#
+**/~$*
+**/lu*.tmp
