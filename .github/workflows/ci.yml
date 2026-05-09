@@ -37,6 +37,9 @@ jobs:
       - name: Tests with Coverage
         run: npm run test:coverage
 
+      - name: i18n parity (ratchet)
+        run: npx tsx scripts/check-i18n.ts
+
   build:
     runs-on: ubuntu-latest
     needs: lint-typecheck-test
