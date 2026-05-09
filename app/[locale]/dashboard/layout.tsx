@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "@/i18n/routing";
 import { getServerSession } from "next-auth";
+import { getTranslations } from "next-intl/server";
 import { authOptions } from "@/lib/auth";
 import { isAdminRole } from "@/lib/permissions";
 import { DashboardShell } from "./_components/dashboard-shell";
@@ -25,10 +26,11 @@ export default async function DashboardLayout({
     return null;
   }
 
+  const t = await getTranslations("dashboard.overview");
   const u = session.user;
   return (
     <DashboardShell
-      displayName={u.name ?? u.email ?? "Account"}
+      displayName={u.name ?? u.email ?? t("fallbackName")}
       email={u.email ?? undefined}
       role={u.role!}
       isAdmin={isAdminRole(u.role!)}

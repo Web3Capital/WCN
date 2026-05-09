@@ -64,6 +64,8 @@ export function AutoTranslateProvider({
       if (isEn || !text) return text;
       if (map[text]) return map[text];
 
+      if (typeof window === "undefined") return text;
+
       if (!pending.current.has(text)) {
         pending.current.add(text);
         clearTimeout(timer.current);

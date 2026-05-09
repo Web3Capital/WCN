@@ -725,6 +725,61 @@
       "nsNotifRules": "Notification Rules",
       "nsTemplates": "Templates"
     },
+    "overview": {
+      "eyebrow": "Overview",
+      "welcome": "Welcome back",
+      "subtitle": "{role} · WCN Operating Console",
+      "fallbackName": "Account",
+      "profileMeta": "Nodes: {nodes} · Projects: {projects} · Tasks: {tasks} · PoB: {pob}",
+      "stats": {
+        "registry": "Registry",
+        "projects": "Projects",
+        "verification": "Verification",
+        "deals": "Deals",
+        "nodes": "Nodes",
+        "yourNodes": "Your nodes",
+        "totalProjects": "Projects",
+        "yourProjects": "Your projects",
+        "pobPending": "PoB pending",
+        "yourPob": "Your PoB",
+        "activeDeals": "Active deals",
+        "yourDeals": "Your deals"
+      },
+      "actions": {
+        "createNode": "Create node",
+        "createNodeDesc": "New network participant",
+        "newProject": "New project",
+        "newProjectDesc": "Start project workflow",
+        "addCapital": "Add capital",
+        "addCapitalDesc": "New investor profile",
+        "settlement": "Settlement",
+        "settlementDesc": "Run allocation cycles"
+      },
+      "myWork": {
+        "title": "My work",
+        "tasks": "Tasks",
+        "projects": "Projects",
+        "dealRoom": "Deal Room",
+        "proofDesk": "Proof Desk",
+        "tasksTotal": "· {count} total",
+        "scopedHint": "· scoped to your nodes"
+      },
+      "modules": {
+        "title": "All modules",
+        "nodeRegistry": "Node registry",
+        "capitalPool": "Capital pool",
+        "agents": "Agents",
+        "settlement": "Settlement",
+        "applications": "Applications",
+        "capitalProfiles": "· {count} profiles",
+        "appCount": "· {count}"
+      },
+      "recent": {
+        "title": "Recent activity",
+        "viewAll": "View all →",
+        "system": "System"
+      }
+    },
     "account": {
       "menuAria": "Account menu",
       "workspace": "Workspace",
