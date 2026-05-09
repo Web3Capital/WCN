@@ -122,7 +122,7 @@ const POLICIES: Record<string, PolicyMap> = {
     deal: ["read", "create", "update"],
     task: ["read", "create", "update"],
     evidence: ["read", "create"],
-    pob: ["read"],
+    pob: ["read", "create"],
     agent: ["read", "create", "update"],
     settlement: ["read"],
     file: ["read", "create"],

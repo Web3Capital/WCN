@@ -1,16 +1,14 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requirePermission, requireSignedIn } from "@/lib/admin";
+import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
-import { isAdminRole } from "@/lib/permissions";
-import { apiOk, apiCreated, apiUnauthorized, apiForbidden, zodToApiError } from "@/lib/core/api-response";
+import { apiOk, apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
 import { parseBody, createPolicySchema } from "@/lib/core/validation";
 import { createPolicy } from "@/lib/modules/policy";
 
 export async function GET(req: Request) {
-  const auth = await requireSignedIn();
+  const auth = await requirePermission("read", "policy");
   if (!auth.ok) return apiUnauthorized();
-  if (!isAdminRole(auth.session.user?.role ?? "USER")) return apiForbidden();
 
   const prisma = getPrisma();
   const { searchParams } = new URL(req.url);

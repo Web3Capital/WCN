@@ -10,6 +10,27 @@ function getDatasourceUrl() {
   return process.env.POSTGRES_URL || process.env.DATABASE_URL;
 }
 
+function isLocalDatabaseHost(hostname: string) {
+  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
+}
+
+export function shouldUsePrismaSsl(url: string) {
+  const explicit = process.env.DB_SSL;
+  if (explicit === "true") return true;
+  if (explicit === "false") return false;
+
+  try {
+    const parsed = new URL(url);
+    const sslMode = parsed.searchParams.get("sslmode");
+    if (sslMode === "require") return true;
+    if (sslMode === "disable") return false;
+
+    return process.env.NODE_ENV === "production" && !isLocalDatabaseHost(parsed.hostname);
+  } catch {
+    return process.env.NODE_ENV === "production" || url.includes("sslmode=require");
+  }
+}
+
 export function getPrisma() {
   if (globalForPrisma.prisma) return globalForPrisma.prisma;
 
@@ -21,7 +42,7 @@ export function getPrisma() {
     throw new Error("POSTGRES_URL must be a direct postgres:// connection string (not prisma+postgres).");
   }
 
-  const sslEnabled = process.env.NODE_ENV === "production" || url.includes("sslmode=require");
+  const sslEnabled = shouldUsePrismaSsl(url);
   // Default max=2 per instance. On Vercel Fluid Compute the runtime keeps many
   // function instances warm; with max=10 we'd exhaust Postgres `max_connections=100`
   // at ~10 concurrent instances. A connection pooler (PgBouncer / Neon pooler /
@@ -44,4 +65,3 @@ export function getPrisma() {
 
   return globalForPrisma.prisma;
 }
-
