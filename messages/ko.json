@@ -751,6 +751,17 @@
       "governance": "거버넌스",
       "api-keys": "API 키",
       "ingestion": "데이터 수집"
+    },
+    "usersPage": {
+      "eyebrow": "관리",
+      "title": "사용자",
+      "subtitle": "사용자 계정 및 역할을 관리합니다.",
+      "nonAdmin": "사용자 관리는 관리자만 가능합니다."
+    },
+    "settingsPage": {
+      "eyebrow": "계정",
+      "title": "설정",
+      "subtitle": "보안, 세션 및 기본 설정."
     }
   },
   "common": {

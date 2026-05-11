@@ -751,6 +751,17 @@
       "governance": "Governance",
       "api-keys": "API Keys",
       "ingestion": "Datenaufnahme"
+    },
+    "usersPage": {
+      "eyebrow": "Admin",
+      "title": "Nutzer",
+      "subtitle": "Verwalten Sie Benutzerkonten und Rollen.",
+      "nonAdmin": "Die Benutzerverwaltung steht nur Administratoren zur Verfügung."
+    },
+    "settingsPage": {
+      "eyebrow": "Konto",
+      "title": "Einstellungen",
+      "subtitle": "Sicherheit, Sitzungen und Einstellungen."
     }
   },
   "common": {

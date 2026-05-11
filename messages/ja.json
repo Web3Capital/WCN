@@ -751,6 +751,17 @@
       "governance": "ガバナンス",
       "api-keys": "APIキー",
       "ingestion": "データ取り込み"
+    },
+    "usersPage": {
+      "eyebrow": "管理",
+      "title": "ユーザー",
+      "subtitle": "ユーザーアカウントとロールを管理します。",
+      "nonAdmin": "ユーザー管理は管理者のみが利用できます。"
+    },
+    "settingsPage": {
+      "eyebrow": "アカウント",
+      "title": "設定",
+      "subtitle": "セキュリティ、セッション、環境設定。"
     }
   },
   "common": {

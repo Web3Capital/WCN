@@ -962,6 +962,17 @@
       "territory-rules": "Territory Rules",
       "permissions": "Permissions",
       "templates": "Templates"
+    },
+    "usersPage": {
+      "eyebrow": "Admin",
+      "title": "Users",
+      "subtitle": "Manage user accounts and roles.",
+      "nonAdmin": "User management is only available to administrators."
+    },
+    "settingsPage": {
+      "eyebrow": "Account",
+      "title": "Settings",
+      "subtitle": "Security, sessions, and preferences."
     }
   },
   "common": {

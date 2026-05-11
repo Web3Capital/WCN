@@ -751,6 +751,17 @@
       "governance": "Governança",
       "api-keys": "Chaves de API",
       "ingestion": "Ingestão de dados"
+    },
+    "usersPage": {
+      "eyebrow": "Administrador",
+      "title": "Usuários",
+      "subtitle": "Gerenciar contas e funções de usuário.",
+      "nonAdmin": "O gerenciamento de usuários está disponível apenas para administradores."
+    },
+    "settingsPage": {
+      "eyebrow": "Conta",
+      "title": "Configurações",
+      "subtitle": "Segurança, sessões e preferências."
     }
   },
   "common": {

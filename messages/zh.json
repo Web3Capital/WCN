@@ -806,6 +806,17 @@
       "governance": "治理",
       "api-keys": "API 密钥",
       "ingestion": "数据采集"
+    },
+    "usersPage": {
+      "eyebrow": "管理员",
+      "title": "用户",
+      "subtitle": "管理用户账户和角色。",
+      "nonAdmin": "用户管理仅对管理员可用。"
+    },
+    "settingsPage": {
+      "eyebrow": "账户",
+      "title": "设置",
+      "subtitle": "安全性、会话和首选项。"
     }
   },
   "common": {

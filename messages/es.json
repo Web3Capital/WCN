@@ -751,6 +751,17 @@
       "governance": "Gobernanza",
       "api-keys": "API Keys",
       "ingestion": "Ingesta de datos"
+    },
+    "usersPage": {
+      "eyebrow": "Administración",
+      "title": "Usuarios",
+      "subtitle": "Administrar cuentas de usuario y roles.",
+      "nonAdmin": "La gestión de usuarios sólo está disponible para administradores."
+    },
+    "settingsPage": {
+      "eyebrow": "Cuenta",
+      "title": "Configuración",
+      "subtitle": "Seguridad, sesiones y preferencias."
     }
   },
   "common": {
