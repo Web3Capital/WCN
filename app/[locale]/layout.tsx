@@ -8,6 +8,8 @@ import { locales, localeMetadata, type Locale } from "@/i18n/config";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { Providers } from "@/components/providers";
+import { ScrollReveal } from "@/components/brand/scroll-reveal";
+import { ReadingProgress } from "@/components/brand/reading-progress";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import { fontSans, fontSerif, fontMono } from "@/app/fonts";
@@ -141,6 +143,8 @@ export default async function LocaleLayout({
             <a href="#main-content" className="skip-link">
               {messages && (messages as any).common?.skipToContent || "Skip to content"}
             </a>
+            <ScrollReveal />
+            <ReadingProgress />
             <Nav />
             <div id="main-content">{children}</div>
             <Footer />

@@ -31,16 +31,16 @@ export function VoltageCallout({
   secondaryHref,
 }: Props) {
   return (
-    <section className="voltage-callout">
+    <section className="voltage-callout" data-anim-host>
       <div className="container">
-        <div className="voltage-callout-inner">
+        <div className="voltage-callout-inner" data-reveal-group>
           <span className="voltage-callout-glyph" aria-hidden>
             <WCNGlyph size={28} variant="ledger" />
           </span>
-          <span className="eyebrow eyebrow-plain voltage-callout-eyebrow">{eyebrow}</span>
-          <h2 className="voltage-callout-title">{title}</h2>
-          <p className="voltage-callout-desc">{desc}</p>
-          <div className="cta-row cta-centered voltage-callout-actions">
+          <span className="eyebrow eyebrow-plain voltage-callout-eyebrow" data-reveal>{eyebrow}</span>
+          <h2 className="voltage-callout-title" data-reveal>{title}</h2>
+          <p className="voltage-callout-desc" data-reveal>{desc}</p>
+          <div className="cta-row cta-centered voltage-callout-actions" data-reveal>
             <Link href={primaryHref} className="button button-lg">
               {primaryLabel}
             </Link>

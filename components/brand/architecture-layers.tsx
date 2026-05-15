@@ -10,7 +10,11 @@
  * layer" — no back doors, no side channels. A small "audit pulse"
  * travels down the rail.
  *
- * Server component (the pulse animation is pure CSS).
+ * Motion: when the stack enters the viewport, each layer cascades in
+ * from the left with a 120ms stagger, and the rail intensifies as the
+ * sequence completes. Pulse is gated by AnimationBudget for offscreen.
+ *
+ * Server component (motion is pure CSS).
  */
 
 type Layer = {
@@ -29,7 +33,7 @@ type Props = {
 
 export function ArchitectureLayers({ layers, flowExample }: Props) {
   return (
-    <div className="architecture-layers" data-anim-host>
+    <div className="architecture-layers" data-anim-host data-reveal="fade">
       {flowExample ? (
         <p className="architecture-flow-example">
           <span className="architecture-flow-example-label">Example request</span>

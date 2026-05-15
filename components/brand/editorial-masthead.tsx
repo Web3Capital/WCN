@@ -6,7 +6,9 @@
  * italic emphasis, byline kicker, and a quiet rule below. Generous
  * negative space — the page must breathe before any density.
  *
- * Server component; renders nothing dynamic.
+ * Server component; renders nothing dynamic. Each line is tagged as a
+ * reveal target so the masthead "unfolds" line-by-line on mount via the
+ * global ScrollReveal observer.
  */
 
 import type { ReactNode } from "react";
@@ -28,16 +30,19 @@ type Props = {
 export function EditorialMasthead({ issueNumber, issueDate, kicker, title, lede, ledeDropcap }: Props) {
   return (
     <header className="editorial-masthead" data-anim-host>
-      <div className="container">
-        <div className="editorial-masthead-bar">
+      <div className="container" data-reveal-group>
+        <div className="editorial-masthead-bar" data-reveal="fade">
           <span className="editorial-masthead-issue">{issueNumber}</span>
           <span className="editorial-masthead-rule" aria-hidden />
           <span className="editorial-masthead-date">{issueDate}</span>
         </div>
-        <p className="editorial-masthead-kicker">{kicker}</p>
-        <h1 className="editorial-masthead-title">{title}</h1>
+        <p className="editorial-masthead-kicker" data-reveal>{kicker}</p>
+        <h1 className="editorial-masthead-title" data-reveal>{title}</h1>
         {lede ? (
-          <p className={`editorial-masthead-lede${ledeDropcap ? " editorial-masthead-lede-dropcap" : ""}`}>
+          <p
+            className={`editorial-masthead-lede${ledeDropcap ? " editorial-masthead-lede-dropcap" : ""}`}
+            data-reveal
+          >
             {lede}
           </p>
         ) : null}
