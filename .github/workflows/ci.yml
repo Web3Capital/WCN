@@ -59,7 +59,11 @@ jobs:
           SKIP_ENV_VALIDATION: "1"
           NEXTAUTH_URL: "http://localhost:3000"
           NEXTAUTH_SECRET: "ci-build-secret-not-real"
-          POSTGRES_URL: "postgresql://build:build@localhost:5432/wcn_build"
+          # `?sslmode=disable` — the CI postgres service container speaks
+          # plain TCP. Without this, `next start` runs with NODE_ENV=production
+          # and lib/prisma.ts defaults SSL on, which the container rejects with
+          # "Error opening a TLS connection".
+          POSTGRES_URL: "postgresql://build:build@localhost:5432/wcn_build?sslmode=disable"
 
   e2e:
     runs-on: ubuntu-latest
@@ -79,7 +83,9 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     env:
-      POSTGRES_URL: postgresql://wcn:wcn@localhost:5432/wcn_e2e
+      # `?sslmode=disable` — see Build job comment; the e2e postgres service
+      # container speaks plain TCP and would otherwise be refused by SSL.
+      POSTGRES_URL: postgresql://wcn:wcn@localhost:5432/wcn_e2e?sslmode=disable
       NEXTAUTH_URL: http://127.0.0.1:3000
       NEXTAUTH_SECRET: ci-e2e-playwright-secret-not-real-32chars
       SKIP_ENV_VALIDATION: "1"
