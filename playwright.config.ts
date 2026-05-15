@@ -23,7 +23,11 @@ export default defineConfig({
         command: `npm run build && npx next start -p ${port}`,
         url: `${baseURL}/api/health`,
         reuseExistingServer: !process.env.CI,
-        timeout: 180_000,
+        // `npm run build` does `prisma generate && next build`. On CI the
+        // build + collect-traces + `next start` boot sits around 150-180s
+        // even after dropping unused SSG. Give it real headroom instead of
+        // racing the 180s default.
+        timeout: 300_000,
         stdout: "pipe",
         stderr: "pipe",
         env: {

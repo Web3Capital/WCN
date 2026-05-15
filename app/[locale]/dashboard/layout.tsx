@@ -14,6 +14,13 @@ export const metadata: Metadata = {
   description: "WCN collaboration network console."
 };
 
+// The dashboard is fully auth-gated — there's no useful static snapshot to
+// generate (every render needs the user's session, role, and tenant data).
+// Marking the layout dynamic cascades to every page underneath, so `next
+// build` doesn't waste minutes prerendering ~200 routes × 10 locales of
+// redirect-to-login stubs (which was timing the CI e2e job out at 180s).
+export const dynamic = "force-dynamic";
+
 export default async function DashboardLayout({
   children,
   params: { locale },
