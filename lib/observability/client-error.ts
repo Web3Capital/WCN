@@ -18,9 +18,23 @@
 
 "use client";
 
-import * as Sentry from "@sentry/nextjs";
+// IMPORTANT: do NOT statically import "@sentry/nextjs" here. Static-importing
+// it pulls @sentry/node + OpenTelemetry into the build graph of every
+// dashboard route that uses `captureClientError`, which on a project with
+// 2000+ static pages blows past CI's Playwright webServer timeout. Dynamic
+// import keeps Sentry in its own chunk and lazily loaded only when an error
+// actually fires.
 
 export type ClientErrorContext = Record<string, string | number | boolean | null | undefined>;
+
+let sentryPromise: Promise<typeof import("@sentry/nextjs") | null> | null = null;
+
+function loadSentry() {
+  if (!sentryPromise) {
+    sentryPromise = import("@sentry/nextjs").catch(() => null);
+  }
+  return sentryPromise;
+}
 
 export function captureClientError(
   scope: string,
@@ -34,22 +48,28 @@ export function captureClientError(
     console.error(`[${scope}]`, err, context ?? "");
   }
 
-  try {
-    Sentry.withScope((s) => {
-      s.setTag("dashboard.scope", scope);
-      if (context) {
-        for (const [k, v] of Object.entries(context)) {
-          if (v !== undefined && v !== null) s.setExtra(k, v);
+  // Fire-and-forget so callers stay synchronous (most call sites are inside
+  // `.catch(err => captureClientError(...))`). Errors inside reporting are
+  // swallowed so reporting never breaks the calling component.
+  void (async () => {
+    try {
+      const Sentry = await loadSentry();
+      if (!Sentry) return;
+      Sentry.withScope((s) => {
+        s.setTag("dashboard.scope", scope);
+        if (context) {
+          for (const [k, v] of Object.entries(context)) {
+            if (v !== undefined && v !== null) s.setExtra(k, v);
+          }
         }
-      }
-      const error =
-        err instanceof Error
-          ? err
-          : new Error(typeof err === "string" ? err : `Non-Error thrown in ${scope}`);
-      Sentry.captureException(error);
-    });
-  } catch {
-    // Sentry init can fail in environments without DSN; never let reporting
-    // throw into the calling component.
-  }
+        const error =
+          err instanceof Error
+            ? err
+            : new Error(typeof err === "string" ? err : `Non-Error thrown in ${scope}`);
+        Sentry.captureException(error);
+      });
+    } catch {
+      // intentional: never let reporting throw
+    }
+  })();
 }
