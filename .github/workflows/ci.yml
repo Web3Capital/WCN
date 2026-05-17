@@ -90,6 +90,11 @@ jobs:
       NEXTAUTH_SECRET: ci-e2e-playwright-secret-not-real-32chars
       SKIP_ENV_VALIDATION: "1"
       CI: "true"
+      # Bypass Upstash-backed rate-limit in CI: `next start` runs with
+      # NODE_ENV=production, the limiter is configured fail-closed, and CI
+      # has no Upstash. Without this every /api/* call returns 429 and the
+      # whole e2e suite is unreachable. See lib/rate-limit.ts.
+      DISABLE_RATE_LIMITING: "1"
     steps:
       - uses: actions/checkout@v4
 

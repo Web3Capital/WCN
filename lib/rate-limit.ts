@@ -59,6 +59,13 @@ function getAdminLimiter(): Ratelimit | null {
 }
 
 async function check(limiter: Ratelimit | null, identifier: string, failClosed = false): Promise<RateLimitResult> {
+  // Explicit escape hatch for known-safe environments (CI, integration
+  // runners) where Upstash isn't reachable but `next start` still boots
+  // with NODE_ENV=production. Without it, every API request returns 429
+  // in CI and tests against `/api/*` are unreachable. Real production
+  // must never set this; the prod safety story is fail-closed.
+  if (process.env.DISABLE_RATE_LIMITING === "1") return noopResult;
+
   if (!limiter) {
     if (process.env.NODE_ENV === "production" && failClosed) return failClosedResult;
     if (process.env.NODE_ENV === "production") {
