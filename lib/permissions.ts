@@ -122,7 +122,11 @@ const POLICIES: Record<string, PolicyMap> = {
     deal: ["read", "create", "update"],
     task: ["read", "create", "update"],
     evidence: ["read", "create"],
-    pob: ["read"],
+    // NODE_OWNER can create + mutate PoBs attributed to their own nodes;
+    // the row-level scope (lib/auth/resource-scope.ts and the IDOR check
+    // in app/api/pob/*) ensures they can't attribute to someone else's
+    // node. Matches the expectation encoded in e2e/rbac-pob.spec.ts.
+    pob: ["read", "create", "update"],
     agent: ["read", "create", "update"],
     settlement: ["read"],
     file: ["read", "create"],

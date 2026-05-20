@@ -8,9 +8,13 @@ import { parseBody, createPolicySchema } from "@/lib/core/validation";
 import { createPolicy } from "@/lib/modules/policy";
 
 export async function GET(req: Request) {
-  const auth = await requireSignedIn();
+  // Policy catalog is intentionally readable by every signed-in role —
+  // users need to know what policies govern them. The RBAC matrix grants
+  // `policy: ["read"]` to ALL_READ; the previous `isAdminRole` gate was
+  // tighter than the matrix and broke USER reads (see
+  // e2e/rbac-policies.spec.ts "deliberate widening from Week 2 Day 4").
+  const auth = await requirePermission("read", "policy");
   if (!auth.ok) return apiUnauthorized();
-  if (!isAdminRole(auth.session.user?.role ?? "USER")) return apiForbidden();
 
   const prisma = getPrisma();
   const { searchParams } = new URL(req.url);
