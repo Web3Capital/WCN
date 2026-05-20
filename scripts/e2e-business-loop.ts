@@ -28,6 +28,7 @@ async function cleanup(ids: {
   nodeCapitalId?: string;
   dealId?: string;
   userId?: string;
+  capitalUserId?: string;
 }) {
   try {
     if (ids.dealId) await prisma.deal.delete({ where: { id: ids.dealId } }).catch((e) => console.error("[e2e cleanup]", e));
@@ -36,6 +37,7 @@ async function cleanup(ids: {
     if (ids.nodeLeadId) await prisma.node.delete({ where: { id: ids.nodeLeadId } }).catch((e) => console.error("[e2e cleanup]", e));
     if (ids.nodeCapitalId) await prisma.node.delete({ where: { id: ids.nodeCapitalId } }).catch((e) => console.error("[e2e cleanup]", e));
     if (ids.userId) await prisma.user.delete({ where: { id: ids.userId } }).catch((e) => console.error("[e2e cleanup]", e));
+    if (ids.capitalUserId) await prisma.user.delete({ where: { id: ids.capitalUserId } }).catch((e) => console.error("[e2e cleanup]", e));
   } catch (e) { console.error("[e2e cleanup] outer", e); }
 }
 
@@ -52,15 +54,29 @@ async function main() {
     // ─── Step 1: Create test user ────────────────────────────
     console.log("Step 1: Create test entities");
 
-    const user = await prisma.user.create({
+    // Two distinct owners — the anti-gaming engine (checkSelfDealing)
+    // flags a match as `SAME_OWNER` if the lead node and capital node
+    // share an `ownerUserId`, and the matching engine skips those. Using
+    // one user for both sides made Step 5 (matching) and Step 8 (PoB
+    // attribution) silently produce empty results.
+    const stamp = Date.now();
+    const leadUser = await prisma.user.create({
       data: {
-        email: `e2e-test-${Date.now()}@wcn.network`,
-        name: "E2E Test User",
+        email: `e2e-test-lead-${stamp}@wcn.network`,
+        name: "E2E Lead User",
         role: "ADMIN",
       },
     });
-    ids.userId = user.id;
-    log(CHECK, `User created: ${user.id}`);
+    const capitalUser = await prisma.user.create({
+      data: {
+        email: `e2e-test-capital-${stamp}@wcn.network`,
+        name: "E2E Capital User",
+        role: "ADMIN",
+      },
+    });
+    ids.userId = leadUser.id;
+    ids.capitalUserId = capitalUser.id;
+    log(CHECK, `User created: ${leadUser.id}`);
     passed++;
 
     // ─── Step 2: Create nodes ────────────────────────────────
@@ -71,7 +87,7 @@ async function main() {
         name: "E2E Lead Node",
         type: "REGION",
         status: "ACTIVE",
-        ownerUserId: user.id,
+        ownerUserId: leadUser.id,
       },
     });
     ids.nodeLeadId = leadNode.id;
@@ -82,7 +98,7 @@ async function main() {
         name: "E2E Capital Node",
         type: "INDUSTRY",
         status: "ACTIVE",
-        ownerUserId: user.id,
+        ownerUserId: capitalUser.id,
       },
     });
     ids.nodeCapitalId = capitalNode.id;
@@ -127,7 +143,7 @@ async function main() {
     console.log("\nStep 5: Matching engine");
 
     const { generateMatchesForProject } = await import("../lib/modules/matching/engine");
-    const matches = await generateMatchesForProject(project.id, user.id);
+    const matches = await generateMatchesForProject(project.id, leadUser.id);
     if (matches.length > 0) {
       log(CHECK, `Generated ${matches.length} match(es), top score: ${matches[0].score}`);
       passed++;
@@ -147,7 +163,7 @@ async function main() {
 
       // Express interest
       const { expressInterest } = await import("../lib/modules/matching/engine");
-      const interested = await expressInterest(matchRecord.id, user.id);
+      const interested = await expressInterest(matchRecord.id, leadUser.id);
       if (interested?.status === "INTEREST_EXPRESSED") {
         log(CHECK, "Interest expressed");
         passed++;
@@ -186,7 +202,7 @@ async function main() {
     // Convert match to deal
     if (matchRecord) {
       const { convertMatchToDeal } = await import("../lib/modules/matching/engine");
-      await convertMatchToDeal(matchRecord.id, deal.id, user.id);
+      await convertMatchToDeal(matchRecord.id, deal.id, leadUser.id);
       const updated = await prisma.match.findUnique({ where: { id: matchRecord.id } });
       if (updated?.status === "CONVERTED_TO_DEAL") {
         log(CHECK, "Match converted to deal");
@@ -328,6 +344,7 @@ async function main() {
       if (ids.nodeLeadId) await prisma.node.delete({ where: { id: ids.nodeLeadId } }).catch((e) => console.error("[e2e cleanup]", e));
       if (ids.nodeCapitalId) await prisma.node.delete({ where: { id: ids.nodeCapitalId } }).catch((e) => console.error("[e2e cleanup]", e));
       if (ids.userId) await prisma.user.delete({ where: { id: ids.userId } }).catch((e) => console.error("[e2e cleanup]", e));
+      if (ids.capitalUserId) await prisma.user.delete({ where: { id: ids.capitalUserId } }).catch((e) => console.error("[e2e cleanup]", e));
       console.log("Cleanup complete.\n");
     } catch (e) {
       console.error("Cleanup error:", e);
