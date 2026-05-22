@@ -19,7 +19,7 @@ export default async function DealDetailPage({ params }: { params: { id: string 
   const isAdmin = isAdminRole(session.user.role);
 
   if (!isAdmin) {
-    const ownedNodeIds = await getOwnedNodeIds(prisma, session.user.id);
+    const ownedNodeIds = await getOwnedNodeIds(prisma, session.user.id, { workspaceId: session.user.activeWorkspaceId });
     const hasAccess = await prisma.deal.findFirst({
       where: {
         id: params.id,

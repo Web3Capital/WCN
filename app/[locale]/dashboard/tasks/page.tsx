@@ -20,7 +20,7 @@ export default async function TasksPage() {
   const userId = session.user.id;
 
   const prisma = getPrisma();
-  const ownedNodeIds = isAdmin ? [] : await getOwnedNodeIds(prisma, userId);
+  const ownedNodeIds = isAdmin ? [] : await getOwnedNodeIds(prisma, userId, { workspaceId: session.user.activeWorkspaceId });
   const taskWhere = isAdmin ? {} : memberTasksWhere(ownedNodeIds);
   const projectWhere = isAdmin ? {} : memberProjectsWhere(ownedNodeIds);
 

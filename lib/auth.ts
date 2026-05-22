@@ -323,22 +323,28 @@ export const authOptions: NextAuthOptions = (() => {
         if (user || now - lastRefresh > REFRESH_MS) {
           const id = (token.id ?? user?.id) as string | undefined;
           if (id) {
-            const [dbUser, ownedNodes] = await Promise.all([
-              prisma.user.findUnique({
-                where: { id },
-                select: {
-                  role: true,
-                  accountStatus: true,
-                  tokenInvalidatedAt: true,
-                  activeWorkspaceId: true,
-                  activeRole: true,
-                },
-              }),
-              prisma.node.findMany({
-                where: { ownerUserId: id },
-                select: { id: true },
-              }),
-            ]);
+            // Read user first so we can scope the node lookup to the active
+            // workspace. Cross-workspace nodeIds in the JWT would leak into
+            // any handler that trusts `session.user.nodeIds` once the
+            // workspace switcher is exposed.
+            const dbUser = await prisma.user.findUnique({
+              where: { id },
+              select: {
+                role: true,
+                accountStatus: true,
+                tokenInvalidatedAt: true,
+                activeWorkspaceId: true,
+                activeRole: true,
+              },
+            });
+            const nodeWhere: { ownerUserId: string; workspaceId?: string } = { ownerUserId: id };
+            if (dbUser?.activeWorkspaceId) {
+              nodeWhere.workspaceId = dbUser.activeWorkspaceId;
+            }
+            const ownedNodes = await prisma.node.findMany({
+              where: nodeWhere,
+              select: { id: true },
+            });
             if (dbUser) {
               token.role = dbUser.role;
               token.accountStatus = dbUser.accountStatus;

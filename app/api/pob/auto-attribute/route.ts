@@ -22,7 +22,9 @@ export async function POST(req: Request) {
   const isAdmin = isAdminRole(auth.session.user?.role ?? "USER");
   if (!isAdmin) {
     const prisma = getPrisma();
-    const ownedNodeIds = await getOwnedNodeIds(prisma, auth.session.user!.id);
+    const ownedNodeIds = await getOwnedNodeIds(prisma, auth.session.user!.id, {
+      workspaceId: auth.session.user!.activeWorkspaceId,
+    });
     if (ownedNodeIds.length === 0) return apiUnauthorized();
     const linked = await prisma.poBRecord.findFirst({
       where: { dealId, nodeId: { in: ownedNodeIds } },

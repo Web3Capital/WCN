@@ -22,7 +22,7 @@ export default async function ProofDeskPage() {
 
   let where: Record<string, unknown> = {};
   if (!isAdmin) {
-    const nodeIds = await getOwnedNodeIds(prisma, session.user.id);
+    const nodeIds = await getOwnedNodeIds(prisma, session.user.id, { workspaceId: session.user.activeWorkspaceId });
     where = memberEvidenceWhere(nodeIds);
   }
 
