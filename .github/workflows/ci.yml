@@ -37,6 +37,9 @@ jobs:
       - name: i18n parity (ratchet)
         run: npx tsx scripts/check-i18n.ts
 
+      - name: Metrics ratchet
+        run: npx tsx scripts/metrics-gate.ts
+
   build:
     runs-on: ubuntu-latest
     needs: lint-typecheck-test
