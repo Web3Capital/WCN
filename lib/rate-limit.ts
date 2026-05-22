@@ -22,6 +22,10 @@ let _authLimiter: Ratelimit | null = null;
 let _adminLimiter: Ratelimit | null = null;
 let _smsLimiter: Ratelimit | null = null;
 
+function isRateLimitDisabled() {
+  return process.env.RATE_LIMIT_DISABLED === "1" || process.env.RATE_LIMIT_DISABLED === "true";
+}
+
 function getApiLimiter(): Ratelimit | null {
   if (_apiLimiter) return _apiLimiter;
   const redis = getRedis();
@@ -59,7 +63,17 @@ function getAdminLimiter(): Ratelimit | null {
 }
 
 async function check(limiter: Ratelimit | null, identifier: string, failClosed = false): Promise<RateLimitResult> {
+  if (isRateLimitDisabled()) return noopResult;
+
   if (!limiter) {
+    // Explicit opt-out for deployments that intentionally run without
+    // Upstash (e2e CI, local production-mode rehearsals, demos). Without
+    // this override, NODE_ENV=production + missing Upstash + failClosed
+    // returns 429 on every authenticated request, which kills e2e suites
+    // running `next start` against a service-container Postgres + no
+    // Redis. Production deployments do NOT set this env var, so the
+    // existing fail-closed behavior for real production is preserved.
+    if (process.env.RATELIMIT_DISABLED === "true") return noopResult;
     if (process.env.NODE_ENV === "production" && failClosed) return failClosedResult;
     if (process.env.NODE_ENV === "production") {
       console.warn("[rate-limit] Upstash Redis not configured in production — rate limiting disabled for this request");

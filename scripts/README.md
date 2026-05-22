@@ -6,6 +6,7 @@ Operational scripts. Run from repo root.
 |---|---|
 | `baseline-metrics.sh` | Snapshots the codebase health dimensions Q1 cares about into `metrics/<date>-<label>.{json,md}`. Run weekly. |
 | `check-i18n.ts` | i18n parity ratchet — compares each `messages/<locale>.json` against `messages/en.json` and fails CI if any locale drifted further from `en` than its baseline ceiling. |
+| `metrics-gate.ts` | Code-shape ratchet — fails CI if tracked metrics (any-type count, raw API handlers, etc.) exceed ceilings in `metrics/ratchet.json`. |
 | `convert-html-to-mdx.ts` | One-shot import of WCN strategy HTML chapters into MDX. |
 | `create-admin.mjs` | Bootstrap an admin user (DB write). Local only. |
 | `e2e-business-loop.ts` | End-to-end smoke of the apply → node → task → PoB → settlement loop. Runs in CI after Playwright. |
@@ -52,4 +53,3 @@ Tracked metrics (Q2 baseline):
 | `requireAdminCallSites` | 1 | 0 | tracked-only (lib/admin.ts comment) |
 
 Adding a new metric: append a `Metric` entry to `METRICS` in `scripts/metrics-gate.ts`, run `--update`, commit. The gate is intentionally additive — removing or relaxing a metric requires PR justification.
-

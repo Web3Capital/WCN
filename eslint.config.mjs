@@ -5,12 +5,30 @@
 // ignored. Migrating to flat config makes lint actually run again, allowing
 // the no-restricted-imports rule (banning requireAdmin) to fire.
 
+import { globalIgnores } from "eslint/config";
 import nextConfig from "eslint-config-next";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import importPlugin from "eslint-plugin-import";
 import tsEslintPlugin from "@typescript-eslint/eslint-plugin";
 
 const config = [
+  globalIgnores(
+    [
+      "node_modules/",
+      ".next/",
+      "**/.next/**",
+      ".claude/",
+      ".claude/**",
+      "prisma/",
+      "metrics/",
+      "coverage/",
+      "test-results/",
+      "playwright-report/",
+      "blob-report/",
+      "lib/generated/",
+    ],
+    "wcn/ignores",
+  ),
   ...nextConfig,
   {
     name: "wcn/overrides",
@@ -58,10 +76,6 @@ const config = [
       // refactors. Ratchet to error once the count drops below 50 or so.
       "@typescript-eslint/no-explicit-any": "warn",
     },
-  },
-  {
-    name: "wcn/ignores",
-    ignores: ["node_modules/", ".next/", "prisma/", "metrics/", "coverage/", "lib/generated/"],
   },
 ];
 

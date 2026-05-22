@@ -1,0 +1,43 @@
+{
+  "generatedAt": "2026-05-09T09:02:03.255Z",
+  "referenceLocale": "en",
+  "referenceKeyCount": 878,
+  "ceilings": {
+    "ar": {
+      "missingKeys": 156,
+      "extraKeys": 0
+    },
+    "de": {
+      "missingKeys": 156,
+      "extraKeys": 0
+    },
+    "es": {
+      "missingKeys": 156,
+      "extraKeys": 0
+    },
+    "fr": {
+      "missingKeys": 156,
+      "extraKeys": 0
+    },
+    "ja": {
+      "missingKeys": 156,
+      "extraKeys": 0
+    },
+    "ko": {
+      "missingKeys": 156,
+      "extraKeys": 0
+    },
+    "pt": {
+      "missingKeys": 156,
+      "extraKeys": 0
+    },
+    "ru": {
+      "missingKeys": 156,
+      "extraKeys": 0
+    },
+    "zh": {
+      "missingKeys": 156,
+      "extraKeys": 0
+    }
+  }
+}
