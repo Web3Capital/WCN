@@ -122,6 +122,13 @@ const POLICIES: Record<string, PolicyMap> = {
     deal: ["read", "create", "update"],
     task: ["read", "create", "update"],
     evidence: ["read", "create"],
+    // PoB create was the original Week 2 Day 1 design (commit da3b9c2 e2e
+    // ratchet: "NODE_OWNER can create / mutate PoBs attributed to their
+    // own nodes, but not to nodes they don't own"). Row-level scope is
+    // enforced in `app/api/pob/route.ts` POST (lines 71–83) — non-admins
+    // must own the claimed nodeId / leadNodeId. The matrix lost `create`
+    // during the requireAdmin → requirePermission migration; restoring
+    // it here re-aligns matrix and handler.
     pob: ["read", "create"],
     agent: ["read", "create", "update"],
     settlement: ["read"],

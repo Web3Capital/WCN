@@ -7,6 +7,12 @@ import { parseBody, createPolicySchema } from "@/lib/core/validation";
 import { createPolicy } from "@/lib/modules/policy";
 
 export async function GET(req: Request) {
+  // Use the permissions matrix as the single source of truth. The previous
+  // inline `isAdminRole` check was a hold-out from the requireAdmin →
+  // requirePermission migration (lib/admin.ts line 44 comment) and
+  // contradicted `lib/permissions.ts`, where USER (and every other signed-in
+  // role) has `policy: ["read"]` by design — see the e2e ratchet
+  // `rbac-policies.spec.ts:37` "deliberate widening from Week 2 Day 4".
   const auth = await requirePermission("read", "policy");
   if (!auth.ok) return apiUnauthorized();
 
