@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 
 type Status = "idle" | "submitting" | "success" | "error";
+type Receipt = { referenceId: string; filedDate: string };
 
 const NODE_TYPES = [
   "Capital Node — VC / Fund / Family Office / Angel",
@@ -114,6 +115,7 @@ export function ApplyForm() {
   const t = useTranslations("apply");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [receipt, setReceipt] = useState<Receipt | null>(null);
 
   const [applicantName, setApplicantName] = useState("");
   const [contact, setContact] = useState("");
@@ -174,18 +176,23 @@ export function ApplyForm() {
       return;
     }
 
+    const filedAt = new Date();
+    const referenceId = `APP-${filedAt.toISOString().slice(0, 10).replace(/-/g, "")}-${Math.floor(Math.random() * 9000 + 1000)}`;
+    setReceipt({
+      referenceId,
+      filedDate: filedAt.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }),
+    });
     setStatus("success");
   }
 
   if (status === "success") {
-    // Receipt-card pattern: institutional confirmation, not a marketing toast.
-    const referenceId = `APP-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-${Math.floor(Math.random() * 9000 + 1000)}`;
+    const receiptData = receipt ?? { referenceId: "APP-PENDING", filedDate: "" };
     return (
       <div className="apply-success" role="status" aria-live="polite">
         <div className="apply-receipt">
           <div className="apply-receipt-header">
             <span className="apply-receipt-label">{t("successReceiptLabel")}</span>
-            <span className="apply-receipt-id">{referenceId}</span>
+            <span className="apply-receipt-id">{receiptData.referenceId}</span>
           </div>
           <h3 className="apply-success-title">{t("successTitle")}</h3>
           <p className="apply-success-body">{t("successBody")}</p>
@@ -199,7 +206,7 @@ export function ApplyForm() {
             <div>
               <span className="apply-receipt-meta-label">Filed</span>
               <span className="apply-receipt-meta-value">
-                {new Date().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
+                {receiptData.filedDate}
               </span>
             </div>
           </div>

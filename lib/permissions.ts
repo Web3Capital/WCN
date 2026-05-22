@@ -122,11 +122,14 @@ const POLICIES: Record<string, PolicyMap> = {
     deal: ["read", "create", "update"],
     task: ["read", "create", "update"],
     evidence: ["read", "create"],
-    // NODE_OWNER can create + mutate PoBs attributed to their own nodes;
-    // the row-level scope (lib/auth/resource-scope.ts and the IDOR check
-    // in app/api/pob/*) ensures they can't attribute to someone else's
-    // node. Matches the expectation encoded in e2e/rbac-pob.spec.ts.
-    pob: ["read", "create", "update"],
+    // PoB create was the original Week 2 Day 1 design (commit da3b9c2 e2e
+    // ratchet: "NODE_OWNER can create / mutate PoBs attributed to their
+    // own nodes, but not to nodes they don't own"). Row-level scope is
+    // enforced in `app/api/pob/route.ts` POST (lines 71–83) — non-admins
+    // must own the claimed nodeId / leadNodeId. The matrix lost `create`
+    // during the requireAdmin → requirePermission migration; restoring
+    // it here re-aligns matrix and handler.
+    pob: ["read", "create"],
     agent: ["read", "create", "update"],
     settlement: ["read"],
     file: ["read", "create"],

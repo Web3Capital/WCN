@@ -762,6 +762,61 @@
       "eyebrow": "계정",
       "title": "설정",
       "subtitle": "보안, 세션 및 기본 설정."
+    },
+    "overview": {
+      "eyebrow": "개요",
+      "welcome": "Welcome back",
+      "subtitle": "{role} · WCN Operating Console",
+      "fallbackName": "계정",
+      "profileMeta": "Nodes: {nodes} · Projects: {projects} · Tasks: {tasks} · PoB: {pob}",
+      "stats": {
+        "registry": "기재",
+        "projects": "프로젝트",
+        "verification": "검증",
+        "deals": "딜",
+        "nodes": "Nodes",
+        "yourNodes": "Your nodes",
+        "totalProjects": "프로젝트",
+        "yourProjects": "Your projects",
+        "pobPending": "PoB pending",
+        "yourPob": "Your PoB",
+        "activeDeals": "활성 거래",
+        "yourDeals": "Your deals"
+      },
+      "actions": {
+        "createNode": "Create node",
+        "createNodeDesc": "New network participant",
+        "newProject": "New project",
+        "newProjectDesc": "Start project workflow",
+        "addCapital": "Add capital",
+        "addCapitalDesc": "New investor profile",
+        "settlement": "정산",
+        "settlementDesc": "Run allocation cycles"
+      },
+      "myWork": {
+        "title": "My work",
+        "tasks": "태스크",
+        "projects": "프로젝트",
+        "dealRoom": "딜룸",
+        "proofDesk": "Proof Desk",
+        "tasksTotal": "· {count} total",
+        "scopedHint": "· scoped to your nodes"
+      },
+      "modules": {
+        "title": "All modules",
+        "nodeRegistry": "노드 레지스트리",
+        "capitalPool": "Capital pool",
+        "agents": "에이전트",
+        "settlement": "정산",
+        "applications": "지원",
+        "capitalProfiles": "· {count} profiles",
+        "appCount": "· {count}"
+      },
+      "recent": {
+        "title": "Recent activity",
+        "viewAll": "View all →",
+        "system": "System"
+      }
     }
   },
   "common": {

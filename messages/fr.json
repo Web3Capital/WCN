@@ -762,6 +762,61 @@
       "eyebrow": "Compte",
       "title": "Paramètres",
       "subtitle": "Sécurité, sessions et préférences."
+    },
+    "overview": {
+      "eyebrow": "Vue d’ensemble",
+      "welcome": "Welcome back",
+      "subtitle": "{role} · WCN Operating Console",
+      "fallbackName": "Compte",
+      "profileMeta": "Nodes: {nodes} · Projects: {projects} · Tasks: {tasks} · PoB: {pob}",
+      "stats": {
+        "registry": "Enregistrement",
+        "projects": "Projets",
+        "verification": "Vérification",
+        "deals": "Offres",
+        "nodes": "Nodes",
+        "yourNodes": "Your nodes",
+        "totalProjects": "Projets",
+        "yourProjects": "Your projects",
+        "pobPending": "PoB pending",
+        "yourPob": "Your PoB",
+        "activeDeals": "Offres actives",
+        "yourDeals": "Your deals"
+      },
+      "actions": {
+        "createNode": "Create node",
+        "createNodeDesc": "New network participant",
+        "newProject": "New project",
+        "newProjectDesc": "Start project workflow",
+        "addCapital": "Add capital",
+        "addCapitalDesc": "New investor profile",
+        "settlement": "Règlement",
+        "settlementDesc": "Run allocation cycles"
+      },
+      "myWork": {
+        "title": "My work",
+        "tasks": "Tâches",
+        "projects": "Projets",
+        "dealRoom": "Salle des deals",
+        "proofDesk": "Proof Desk",
+        "tasksTotal": "· {count} total",
+        "scopedHint": "· scoped to your nodes"
+      },
+      "modules": {
+        "title": "All modules",
+        "nodeRegistry": "Registre de nœuds",
+        "capitalPool": "Capital pool",
+        "agents": "Agents",
+        "settlement": "Règlement",
+        "applications": "Applications",
+        "capitalProfiles": "· {count} profiles",
+        "appCount": "· {count}"
+      },
+      "recent": {
+        "title": "Recent activity",
+        "viewAll": "View all →",
+        "system": "System"
+      }
     }
   },
   "common": {

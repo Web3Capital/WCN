@@ -16,3 +16,8 @@ coverage/
 /blob-report/
 /playwright/.cache/
 .env*.local
+
+# Office editor temp and lock files, often produced while reviewing WCN docs.
+**/.~lock.*#
+**/~$*
+**/lu*.tmp

@@ -27,8 +27,8 @@ async function cleanup(ids: {
   nodeLeadId?: string;
   nodeCapitalId?: string;
   dealId?: string;
-  userId?: string;
-  capitalUserId?: string;
+  leadOwnerId?: string;
+  capitalOwnerId?: string;
 }) {
   try {
     if (ids.dealId) await prisma.deal.delete({ where: { id: ids.dealId } }).catch((e) => console.error("[e2e cleanup]", e));
@@ -36,8 +36,8 @@ async function cleanup(ids: {
     if (ids.capitalId) await prisma.capitalProfile.delete({ where: { id: ids.capitalId } }).catch((e) => console.error("[e2e cleanup]", e));
     if (ids.nodeLeadId) await prisma.node.delete({ where: { id: ids.nodeLeadId } }).catch((e) => console.error("[e2e cleanup]", e));
     if (ids.nodeCapitalId) await prisma.node.delete({ where: { id: ids.nodeCapitalId } }).catch((e) => console.error("[e2e cleanup]", e));
-    if (ids.userId) await prisma.user.delete({ where: { id: ids.userId } }).catch((e) => console.error("[e2e cleanup]", e));
-    if (ids.capitalUserId) await prisma.user.delete({ where: { id: ids.capitalUserId } }).catch((e) => console.error("[e2e cleanup]", e));
+    if (ids.leadOwnerId) await prisma.user.delete({ where: { id: ids.leadOwnerId } }).catch((e) => console.error("[e2e cleanup]", e));
+    if (ids.capitalOwnerId) await prisma.user.delete({ where: { id: ids.capitalOwnerId } }).catch((e) => console.error("[e2e cleanup]", e));
   } catch (e) { console.error("[e2e cleanup] outer", e); }
 }
 
@@ -51,32 +51,28 @@ async function main() {
   let failed = 0;
 
   try {
-    // ─── Step 1: Create test user ────────────────────────────
+    // ─── Step 1: Create test users ───────────────────────────
     console.log("Step 1: Create test entities");
 
-    // Two distinct owners — the anti-gaming engine (checkSelfDealing)
-    // flags a match as `SAME_OWNER` if the lead node and capital node
-    // share an `ownerUserId`, and the matching engine skips those. Using
-    // one user for both sides made Step 5 (matching) and Step 8 (PoB
-    // attribution) silently produce empty results.
-    const stamp = Date.now();
-    const leadUser = await prisma.user.create({
+    const unique = Date.now();
+    const leadOwner = await prisma.user.create({
       data: {
-        email: `e2e-test-lead-${stamp}@wcn.network`,
-        name: "E2E Lead User",
+        email: `e2e-lead-${unique}@wcn.network`,
+        name: "E2E Lead Owner",
         role: "ADMIN",
       },
     });
-    const capitalUser = await prisma.user.create({
+
+    const capitalOwner = await prisma.user.create({
       data: {
-        email: `e2e-test-capital-${stamp}@wcn.network`,
-        name: "E2E Capital User",
+        email: `e2e-capital-${unique}@wcn.network`,
+        name: "E2E Capital Owner",
         role: "ADMIN",
       },
     });
-    ids.userId = leadUser.id;
-    ids.capitalUserId = capitalUser.id;
-    log(CHECK, `User created: ${leadUser.id}`);
+    ids.leadOwnerId = leadOwner.id;
+    ids.capitalOwnerId = capitalOwner.id;
+    log(CHECK, `Users created: lead=${leadOwner.id}, capital=${capitalOwner.id}`);
     passed++;
 
     // ─── Step 2: Create nodes ────────────────────────────────
@@ -87,7 +83,7 @@ async function main() {
         name: "E2E Lead Node",
         type: "REGION",
         status: "ACTIVE",
-        ownerUserId: leadUser.id,
+        ownerUserId: leadOwner.id,
       },
     });
     ids.nodeLeadId = leadNode.id;
@@ -98,7 +94,7 @@ async function main() {
         name: "E2E Capital Node",
         type: "INDUSTRY",
         status: "ACTIVE",
-        ownerUserId: capitalUser.id,
+        ownerUserId: capitalOwner.id,
       },
     });
     ids.nodeCapitalId = capitalNode.id;
@@ -143,7 +139,7 @@ async function main() {
     console.log("\nStep 5: Matching engine");
 
     const { generateMatchesForProject } = await import("../lib/modules/matching/engine");
-    const matches = await generateMatchesForProject(project.id, leadUser.id);
+    const matches = await generateMatchesForProject(project.id, leadOwner.id);
     if (matches.length > 0) {
       log(CHECK, `Generated ${matches.length} match(es), top score: ${matches[0].score}`);
       passed++;
@@ -163,7 +159,7 @@ async function main() {
 
       // Express interest
       const { expressInterest } = await import("../lib/modules/matching/engine");
-      const interested = await expressInterest(matchRecord.id, leadUser.id);
+      const interested = await expressInterest(matchRecord.id, leadOwner.id);
       if (interested?.status === "INTEREST_EXPRESSED") {
         log(CHECK, "Interest expressed");
         passed++;
@@ -202,7 +198,7 @@ async function main() {
     // Convert match to deal
     if (matchRecord) {
       const { convertMatchToDeal } = await import("../lib/modules/matching/engine");
-      await convertMatchToDeal(matchRecord.id, deal.id, leadUser.id);
+      await convertMatchToDeal(matchRecord.id, deal.id, leadOwner.id);
       const updated = await prisma.match.findUnique({ where: { id: matchRecord.id } });
       if (updated?.status === "CONVERTED_TO_DEAL") {
         log(CHECK, "Match converted to deal");
@@ -343,8 +339,8 @@ async function main() {
       if (ids.capitalId) await prisma.capitalProfile.delete({ where: { id: ids.capitalId } }).catch((e) => console.error("[e2e cleanup]", e));
       if (ids.nodeLeadId) await prisma.node.delete({ where: { id: ids.nodeLeadId } }).catch((e) => console.error("[e2e cleanup]", e));
       if (ids.nodeCapitalId) await prisma.node.delete({ where: { id: ids.nodeCapitalId } }).catch((e) => console.error("[e2e cleanup]", e));
-      if (ids.userId) await prisma.user.delete({ where: { id: ids.userId } }).catch((e) => console.error("[e2e cleanup]", e));
-      if (ids.capitalUserId) await prisma.user.delete({ where: { id: ids.capitalUserId } }).catch((e) => console.error("[e2e cleanup]", e));
+      if (ids.leadOwnerId) await prisma.user.delete({ where: { id: ids.leadOwnerId } }).catch((e) => console.error("[e2e cleanup]", e));
+      if (ids.capitalOwnerId) await prisma.user.delete({ where: { id: ids.capitalOwnerId } }).catch((e) => console.error("[e2e cleanup]", e));
       console.log("Cleanup complete.\n");
     } catch (e) {
       console.error("Cleanup error:", e);

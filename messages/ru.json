@@ -762,6 +762,61 @@
       "eyebrow": "Счет",
       "title": "Настройки",
       "subtitle": "Безопасность, сеансы и настройки."
+    },
+    "overview": {
+      "eyebrow": "Обзор",
+      "welcome": "Welcome back",
+      "subtitle": "{role} · WCN Operating Console",
+      "fallbackName": "Счет",
+      "profileMeta": "Nodes: {nodes} · Projects: {projects} · Tasks: {tasks} · PoB: {pob}",
+      "stats": {
+        "registry": "Реестр",
+        "projects": "Проекты",
+        "verification": "Верификация",
+        "deals": "Сделки",
+        "nodes": "Nodes",
+        "yourNodes": "Your nodes",
+        "totalProjects": "Проекты",
+        "yourProjects": "Your projects",
+        "pobPending": "PoB pending",
+        "yourPob": "Your PoB",
+        "activeDeals": "Активные предложения",
+        "yourDeals": "Your deals"
+      },
+      "actions": {
+        "createNode": "Create node",
+        "createNodeDesc": "New network participant",
+        "newProject": "New project",
+        "newProjectDesc": "Start project workflow",
+        "addCapital": "Add capital",
+        "addCapitalDesc": "New investor profile",
+        "settlement": "Расчёты",
+        "settlementDesc": "Run allocation cycles"
+      },
+      "myWork": {
+        "title": "My work",
+        "tasks": "Задачи",
+        "projects": "Проекты",
+        "dealRoom": "Комната сделок",
+        "proofDesk": "Proof Desk",
+        "tasksTotal": "· {count} total",
+        "scopedHint": "· scoped to your nodes"
+      },
+      "modules": {
+        "title": "All modules",
+        "nodeRegistry": "Реестр узлов",
+        "capitalPool": "Capital pool",
+        "agents": "Агенты",
+        "settlement": "Расчёты",
+        "applications": "Заявки",
+        "capitalProfiles": "· {count} profiles",
+        "appCount": "· {count}"
+      },
+      "recent": {
+        "title": "Recent activity",
+        "viewAll": "View all →",
+        "system": "System"
+      }
     }
   },
   "common": {

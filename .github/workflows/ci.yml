@@ -30,12 +30,15 @@ jobs:
 
       - name: Lint
         run: npm run lint
-        continue-on-error: true
-        # TODO: pre-existing — eslint 9 (installed) is incompatible with the legacy
-        # .eslintrc.json. Migrate to flat config (eslint.config.mjs) and remove this.
 
       - name: Tests with Coverage
         run: npm run test:coverage
+
+      - name: i18n parity (ratchet)
+        run: npx tsx scripts/check-i18n.ts
+
+      - name: Metrics ratchet
+        run: npx tsx scripts/metrics-gate.ts
 
   build:
     runs-on: ubuntu-latest
@@ -59,11 +62,7 @@ jobs:
           SKIP_ENV_VALIDATION: "1"
           NEXTAUTH_URL: "http://localhost:3000"
           NEXTAUTH_SECRET: "ci-build-secret-not-real"
-          # `?sslmode=disable` — the CI postgres service container speaks
-          # plain TCP. Without this, `next start` runs with NODE_ENV=production
-          # and lib/prisma.ts defaults SSL on, which the container rejects with
-          # "Error opening a TLS connection".
-          POSTGRES_URL: "postgresql://build:build@localhost:5432/wcn_build?sslmode=disable"
+          POSTGRES_URL: "postgresql://build:build@localhost:5432/wcn_build"
 
   e2e:
     runs-on: ubuntu-latest
@@ -83,18 +82,24 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     env:
-      # `?sslmode=disable` — see Build job comment; the e2e postgres service
-      # container speaks plain TCP and would otherwise be refused by SSL.
+      # `sslmode=disable` is required: e2e runs `next start` (NODE_ENV=production),
+      # which previously forced TLS on regardless of URL — but the
+      # postgres:16-alpine service container has no TLS, so every Prisma
+      # call failed with "The server does not support SSL connections".
+      # `lib/prisma.ts` now honors `sslmode=disable` to override the
+      # production default; this URL parameter is the trigger.
       POSTGRES_URL: postgresql://wcn:wcn@localhost:5432/wcn_e2e?sslmode=disable
       NEXTAUTH_URL: http://127.0.0.1:3000
       NEXTAUTH_SECRET: ci-e2e-playwright-secret-not-real-32chars
       SKIP_ENV_VALIDATION: "1"
+      RATE_LIMIT_DISABLED: "1"
       CI: "true"
-      # Bypass Upstash-backed rate-limit in CI: `next start` runs with
-      # NODE_ENV=production, the limiter is configured fail-closed, and CI
-      # has no Upstash. Without this every /api/* call returns 429 and the
-      # whole e2e suite is unreachable. See lib/rate-limit.ts.
-      DISABLE_RATE_LIMITING: "1"
+      # Disable Upstash-backed rate limiting for the e2e job. With
+      # NODE_ENV=production (next start) and no UPSTASH_REDIS_REST_URL,
+      # every authenticated API request would otherwise return 429 from
+      # the fail-closed branch in lib/rate-limit.ts, defeating the entire
+      # RBAC test suite. Real production sets Upstash and never sets this.
+      RATELIMIT_DISABLED: "true"
     steps:
       - uses: actions/checkout@v4
 
