@@ -22,6 +22,10 @@ let _authLimiter: Ratelimit | null = null;
 let _adminLimiter: Ratelimit | null = null;
 let _smsLimiter: Ratelimit | null = null;
 
+function isRateLimitDisabled() {
+  return process.env.RATE_LIMIT_DISABLED === "1" || process.env.RATE_LIMIT_DISABLED === "true";
+}
+
 function getApiLimiter(): Ratelimit | null {
   if (_apiLimiter) return _apiLimiter;
   const redis = getRedis();
@@ -59,6 +63,8 @@ function getAdminLimiter(): Ratelimit | null {
 }
 
 async function check(limiter: Ratelimit | null, identifier: string, failClosed = false): Promise<RateLimitResult> {
+  if (isRateLimitDisabled()) return noopResult;
+
   if (!limiter) {
     // Explicit opt-out for deployments that intentionally run without
     // Upstash (e2e CI, local production-mode rehearsals, demos). Without

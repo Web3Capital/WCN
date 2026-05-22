@@ -30,9 +30,6 @@ jobs:
 
       - name: Lint
         run: npm run lint
-        continue-on-error: true
-        # TODO: pre-existing — eslint 9 (installed) is incompatible with the legacy
-        # .eslintrc.json. Migrate to flat config (eslint.config.mjs) and remove this.
 
       - name: Tests with Coverage
         run: npm run test:coverage
@@ -89,6 +86,7 @@ jobs:
       NEXTAUTH_URL: http://127.0.0.1:3000
       NEXTAUTH_SECRET: ci-e2e-playwright-secret-not-real-32chars
       SKIP_ENV_VALIDATION: "1"
+      RATE_LIMIT_DISABLED: "1"
       CI: "true"
       # Disable Upstash-backed rate limiting for the e2e job. With
       # NODE_ENV=production (next start) and no UPSTASH_REDIS_REST_URL,

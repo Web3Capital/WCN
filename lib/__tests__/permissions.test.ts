@@ -17,11 +17,12 @@ describe("Permissions (RBAC)", () => {
       expect(can("USER" as Role, "delete", "node")).toBe(false);
     });
 
-    it("NODE_OWNER can create and update projects", () => {
+    it("NODE_OWNER can create and update scoped work", () => {
       expect(can("NODE_OWNER" as Role, "read", "project")).toBe(true);
       expect(can("NODE_OWNER" as Role, "create", "project")).toBe(true);
       expect(can("NODE_OWNER" as Role, "update", "project")).toBe(true);
       expect(can("NODE_OWNER" as Role, "delete", "project")).toBe(false);
+      expect(can("NODE_OWNER" as Role, "create", "pob")).toBe(true);
     });
 
     it("REVIEWER can review evidence but not create", () => {
