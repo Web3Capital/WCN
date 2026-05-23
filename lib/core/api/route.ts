@@ -70,6 +70,20 @@ export interface RouteCtx<I, P extends Record<string, string> = Record<string, s
   requestId: string;
 }
 
+const routeResultBrand: unique symbol = Symbol("routeResult");
+
+export interface RouteResult<T> {
+  readonly [routeResultBrand]: true;
+  readonly data: T;
+  readonly status: number;
+}
+
+export function routeResult<T>(data: T, status = 200): RouteResult<T> {
+  return { [routeResultBrand]: true, data, status };
+}
+
+type RouteHandlerResult<O> = O | RouteResult<O>;
+
 /** Context handed to permission scope functions. */
 export interface ScopeCtx<I, P extends Record<string, string>> extends RouteCtx<I, P> {
   session: AuthedSession;
@@ -94,18 +108,18 @@ interface BaseCfg<I, O> {
 }
 
 interface PublicCfg<I, O, P extends Record<string, string>> extends BaseCfg<I, O> {
-  handler: (ctx: RouteCtx<I, P>) => Promise<O>;
+  handler: (ctx: RouteCtx<I, P>) => Promise<RouteHandlerResult<O>>;
 }
 
 interface SessionCfg<I, O, P extends Record<string, string>> extends BaseCfg<I, O> {
-  handler: (ctx: RouteCtx<I, P> & { session: AuthedSession }) => Promise<O>;
+  handler: (ctx: RouteCtx<I, P> & { session: AuthedSession }) => Promise<RouteHandlerResult<O>>;
 }
 
 interface PermissionCfg<I, O, P extends Record<string, string>> extends BaseCfg<I, O> {
   permission: { action: Action; resource: Resource };
   /** Row-level scope check. Return true if the session may act on this row. */
   scope?: ScopeFn<I, P>;
-  handler: (ctx: RouteCtx<I, P> & { session: AuthedSession }) => Promise<O>;
+  handler: (ctx: RouteCtx<I, P> & { session: AuthedSession }) => Promise<RouteHandlerResult<O>>;
 }
 
 interface ServiceCfg<I, O, P extends Record<string, string>> extends BaseCfg<I, O> {
@@ -113,7 +127,7 @@ interface ServiceCfg<I, O, P extends Record<string, string>> extends BaseCfg<I, 
   tokenHeader?: string;
   /** Env var holding the expected token. Default: `SERVICE_TOKEN`. */
   tokenEnv?: string;
-  handler: (ctx: RouteCtx<I, P>) => Promise<O>;
+  handler: (ctx: RouteCtx<I, P>) => Promise<RouteHandlerResult<O>>;
 }
 
 /** A Next.js App Router route handler signature. */
@@ -199,6 +213,15 @@ function shapeResponse<O>(data: O, status: number, output?: z.ZodSchema<O>): Nex
   return status === 201 ? apiCreated(data) : apiOk(data, status);
 }
 
+function isRouteResult<O>(value: RouteHandlerResult<O>): value is RouteResult<O> {
+  return typeof value === "object" && value !== null && routeResultBrand in value;
+}
+
+function resolveHandlerResult<O>(value: RouteHandlerResult<O>, defaultStatus: number): { data: O; status: number } {
+  if (isRouteResult(value)) return { data: value.data, status: value.status };
+  return { data: value, status: defaultStatus };
+}
+
 function handleHandlerError(err: unknown, requestId: string): NextResponse {
   // Recognize a few common error contracts thrown by domain code.
   if (err && typeof err === "object" && "status" in err && "code" in err) {
@@ -229,7 +252,8 @@ export const route = {
 
       try {
         const out = await cfg.handler({ input: inputResult.data, params, session: undefined, request: req, requestId });
-        return shapeResponse(out, cfg.successStatus ?? 200, cfg.output);
+        const result = resolveHandlerResult(out, cfg.successStatus ?? 200);
+        return shapeResponse(result.data, result.status, cfg.output);
       } catch (err) {
         return handleHandlerError(err, requestId);
       }
@@ -260,7 +284,8 @@ export const route = {
           request: req,
           requestId,
         });
-        return shapeResponse(out, cfg.successStatus ?? 200, cfg.output);
+        const result = resolveHandlerResult(out, cfg.successStatus ?? 200);
+        return shapeResponse(result.data, result.status, cfg.output);
       } catch (err) {
         return handleHandlerError(err, requestId);
       }
@@ -303,7 +328,8 @@ export const route = {
 
       try {
         const out = await cfg.handler(ctx);
-        return shapeResponse(out, cfg.successStatus ?? 200, cfg.output);
+        const result = resolveHandlerResult(out, cfg.successStatus ?? 200);
+        return shapeResponse(result.data, result.status, cfg.output);
       } catch (err) {
         return handleHandlerError(err, requestId);
       }
@@ -328,7 +354,8 @@ export const route = {
 
       try {
         const out = await cfg.handler({ input: inputResult.data, params, session: undefined, request: req, requestId });
-        return shapeResponse(out, cfg.successStatus ?? 200, cfg.output);
+        const result = resolveHandlerResult(out, cfg.successStatus ?? 200);
+        return shapeResponse(result.data, result.status, cfg.output);
       } catch (err) {
         return handleHandlerError(err, requestId);
       }

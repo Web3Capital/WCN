@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { z } from "zod";
-import { route, HttpError } from "@/lib/core/api/route";
+import { route, routeResult, HttpError } from "@/lib/core/api/route";
 
 // ─── Mocks ──────────────────────────────────────────────────────
 
@@ -119,6 +119,25 @@ describe("route.public", () => {
     });
     const res = await handler(makeReq("POST", {}), { params: {} });
     expect(res.status).toBe(201);
+  });
+
+  it("allows handlers to choose success status per result", async () => {
+    const handler = route.public({
+      input: z.object({ existing: z.string().optional() }),
+      rateLimit: "public",
+      handler: async ({ input }) => {
+        if (input.existing === "true") return routeResult({ id: "same" }, 200);
+        return routeResult({ id: "new" }, 201);
+      },
+    });
+
+    const existing = await handler(makeReq("POST", { existing: "true" }), { params: {} });
+    expect(existing.status).toBe(200);
+    await expect(readJson(existing)).resolves.toEqual({ ok: true, data: { id: "same" } });
+
+    const created = await handler(makeReq("POST", {}), { params: {} });
+    expect(created.status).toBe(201);
+    await expect(readJson(created)).resolves.toEqual({ ok: true, data: { id: "new" } });
   });
 });
 

@@ -1,60 +1,62 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
-import { parseBody, acceptTermsSchema } from "@/lib/core/validation";
+import { route, routeResult } from "@/lib/core/api/route";
+import { acceptTermsSchema } from "@/lib/core/validation";
+import type { TermsAcceptance } from "@prisma/client";
+import { z } from "zod";
 
-export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) return apiUnauthorized();
+type AcceptTermsResponse =
+  | TermsAcceptance
+  | { acceptance: TermsAcceptance; alreadyAccepted: true };
 
-  const prisma = getPrisma();
-  const acceptances = await prisma.termsAcceptance.findMany({
-    where: { userId: session.user.id },
-    orderBy: { acceptedAt: "desc" },
-  });
+export const GET = route.session({
+  input: z.object({}),
+  rateLimit: "auth",
+  handler: async ({ session }) => {
+    const prisma = getPrisma();
+    const acceptances = await prisma.termsAcceptance.findMany({
+      where: { userId: session.user.id },
+      orderBy: { acceptedAt: "desc" },
+    });
 
-  return apiOk(acceptances);
-}
+    return acceptances;
+  },
+});
 
-export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) return apiUnauthorized();
+export const POST = route.session<z.infer<typeof acceptTermsSchema>, AcceptTermsResponse>({
+  input: acceptTermsSchema,
+  rateLimit: "write",
+  handler: async ({ input, request, session }) => {
+    const prisma = getPrisma();
+    const { documentType, documentVer, workspaceId } = input;
 
-  const body = await req.json().catch(() => ({}));
-  const parsed = parseBody(acceptTermsSchema, body);
-  if (!parsed.ok) return zodToApiError(parsed.error);
+    const existing = await prisma.termsAcceptance.findFirst({
+      where: { userId: session.user.id, documentType, documentVer },
+    });
+    if (existing) {
+      return { acceptance: existing, alreadyAccepted: true };
+    }
 
-  const prisma = getPrisma();
-  const { documentType, documentVer, workspaceId } = parsed.data;
+    const acceptance = await prisma.termsAcceptance.create({
+      data: {
+        userId: session.user.id,
+        documentType,
+        documentVer,
+        workspaceId: workspaceId ?? null,
+        ipAddress: request.headers.get("x-forwarded-for") ?? null,
+        deviceInfo: request.headers.get("user-agent") ?? null,
+      },
+    });
 
-  const existing = await prisma.termsAcceptance.findFirst({
-    where: { userId: session.user.id, documentType: documentType as any, documentVer },
-  });
-  if (existing) {
-    return apiOk({ acceptance: existing, alreadyAccepted: true });
-  }
+    await writeAudit({
+      actorUserId: session.user.id,
+      action: AuditAction.TERMS_ACCEPT,
+      targetType: "TERMS",
+      targetId: acceptance.id,
+      metadata: { documentType, documentVer },
+    });
 
-  const acceptance = await prisma.termsAcceptance.create({
-    data: {
-      userId: session.user.id,
-      documentType: documentType as any,
-      documentVer,
-      workspaceId: workspaceId ?? null,
-      ipAddress: req.headers.get("x-forwarded-for") ?? null,
-      deviceInfo: req.headers.get("user-agent") ?? null,
-    },
-  });
-
-  await writeAudit({
-    actorUserId: session.user.id,
-    action: AuditAction.TERMS_ACCEPT,
-    targetType: "TERMS",
-    targetId: acceptance.id,
-    metadata: { documentType, documentVer },
-  });
-
-  return apiCreated(acceptance);
-}
+    return routeResult(acceptance, 201);
+  },
+});

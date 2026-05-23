@@ -1,8 +1,8 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requirePermission } from "@/lib/admin";
-import { apiOk, apiCreated, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
+import { route } from "@/lib/core/api/route";
 import { listAdapters } from "@/lib/modules/ingestion/registry";
+import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 const createSchema = z.object({
@@ -13,40 +13,39 @@ const createSchema = z.object({
   enabled: z.boolean().optional(),
 });
 
-export async function GET() {
-  const auth = await requirePermission("manage", "node");
-  if (!auth.ok) return apiUnauthorized();
+export const GET = route.permission({
+  input: z.object({}),
+  rateLimit: "auth",
+  permission: { action: "manage", resource: "node" },
+  handler: async () => {
+    const prisma = getPrisma();
+    const sources = await prisma.ingestionSource.findMany({
+      orderBy: { createdAt: "desc" },
+      include: { runs: { take: 3, orderBy: { startedAt: "desc" } } },
+    });
 
-  const prisma = getPrisma();
-  const sources = await prisma.ingestionSource.findMany({
-    orderBy: { createdAt: "desc" },
-    include: { runs: { take: 3, orderBy: { startedAt: "desc" } } },
-  });
+    return { sources, adapters: listAdapters() };
+  },
+});
 
-  return apiOk({ sources, adapters: listAdapters() });
-}
+export const POST = route.permission({
+  input: createSchema,
+  rateLimit: "write",
+  permission: { action: "manage", resource: "node" },
+  successStatus: 201,
+  handler: async ({ input, session }) => {
+    const prisma = getPrisma();
+    const source = await prisma.ingestionSource.create({
+      data: {
+        name: input.name,
+        type: input.type,
+        config: (input.config ?? {}) as Prisma.InputJsonObject,
+        schedule: input.schedule ?? null,
+        enabled: input.enabled ?? true,
+        createdById: session.user.id,
+      },
+    });
 
-export async function POST(req: Request) {
-  const auth = await requirePermission("manage", "node");
-  if (!auth.ok) return apiUnauthorized();
-
-  const body = await req.json().catch(() => ({}));
-  const parsed = createSchema.safeParse(body);
-  if (!parsed.success) {
-    return apiValidationError(parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })));
-  }
-
-  const prisma = getPrisma();
-  const source = await prisma.ingestionSource.create({
-    data: {
-      name: parsed.data.name,
-      type: parsed.data.type,
-      config: (parsed.data.config as any) ?? {},
-      schedule: parsed.data.schedule ?? null,
-      enabled: parsed.data.enabled ?? true,
-      createdById: auth.ok ? auth.session.user?.id ?? null : null,
-    },
-  });
-
-  return apiCreated(source);
-}
+    return source;
+  },
+});

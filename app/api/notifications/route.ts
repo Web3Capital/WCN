@@ -1,52 +1,54 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireSignedIn } from "@/lib/admin";
-import { apiOk, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
-import { parseBody, notificationActionSchema } from "@/lib/core/validation";
+import { route } from "@/lib/core/api/route";
+import { notificationActionSchema } from "@/lib/core/validation";
+import { z } from "zod";
 
-export async function GET(req: Request) {
-  const auth = await requireSignedIn();
-  if (!auth.ok) return apiUnauthorized();
+const notificationQuerySchema = z.object({
+  unread: z.string().optional(),
+});
 
-  const prisma = getPrisma();
-  const userId = auth.session.user!.id;
-  const { searchParams } = new URL(req.url);
-  const unreadOnly = searchParams.get("unread") === "true";
+export const GET = route.session({
+  input: notificationQuerySchema,
+  rateLimit: "auth",
+  handler: async ({ input, session }) => {
+    const prisma = getPrisma();
+    const userId = session.user.id;
+    const unreadOnly = input.unread === "true";
 
-  const where: Record<string, unknown> = { userId };
-  if (unreadOnly) where.readAt = null;
+    const where: Record<string, unknown> = { userId };
+    if (unreadOnly) where.readAt = null;
 
-  const notifications = await prisma.notification.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
-    take: 50,
-  });
+    const notifications = await prisma.notification.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      take: 50,
+    });
 
-  const unreadCount = await prisma.notification.count({ where: { userId, readAt: null } });
+    const unreadCount = await prisma.notification.count({ where: { userId, readAt: null } });
 
-  return apiOk({ notifications, unreadCount });
-}
+    return { notifications, unreadCount };
+  },
+});
 
-export async function POST(req: Request) {
-  const auth = await requireSignedIn();
-  if (!auth.ok) return apiUnauthorized();
+export const POST = route.session({
+  input: notificationActionSchema,
+  rateLimit: "write",
+  handler: async ({ input, session }) => {
+    const prisma = getPrisma();
 
-  const prisma = getPrisma();
-  const body = await req.json().catch(() => ({}));
-  const parsed = parseBody(notificationActionSchema, body);
-  if (!parsed.ok) return zodToApiError(parsed.error);
+    if (input.action === "markAllRead") {
+      await prisma.notification.updateMany({
+        where: { userId: session.user.id, readAt: null },
+        data: { readAt: new Date() },
+      });
+      return { marked: "all" };
+    }
 
-  if (parsed.data.action === "markAllRead") {
     await prisma.notification.updateMany({
-      where: { userId: auth.session.user!.id, readAt: null },
+      where: { id: input.id, userId: session.user.id },
       data: { readAt: new Date() },
     });
-    return apiOk({ marked: "all" });
-  }
-
-  await prisma.notification.updateMany({
-    where: { id: parsed.data.id, userId: auth.session.user!.id },
-    data: { readAt: new Date() },
-  });
-  return apiOk({ marked: parsed.data.id });
-}
+    return { marked: input.id };
+  },
+});

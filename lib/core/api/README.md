@@ -45,6 +45,26 @@ export const POST = route.session({
 });
 ```
 
+### Dynamic success status
+
+Use `routeResult(data, status)` when one handler has multiple successful outcomes, such as returning `200` for an existing record and `201` for a newly created one.
+
+```ts
+import { route, routeResult } from "@/lib/core/api/route";
+
+export const POST = route.session({
+  input: acceptTermsSchema,
+  rateLimit: "write",
+  handler: async ({ input }) => {
+    const existing = await findAcceptance(input);
+    if (existing) return routeResult({ acceptance: existing, alreadyAccepted: true }, 200);
+
+    const acceptance = await createAcceptance(input);
+    return routeResult(acceptance, 201);
+  },
+});
+```
+
 ### Permission + row-level scope
 
 ```ts
