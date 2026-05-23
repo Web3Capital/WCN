@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "@/i18n/routing";
 import { Clock } from "lucide-react";
+import { captureClientError } from "@/lib/observability/client-error";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 import { DetailLayout, StatusBadge, StatCard } from "../../_components";
 import { NoteSectionCard, NoteComposerRow, NoteFeed } from "../../notes";
@@ -95,7 +96,7 @@ export function DealDetail({ deal, nodes, isAdmin }: {
     fetch(`/api/deals/${deal.id}/activity`)
       .then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.json(); })
       .then((d) => { if (d.ok) setActivity(d.data?.activity ?? []); })
-      .catch((err) => console.error("[Deal] activity fetch failed", err));
+      .catch((err) => captureClientError("Deal.activityFetch", err, { dealId: deal.id }));
   }, [deal.id, isAdmin]);
 
   const transitionStage = useCallback(async (s: string) => {
@@ -111,7 +112,8 @@ export function DealDetail({ deal, nodes, isAdmin }: {
       const data = await res.json();
       if (data.ok) setStage(s);
       else setError(data.error || t("Transition failed."));
-    } catch {
+    } catch (err) {
+      captureClientError("DealDetail.transition", err, { dealId: deal.id });
       setError(t("Transition failed."));
     } finally { setBusy(false); }
   }, [deal.id, t]);
@@ -129,7 +131,8 @@ export function DealDetail({ deal, nodes, isAdmin }: {
       if (!data.ok) setAdminMsg(data.error ?? t("Save failed."));
       else setAdminMsg(t("Saved"));
       setTimeout(() => setAdminMsg(null), 2000);
-    } catch {
+    } catch (err) {
+      captureClientError("DealDetail.adminPatch", err, { dealId: deal.id });
       setAdminMsg(t("Save failed."));
     } finally { setAdminSaving(false); }
   }, [deal.id, t]);

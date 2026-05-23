@@ -5,6 +5,7 @@ import { Link } from "@/i18n/routing";
 import { Clock } from "lucide-react";
 import { DetailLayout, StatusBadge, StatCard, EmptyState } from "../../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 
 type Permission = { id: string; scope: string; canWrite: boolean; auditLevel: number };
 type Log = { id: string; actionType: string; taskId: string | null; modelVersion: string | null; exceptionFlag: boolean; createdAt: string };
@@ -127,7 +128,7 @@ export function AgentDetailUI({ agent, isAdmin }: { agent: AgentData; isAdmin: b
         body: JSON.stringify({ reviewStatus }),
       });
       if (res.ok) window.location.reload();
-    } catch { /* ignore */ }
+    } catch (err) { captureClientError("AgentDetail.review", err, { runId }); }
     setBusy(false);
   }
 

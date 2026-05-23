@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link } from "@/i18n/routing";
 import { DetailLayout, StatusBadge } from "../../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 
 type NodeRow = { id: string; name: string; type: string; status: string };
 type ApplicationRow = { id: string; status: string; applicantName: string; nodeType: string | null; createdAt: string };
@@ -54,7 +55,8 @@ export function UserDetail({
       } else {
         setError(data.error?.message || data.error || t("Failed to update role."));
       }
-    } catch {
+    } catch (err) {
+      captureClientError("UserDetail.updateRole", err);
       setError(t("Network error."));
     }
     setBusy(false);

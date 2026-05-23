@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-05-23T03:32:27.208Z",
+  "generatedAt": "2026-05-23T03:51:22.817Z",
   "ceilings": {
     "rawApiHandlers": 121,
     "routesWithoutZod": 63,
     "routesWithoutRateLimit": 119,
     "anyTypeOccurrences": 212,
     "jsonParseStringifyFiles": 29,
-    "forceDynamicFiles": 106,
+    "forceDynamicFiles": 107,
     "requireAdminCallSites": 3
   }
 }

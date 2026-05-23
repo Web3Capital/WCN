@@ -751,6 +751,72 @@
       "governance": "ガバナンス",
       "api-keys": "APIキー",
       "ingestion": "データ取り込み"
+    },
+    "usersPage": {
+      "eyebrow": "管理",
+      "title": "ユーザー",
+      "subtitle": "ユーザーアカウントとロールを管理します。",
+      "nonAdmin": "ユーザー管理は管理者のみが利用できます。"
+    },
+    "settingsPage": {
+      "eyebrow": "アカウント",
+      "title": "設定",
+      "subtitle": "セキュリティ、セッション、環境設定。"
+    },
+    "overview": {
+      "eyebrow": "概要",
+      "welcome": "Welcome back",
+      "subtitle": "{role} · WCN Operating Console",
+      "fallbackName": "アカウント",
+      "profileMeta": "Nodes: {nodes} · Projects: {projects} · Tasks: {tasks} · PoB: {pob}",
+      "stats": {
+        "registry": "レジストリ",
+        "projects": "プロジェクト",
+        "verification": "検証",
+        "deals": "ディール",
+        "nodes": "Nodes",
+        "yourNodes": "Your nodes",
+        "totalProjects": "プロジェクト",
+        "yourProjects": "Your projects",
+        "pobPending": "PoB pending",
+        "yourPob": "Your PoB",
+        "activeDeals": "アクティブな取引",
+        "yourDeals": "Your deals"
+      },
+      "actions": {
+        "createNode": "Create node",
+        "createNodeDesc": "New network participant",
+        "newProject": "New project",
+        "newProjectDesc": "Start project workflow",
+        "addCapital": "Add capital",
+        "addCapitalDesc": "New investor profile",
+        "settlement": "決済",
+        "settlementDesc": "Run allocation cycles"
+      },
+      "myWork": {
+        "title": "My work",
+        "tasks": "タスク",
+        "projects": "プロジェクト",
+        "dealRoom": "ディールルーム",
+        "proofDesk": "Proof Desk",
+        "tasksTotal": "· {count} total",
+        "scopedHint": "· scoped to your nodes"
+      },
+      "modules": {
+        "title": "All modules",
+        "nodeRegistry": "ノードレジストリ",
+        "capitalPool": "Capital pool",
+        "agents": "エージェント",
+        "settlement": "決済",
+        "applications": "申請",
+        "capitalProfiles": "· {count} profiles",
+        "appCount": "· {count}"
+      },
+      "recent": {
+        "title": "Recent activity",
+        "viewAll": "View all →",
+        "system": "System"
+      }
     }
   },
   "common": {

@@ -643,6 +643,61 @@
       "nsRisk": "风控",
       "nsSettings": "设置"
     },
+    "overview": {
+      "eyebrow": "总览",
+      "welcome": "欢迎回来",
+      "subtitle": "{role} · WCN 运营控制台",
+      "fallbackName": "账号",
+      "profileMeta": "节点：{nodes} · 项目：{projects} · 任务：{tasks} · PoB：{pob}",
+      "stats": {
+        "registry": "节点登记",
+        "projects": "项目",
+        "verification": "验证",
+        "deals": "交易",
+        "nodes": "节点数",
+        "yourNodes": "我的节点",
+        "totalProjects": "项目数",
+        "yourProjects": "我的项目",
+        "pobPending": "待审 PoB",
+        "yourPob": "我的 PoB",
+        "activeDeals": "进行中交易",
+        "yourDeals": "我的交易"
+      },
+      "actions": {
+        "createNode": "新建节点",
+        "createNodeDesc": "新增网络参与者",
+        "newProject": "新建项目",
+        "newProjectDesc": "启动项目流程",
+        "addCapital": "新增资本",
+        "addCapitalDesc": "新增投资人档案",
+        "settlement": "结算",
+        "settlementDesc": "执行分配周期"
+      },
+      "myWork": {
+        "title": "我的工作",
+        "tasks": "任务",
+        "projects": "项目",
+        "dealRoom": "交易协作",
+        "proofDesk": "证据台",
+        "tasksTotal": "· 共 {count}",
+        "scopedHint": "· 仅你所属节点"
+      },
+      "modules": {
+        "title": "全部模块",
+        "nodeRegistry": "节点登记",
+        "capitalPool": "资本池",
+        "agents": "智能体",
+        "settlement": "结算",
+        "applications": "申请",
+        "capitalProfiles": "· {count} 个档案",
+        "appCount": "· {count}"
+      },
+      "recent": {
+        "title": "近期活动",
+        "viewAll": "全部查看 →",
+        "system": "系统"
+      }
+    },
     "account": {
       "menuAria": "账户菜单",
       "workspace": "工作台",
@@ -751,6 +806,17 @@
       "governance": "治理",
       "api-keys": "API 密钥",
       "ingestion": "数据采集"
+    },
+    "usersPage": {
+      "eyebrow": "管理员",
+      "title": "用户",
+      "subtitle": "管理用户账户和角色。",
+      "nonAdmin": "用户管理仅对管理员可用。"
+    },
+    "settingsPage": {
+      "eyebrow": "账户",
+      "title": "设置",
+      "subtitle": "安全性、会话和首选项。"
     }
   },
   "common": {

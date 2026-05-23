@@ -3,6 +3,7 @@
 import { useMemo, useState, useCallback } from "react";
 import { Link, useRouter } from "@/i18n/routing";
 import { Search, ChevronDown, ChevronUp, X } from "lucide-react";
+import { captureClientError } from "@/lib/observability/client-error";
 import { StatusBadge, FormCard, EmptyState, StatCard, DashboardDistributionPie, DashboardPipelineBar, ReadOnlyInlineStrip } from "../_components";
 import { FilterToolbar } from "../_components/filter-toolbar";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
@@ -181,7 +182,7 @@ export function TasksConsole({
       if (!data?.ok) throw new Error(data?.error ?? t("Failed to load tasks."));
       setRows(data.data ?? []);
     } catch (err) {
-      console.error("[Tasks] refresh failed", err);
+      captureClientError("Tasks.refresh", err);
     } finally {
       setLoading(false);
     }

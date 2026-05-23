@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Link } from "@/i18n/routing";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 import { ConfirmDialog } from "../../_components/confirm-dialog";
 
 type Line = { id: string; nodeId: string; node: { id: string; name: string }; scoreTotal: number; allocation: number; pobCount: number };
@@ -52,7 +53,7 @@ export function SettlementCycleDetailUI({
       });
       if (!res.ok) throw new Error(`Lock failed: ${res.status}`);
       window.location.reload();
-    } catch (err) { console.error("[Settlement] lock request failed", err); }
+    } catch (err) { captureClientError("Settlement.lock", err, { cycleId: cycle.id }); }
     setBusy(false);
   }
 
@@ -68,7 +69,7 @@ export function SettlementCycleDetailUI({
       });
       if (!res.ok) throw new Error(`Reopen failed: ${res.status}`);
       window.location.reload();
-    } catch (err) { console.error("[Settlement] reopen request failed", err); }
+    } catch (err) { captureClientError("Settlement.reopen", err, { cycleId: cycle.id }); }
     setBusy(false);
   }
 

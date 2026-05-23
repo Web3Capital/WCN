@@ -2,9 +2,9 @@ import { getPrisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { UsersConsole } from "./ui";
 import { isAdminRole } from "@/lib/permissions";
-import { T } from "@/app/[locale]/dashboard/_components/translated-text";
 import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
@@ -15,16 +15,17 @@ export default async function UsersPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
   const isAdmin = isAdminRole(session.user.role);
+  const t = await getTranslations("dashboard.usersPage");
 
   if (!isAdmin) {
     return (
       <div className="dashboard-page section">
         <div className="container-wide">
-          <span className="eyebrow"><T>Admin</T></span>
-          <h1><T>Users</T></h1>
+          <span className="eyebrow">{t("eyebrow")}</span>
+          <h1>{t("title")}</h1>
           <div className="card" style={{ marginTop: 18, padding: "14px 16px" }}>
             <p className="muted" style={{ margin: 0 }}>
-              <T>User management is only available to administrators.</T>
+              {t("nonAdmin")}
             </p>
           </div>
         </div>
@@ -48,9 +49,9 @@ export default async function UsersPage() {
   return (
     <div className="dashboard-page section">
       <div className="container-wide">
-        <span className="eyebrow"><T>Admin</T></span>
-        <h1><T>Users</T></h1>
-        <p className="muted"><T>Manage user accounts and roles.</T></p>
+        <span className="eyebrow">{t("eyebrow")}</span>
+        <h1>{t("title")}</h1>
+        <p className="muted">{t("subtitle")}</p>
         <div className="card" style={{ marginTop: 18 }}>
           <UsersConsole initial={users as any} currentUserId={session.user.id} />
         </div>

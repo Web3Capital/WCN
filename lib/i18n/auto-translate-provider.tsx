@@ -64,6 +64,8 @@ export function AutoTranslateProvider({
       if (isEn || !text) return text;
       if (map[text]) return map[text];
 
+      if (typeof window === "undefined") return text;
+
       if (!pending.current.has(text)) {
         pending.current.add(text);
         clearTimeout(timer.current);
@@ -93,6 +95,12 @@ export function AutoTranslateProvider({
  *
  * English locale: returns text as-is, zero overhead.
  * Other locales: returns cached translation or fetches on-demand.
+ *
+ * @deprecated Prefer `useTranslations` from `next-intl` with proper
+ * `messages/{locale}.json` keys. See the `<T>` component JSDoc and
+ * `app/[locale]/dashboard/users/page.tsx` for migration examples.
+ * This hook stays available for existing call sites; the dashboard
+ * layout pre-loads cache server-side so it still renders correctly.
  */
 export function useAutoTranslate() {
   return useContext(Ctx);

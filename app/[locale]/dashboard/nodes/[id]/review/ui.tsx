@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { DetailLayout, StatusBadge, EmptyState } from "../../../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 import { formatNodeType } from "@/lib/nodes/node-type-label";
 
 type ReviewData = {
@@ -47,7 +48,8 @@ export function NodeReviewUI({ node, reviews }: { node: NodeData; reviews: Revie
       const data = await res.json();
       if (!data.ok) setError(data.error || t("Failed."));
       else setSuccess(t("Review submitted."));
-    } catch {
+    } catch (err) {
+      captureClientError("NodeReview.submit", err);
       setError(t("Network error."));
     } finally {
       setBusy(false);

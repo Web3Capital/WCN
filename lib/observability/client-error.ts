@@ -1,0 +1,75 @@
+/**
+ * Tiny client-safe error reporter for the dashboard.
+ *
+ * Why: dashboard subpages had ~13 raw `console.error` sites for caught
+ * fetch/abort errors that never reached Sentry, even though @sentry/nextjs
+ * is fully configured (sentry.client.config.ts). This helper closes that
+ * gap with a one-liner that:
+ *   1. Logs to the browser console in development for DX
+ *   2. Captures to Sentry as a tagged exception
+ *   3. Stays a no-op when Sentry isn't initialised (e.g. local dev with no
+ *      DSN), so consumers don't have to gate on env vars
+ *
+ * Usage:
+ *   import { captureClientError } from "@/lib/observability/client-error";
+ *   captureClientError("Tasks.refresh", err);
+ *   captureClientError("Deal.activity", err, { dealId });
+ */
+
+"use client";
+
+// IMPORTANT: do NOT statically import "@sentry/nextjs" here. Static-importing
+// it pulls @sentry/node + OpenTelemetry into the build graph of every
+// dashboard route that uses `captureClientError`, which on a project with
+// 2000+ static pages blows past CI's Playwright webServer timeout. Dynamic
+// import keeps Sentry in its own chunk and lazily loaded only when an error
+// actually fires.
+
+export type ClientErrorContext = Record<string, string | number | boolean | null | undefined>;
+
+let sentryPromise: Promise<typeof import("@sentry/nextjs") | null> | null = null;
+
+function loadSentry() {
+  if (!sentryPromise) {
+    sentryPromise = import("@sentry/nextjs").catch(() => null);
+  }
+  return sentryPromise;
+}
+
+export function captureClientError(
+  scope: string,
+  err: unknown,
+  context?: ClientErrorContext,
+): void {
+  if (process.env.NODE_ENV !== "production") {
+    // Keep dev-time visibility — preserves the `[Scope] message` shape the
+    // dashboard previously logged, so existing console-log hunting still works.
+    // eslint-disable-next-line no-console
+    console.error(`[${scope}]`, err, context ?? "");
+  }
+
+  // Fire-and-forget so callers stay synchronous (most call sites are inside
+  // `.catch(err => captureClientError(...))`). Errors inside reporting are
+  // swallowed so reporting never breaks the calling component.
+  void (async () => {
+    try {
+      const Sentry = await loadSentry();
+      if (!Sentry) return;
+      Sentry.withScope((s) => {
+        s.setTag("dashboard.scope", scope);
+        if (context) {
+          for (const [k, v] of Object.entries(context)) {
+            if (v !== undefined && v !== null) s.setExtra(k, v);
+          }
+        }
+        const error =
+          err instanceof Error
+            ? err
+            : new Error(typeof err === "string" ? err : `Non-Error thrown in ${scope}`);
+        Sentry.captureException(error);
+      });
+    } catch {
+      // intentional: never let reporting throw
+    }
+  })();
+}

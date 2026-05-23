@@ -751,6 +751,72 @@
       "governance": "الحوكمة",
       "api-keys": "مفاتيح API",
       "ingestion": "استيعاب البيانات"
+    },
+    "usersPage": {
+      "eyebrow": "المشرف",
+      "title": "المستخدمون",
+      "subtitle": "إدارة حسابات المستخدمين والأدوار.",
+      "nonAdmin": "إدارة المستخدم متاحة فقط للمسؤولين."
+    },
+    "settingsPage": {
+      "eyebrow": "حساب",
+      "title": "الإعدادات",
+      "subtitle": "الأمان والجلسات والتفضيلات."
+    },
+    "overview": {
+      "eyebrow": "نظرة عامة",
+      "welcome": "Welcome back",
+      "subtitle": "{role} · WCN Operating Console",
+      "fallbackName": "حساب",
+      "profileMeta": "Nodes: {nodes} · Projects: {projects} · Tasks: {tasks} · PoB: {pob}",
+      "stats": {
+        "registry": "التسجيل",
+        "projects": "المشاريع",
+        "verification": "التحقّق",
+        "deals": "الصفقات",
+        "nodes": "Nodes",
+        "yourNodes": "Your nodes",
+        "totalProjects": "المشاريع",
+        "yourProjects": "Your projects",
+        "pobPending": "PoB pending",
+        "yourPob": "Your PoB",
+        "activeDeals": "الصفقات النشطة",
+        "yourDeals": "Your deals"
+      },
+      "actions": {
+        "createNode": "Create node",
+        "createNodeDesc": "New network participant",
+        "newProject": "New project",
+        "newProjectDesc": "Start project workflow",
+        "addCapital": "Add capital",
+        "addCapitalDesc": "New investor profile",
+        "settlement": "التسوية",
+        "settlementDesc": "Run allocation cycles"
+      },
+      "myWork": {
+        "title": "My work",
+        "tasks": "المهام",
+        "projects": "المشاريع",
+        "dealRoom": "غرفة الصفقات",
+        "proofDesk": "Proof Desk",
+        "tasksTotal": "· {count} total",
+        "scopedHint": "· scoped to your nodes"
+      },
+      "modules": {
+        "title": "All modules",
+        "nodeRegistry": "تسجيل العقدة",
+        "capitalPool": "Capital pool",
+        "agents": "الوكلاء",
+        "settlement": "التسوية",
+        "applications": "الطلبات",
+        "capitalProfiles": "· {count} profiles",
+        "appCount": "· {count}"
+      },
+      "recent": {
+        "title": "Recent activity",
+        "viewAll": "View all →",
+        "system": "System"
+      }
     }
   },
   "common": {

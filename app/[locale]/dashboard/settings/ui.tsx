@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "@/i18n/routing";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 
 type NotifPref = { channel: string; enabled: boolean };
 
@@ -83,7 +84,7 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
       const data = await res.json();
       setPwMsg(data.ok ? t("Password updated.") : (data.error?.message || data.error || t("Failed.")));
       if (data.ok) { setCurrentPw(""); setNewPw(""); }
-    } catch { setPwMsg(t("Network error.")); }
+    } catch (err) { captureClientError("Settings.passwordChange", err); setPwMsg(t("Network error.")); }
     finally { setPwBusy(false); }
   }
 
@@ -101,7 +102,7 @@ export function SettingsPage({ has2FA, hasPassword }: { has2FA: boolean; hasPass
       if (data.ok) {
         setTimeout(() => { window.location.href = "/login"; }, 2000);
       }
-    } catch { setSessionMsg(t("Network error.")); }
+    } catch (err) { captureClientError("Settings.session", err); setSessionMsg(t("Network error.")); }
     finally { setSessionBusy(false); }
   }
 

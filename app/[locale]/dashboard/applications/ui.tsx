@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "@/i18n/routing";
 import { StatusBadge, EmptyState } from "../_components";
+import { captureClientError } from "@/lib/observability/client-error";
 import { InternalNoteField } from "../notes";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
@@ -64,7 +65,7 @@ export function ApplicationsTable({
     fetch(`/api/reviews?targetType=APPLICATION&targetId=${activeId}`, { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => { if (d?.ok) setReviews(d.data ?? []); })
-      .catch((err) => console.error("[Applications] review fetch failed", err));
+      .catch((err) => captureClientError("Applications.reviewFetch", err, { activeId }));
   }, [activeId, readOnly]);
 
   async function updateApplication(id: string, patch: Partial<Pick<Application, "status" | "notes">>) {

@@ -751,6 +751,72 @@
       "governance": "Governance",
       "api-keys": "API Keys",
       "ingestion": "Datenaufnahme"
+    },
+    "usersPage": {
+      "eyebrow": "Admin",
+      "title": "Nutzer",
+      "subtitle": "Verwalten Sie Benutzerkonten und Rollen.",
+      "nonAdmin": "Die Benutzerverwaltung steht nur Administratoren zur Verfügung."
+    },
+    "settingsPage": {
+      "eyebrow": "Konto",
+      "title": "Einstellungen",
+      "subtitle": "Sicherheit, Sitzungen und Einstellungen."
+    },
+    "overview": {
+      "eyebrow": "Überblick",
+      "welcome": "Welcome back",
+      "subtitle": "{role} · WCN Operating Console",
+      "fallbackName": "Konto",
+      "profileMeta": "Nodes: {nodes} · Projects: {projects} · Tasks: {tasks} · PoB: {pob}",
+      "stats": {
+        "registry": "Registrierung",
+        "projects": "Projekte",
+        "verification": "Verifizierung",
+        "deals": "Angebote",
+        "nodes": "Nodes",
+        "yourNodes": "Your nodes",
+        "totalProjects": "Projekte",
+        "yourProjects": "Your projects",
+        "pobPending": "PoB pending",
+        "yourPob": "Your PoB",
+        "activeDeals": "Aktive Angebote",
+        "yourDeals": "Your deals"
+      },
+      "actions": {
+        "createNode": "Create node",
+        "createNodeDesc": "New network participant",
+        "newProject": "New project",
+        "newProjectDesc": "Start project workflow",
+        "addCapital": "Add capital",
+        "addCapitalDesc": "New investor profile",
+        "settlement": "Abwicklung",
+        "settlementDesc": "Run allocation cycles"
+      },
+      "myWork": {
+        "title": "My work",
+        "tasks": "Aufgaben",
+        "projects": "Projekte",
+        "dealRoom": "Deal-Raum",
+        "proofDesk": "Proof Desk",
+        "tasksTotal": "· {count} total",
+        "scopedHint": "· scoped to your nodes"
+      },
+      "modules": {
+        "title": "All modules",
+        "nodeRegistry": "Knotenregistrierung",
+        "capitalPool": "Capital pool",
+        "agents": "Agenten",
+        "settlement": "Abwicklung",
+        "applications": "Bewerbungen",
+        "capitalProfiles": "· {count} profiles",
+        "appCount": "· {count}"
+      },
+      "recent": {
+        "title": "Recent activity",
+        "viewAll": "View all →",
+        "system": "System"
+      }
     }
   },
   "common": {

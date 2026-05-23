@@ -1,16 +1,25 @@
 import type { Metadata } from "next";
 import { redirect } from "@/i18n/routing";
 import { getServerSession } from "next-auth";
+import { getTranslations } from "next-intl/server";
 import { authOptions } from "@/lib/auth";
 import { isAdminRole } from "@/lib/permissions";
 import { DashboardShell } from "./_components/dashboard-shell";
 import { Spotlight } from "./_components/spotlight";
 import { AutoTranslateProvider } from "@/lib/i18n/auto-translate-provider";
+import { loadCachedTranslations } from "@/lib/i18n/auto-translate";
 
 export const metadata: Metadata = {
   title: "Console · WCN",
   description: "WCN collaboration network console."
 };
+
+// The dashboard is fully auth-gated — there's no useful static snapshot to
+// generate (every render needs the user's session, role, and tenant data).
+// Marking the layout dynamic cascades to every page underneath, so `next
+// build` doesn't waste minutes prerendering ~200 routes × 10 locales of
+// redirect-to-login stubs (which was timing the CI e2e job out at 180s).
+export const dynamic = "force-dynamic";
 
 export default async function DashboardLayout({
   children,
@@ -25,15 +34,20 @@ export default async function DashboardLayout({
     return null;
   }
 
+  const t = await getTranslations("dashboard.overview");
+  const activeLocale = locale ?? "en";
+  // Load auto-translate cache server-side so cached strings render correctly
+  // on first paint instead of flashing English while the client hydrates.
+  const initialTranslations = loadCachedTranslations(activeLocale);
   const u = session.user;
   return (
     <DashboardShell
-      displayName={u.name ?? u.email ?? "Account"}
+      displayName={u.name ?? u.email ?? t("fallbackName")}
       email={u.email ?? undefined}
       role={u.role!}
       isAdmin={isAdminRole(u.role!)}
     >
-      <AutoTranslateProvider locale={locale ?? "en"}>
+      <AutoTranslateProvider locale={activeLocale} initial={initialTranslations}>
         {children}
       </AutoTranslateProvider>
       <Spotlight />

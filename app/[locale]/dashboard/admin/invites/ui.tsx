@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 import { EmptyState } from "../../_components";
 
 type InviteRow = {
@@ -58,7 +59,7 @@ export function InviteConsole({ initialInvites }: { initialInvites: InviteRow[] 
         createdAt: new Date().toISOString(),
       }, ...invites]);
       setEmail("");
-    } catch { setError(t("Network error.")); }
+    } catch (err) { captureClientError("AdminInvites.create", err); setError(t("Network error.")); }
     finally { setBusy(false); }
   }
 

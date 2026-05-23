@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { captureClientError } from "@/lib/observability/client-error";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -213,7 +214,7 @@ function GlobalSearch() {
         const res = await fetch(`/api/search?q=${encodeURIComponent(value)}`);
         const data = await res.json();
         if (data.ok) setResults(data.data?.results ?? data.data ?? []);
-      } catch { /* ignore */ }
+      } catch (err) { captureClientError("Dashboard.spotlightSearch", err); }
     }, 300);
   }, []);
 
@@ -362,7 +363,7 @@ function NotificationBell() {
           setItems(d.data.notifications ?? []);
         }
       })
-      .catch((err) => console.error("[Dashboard] notification fetch failed", err));
+      .catch((err) => captureClientError("Dashboard.notificationFetch", err));
   }, []);
 
   useEffect(() => {

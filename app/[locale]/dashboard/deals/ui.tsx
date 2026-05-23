@@ -3,6 +3,7 @@
 import { useMemo, useState, useCallback } from "react";
 import { Link, useRouter } from "@/i18n/routing";
 import { Search, ChevronDown, ChevronUp, X, Handshake, LayoutGrid, Table2, TrendingUp, Target, Layers } from "lucide-react";
+import { captureClientError } from "@/lib/observability/client-error";
 import { StatusBadge, FormCard, EmptyState, FilterToolbar, StatCard, DashboardDistributionPie, DashboardPipelineBar } from "../_components";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
 
@@ -151,7 +152,7 @@ export function DealsConsole({
       if (!data?.ok) throw new Error(data?.error ?? t("Failed to load deals."));
       setDeals(data.data ?? []);
     } catch (err) {
-      console.error("[Deals] refresh failed", err);
+      captureClientError("Deals.refresh", err);
     } finally {
       setLoading(false);
     }

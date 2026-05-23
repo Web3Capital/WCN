@@ -751,6 +751,72 @@
       "governance": "Gobernanza",
       "api-keys": "API Keys",
       "ingestion": "Ingesta de datos"
+    },
+    "usersPage": {
+      "eyebrow": "Administración",
+      "title": "Usuarios",
+      "subtitle": "Administrar cuentas de usuario y roles.",
+      "nonAdmin": "La gestión de usuarios sólo está disponible para administradores."
+    },
+    "settingsPage": {
+      "eyebrow": "Cuenta",
+      "title": "Configuración",
+      "subtitle": "Seguridad, sesiones y preferencias."
+    },
+    "overview": {
+      "eyebrow": "Resumen",
+      "welcome": "Welcome back",
+      "subtitle": "{role} · WCN Operating Console",
+      "fallbackName": "Cuenta",
+      "profileMeta": "Nodes: {nodes} · Projects: {projects} · Tasks: {tasks} · PoB: {pob}",
+      "stats": {
+        "registry": "Registro",
+        "projects": "Proyectos",
+        "verification": "Verificación",
+        "deals": "Acuerdos",
+        "nodes": "Nodes",
+        "yourNodes": "Your nodes",
+        "totalProjects": "Proyectos",
+        "yourProjects": "Your projects",
+        "pobPending": "PoB pending",
+        "yourPob": "Your PoB",
+        "activeDeals": "Ofertas activas",
+        "yourDeals": "Your deals"
+      },
+      "actions": {
+        "createNode": "Create node",
+        "createNodeDesc": "New network participant",
+        "newProject": "New project",
+        "newProjectDesc": "Start project workflow",
+        "addCapital": "Add capital",
+        "addCapitalDesc": "New investor profile",
+        "settlement": "Liquidación",
+        "settlementDesc": "Run allocation cycles"
+      },
+      "myWork": {
+        "title": "My work",
+        "tasks": "Tareas",
+        "projects": "Proyectos",
+        "dealRoom": "Sala de acuerdos",
+        "proofDesk": "Proof Desk",
+        "tasksTotal": "· {count} total",
+        "scopedHint": "· scoped to your nodes"
+      },
+      "modules": {
+        "title": "All modules",
+        "nodeRegistry": "Registro de nodos",
+        "capitalPool": "Capital pool",
+        "agents": "Agentes",
+        "settlement": "Liquidación",
+        "applications": "Solicitudes",
+        "capitalProfiles": "· {count} profiles",
+        "appCount": "· {count}"
+      },
+      "recent": {
+        "title": "Recent activity",
+        "viewAll": "View all →",
+        "system": "System"
+      }
     }
   },
   "common": {

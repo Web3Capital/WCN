@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Link } from "@/i18n/routing";
 import { useAutoTranslate } from "@/lib/i18n/auto-translate-provider";
+import { captureClientError } from "@/lib/observability/client-error";
 import { DetailLayout, StatusBadge } from "../../_components";
 
 type Attribution = {
@@ -75,7 +76,8 @@ export function DisputeDetail({
       } else {
         setError(data.error?.message || data.error || t("Action failed."));
       }
-    } catch {
+    } catch (err) {
+      captureClientError("DisputeDetail.action", err);
       setError(t("Network error."));
     }
     setBusy(false);
