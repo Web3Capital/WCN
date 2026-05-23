@@ -1,25 +1,29 @@
 import "@/lib/core/init";
-import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiUnauthorized } from "@/lib/core/api-response";
+import { route } from "@/lib/core/api/route";
 import { activatePolicy } from "@/lib/modules/policy";
+import { z } from "zod";
 
-export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await requirePermission("manage", "policy");
-  if (!auth.ok) return apiUnauthorized();
+const emptyInputSchema = z.object({});
 
-  const { id } = await params;
-  const userId = auth.session.user?.id ?? "system";
+export const POST = route.permission<z.infer<typeof emptyInputSchema>, unknown, { id: string }>({
+  input: emptyInputSchema,
+  rateLimit: "write",
+  permission: { action: "manage", resource: "policy" },
+  handler: async ({ params, session }) => {
+    const { id } = params;
+    const userId = session.user.id;
 
-  await activatePolicy(id, userId);
+    await activatePolicy(id, userId);
 
-  await writeAudit({
-    actorUserId: userId,
-    action: AuditAction.POLICY_ACTIVATE,
-    targetType: "POLICY",
-    targetId: id,
-    metadata: { action: "activate" },
-  });
+    await writeAudit({
+      actorUserId: userId,
+      action: AuditAction.POLICY_ACTIVATE,
+      targetType: "POLICY",
+      targetId: id,
+      metadata: { action: "activate" },
+    });
 
-  return apiOk({ id, status: "ACTIVE" });
-}
+    return { id, status: "ACTIVE" };
+  },
+});
