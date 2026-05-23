@@ -45,7 +45,14 @@ interface ChapterMeta {
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
 
-const CONTENT_ROOT = path.join(process.cwd(), "content", "wiki");
+const CONTENT_BASE = path.join(process.cwd(), "content", "wiki");
+const DEFAULT_LOCALE = "zh";
+
+function resolveContentRoot(locale: string): string {
+  const target = path.join(CONTENT_BASE, locale);
+  if (fs.existsSync(target)) return target;
+  return path.join(CONTENT_BASE, DEFAULT_LOCALE);
+}
 
 function readJsonSafe<T>(filePath: string): T | null {
   try {
@@ -75,15 +82,21 @@ function extractHeadings(mdx: string): { id: string; text: string; level: number
 /*  Core API                                                           */
 /* ------------------------------------------------------------------ */
 
-let _cache: { docs: DocEntry[]; chapters: ChapterEntry[] } | null = null;
+const _cacheByLocale: Map<string, { docs: DocEntry[]; chapters: ChapterEntry[] }> = new Map();
 
-function loadAll(): { docs: DocEntry[]; chapters: ChapterEntry[] } {
-  if (_cache) return _cache;
+function loadAll(locale: string = DEFAULT_LOCALE): { docs: DocEntry[]; chapters: ChapterEntry[] } {
+  const cached = _cacheByLocale.get(locale);
+  if (cached) return cached;
 
-  if (!fs.existsSync(CONTENT_ROOT)) return { docs: [], chapters: [] };
+  const contentRoot = resolveContentRoot(locale);
+  if (!fs.existsSync(contentRoot)) {
+    const empty = { docs: [], chapters: [] };
+    _cacheByLocale.set(locale, empty);
+    return empty;
+  }
 
   const chapterDirs = fs
-    .readdirSync(CONTENT_ROOT, { withFileTypes: true })
+    .readdirSync(contentRoot, { withFileTypes: true })
     .filter((d) => d.isDirectory() && !d.name.startsWith("."))
     .sort((a, b) => a.name.localeCompare(b.name, "en"));
 
@@ -91,7 +104,7 @@ function loadAll(): { docs: DocEntry[]; chapters: ChapterEntry[] } {
   const allDocs: DocEntry[] = [];
 
   for (const dir of chapterDirs) {
-    const dirPath = path.join(CONTENT_ROOT, dir.name);
+    const dirPath = path.join(contentRoot, dir.name);
     const metaPath = path.join(dirPath, "_meta.json");
     const chapterMeta = readJsonSafe<ChapterMeta>(metaPath);
 
@@ -151,25 +164,26 @@ function loadAll(): { docs: DocEntry[]; chapters: ChapterEntry[] } {
   }
 
   chapters.sort((a, b) => a.order - b.order);
-  _cache = { docs: allDocs, chapters };
-  return _cache;
+  const result = { docs: allDocs, chapters };
+  _cacheByLocale.set(locale, result);
+  return result;
 }
 
-export function getAllDocs(): DocEntry[] {
-  return loadAll().docs;
+export function getAllDocs(locale: string = DEFAULT_LOCALE): DocEntry[] {
+  return loadAll(locale).docs;
 }
 
-export function getChapters(): ChapterEntry[] {
-  return loadAll().chapters;
+export function getChapters(locale: string = DEFAULT_LOCALE): ChapterEntry[] {
+  return loadAll(locale).chapters;
 }
 
-export function getDocBySlug(slugParts: string[]): DocEntry | undefined {
+export function getDocBySlug(slugParts: string[], locale: string = DEFAULT_LOCALE): DocEntry | undefined {
   const target = slugParts.join("/");
-  return getAllDocs().find((d) => d.slug.join("/") === target);
+  return getAllDocs(locale).find((d) => d.slug.join("/") === target);
 }
 
-export function getAdjacentDocs(doc: DocEntry): { prev: DocEntry | null; next: DocEntry | null } {
-  const all = getAllDocs();
+export function getAdjacentDocs(doc: DocEntry, locale: string = DEFAULT_LOCALE): { prev: DocEntry | null; next: DocEntry | null } {
+  const all = getAllDocs(locale);
   const idx = all.findIndex((d) => d.href === doc.href);
   return {
     prev: idx > 0 ? all[idx - 1] : null,
@@ -181,8 +195,8 @@ export function getDocHeadings(content: string) {
   return extractHeadings(content);
 }
 
-export function buildSearchIndex(): { title: string; description?: string; href: string; chapter: string; body: string }[] {
-  return getAllDocs().map((d) => ({
+export function buildSearchIndex(locale: string = DEFAULT_LOCALE): { title: string; description?: string; href: string; chapter: string; body: string }[] {
+  return getAllDocs(locale).map((d) => ({
     title: d.meta.title,
     description: d.meta.description,
     href: d.href,

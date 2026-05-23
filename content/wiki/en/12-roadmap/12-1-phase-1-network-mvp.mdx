@@ -1,0 +1,62 @@
+---
+title: '12.1 Phase 1: Network MVP'
+chapter: 12
+order: 1
+description: >-
+  Benchmark Uniswap v1: single clear product hypothesis; delivery node access,
+  Deal minimum closed loop, Proof traces, measurable early cash flow and PoB
+  prototype.
+---
+
+<Hero badge="12.1 · Network MVP" lead="This stage benchmarks Uniswap v1 and the early "single point breakthrough" of Ethereum: it does not build a full-stack chain infrastructure, but only verifies whether "structured deal + node network + auditable results" can continue to occur.">
+# The deliverable is the minimum acceptable business network, not the final architecture diagram in the white paper.
+</Hero>
+
+<MetaGrid>
+  <Meta label="core goals" value="Minimal Verifiable Network (Node + Deal + Proof + Income)" />
+  <Meta label="success criterion" value="Closed loop is repeatable, Proof can be randomly checked, and unit economics has samples." />
+  <Meta label="Deliberately not doing it" value="Complex settlement contracts, large-scale on-chain status, and Token as the main narrative" />
+</MetaGrid>
+
+## Industry reference
+
+- **Uniswap v1**: Only ETH/ERC20 single AMM formula, use transaction volume and liquidity to prove the product hypothesis, and then iterate v2/v3 and governance; WCN Phase 1 is the same, first use "transactions and traces" to prove the network value.
+- **Ethereum Phase 0→1**: Consensus and security base first, then sharding; WCN puts "chain and assets" behind, which is equivalent to stabilizing the "business consensus" (who participates, what counts as completed) first.
+- **Solana application layer first**: In the early stage of the ecosystem, specific applications will drive performance requirements; in WCN Phase 1, Deal and node behavior will drive product and risk control needs, rather than chain design driving business in reverse.
+
+## Specific deliverables (can be written into milestone documents)
+
+<CardGrid cols={2}>
+  <Card title="Node admission and tiering" icon="users">**Delivery**: Entry criteria, role tags (project/capital/service/distribution/region, etc.), violation and exit rules documented. **Metrics**: Number of active nodes, participation rate by role, repeat participation rate (non-one-time activities).</Card>
+  <Card title="Deal Room Minimal Process" icon="handshake">**Delivery**: The shortest path SOP from opportunity entry to stage advancement (such as due diligence/terms/delivery); a single "golden path" Deal type run through. **Indicators**: Number of deals entering the promotion stage, stage conversion rate, average cycle (by deal type).</Card>
+  <Card title="Proof Desk and Audit Portal" icon="clipboard-list">**Delivery**: Results and evidence field standards, review queue, first version of attribution rules. **Indicators**: Proof submission rate, review timeliness, challenged/rejected ratio (quality proxy indicator).</Card>
+  <Card title="early cash flow" icon="coins">**Delivery**: The billing and reconciliation of seat fees, service fees, and transaction-related fees can be run. **Indicators**: MRR/quarterly recurring revenue prototype, customer unit price distribution, payment collection cycle; at least one type of revenue is non-zero and can be reviewed year-on-year.</Card>
+</CardGrid>
+
+## Success Metrics (recommended thresholds set by governance/operations)
+
+| Dimensions | Example Metrics | Description |
+|------|----------|------|
+| Network | Multi-role nodes are continuously active | Non-_campaign pulse registration |
+| Closed loop | End-to-end deal sample size | Similar deals can be completed repeatedly |
+| Quality | Proof completeness rate and review pass rate | Avoid "only narrative without proof" |
+| Business | Unit economics are positive or the path is clear | Prototype of CAC/LTV benchmarking SaaS/market place |
+
+## Signals for entering the second phase (summary)
+
+PoB has changed from "memorable" to "understandable by third parties": the rules are documented, the sample size is sufficient for error type statistics, and the manual process before Agent access has been stabilized. See [12.4](/wiki/roadmap/12-4-Milestones and Phase Switching Signals) for details.
+
+## Main risks at this stage
+
+<CardGrid cols={2}>
+  <Card title="demand risk" icon="triangle-alert">Deal Insufficient supply or quality → Network idling. **Slow Release**: Focus on a single vertical or single Deal type penetration.</Card>
+  <Card title="Standard is too divergent" icon="trending-down">Too much customization per order → Proof cannot be compared. **Release**: Enforce minimum field set and templating phase.</Card>
+  <Card title="premature winding" icon="link-2">Technical narrative squeezes product iteration. **Release**: The chain is only a future option and is not part of the Phase 1 core OKRs.</Card>
+  <Card title="Compliance and Reputation" icon="shield">The boundaries of financial promotion are blurred. **Release**: Role boundaries, disclaimers, and review rating prerequisites.</Card>
+</CardGrid>
+
+## Why it’s better than “one step”
+
+<Callout type="warning">"Mainnet + Token + Full-featured Platform" is launched in the same quarter, which usually results in: expanded security, uncontrollable compliance, and inability to determine whether the failure comes from the product or the infrastructure. Phase 1 compresses failures into diagnosable dimensions (node? Deal? Proof? Billing?), which is consistent with the protocol advocated by Vitalik to reduce coordination costs in stages and Uniswap to absorb complexity through version iteration.</Callout>
+
+<Statement>By the end of the first phase, the outside world should be able to answer three questions: who was in the network, what was done, and what was paid—with evidence of the answers.</Statement>

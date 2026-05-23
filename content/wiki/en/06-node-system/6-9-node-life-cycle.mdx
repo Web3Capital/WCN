@@ -1,0 +1,56 @@
+---
+title: 6.9 Node life cycle
+description: >-
+  Complete state machine from application, review, online to review, renewal,
+  downgrade and exit.
+chapter: 6
+order: 9
+---
+
+<Hero badge="6.9 · Node life cycle" lead="Financial licenses and institutional client relationships require annual review and triggered review; the same applies to node seats. Static whitelisting will cause zombie nodes to occupy routes and brands, diluting the marginal benefits of high-quality nodes - the life cycle is the regulating valve of the quality curve.">
+# Seats are defined by ongoing verification, not by one-time admission.
+</Hero>
+
+<MetaGrid>
+  <Meta label="design goals" value="Prevent seat inflation; make contributions, violations and renewals readable in the same state machine" />
+  <Meta label="TradFi analogy" value="Similar to broker-dealer annual inspection, regular KYC refresh for prime customers, and analyst compliance training cycle" />
+  <Meta label="Data usage" value="Status change log service risk control, incentives and external disclosure (aggregated anonymity)" />
+</MetaGrid>
+
+## Node state machine
+
+<CardGrid cols={3}>
+  <Card title="Applied" description="Submit qualifications, recommenders, business plans and proposed coverage; conduct a preliminary review of operations and compliance materials for completeness and conflicts of interest." icon="file-text" />
+  <Card title="Approved" description="The qualifications are passed but the agreement signing, permission activation and training have not been completed; this is common in background checks or legal queues." icon="circle-check" />
+  <Card title="Active" description="Full-featured routing and PoB submission permissions; participation in KPI statistics and incentive pools." icon="zap" />
+  <Card title="Probation" description="Examples of triggering conditions: The number of introductions is lower than the minimum for two consecutive quarters, customer complaints are true, and the suspicion of PoB fraud is outstanding." icon="triangle-alert" />
+  <Card title="Suspended" description="Temporarily frozen authority: investigating violations, pending supplementary materials or judicial cooperation; will not participate in distribution during this period." icon="lock" />
+  <Card title="Renewed / Revoked" description="If the renewal is passed, the authorization period will be refreshed; if it is revoked, it will enter the cooling period and the brand will be removed from the shelves. Key records will be retained in accordance with the law or agreement." icon="refresh-cw" />
+</CardGrid>
+
+---
+
+## life cycle path
+
+<Callout type="warning">
+Application → Due Diligence and Agreement → Permission Activation → Active Operation → Quarterly/Annual Review → Renewal, Upgrade, Downgrade or Exit; temporary review can be inserted for major events.
+</Callout>
+
+<CardGrid cols={2}>
+  <Card title="Admission stage" description="Evaluate resource authenticity, historical reputation, and overlap with existing subgraphs; request pilot tasks if necessary." icon="search" />
+  <Card title="Online stage" description="Complete rules training, confidentiality grading tests, and system tool onboarding; sign the boundaries of external speaking skills." icon="clipboard-list" />
+  <Card title="running phase" description="Track pipeline, closed loop, PoB quality and customer feedback by KPI; data-driven routing weights." icon="zap" />
+  <Card title="Renewal stage" description="Compare contributions and violation record decisions: renewal, reduction of permissions, observation period, or removal." icon="star" />
+</CardGrid>
+
+<Statement>Nodes are not NFT-style permanent assets, but service-type contracts bound to performance and compliance; proper design allows the network to maintain marginal quality without degradation during the expansion period.</Statement>
+
+---
+
+## System rationale for strict life cycle
+
+Static expansion will cause three types of problems: **Routes are occupied by low-production nodes**, **PoB dispute processing costs increase**, and **new nodes are deterred due to old nodes occupying space** (adverse selection). Dynamic renewal implies "seat rent" as a continuing contribution, which is consistent with the logic of coverage banker's annual book review in TradFi.
+
+<Callout type="info">
+It is recommended to expose minimum transparency at the product layer: for example, node retention rates aggregated by track and changes in average closed-loop duration, so that market participants can understand whether the network is getting thicker or thinner - without revealing the commercial secrets of individual nodes.
+</Callout>

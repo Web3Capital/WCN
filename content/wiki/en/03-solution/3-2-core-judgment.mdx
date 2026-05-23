@@ -1,0 +1,110 @@
+---
+title: 3.2 Core judgment
+description: >-
+  Four first principles: the industry lacks business networks rather than
+  chains, the system cannot reward noise, AI must enter a closed loop, and
+  chains must be behind the scenes.
+chapter: 3
+order: 1
+---
+
+<Hero badge="3.2 · Core judgment" lead="Product design is preceded by judgment. WCN starts not from a list of features, but from four structural judgments about the industry—judgements that determine the boundaries, priorities, and evolution paths of the system.">
+# WCN's solution is based on several clear judgments rather than vague trend bets.
+</Hero>
+
+<MetaGrid>
+  <Meta label="core method" value="Judgment comes before product, structure comes before function" />
+  <Meta label="Judgment of quantity" value="four first principles" />
+  <Meta label="Verification method" value="Industry data + historical analogies + negative cases" />
+</MetaGrid>
+
+<Statement>If the judgment is unclear, the product will be chaotic; if the judgment is clear, paths, modules and boundaries will appear naturally.</Statement>
+
+---
+
+## Judgment 1: What the industry lacks is not a chain, but a business network
+
+<CardGrid cols={1}>
+  <Card title="status quo" icon="link">In 2024, Web3 will have more than 200 active public chains and L2, but most on-chain TVL is maintained by liquidity mining, and the proportion of real business transaction volume is extremely low. There is no shortage of chains—what is lacking is a business network that can truly organize resources, promote transactions, and verify results on or off the chain.</Card>
+</CardGrid>
+
+**Industry Verification**: Between 2020 and 2023, more than 50 "Web3 LinkedIn", "Decentralized CRM" and "On-chain BD Platform" projects were launched and then went silent. Their common failure mode: only the information layer (list + search + matching), without entering the execution layer and settlement layer. After registering, users found that it was OK to meet people, but they still had to go back to Telegram to advance transactions.
+
+> **Historical analogy**: The Internet in the 1990s had countless portals and directories (Yahoo! Directory), but what really changed trading was the unified workflow platform that emerged later - eBay (trading), Amazon (fulfillment), Stripe (settlement). Web3 is still stuck in the "directory era".
+
+<Callout type="info">
+WCN’s judgment: It is more meaningful to build a business network first and let nodes collaborate within the same set of rules than to build a new chain first.
+</Callout>
+
+---
+
+## Judgment 2: The system cannot reward noise
+
+<CardGrid cols={1}>
+  <Card title="status quo" icon="megaphone">Web3's current incentive system generally rewards quantifiable but worthless behaviors: posting, joining groups, forwarding, checking in, and completing tasks. These behaviors are easily faked by bots and have no correlation with business results. The result is that the incentive budget is consumed by noise, and the people who actually advance the transaction are not seen by the system.</Card>
+</CardGrid>
+
+**Industry Data**: Chainalysis estimates that 40-60% of addresses in 2023 airdrop campaigns are Sybil attackers or brush bots. LayerZero’s anti-Sybil purge removed over 1.2 million addresses (~20% of total claims). 70% of recipients of the Arbitrum airdrop sold within 7 days. What these numbers illustrate: A system that rewards noise ultimately rewards arbitrageurs, not builders.
+
+> **Analogy**: This is like a company giving bonuses to employees based on the "number of emails sent" - the number of emails will increase dramatically, but the company's performance will not improve as a result. WCN's PoB mechanism is equivalent to "only the business that signs the contract, delivers the goods, and receives payment is considered performance."
+
+<Callout type="warning">
+WCN’s judgment: Only verified business closed loops should enter the value layer. Activity, loudness, and social behavior are not evidence of contribution.
+</Callout>
+
+---
+
+## Judgment 3: AI must enter the business closed loop
+
+<CardGrid cols={1}>
+  <Card title="status quo" icon="bot">From 2024 to 2025, the number of Web3 + AI projects will exceed 500, but most of them stay in two modes: (1) AI does content generation (writing tweets, making pictures), (2) AI does Token trading strategies. The number of projects that really allow AI Agents to enter B2B business processes (project screening, DD assistance, contract follow-up, execution monitoring) is close to zero.</Card>
+</CardGrid>
+
+**Why is the adoption of AI in Web3 business lagging far behind TradFi? **
+
+<CardGrid cols={2}>
+  <Card title="What TradFi is already doing with AI" icon="landmark">Bloomberg’s AI does news summarization and risk warning; JPMorgan’s COIN system uses AI to review commercial loan contracts (originally requiring 360,000 hours of labor per year); Blackrock’s Aladdin uses AI to do asset risk modeling.</Card>
+  <Card title="Where does Web3’s AI stop?" icon="triangle-alert">Write tweets, make memes, auto-trading bots. There is no system that allows AI to enter the formal deal process, with permission boundaries, output logs, human review, and settlement qualifications.</Card>
+</CardGrid>
+
+> **Key Insight**: The value of an AI Agent lies not in “what it can do”, but in “what system its output enters”. If the Agent's output doesn't enter a formal workflow, isn't reviewed, and isn't attributed, it's just a faster search engine.
+
+<Callout type="info">
+WCN’s judgment: AI must enter the business closed loop from the tool layer - have tasks, permissions, logs, attribution, and settlement qualifications. This is the only way for AI to truly generate value in Web3.
+</Callout>
+
+---
+
+## Judgment 4: The chain must be behind
+
+<CardGrid cols={1}>
+  <Card title="status quo" icon="link-2">From 2021 to 2023, more than 100 new public chains and L2 will be launched. Most follow the same path: first raise funds → build a chain → provide incentives → pull TVL → and other ecosystems. The result is: a large number of chains have technical capabilities but lack real usage scenarios, and TVL is highly dependent on subsidies.</Card>
+</CardGrid>
+
+**Negative case**:
+
+<CardGrid cols={2}>
+  <Card title="The failure mode of chain first and business later" icon="ban">ICP (Internet Computer) was launched in 2021 with $166M in financing, but it lacked a killer application and the Token dropped from $700 to $5. Advanced technology but zero business density. The same goes for EOS.</Card>
+  <Card title="A successful model of business first and chain later" icon="circle-check">Binance first launched an exchange (business), and then launched BNB Chain (chain). The application of BNB Chain took off quickly because of the existing users and traffic of Binance. Coinbase will first be a compliant exchange and then launch Base L2. Base will have real trading volume when it goes online.</Card>
+</CardGrid>
+
+> **Core logic**: Chain is infrastructure, and the value of infrastructure depends on what runs on it. If the road is built first but there is no cargo, the road is the cost. WCN chooses to let the "goods" (business network, PoB ledger) run first, and then decides what "road" (chain) to use to carry it.
+
+<Callout type="warning">
+WCN’s judgment: On-chain without business density is “on-chain for the sake of on-chain”. It is a more rational path to verify the business model first and then decide on the bearer layer.
+</Callout>
+
+---
+
+## How to transform the four judgments into design directions
+
+<CardGrid cols={2}>
+  <Card title="Judgment 1 → Build the node network first" icon="globe">Instead of building a chain or agreement first, we first organize the nodes that can bring resources and promote transactions, so that collaboration can occur within the same system.</Card>
+  <Card title="Judgment 2 → Use PoB as the result threshold" icon="circle-check">Do not reward activity or volume, only allow proven closed loops to enter the value layer and filter noise from the source.</Card>
+  <Card title="Judgment 3 → Let Agent enter the task system" icon="bot">Instead of making an independent AI product, Agent becomes a formal participant in the WCN workflow, with boundaries, logs, and audits.</Card>
+  <Card title="Judgment 4 → Web2 will be run through first, and then gradually uploaded to the chain." icon="zap">Use mature tools to verify the collaboration model first, and then introduce the on-chain bearer layer when the business density is sufficient.</Card>
+</CardGrid>
+
+<Callout type="tip">
+The four judgments are the first principles of WCN. They are not a list of functions, but the starting point for all design decisions - subsequent architecture, modules, and priorities are all the results of these four judgments.
+</Callout>

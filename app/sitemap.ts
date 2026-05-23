@@ -37,20 +37,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
-  const docs = getAllDocs();
-  for (const doc of docs) {
-    const alternates: Record<string, string> = {};
-    for (const locale of locales) {
-      alternates[locale] = `${base}/${locale}${doc.href}`;
+  for (const locale of locales) {
+    const docs = getAllDocs(locale);
+    for (const doc of docs) {
+      entries.push({
+        url: `${base}/${locale}${doc.href}`,
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.6,
+      });
     }
-
-    entries.push({
-      url: `${base}/${defaultLocale}${doc.href}`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-      alternates: { languages: alternates },
-    });
   }
 
   return entries;

@@ -36,13 +36,13 @@ const mdxComponents = {
   Tab,
 };
 
-export function generateStaticParams() {
-  return getAllDocs().map((doc) => ({ slug: doc.slug }));
+export function generateStaticParams({ params }: { params: { locale: string } }) {
+  return getAllDocs(params.locale).map((doc) => ({ slug: doc.slug }));
 }
 
 export function generateMetadata({ params }: { params: { slug: string[]; locale: string } }): Metadata {
   const decoded = params.slug.map((s) => decodeURIComponent(s));
-  const doc = getDocBySlug(decoded);
+  const doc = getDocBySlug(decoded, params.locale);
   if (!doc) return {};
 
   const locale = params.locale || "en";
@@ -78,14 +78,14 @@ const LEGACY_MAP: Record<string, string> = {
   governance: "governance",
 };
 
-export default async function WikiPage({ params }: { params: { slug: string[] } }) {
+export default async function WikiPage({ params }: { params: { slug: string[]; locale: string } }) {
   const decoded = params.slug.map((s) => decodeURIComponent(s));
-  let doc = getDocBySlug(decoded);
+  let doc = getDocBySlug(decoded, params.locale);
 
   if (!doc && decoded.length === 1) {
     const mapped = LEGACY_MAP[decoded[0]];
     if (mapped) {
-      const chapters = getChapters();
+      const chapters = getChapters(params.locale);
       const ch = chapters.find((c) => c.slug === mapped);
       if (ch?.docs[0]) redirect(ch.docs[0].href);
     }
@@ -93,7 +93,7 @@ export default async function WikiPage({ params }: { params: { slug: string[] } 
 
   if (!doc) notFound();
 
-  const { prev, next } = getAdjacentDocs(doc);
+  const { prev, next } = getAdjacentDocs(doc, params.locale);
   const headings = getDocHeadings(doc.content);
 
   const { content } = await compileMDX({

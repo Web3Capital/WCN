@@ -1,0 +1,56 @@
+---
+title: '12.3 The third stage: settlement and asset layer'
+chapter: 12
+order: 3
+description: >-
+  Fee capture and state root on-chain in the maturity stage of the benchmarking
+  protocol: On the premise that PoB is a trusted input, settlement, identity
+  bearing and selective on-chain certification are promoted - not the starting
+  point of the narrative, but the business results.
+---
+
+<Hero badge="12.3 · Settlement and Asset Layer" lead="Only when the node network, Deal density, PoB and Agent governance meet the standards, settlement and asset carrying will be systematically promoted; the on-chain part should be "necessary summaries and proofs" rather than full state replication.">
+# The settlement layer eats the input quality of PoB; when the input is thin, any chain is just an expensive database.
+</Hero>
+
+<MetaGrid>
+  <Meta label="core goals" value="Settlement mechanism + digital carrying of identity/authority + selective on-chain implementation" />
+  <Meta label="Preconditions" value="The switching signal of 12.1/12.2 has been continuously met (not a single monthly pulse)" />
+  <Meta label="in principle" value="Things that can be efficiently solved off-chain should not be put on the chain; there must be a clear verifier or counterparty on the chain." />
+</MetaGrid>
+
+## Industry reference
+
+- **Uniswap fee switch and governance precipitation**: After the transaction volume and pool depth are proven, the protocol layer will carry long-term fees and parameter governance; WCN settlement rules should be solidified after the cash flow and PoB density are proven.
+- **Ethereum state and data availability layering**: The complete state does not need to be copied by everyone; WCN can keep detailed deal data within the compliance boundary, and only the commitment, root hash or ZK/signature proof remain on the chain (depending on compliance and technology selection).
+- **RWA / Compliance Securities Token Path**: Asset on-chain is generally restricted by legal entities and disclosure; the third phase of WCN should align the dual conditions of "business has been run + clear legal path" to avoid reverse packaging.
+
+## specific deliverables
+
+<CardGrid cols={2}>
+  <Card title="Settlement formalization" icon="coins">**Delivery**: Accounting rules and PoB trigger condition mapping table, dispute and arbitration interface, reconciliation and audit reports. **Indicators**: Settlement cycle, dispute rate, bad debt/reversal rate, multi-entity reconciliation consistency.</Card>
+  <Card title="Identity and permission bearing" icon="id-card">**Delivery**: Unified model of node identity, role, reputation or staking (if adopted) and system permissions; logout and inheritance processes. **Indicators**: Permission change traceability rate, number of fraudulent use and shared account incidents.</Card>
+  <Card title="long term value ledger" icon="trending-up">**Delivery**: Views of contributions and results that can be queried across quarters (used for incentives, sharing or governance reference, the specific form is determined by governance). **Indicators**: Account book recalculation consistency, external audit sampling pass rate.</Card>
+  <Card title="Selective on-chain" icon="link-2">**Delivery**: On-chain asset list (what is on-chain, why is on-chain, who verifies), bridge or custody assumptions, upgrade and pause switches. **Indicators**: Difference between on-chain events and off-chain PoB reconciliation, accident recovery time.</Card>
+</CardGrid>
+
+## Success Metrics (Example)
+
+- Any settlement can be traced back to the complete chain of: **PoB record → rule version → participant identity**.
+- There is a documented downgrade path when on-chain components fail (pause minting, rollback to off-chain settlement, etc.).
+- For sampling audits proposed by regulators or major partners, the material export can be completed within the agreed time.
+
+## Main risks at this stage
+
+<CardGrid cols={2}>
+  <Card title="Compliance and Jurisdiction" icon="scale">Token/security attribute misjudgment. **Miscellaneous**: Legal opinions drive product boundaries, not the other way around.</Card>
+  <Card title="Smart contracts and security" icon="lock-open">The asset layer attracts attack surfaces. **Mitigation**: Auditing, bug bounties, limits and multi-signatures; no user keys are escrowd unless necessary.</Card>
+  <Card title="Oracles and off-chain dependencies" icon="link">The on-chain status is inconsistent with PoB. **Slow release**: multi-source verification, delayed settlement, challenge period.</Card>
+  <Card title="narrative backlash" icon="megaphone">The market only talks about chains and not about business. **Release**: External KPIs still prioritize network output and settlement quality.</Card>
+</CardGrid>
+
+## Why must it be placed after
+
+<Callout type="warning">If Phase 1–2 is skipped, there will be no stable input to the settlement layer, and the asset layer will easily become a “shell certificate”. This is opposite to the unsustainable path of a large number of cash-flow-free projects in 2017-2018 after issuing tokens; it is also consistent with the path of today's leading protocols to "first establish volume and governance practices, and then expand the utility of tokens."</Callout>
+
+<Statement>The third phase marks the evolution of WCN from a "high-trust business network" to an "auditable, distributable, optionally anchored on-chain long-term system" - provided that the numbers in the first two phases can withstand random inspections.</Statement>

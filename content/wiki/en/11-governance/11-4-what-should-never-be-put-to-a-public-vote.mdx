@@ -1,0 +1,54 @@
+---
+title: 11.4 What should never be put to a public vote
+chapter: 11
+order: 4
+description: >-
+  Hard boundaries such as security, compliance, litigation, sanctions, keys and
+  brands: benchmarking on-chain governance manipulation and TradFi
+  non-shareholder referendum matters.
+---
+
+<Hero badge="11.4 · Non-voting matters" lead="WCN permanently excludes the following areas from public voting: not against participation, but in recognition that certain decisions, once hijacked by economic weight or short-term emotions, will directly destroy existence and legitimacy. The boundary list sits alongside the exec responsibilities and constitutes the governance capability itself.">
+# One of the signs of mature governance is clearly stated matters and reasons that can never be submitted to a public vote.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Core answer" value="What matters will never be decided by node or token referendum?" />
+  <Meta label="negative teaching material" value="The DAO emergency failure, Beanstalk flash loan decision, Compound vault kidnapping" />
+  <Meta label="underlying logic" value="Fiduciary duties, regulatory non-negotiability, operational continuity" />
+</MetaGrid>
+
+## Things to never put to a vote (list level)
+
+The following matters are the sole responsibility of the founding team, board of directors, authorized executives, compliance officers or security officers within the framework of the law and charter; community voting may not be used to overturn, suspend or replace legal obligations.
+
+<CardGrid cols={2}>
+  <Card title="Security and Incident Response" icon="shield">Smart contract upgrades key management, intrusion handling, freezing/circuiting, and technical cooperation with auditing and law enforcement. The DAO stated: **Slow voting on the chain does not match the speed of asset loss**; such decisions must have a preset playbook and responsibility chain.</Card>
+  <Card title="KYC/AML/Sanctions" icon="lock-keyhole">Client onboarding, ongoing due diligence, suspicious activity reporting, list screening and account restrictions. Benchmark banks and securities firms: **Anti-money laundering and sanctions compliance cannot be exempted by "community" voting**, otherwise it will constitute regulatory and criminal liability.</Card>
+  <Card title="Regulatory and Enforcement Communications" icon="scale">Regulatory inquiry responses, investigation cooperation, license applications and withdrawal strategies. Benchmarking SEC/FINRA context: **External legal position** must be unified by authorized legal and compliance functions, and cannot be decided by referendum on "whether to cooperate".</Card>
+  <Card title="Major litigation and arbitration" icon="scroll">Prosecution, Settlement, Jurisdiction and Evidence Strategy. Shareholders in listed companies cannot vote on a daily basis to decide settlement terms for individual cases; similarly, on-chain voting can easily be manipulated and confidentiality compromised.</Card>
+  <Card title="Entity and Licensing Structure" icon="building">Holding structure, relocation of registration place, scope of licensed entities, disclosure of related transactions. It falls within the scope of **Director/Trustee** and regulatory disclosures, and a referendum cannot replace fiduciary obligations.</Card>
+  <Card title="Core brand and major external commitments" icon="mic">Earnings implications, regulatory-friendly statements, and marketing claims that are inconsistent with the facts. Excessive openness will lead to **uncontrollable risks in securities laws and advertising laws**; unified standards are issued by the responsible layer.</Card>
+  <Card title="Key Funding and Custody Actions" icon="coins">Large-amount treasury transfers, cross-chain bridge strategy changes, and custodian changes. Beanstalk proves: **Temporarily centralized voting rights = Stealable vault**; requires multi-signature, time lock, human-machine separation, and no public vote.</Card>
+  <Card title="Personal data and cross-border transfers" icon="globe">DPA, sub-processors, data residency and deletion policies. The **basis of legality** for data processing under jurisdictions such as GDPR cannot be overwritten by a vote of a non-data controller.</Card>
+</CardGrid>
+
+## Why open voting must fail in these domains
+
+<Callout type="warning">**Emotions and short-term interests**: In a crisis, participants may vote against actions that are "unfavorable to themselves but legally necessary" (such as freezing, cooperating with investigations). **Manipulation**: Flash loans, vote bribery and entrusted kidnapping have been proven on the chain. **Legal liability**: Regulators are pursuing **controllers and executives**, not "community will".</Callout>
+
+## Alignment with TradFi (Concept)
+
+- **Matters reserved by the Board of Directors**: Areas that require approval from directors as stipulated in the Articles of Association shall not be submitted to the general meeting of shareholders.
+- **Separate Channel for Compliance Officers**: In regulated entities, certain reporting obligations go directly to the board of directors and supervision, and **line-of-business votes cannot be vetoed**.
+- **Exchange Crisis Rules**: Trading suspension and abnormal fluctuation disposal are usually implemented immediately by the management authorized by the rules, **post-disclosure and review**, rather than prior referendums.
+
+## Implementation points
+
+<Steps>
+  <Step title="Writing in the Charter and Disclosure to the Public">Restricted areas must be readable in the user agreement, governance instructions and node materials to avoid "verbal red lines".</Step>
+  <Step title="Hooking is prohibited on the technical side">Smart contracts or backend permissions must not be configured to "cover restricted areas with a single proposal".</Step>
+  <Step title="Linked with 11.5">When compliance requirements in multiple jurisdictions change, the restricted areas will only increase rather than decrease until the charter is formally revised and legal procedures are passed at the responsible level.</Step>
+</Steps>
+
+<Statement>Knowing what **not** to vote is equally important as knowing what **can** vote; the former prevents the network from self-legitimizing illegal behavior under pressure, and the latter supports long-term participation value.</Statement>

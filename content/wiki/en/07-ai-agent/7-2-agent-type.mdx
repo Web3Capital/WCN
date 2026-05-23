@@ -1,0 +1,59 @@
+---
+title: 7.2 Agent type
+description: >-
+  The five types of Agents map different tool permissions, log granularity and
+  settlement calibers; they are aligned with roles in the orchestration
+  framework, but are bound to governance.
+chapter: 7
+order: 2
+---
+
+<Hero badge="7.2 · Agent type" lead="Multi-agent frameworks such as CrewAI use "roles" to organize prompts and tools; WCN upgrades roles to governance objects: each type of Agent corresponds to different data visibility, executable actions, and PoB attribution templates. Without classification, permissions and settlement will be confused.">
+# Five types = five mission identities, not five chat skins.
+</Hero>
+
+<MetaGrid>
+  <Meta label="What this page does" value="Type definition × Permission × Log × PoB caliber" />
+  <Meta label="core themes" value="Research / Deal / Growth / Execution / Liquidity" />
+  <Meta label="Reading highlights" value="Who can see what, what tools can be adjusted, what marks can be left" />
+</MetaGrid>
+
+## Five typical Agents
+
+<CardGrid cols={2}>
+  <Card title="Research Agent" icon="search">Information retrieval, multi-source summary, structured table of comparable companies/tracks, and due diligence list filling. **Tool examples**: Intranet document RAG, permitted third-party data API, prohibiting direct connection to any web page crawling (anti-injection). **LLM Note**: Fact references must have source anchors; values ​​are marked "to be verified" by default.</Card>
+  <Card title="Deal Agent" icon="handshake">Capital-project match candidates, teaser-level pitch drafts, deal stage status recommendations. **Prohibited**: Issuing binding terms or exclusive commitments on behalf of nodes without authorization. **Copilot comparison**: Copilot optimizes single-person manuscripts; Deal Agent output needs to have deal_id and recommendation logic summary for review.</Card>
+  <Card title="Growth Agent" icon="trending-up">Multi-version copy, funnel bullet points, post-campaign attribution summary (tied to the Growth task). **Risk**: Must go through the manual release gate before publishing to the outside world; avoid combining with prompt words such as "profit commitment".</Card>
+  <Card title="Execution Agent" icon="settings">Meeting minutes, to-do breakdown, reminder draft, and receipt tracking list. **Benchmark**: Closest to enterprise automation (Zapier/Make) + LLM, but each suggestion should be linked to meeting notes and timestamps.</Card>
+  <Card title="Liquidity Agent" icon="droplet">Liquidity and market health monitoring summary, checklist status, abnormal threshold alarm description. **TradFi Lenovo**: Similar to the "natural language layer" of a certain type of risk dashboard in Aladdin, the decision-making power still lies with the trading desk/node.</Card>
+</CardGrid>
+
+## Why can’t they be mixed into a “super agent”?
+
+LangChain-style general-purpose Agents often share the same toolset; in institutional scenarios, the **principle of least privilege** will be violated. After classification, the system can do:
+
+<CardGrid cols={2}>
+  <Card title="Who can see what" icon="eye">Research can read a wide range of materials; Liquidity can only read market prices and agreed contracts; Deal does not read sensitive fields of salary levels in the entire database by default.</Card>
+  <Card title="Who can do what" icon="wrench">Execution can write tasks and comments; Growth can only write marketing draft areas; no type of Agent can transfer money or sign contracts by default.</Card>
+  <Card title="Who should keep what log?" icon="clipboard-list">Research records the search query and fragment ID; Deal records the recommended features and versions; Liquidity records the indicator definition and data time.</Card>
+  <Card title="How and who gets into PoB" icon="circle-check">Attribution templates are split by type: for example, "Adopted Research Paragraphs" and "Adopted Growth Materials" have different Proof fields to avoid settlement disputes.</Card>
+</CardGrid>
+
+## Mapping relationship with multi-agent orchestration
+
+The *agent / node* in CrewAI / LangGraph can be compared to the types of WCN, but WCN fixes three additional things: **(1)** The tool whitelist allowed for each type; **(2)** The state machine with the human approval edge; **(3)** The output is bound to `task_id`, node adoption event. Without (3), no matter how beautiful the arrangement is, it is just an internal experiment.
+
+<Callout type="warning">
+Not classified → Permission expansion → Logs cannot be defended → PoB cannot be priced. Type is a prerequisite for governance and commercialization, not a document decoration.
+</Callout>
+
+## Short example: same event, multiple types of collaboration
+
+<Steps>
+  <Step title="Research">Pull public financing news + internal memo to generate "Conflict Points and Question List".</Step>
+  <Step title="Deal">Output a draft of "Next round of communication points" based on the list, with matching reasons (no automatic emailing).</Step>
+  <Step title="Execution">Write the meeting conclusion as an action item with owner/due and attach it to Task.</Step>
+  <Step title="Growth (optional)">Generate external neutral update copy from the adopted facts, and manually click to publish it.</Step>
+</Steps>
+
+<Statement>The goal of types is to answer at the architectural level: if something goes wrong, is it a problem with the model, tools, configuration, or human adoption - it can be broken down before it can be managed.</Statement>

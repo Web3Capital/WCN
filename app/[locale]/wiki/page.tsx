@@ -35,8 +35,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function WikiLandingPage() {
-  const chapters = getChapters();
+export default async function WikiLandingPage({ params }: { params: { locale: string } }) {
+  const chapters = getChapters(params.locale);
   const t = await getTranslations("wiki");
 
   const totalPages = chapters.reduce((acc, ch) => acc + ch.docs.length, 0);

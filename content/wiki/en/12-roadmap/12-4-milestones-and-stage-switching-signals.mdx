@@ -1,0 +1,73 @@
+---
+title: 12.4 Milestones and stage switching signals
+chapter: 12
+order: 4
+description: >-
+  Maturity-driven go/no-go: Quantify the threshold, anti-pattern and review
+  rhythm of Phase 1→2, 2→3; benchmark the mainnet stage gating rather than the
+  marketing roadmap.
+---
+
+<Hero badge="12.4 · Switching signals" lead="Phase switching should be like an Ethereum upgrade or a mainnet milestone: triggered by preset conditions and observational data, and can be explained to the outside world "why it is now possible to enter the next phase."">
+# The calendar is only used to plan the review rhythm; the access control conditions are the only basis for whether to switch stages.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Core answer" value="What quantifiable condition triggers a phase switch?" />
+  <Meta label="Judgment Dimension" value="Node, Deal, Proof, PoB, Agent, Income, Risk Event" />
+  <Meta label="underlying logic" value="Maturity driven + continuous window verification (not a one-month fluke)" />
+</MetaGrid>
+
+## Why reject the "pure timetable roadmap"
+
+The passage of time does not guarantee that learning occurs. Ethereum uses the research and test network as its gate control; Uniswap uses on-chain verifiable transaction volume as its de facto standard. If WCN only turns pages on a quarterly basis, it will easily fall into "overpromising for the sake of narrative" - ​​a disease shared by a large number of one-off TGE projects.
+
+<Callout type="info">It is recommended to conduct a roadmap review every quarter: compare the signals in the table below to determine "stay/forward/return to strengthen", and record the root causes of non-compliance (demand, product, compliance, organization).</Callout>
+
+## Phase 1 → Phase 2: switching signal (recommended for access control)
+
+<Steps>
+  <Step title="Network and closed loop">At least one core Deal type completes multiple end-to-end closed loops; multiple roles on the node side have continuous participation (not single event registration); and there are baseline data for stage conversion rates and cycles.</Step>
+  <Step title="Proof and PoB prototype">Proof's minimum field set and audit path run stably; PoB can output a readable staged account book (including version or change record intention); there is an entrance for objections.</Step>
+  <Step title="Business and Risk Control">At least one revenue line can be reconciled monthly; major compliance/reputation incidents have disposal records and rule patches; there are no unresolved "systemic fraud" accusations.</Step>
+</Steps>
+
+**Anti-Pattern (If you are not satisfied, you are not allowed to enter Phase 2)**: Proof is missing in large areas but still claims success; Agent is not standardized but has been connected on a large scale; there is no revenue but emphasis on "growth hacking".
+
+## Phase 2 → Phase 3: switching signal (recommended for access control)
+
+<Steps>
+  <Step title="PoB and standards">PoB schema is versioned; breaking changes have migration strategies; auditing SLA and attribution disputes have trackable downward trends or clear tolerance thresholds.</Step>
+  <Step title="Agent governance">Permissions, logs, rollback and manual coverage strategies are implemented; accidents can be postmortem; unauthorized access and data events are quantitatively monitored.</Step>
+  <Step title="Settlement ready">The off-chain ledger or settlement object has been defined at the rule level (who, based on what PoB, dispute path); the identity and permission model can support settlement, not only support display.</Step>
+</Steps>
+
+**Anti-Pattern**: Settlement rules are still completely verbal; on-chain contract development is out of sync with PoB quality; forcing the asset layer to cater to financing nodes.
+
+## Indicator combination (no single point decision-making)
+
+<CardGrid cols={2}>
+  <Card title="multidimensional threshold" icon="chart-bar">Also look at: Deal quantity and quality, Proof completeness rate, revenue structure, PoB/Agent event log, risk events. **BANNED** Only use DAU or "LOI quantity" to decide.</Card>
+  <Card title="persistent window" icon="calendar">It is recommended that key signals reach the standard for **2–3 consecutive statistical periods** (such as monthly or quarterly) to avoid campaign distortion in a single month - similar protocols are observed in the multi-stage stability of the test network.</Card>
+  <Card title="Replicability" icon="ruler">New verticals or new regions can reach the target under the playbook, proving that non-heroic individuals are accidental - benchmarking the "implementation success rate" of scalable SaaS.</Card>
+  <Card title="risk tolerance" icon="shield">The system can still operate or can be downgraded in an orderly manner under pressure such as the absence of key personnel, the exit of a single node, external regulatory inquiries, etc.</Card>
+</CardGrid>
+
+## Comparison with the "one-time launch" path
+
+| Dimensions | Stages (WCN) | Full stack at one time |
+|------|----------------|----------------|
+| Failure Diagnosis | Attributable to Network/Standards/Automation/Billing | Often Attributable to Blur |
+| Capital efficiency | Each stage can be independently financed or verified through cooperation | Large amounts in the early stage are sunk in the chain and compliance |
+| Trust accumulation | Each stage has random checkable outputs | Depends on narrative and time |
+| Regulatory Dialogue | Progressive Disclosure and Tightening of Boundaries | Easy to cross the line in one go |
+
+## Risk overview (across stages)
+
+<CardGrid cols={2}>
+  <Card title="Stage misjudgment" icon="ban">Forcibly "announce the next stage" for the financing rhythm. **Release**: Public access control checklist and scope of compliance evidence (within compliance permission).</Card>
+  <Card title="Gamification of indicators" icon="gamepad-2">Swipe registration and invalid deal. **Release**: Quality inspection and random audit samples.</Card>
+  <Card title="Technology kidnapping business" icon="link-2">Chain and Token OKR outweigh Deal OKR. **Mitigation**: Board/Governance dual-track KPI.</Card>
+</CardGrid>
+
+<Statement>The significance of the switching signal is to prevent self-deception internally and provide a "verifiable rhythm narrative" externally similar to Ethereum-style stage gating and the evolution of the head DeFi protocol version.</Statement>

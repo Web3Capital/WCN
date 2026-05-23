@@ -1,0 +1,67 @@
+---
+title: 5.1 Overview of five-layer architecture
+description: >-
+  The five layers answer five core questions respectively, forming a complete
+  value chain from demand to settlement.
+chapter: 5
+order: 1
+---
+
+<Hero badge="5.1 · Architecture Overview" lead="Most Web3 projects stack functionality together and call it "architecture." WCN's five-layer design comes from a simple understanding: any complex multi-party collaboration system without a clear hierarchical division of labor will eventually become a chaotic platform. TradFi investment bank has used a division of labor system established over 100 years (underwriting → research → sales → trading → clearing), and WCN uses a five-layer architecture to implement a similar structural division of labor in Web3.">
+# The five layers, from demand to settlement, give Web3 multi-party collaboration a system skeleton for the first time.
+</Hero>
+
+<MetaGrid>
+  <Meta label="architectural principles" value="Layered responsibilities, sequential advancement, and result gathering" />
+  <Meta label="Design reference" value="TradFi investment banking division of labor + SaaS platform layering" />
+  <Meta label="core features" value="The output of the previous layer is the input of the next layer" />
+</MetaGrid>
+
+## Answer five questions on each of the five floors.
+
+<Steps>
+  <Step title="L1 · Project and asset level: Who makes the demand?">Project parties and asset parties enter the system to express financing, growth and service needs. This is the demand entry point of the entire network - without real demand, all subsequent layers will be idle.</Step>
+  <Step title="L2 · Capital allocation layer: Who catches the demand?">The capital side connects funds and projects through judgment and allocation capabilities. It is not a simple "matching", but a systematic screening, matching and structured investment process.</Step>
+  <Step title="L3 · Execution and service layer: Who gets things done?">Legal, Audit, Development, Growth, and Agents drive execution in Tasks. This layer determines whether "connection" can become "result".</Step>
+  <Step title="L4 · Distribution and liquidity layer: Who is responsible for market undertaking?">Exchanges, market makers, media, KOLs and communities send results from within the system to the external market. There is no distribution, the result is just looped inside.</Step>
+  <Step title="L5 · Verification and Settlement Layer: Who will prove and settle?">Proof Desk collects evidence, audits verification, PoB attribution accounting, and Settlement assigns value. This is the closing layer and value outlet of the entire system.</Step>
+</Steps>
+
+---
+
+## Why is it the fifth floor, not the third or seventh floor?
+
+<CardGrid cols={2}>
+  <Card title="less than five floors" icon="ban">If execution and distribution are merged, the system cannot distinguish between "people who do things" and "people who spread the word" - attribution and settlement will be confused. If verification is merged into the execution layer, conflicts of interest between reviewers and executors are unavoidable.</Card>
+  <Card title="More than five floors" icon="ban">If the capital layer is split into a "screening layer" and a "allocation layer", it will increase complexity but not add new value judgment points. Level five is the minimally complete set of information and responsibility transformations.</Card>
+</CardGrid>
+
+> **Analogy**: The core division of labor of TradFi investment bank is also five links - **Underwriting** (project entry) → **Research** (judgment and screening) → **Sales** (capital matching) → **Transaction** (execution and settlement) → **Liquidation** (final delivery). This division of labor has been tested in the market for 100 years and has proven to be the most effective structure in multi-party collaboration.
+
+---
+
+## The fifth layer is a business sequence, not a parallel module
+
+<Callout type="warning">
+L1 Projects and Assets → L2 Capital Allocation → L3 Execution and Services → L4 Distribution and Liquidity → L5 Verification and Settlement
+</Callout>
+
+Key features:
+- **One-way flow**: The output of the previous layer is the input of the next layer. Project requirements are output to the capital layer, capital deals are output to the execution layer, execution results are output to the distribution layer, and distribution effects are output to the verification layer.
+- **Feedback Loop**: The results of the verification layer (reputation, attribution, PoB data) will feed back to L1-L4, improving matching accuracy and execution efficiency.
+- **Independent Expansion**: Each layer can independently add capabilities (more capital nodes, more service providers, more Agents) without the need to reconstruct other layers.
+
+---
+
+## Comparison with existing architecture
+
+<CardGrid cols={2}>
+  <Card title="vs. Traditional CRM (Salesforce/HubSpot)" icon="chart-bar">CRM only manages customer relationships and sales funnels, without capital allocation, service collaboration and result verification. The five layers of WCN cover the complete chain from demand to settlement.</Card>
+  <Card title="vs. DAO tools (Snapshot + Gnosis Safe)" icon="landmark">DAO tools focus on governance and fund management, without deal promotion, service execution and attribution verification. WCN solves "doing things", not just "voting".</Card>
+  <Card title="vs. Web3 Matchmaking Platform" icon="refresh-cw">The matching platform only performs L1-L2 connections, regardless of L3 execution, L4 distribution and L5 authentication. The result is "introduced but not completed."</Card>
+  <Card title="vs. TradFi investment bank" icon="landmark">Investment banks have a complete five-layer division of labor, but it is centralized, has high thresholds, and is opaque. WCN uses a networked structure to achieve a similar division of labor, but lowers the participation threshold by an order of magnitude.</Card>
+</CardGrid>
+
+<Callout type="tip">
+Understanding the five-layer sequence is the first step to understanding WCN - first there is demand, then capital, then execution, then distribution, and finally verification and settlement. This is not a theoretical framework, but an inevitable sequence of business logic.
+</Callout>

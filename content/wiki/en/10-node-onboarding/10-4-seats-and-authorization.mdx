@@ -1,0 +1,49 @@
+---
+title: 10.4 Seats and Authorization
+chapter: 10
+order: 4
+description: >-
+  Seat defines "who you are"; authorization defines "what you can reach" - the
+  two are mapped one by one to KPIs and evidence obligations, similar to the
+  RBAC + exchange product authority matrix.
+---
+
+<Hero badge="10.4 · Seats and Authorization" lead="Without clear ACLs, multi-agency networks will degenerate into WeChat groups. WCN splits Seat and Entitlement: the former is the organization’s job title and scope of responsibility in the network, and the latter is a specific Boolean combination that is readable, writable, and settleable in the system—the logic is close to the enterprise SSO role + exchange sub-account permission table.">
+# The seat is the position, and the authorization is the boundary; the closer to the settlement, the narrower the authorization and the stricter the audit.
+</Hero>
+
+<MetaGrid>
+  <Meta label="core issues" value="How to formalize the position of nodes in the network?" />
+  <Meta label="seat axis" value="Function/Region/Track/Task" />
+  <Meta label="authorization axis" value="Access / Participation / Operations / Billing Eligibility" />
+</MetaGrid>
+
+## Four types of seats (can be stacked)
+
+<CardGrid cols={2}>
+  <Card title="Function seats" icon="settings">Principal responsibility identities such as capital, project, service, distribution, region, and agent. Determine the default workflow template and KPI category (for example, the capital side is response time + investment conversion rate, the service side is delivery on-time rate + re-inspection pass rate).</Card>
+  <Card title="regional seats" icon="globe">Country/city/time zone coverage; often accompanied by **exclusivity or quota** (for example, only N master nodes in the same jurisdiction) to avoid internal order grabbing and reputation dilution.</Card>
+  <Card title="Industry seats" icon="tag">Tags such as AI, RWA, payments, infrastructure; drive L1–L2 match weighting and co-branded campaign eligibility.</Card>
+  <Card title="task seat" icon="target">Bind specific Deal ID, Task ID or activity code; permissions are time-boxed and recycled or downgraded when the task is over - similar to project-based consultant access control.</Card>
+</CardGrid>
+
+---
+
+## Four types of authorization (symmetrical with responsibilities)
+
+<CardGrid cols={2}>
+  <Card title="Access (Read)" icon="eye">Visible Deal Room, document version, indicator board scope. It can be broken down to the field level according to the "need-to-know principle" (watermarked PDF strategy for benchmarking investment bank data rooms).</Card>
+  <Card title="Engage" icon="door-open">You can bid, comment, claim tasks, and join the meeting sequence. Conflict declarations are usually required to be prepended.</Card>
+  <Card title="Right to operate (Act)" icon="wrench">On-chain or API-level actions: mint credentials, trigger allocations, invoke Agent batches. **Double review** or time lock is often required.</Card>
+  <Card title="Settlement Qualification (Settle)" icon="coins">Conditions for entering the PoB attribution and value allocation path: complete evidence package, signature of the Reviewer, and no open dispute tickets. If not met, **permissions can be frozen** while the identity still exists.</Card>
+</CardGrid>
+
+<Callout type="info">**Seat** answers "What kind of institutional responsibility do you represent?"; **Authorization** answers "Who can you move this round?" Upgrading seats does not automatically equal expansion authorization - compliance and security review is required.</Callout>
+
+---
+
+## Why does the system rely on this layer?
+
+Without seats and authorization, the collaboration map cannot be automated—matching algorithms, risk control rules, and audit logs all lose their subjects. WCN has been upgraded from "who knows whom" to "who did what to what object at what time under what authorization" - the same granularity requirement as exchange order logs and end-user audit trails.
+
+<Statement>Seat + authorization + evidence chain is the smallest structure that can be scaled at the institutional level; if one is missing, favors and verbal promises will be returned.</Statement>

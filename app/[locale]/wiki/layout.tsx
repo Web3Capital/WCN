@@ -6,11 +6,14 @@ import { DocsProgress } from "@/components/docs/DocsProgress";
 
 export default function DocsLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { locale: string };
 }) {
-  const chapters = getChapters();
-  const searchItems = buildSearchIndex();
+  const { locale } = params;
+  const chapters = getChapters(locale);
+  const searchItems = buildSearchIndex(locale);
 
   return (
     <div className="docs-shell">

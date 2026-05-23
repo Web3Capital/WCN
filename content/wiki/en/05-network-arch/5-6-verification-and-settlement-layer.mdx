@@ -1,0 +1,61 @@
+---
+title: 5.6 Verification and Settlement Layer
+description: >-
+  The closing layer of the architecture: Proof Desk, PoB, Attribution and
+  Settlement, giving all collaborations a trusted endpoint.
+chapter: 5
+order: 6
+---
+
+<Hero badge="5.6 · Verification and Settlement Layer" lead="The first four layers address resources, capital, execution, and distribution. The fifth layer solves the most critical issues: how the results are confirmed, how the attribution is calculated, and how the value is settled. Without this layer, there is no essential difference between WCN and an advanced version of CRM. The verification and settlement layer is the reason for the existence of the entire system.">
+# L5 · Verification and settlement layer - turning "what was done" into "what was proven".
+</Hero>
+
+<MetaGrid>
+  <Meta label="hierarchical position" value="L5 - Value export of five-layer architecture" />
+  <Meta label="core components" value="Proof Desk → PoB → Attribution → Settlement" />
+  <Meta label="TradFi Benchmarking" value="Audit + Clearinghouse + Performance Attribution" />
+</MetaGrid>
+
+## The core question answered at this level: How can the results be believed by the system?
+
+No matter how powerful the first four layers are, without L5, the system cannot distinguish between "really done" and "claimed to be done." The verification and settlement layer upgrades subjective narratives into auditable evidence chains.
+
+<Statement>The essence of L5: Upgrading "the result happened" to "the result was proven, attributed, and settled."</Statement>
+
+---
+
+## Four core components
+
+<CardGrid cols={2}>
+  <Card title="Proof Desk (evidence collection)" icon="paperclip">After the deal is completed, the Deal Owner submits the result evidence to the Proof Desk: signed agreement, payment record, deliverables, on-chain hash, meeting minutes, and email confirmation. The type and amount of evidence depends on the deal type - a financing deal requires agreement + payment confirmation, and a service deal requires SOW + delivery acceptance.</Card>
+  <Card title="Reviewer Queue" icon="search">Independent reviewers check evidence for: material integrity, authenticity verification, timeline plausibility, risk flagging. Key rules: The reviewer cannot be a Deal participant (interest avoidance), and the review results require multiple signatures for confirmation.</Card>
+  <Card title="PoB Event (Proof of Business)" icon="circle-check">After passing the review, the business results will be entered into the system ledger as PoB Event. PoB records are immutable and contain complete participants, evidence summaries, attribution assignments, and timestamps.</Card>
+  <Card title="Settlement Run (cycle settlement)" icon="scale">PoBs are aggregated and processed in periodic Settlement Runs. The system allocates value to all contributors - nodes, service providers and agents based on attribution ratios.</Card>
+</CardGrid>
+
+---
+
+## Comparison with TradFi verification system
+
+<CardGrid cols={2}>
+  <Card title="TradFi: mature but centralized" icon="landmark">The Big Four accounting firms (Deloitte/PwC/EY/KPMG) provide audits, DTCC/Euroclear provide clearings, and Bloomberg/MSCI provide performance attribution. The system is mature but highly centralized, high threshold, and high cost.</Card>
+  <Card title="WCN: Networked + Programmable" icon="globe">Proof Desk replaces manual audit collection, PoB replaces paper audit reports, intelligent attribution replaces manual performance calculations, and on-chain Settlement replaces centralized clearing. More open, more traceable, and lower cost.</Card>
+</CardGrid>
+
+> **Key difference**: TradFi's verification is **post-action audit** (reviewed after the annual report is released), while WCN's verification is **real-time embedding** - each deal will immediately enter the evidence collection and review process when it is completed, and there is no "year-end replenishment" problem.
+
+---
+
+## What happens if the validation layer is missing
+
+<CardGrid cols={2}>
+  <Card title="subjectivity of results" icon="ban">The participant claimed that "I facilitated this deal", but there was no evidence to support it. The system degenerates into verbal claims and relational assignments.</Card>
+  <Card title="attribution controversy" icon="ban">Multiple parties participate in a deal, and it is impossible to determine who contributed how much. Most Web3 projects choose to avoid this issue (deuce or not settle), hurting participation in the long term.</Card>
+  <Card title="Credibility does not accumulate" icon="ban">Without verified results, a node's reputation score cannot be established. The system cannot differentiate between high-value nodes and low-value nodes.</Card>
+  <Card title="Value does not accumulate" icon="ban">The results of collaboration are one-off - they are broken up as soon as they are done, and there is no systematic record. The network cannot learn and accumulate from past cooperation.</Card>
+</CardGrid>
+
+<Callout type="tip">
+The verification and settlement layer is not a "last step patch", but the core reason for the existence of the entire WCN architecture - it gives all collaboration a credible endpoint, gives all contributions a quantifiable value, and transforms the network from "one-time cooperation" into a "continuous accumulation system."
+</Callout>

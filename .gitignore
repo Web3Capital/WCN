@@ -21,3 +21,6 @@ coverage/
 **/.~lock.*#
 **/~$*
 **/lu*.tmp
+
+# Translation script cache (derived from content/wiki/zh/ via scripts/translate-wiki.ts)
+scripts/.translate-wiki-cache.json
