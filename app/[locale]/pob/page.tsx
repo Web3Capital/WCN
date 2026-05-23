@@ -3,12 +3,10 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import {
   Archive,
-  ArrowRight,
   Ban,
   CheckCircle2,
   ClipboardList,
   FileStack,
-  Network,
   Scale,
   Search,
   ShieldCheck,
@@ -108,10 +106,17 @@ export default async function PobPage() {
 
   return (
     <main className="pob-page">
+      {/* ═══ HERO — editorial masthead bar + centered Fraunces title ═══ */}
       <section className="section hero hero-orb pob-hero">
         <div className="container pob-hero-container">
+          <div className="pob-masthead" aria-hidden>
+            <span className="pob-masthead-mark">№ 05</span>
+            <span className="pob-masthead-rule" />
+            <span className="pob-masthead-section">{t("eyebrow")}</span>
+            <span className="pob-masthead-rule" />
+            <span className="pob-masthead-meta">Volume · MMXXVI</span>
+          </div>
           <div className="section-head pob-hero-intro">
-            <span className="eyebrow pob-eyebrow">{t("eyebrow")}</span>
             <h1 className="pob-hero-title">
               {t.rich("headline", { em: (chunks) => <em>{chunks}</em> })}
             </h1>
@@ -124,7 +129,8 @@ export default async function PobPage() {
 
           <div className="pob-hero-grid card-grid-animated">
             <div className="pob-hero-copy">
-              <p className="muted pob-hero-sub">{t("subLede")}</p>
+              <span className="pob-editor-kicker">Editor’s note</span>
+              <p className="pob-hero-sub pob-hero-sub--dropcap">{t("subLede")}</p>
               <div className="pob-hero-ctas">
                 <Link href="/wiki" className="button-secondary pob-hero-link">
                   {t("pobInWiki")}
@@ -138,27 +144,29 @@ export default async function PobPage() {
               </div>
             </div>
 
-            <div className="pob-pillars-panel glass" aria-label={t("pillarsPanelAria")}>
+            <aside className="pob-pillars-panel glass" aria-label={t("pillarsPanelAria")}>
               <div className="pob-pillars-head">
                 <ShieldCheck size={22} className="pob-pillars-icon" aria-hidden />
                 <span>{t("whatPobEnforces")}</span>
               </div>
-              <ul className="pob-pillars-list">
-                {pillars.map((p) => (
+              <ol className="pob-pillars-list">
+                {pillars.map((p, i) => (
                   <li key={p.title} className="pob-pillar-item">
-                    <CheckCircle2 size={18} className="pob-pillar-check" aria-hidden />
-                    <div>
+                    <span className="pob-pillar-index" aria-hidden>{String(i + 1).padStart(2, "0")}</span>
+                    <span className="pob-pillar-dot" aria-hidden />
+                    <div className="pob-pillar-text">
                       <div className="pob-pillar-title">{p.title}</div>
                       <p className="pob-pillar-body">{p.body}</p>
                     </div>
                   </li>
                 ))}
-              </ul>
-            </div>
+              </ol>
+            </aside>
           </div>
         </div>
       </section>
 
+      {/* ═══ № 01 — Boundaries: rewarded / not rewarded ════════════ */}
       <section className="section section-alt pob-boundaries">
         <div className="container">
           <div className="section-head pob-section-head section-head-numbered">
@@ -171,43 +179,48 @@ export default async function PobPage() {
               })}
             </p>
           </div>
-          <div className="pob-split-board grid-2 card-grid-animated">
-            <div className="pob-split-slab pob-split-slab--yes">
-              <span className="pob-split-watermark" aria-hidden>
-                01
-              </span>
-              <div className="card pob-dual-card pob-dual-yes">
-                <div className="pob-dual-icon" aria-hidden>
-                  <CheckCircle2 size={24} strokeWidth={2} />
+          <div className="grid-2 pob-bound-grid card-grid-animated">
+            <article className="card pob-bound-card pob-bound-card--yes">
+              <div className="pob-bound-head">
+                <span className="pob-bound-sigil" aria-hidden>+</span>
+                <div className="pob-bound-titlewrap">
+                  <span className="pob-bound-kicker">Rewarded</span>
+                  <h3 className="pob-bound-title">{t("whatIsRewarded")}</h3>
                 </div>
-                <h3>{t("whatIsRewarded")}</h3>
-                <ul className="pob-list">
-                  {rewarded.map((line) => (
-                    <li key={line}>{line}</li>
-                  ))}
-                </ul>
+                <CheckCircle2 className="pob-bound-icon-svg" size={20} strokeWidth={1.75} aria-hidden />
               </div>
-            </div>
-            <div className="pob-split-slab pob-split-slab--no">
-              <span className="pob-split-watermark" aria-hidden>
-                02
-              </span>
-              <div className="card pob-dual-card pob-dual-no">
-                <div className="pob-dual-icon pob-dual-icon-muted" aria-hidden>
-                  <Ban size={24} strokeWidth={2} />
+              <ol className="pob-bound-list">
+                {rewarded.map((line, i) => (
+                  <li key={line} className="pob-bound-row">
+                    <span className="pob-bound-num" aria-hidden>{String(i + 1).padStart(2, "0")}</span>
+                    <span className="pob-bound-text">{line}</span>
+                  </li>
+                ))}
+              </ol>
+            </article>
+            <article className="card pob-bound-card pob-bound-card--no">
+              <div className="pob-bound-head">
+                <span className="pob-bound-sigil pob-bound-sigil--muted" aria-hidden>−</span>
+                <div className="pob-bound-titlewrap">
+                  <span className="pob-bound-kicker pob-bound-kicker--muted">Not rewarded</span>
+                  <h3 className="pob-bound-title">{t("whatIsNotRewarded")}</h3>
                 </div>
-                <h3>{t("whatIsNotRewarded")}</h3>
-                <ul className="pob-list">
-                  {notRewarded.map((line) => (
-                    <li key={line}>{line}</li>
-                  ))}
-                </ul>
+                <Ban className="pob-bound-icon-svg pob-bound-icon-svg--muted" size={20} strokeWidth={1.75} aria-hidden />
               </div>
-            </div>
+              <ol className="pob-bound-list">
+                {notRewarded.map((line, i) => (
+                  <li key={line} className="pob-bound-row">
+                    <span className="pob-bound-num pob-bound-num--muted" aria-hidden>{String(i + 1).padStart(2, "0")}</span>
+                    <span className="pob-bound-text">{line}</span>
+                  </li>
+                ))}
+              </ol>
+            </article>
           </div>
         </div>
       </section>
 
+      {/* ═══ № 02 — Verification flow as editorial row sequence ══════ */}
       <section className="section pob-verify">
         <div className="container">
           <div className="section-head pob-section-head section-head-numbered">
@@ -216,57 +229,70 @@ export default async function PobPage() {
             <h2 className="pob-section-h2">{t("verificationTitle")}</h2>
             <p className="muted hero-lede pob-section-lede">{t("verificationDesc")}</p>
           </div>
-          <div className="pob-flow-wrap">
-            <div className="pob-flow card-grid-animated">
-              {verificationSteps.map((step, i) => (
-                <div key={step.title} className="pob-flow-card">
-                  <div className="pob-flow-icon">{step.icon}</div>
-                  <div className="pob-flow-step">{t("verificationStep", { n: i + 1 })}</div>
-                  <h3 className="pob-flow-title">{step.title}</h3>
-                  <p className="pob-flow-body">{step.body}</p>
+          <ol className="pob-verify-editorial card-grid-animated">
+            {verificationSteps.map((step, i) => (
+              <li key={step.title} className="pob-verify-row">
+                <span className="pob-verify-num" aria-hidden>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="pob-verify-content">
+                  <div className="pob-verify-head">
+                    <span className="pob-verify-icon" aria-hidden>{step.icon}</span>
+                    <h3 className="pob-verify-title">{step.title}</h3>
+                  </div>
+                  <p className="pob-verify-body">{step.body}</p>
                 </div>
-              ))}
-            </div>
-          </div>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
+      {/* ═══ № 03 — Proof Desk as feature article ═════════════════════ */}
       <section className="section section-alt pob-proof-section">
         <div className="container">
-          <div className="card pob-proof-desk card-grid-animated">
-            <div className="pob-proof-desk-inner">
-              <div className="pob-proof-desk-icon" aria-hidden>
-                <ShieldCheck size={26} strokeWidth={2} />
-              </div>
-              <div>
-                <span className="section-number pob-proof-section-number">№ 03</span>
-                <span className="eyebrow pob-eyebrow pob-proof-eyebrow">{t("proofDeskEyebrow")}</span>
-                <h2 className="pob-proof-desk-title">{t("proofDeskTitle")}</h2>
-                <p className="muted pob-proof-desk-lede">{t("proofDeskDesc")}</p>
-                <ul className="pob-proof-desk-grid">
-                  <li>
-                    <strong className="pob-strong">{t("intake")}</strong>
-                    <span className="muted">{t("intakeDesc")}</span>
-                  </li>
-                  <li>
-                    <strong className="pob-strong">{t("review")}</strong>
-                    <span className="muted">{t("reviewDesc")}</span>
-                  </li>
-                  <li>
-                    <strong className="pob-strong">{t("disputes")}</strong>
-                    <span className="muted">{t("disputesDesc")}</span>
-                  </li>
-                  <li>
-                    <strong className="pob-strong">{t("conclusions")}</strong>
-                    <span className="muted">{t("conclusionsDesc")}</span>
-                  </li>
-                </ul>
-              </div>
+          <div className="pob-proof-feature card-grid-animated">
+            <div className="pob-proof-head">
+              <span className="section-number pob-proof-section-number">№ 03</span>
+              <span className="eyebrow pob-eyebrow pob-proof-eyebrow">{t("proofDeskEyebrow")}</span>
+              <h2 className="pob-section-h2 pob-proof-title">{t("proofDeskTitle")}</h2>
+              <p className="pob-proof-lede">{t("proofDeskDesc")}</p>
             </div>
+            <ol className="pob-proof-roles">
+              <li className="pob-proof-role">
+                <span className="pob-proof-role-num" aria-hidden>·a</span>
+                <div className="pob-proof-role-body">
+                  <div className="pob-proof-role-name">{t("intake")}</div>
+                  <p className="pob-proof-role-desc">{t("intakeDesc")}</p>
+                </div>
+              </li>
+              <li className="pob-proof-role">
+                <span className="pob-proof-role-num" aria-hidden>·b</span>
+                <div className="pob-proof-role-body">
+                  <div className="pob-proof-role-name">{t("review")}</div>
+                  <p className="pob-proof-role-desc">{t("reviewDesc")}</p>
+                </div>
+              </li>
+              <li className="pob-proof-role">
+                <span className="pob-proof-role-num" aria-hidden>·c</span>
+                <div className="pob-proof-role-body">
+                  <div className="pob-proof-role-name">{t("disputes")}</div>
+                  <p className="pob-proof-role-desc">{t("disputesDesc")}</p>
+                </div>
+              </li>
+              <li className="pob-proof-role">
+                <span className="pob-proof-role-num" aria-hidden>·d</span>
+                <div className="pob-proof-role-body">
+                  <div className="pob-proof-role-name">{t("conclusions")}</div>
+                  <p className="pob-proof-role-desc">{t("conclusionsDesc")}</p>
+                </div>
+              </li>
+            </ol>
           </div>
         </div>
       </section>
 
+      {/* ═══ № 04 — Scoring formula as editorial specimen ═══════════ */}
       <section className="section pob-scoring">
         <div className="container">
           <div className="section-head pob-section-head section-head-numbered">
@@ -275,7 +301,7 @@ export default async function PobPage() {
             <h2 className="pob-section-h2">{t("scoringTitle")}</h2>
             <p className="muted hero-lede pob-section-lede">{t("scoringDesc")}</p>
           </div>
-          <div className="card pob-formula-card card-grid-animated">
+          <div className="pob-formula-feature card-grid-animated">
             <p className="pob-formula-label">{t("composition")}</p>
             <div className="pob-formula-specbar" aria-label={t("formulaSpecAria")}>
               <span className="pob-formula-eq">{t("effectivePob")}</span>
@@ -287,40 +313,50 @@ export default async function PobPage() {
                 </span>
               ))}
             </div>
-            <div className="pob-formula-factors">
-              {formulaFactors.map((f) => (
-                <div key={f.name} className="pob-formula-factor">
-                  <span className="pob-formula-name">{f.name}</span>
-                  <p className="pob-formula-hint">{f.hint}</p>
-                </div>
+            <ol className="pob-formula-factors">
+              {formulaFactors.map((f, i) => (
+                <li key={f.name} className="pob-formula-factor">
+                  <span className="pob-formula-factor-num" aria-hidden>{String(i + 1).padStart(2, "0")}</span>
+                  <div className="pob-formula-factor-body">
+                    <span className="pob-formula-name">{f.name}</span>
+                    <p className="pob-formula-hint">{f.hint}</p>
+                  </div>
+                </li>
               ))}
-            </div>
-            <p className="muted pob-formula-foot">{t("scoringFoot")}</p>
+            </ol>
+            <p className="pob-formula-foot">{t("scoringFoot")}</p>
           </div>
         </div>
       </section>
 
+      {/* ═══ Attribution / boundary statement — editorial entries ══ */}
       <section className="section section-alt pob-attrib-section">
         <div className="container">
           <div className="grid-2 pob-attrib-grid card-grid-animated">
-            <div className="card pob-attrib-card">
-              <div className="pob-attrib-icon" aria-hidden>
-                <Split size={22} strokeWidth={2} />
+            <article className="card pob-attrib-card">
+              <div className="pob-attrib-kicker">
+                <span className="pob-attrib-kicker-num">№ 05·a</span>
+                <span className="pob-attrib-kicker-rule" aria-hidden />
+                <span className="pob-attrib-kicker-label">Attribution</span>
               </div>
-              <h3>{t("attributionTitle")}</h3>
-              <p className="muted" style={{ marginBottom: 0 }}>
-                {t("attributionBody")}
-              </p>
-            </div>
-            <div className="card pob-attrib-card pob-attrib-muted">
-              <div className="pob-attrib-icon" aria-hidden>
-                <XCircle size={22} strokeWidth={2} />
+              <div className="pob-attrib-head">
+                <Split size={22} strokeWidth={1.75} className="pob-attrib-icon-svg" aria-hidden />
+                <h3 className="pob-attrib-title">{t("attributionTitle")}</h3>
               </div>
-              <h3>{t("notLawTitle")}</h3>
-              <p className="muted" style={{ marginBottom: 0 }}>
-                {t("notLawBody")}
-              </p>
-            </div>
+              <p className="pob-attrib-body">{t("attributionBody")}</p>
+            </article>
+            <article className="card pob-attrib-card pob-attrib-muted">
+              <div className="pob-attrib-kicker">
+                <span className="pob-attrib-kicker-num pob-attrib-kicker-num--muted">№ 05·b</span>
+                <span className="pob-attrib-kicker-rule" aria-hidden />
+                <span className="pob-attrib-kicker-label">Boundary</span>
+              </div>
+              <div className="pob-attrib-head">
+                <XCircle size={22} strokeWidth={1.75} className="pob-attrib-icon-svg pob-attrib-icon-svg--muted" aria-hidden />
+                <h3 className="pob-attrib-title">{t("notLawTitle")}</h3>
+              </div>
+              <p className="pob-attrib-body">{t("notLawBody")}</p>
+            </article>
           </div>
         </div>
       </section>
