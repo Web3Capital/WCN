@@ -5,8 +5,21 @@ import { authOptions } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import { getOwnedNodeIds, scopedSummaryCounts } from "@/lib/member-data-scope";
 import { isAdminRole } from "@/lib/permissions";
-import { Network, FolderKanban, ShieldCheck, Plus, Scale, Inbox, Handshake, Landmark, ListTodo } from "lucide-react";
+import { buildInboxView, type InboxItem } from "@/lib/queries/inbox-view";
+import {
+  Network,
+  FolderKanban,
+  ShieldCheck,
+  Plus,
+  Scale,
+  Inbox,
+  Handshake,
+  Landmark,
+  Gavel,
+  ArrowRight,
+} from "lucide-react";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { StatusBadge } from "@/app/[locale]/dashboard/_components/status-badge";
 import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
@@ -21,8 +34,16 @@ function roleLabel(role: string): string {
   return map[role] || role;
 }
 
+function inboxIcon(kind: InboxItem["kind"]) {
+  switch (kind) {
+    case "application": return <Inbox size={18} aria-hidden />;
+    case "settlement_lock": return <Scale size={18} aria-hidden />;
+    case "dispute": return <Gavel size={18} aria-hidden />;
+  }
+}
 
 export const metadata = dashboardMeta("Dashboard", "WCN console overview");
+
 export default async function DashboardIndex() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
@@ -30,36 +51,42 @@ export default async function DashboardIndex() {
   const isAdmin = isAdminRole(session.user.role);
   const userId = session.user.id;
   const role = session.user.role;
+  const workspaceId = session.user.activeWorkspaceId ?? null;
   const prisma = getPrisma();
 
+  // Inbox is the headline — always fetched. Pulse + recent are
+  // secondary. Member-scoped queries fall back when the actor isn't
+  // an admin.
   const [
-    nodeCount, projectCount, taskCount, pobPending, applicationCount,
-    capitalCount, dealCount, myApplications, memberCounts, recentAudit
+    inbox,
+    nodeCount, projectCount, pobPending, dealCount,
+    memberCounts, recentAudit,
   ] = await Promise.all([
+    buildInboxView({ prisma, userId, role, workspaceId, topN: 5 }),
     isAdmin ? prisma.node.count() : Promise.resolve(0),
     isAdmin ? prisma.project.count() : Promise.resolve(0),
-    isAdmin ? prisma.task.count() : Promise.resolve(0),
     isAdmin ? prisma.poBRecord.count({ where: { status: "PENDING" } }) : Promise.resolve(0),
-    isAdmin ? prisma.application.count() : Promise.resolve(0),
-    isAdmin ? prisma.capitalProfile.count() : Promise.resolve(0),
     isAdmin ? prisma.deal.count() : Promise.resolve(0),
-    prisma.application.count({ where: { userId } }),
     isAdmin
       ? Promise.resolve(null)
       : getOwnedNodeIds(prisma, userId).then((ids) => scopedSummaryCounts(prisma, userId, ids)),
     isAdmin
-      ? prisma.auditLog.findMany({ orderBy: { createdAt: "desc" }, take: 8, include: { actor: { select: { name: true, email: true } } } })
-      : Promise.resolve([])
+      ? prisma.auditLog.findMany({
+          orderBy: { createdAt: "desc" },
+          take: 8,
+          include: { actor: { select: { name: true, email: true } } },
+        })
+      : Promise.resolve([]),
   ]);
+
+  const remaining = Math.max(0, inbox.totalCount - inbox.items.length);
 
   return (
     <div className="dashboard-page section">
       <div className="container-wide">
         <span className="eyebrow"><T>Overview</T></span>
         <h1><T>Welcome back</T></h1>
-        <p className="muted">
-          {roleLabel(role)} · WCN Operating Console
-        </p>
+        <p className="muted">{roleLabel(role)} · WCN Operating Console</p>
 
         {!isAdmin && memberCounts ? (
           <div className="card profile-bar mt-18">
@@ -75,44 +102,96 @@ export default async function DashboardIndex() {
           </div>
         ) : null}
 
-        <div className="grid-4 card-grid-animated mt-18">
-          <div className="card kpi-card">
-            <div className="kpi-header">
-              <span className="badge badge-accent"><T>Registry</T></span>
-              <Network size={18} className="kpi-icon" />
-            </div>
-            <div className="stat-number">{isAdmin ? nodeCount : (memberCounts?.ownedNodes ?? 0)}</div>
-            <div className="stat-label">{isAdmin ? "Nodes" : "Your nodes"}</div>
-          </div>
+        {/* ─── Inbox + Pulse row ────────────────────────────────────── */}
+        <div className="dashboard-inbox-row mt-18">
+          <section className="card dashboard-inbox" aria-labelledby="inbox-heading">
+            <header className="dashboard-inbox-header">
+              <h2 id="inbox-heading" className="dashboard-inbox-title">
+                <T>Inbox</T>
+              </h2>
+              <span className="muted dashboard-inbox-subtitle">
+                {inbox.totalCount === 0 ? (
+                  <T>Nothing waiting on you right now</T>
+                ) : (
+                  <>
+                    {inbox.totalCount} <T>things need your attention</T>
+                  </>
+                )}
+              </span>
+            </header>
 
-          <div className="card kpi-card">
-            <div className="kpi-header">
-              <span className="badge badge-green"><T>Projects</T></span>
-              <FolderKanban size={18} className="kpi-icon" />
-            </div>
-            <div className="stat-number">{isAdmin ? projectCount : (memberCounts?.scopedProjects ?? 0)}</div>
-            <div className="stat-label">{isAdmin ? "Projects" : "Your projects"}</div>
-          </div>
+            {inbox.items.length === 0 ? (
+              <div className="dashboard-inbox-empty muted">
+                <T>You are caught up. Decisions assigned to you will appear here.</T>
+              </div>
+            ) : (
+              <ul className="dashboard-inbox-list">
+                {inbox.items.map((item) => (
+                  <li key={`${item.kind}-${item.id}`} className="dashboard-inbox-item">
+                    <span className="dashboard-inbox-icon" aria-hidden>{inboxIcon(item.kind)}</span>
+                    <div className="dashboard-inbox-body">
+                      <div className="dashboard-inbox-row-1">
+                        <span className="dashboard-inbox-item-title">{item.title}</span>
+                        <StatusBadge status={item.status} className="dashboard-inbox-status" />
+                      </div>
+                      <div className="dashboard-inbox-row-2 muted">{item.context}</div>
+                    </div>
+                    <Link
+                      href={item.href as "/dashboard"}
+                      className="dashboard-inbox-action"
+                      aria-label={`Review: ${item.title}`}
+                    >
+                      <T>Review</T>
+                      <ArrowRight size={14} aria-hidden />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
 
-          <div className="card kpi-card">
-            <div className="kpi-header">
-              <span className="badge badge-amber"><T>Verification</T></span>
-              <ShieldCheck size={18} className="kpi-icon" />
-            </div>
-            <div className="stat-number">{isAdmin ? pobPending : (memberCounts?.scopedPoB ?? 0)}</div>
-            <div className="stat-label">{isAdmin ? "PoB pending" : "Your PoB"}</div>
-          </div>
+            {remaining > 0 ? (
+              <Link href="/dashboard/approvals" className="dashboard-inbox-more muted">
+                → {remaining} <T>more in queue</T>
+              </Link>
+            ) : null}
+          </section>
 
-          <div className="card kpi-card">
-            <div className="kpi-header">
-              <span className="badge badge-purple"><T>Deals</T></span>
-              <Handshake size={18} className="kpi-icon" />
-            </div>
-            <div className="stat-number">{isAdmin ? dealCount : 0}</div>
-            <div className="stat-label">{isAdmin ? "Active deals" : "Your deals"}</div>
-          </div>
+          <aside className="card dashboard-pulse" aria-labelledby="pulse-heading">
+            <header className="dashboard-pulse-header">
+              <h2 id="pulse-heading" className="dashboard-pulse-title"><T>Pulse</T></h2>
+            </header>
+            <ul className="dashboard-pulse-list">
+              <li className="dashboard-pulse-item">
+                <Network size={14} aria-hidden />
+                <span className="dashboard-pulse-label"><T>Nodes</T></span>
+                <span className="dashboard-pulse-value">
+                  {isAdmin ? nodeCount : (memberCounts?.ownedNodes ?? 0)}
+                </span>
+              </li>
+              <li className="dashboard-pulse-item">
+                <FolderKanban size={14} aria-hidden />
+                <span className="dashboard-pulse-label"><T>Projects</T></span>
+                <span className="dashboard-pulse-value">
+                  {isAdmin ? projectCount : (memberCounts?.scopedProjects ?? 0)}
+                </span>
+              </li>
+              <li className="dashboard-pulse-item">
+                <Handshake size={14} aria-hidden />
+                <span className="dashboard-pulse-label"><T>Active deals</T></span>
+                <span className="dashboard-pulse-value">{isAdmin ? dealCount : 0}</span>
+              </li>
+              <li className="dashboard-pulse-item">
+                <ShieldCheck size={14} aria-hidden />
+                <span className="dashboard-pulse-label"><T>PoB pending</T></span>
+                <span className="dashboard-pulse-value">
+                  {isAdmin ? pobPending : (memberCounts?.scopedPoB ?? 0)}
+                </span>
+              </li>
+            </ul>
+          </aside>
         </div>
 
+        {/* ─── Quick actions (admin) ───────────────────────────────── */}
         {isAdmin ? (
           <div className="grid-4 mt-14">
             <Link href="/dashboard/nodes" className="quick-action">
@@ -146,68 +225,29 @@ export default async function DashboardIndex() {
           </div>
         ) : null}
 
-        <div className="grid-2 mt-14">
-          <div className="card">
-            <h3><T>My work</T></h3>
-            <div className="flex-col gap-10">
-              <Link href="/dashboard/tasks" className="module-link">
-                <span className="status-dot status-dot-accent" /> <T>Tasks</T>
-                {isAdmin ? <span className="muted"> · {taskCount} total</span> : <span className="muted"> · scoped to your nodes</span>}
-              </Link>
-              <Link href="/dashboard/projects" className="module-link">
-                <span className="status-dot status-dot-green" /> <T>Projects</T>
-              </Link>
-              <Link href="/dashboard/deals" className="module-link">
-                <span className="status-dot status-dot-purple" /> <T>Deal Room</T>
-              </Link>
-              <Link href="/dashboard/proof-desk" className="module-link">
-                <span className="status-dot status-dot-amber" /> <T>Proof Desk</T>
-              </Link>
-            </div>
-          </div>
-          <div className="card">
-            <h3><T>All modules</T></h3>
-            <div className="flex-col gap-10">
-              <Link href="/dashboard/nodes" className="module-link">
-                <span className="status-dot status-dot-green" /> <T>Node registry</T>
-              </Link>
-              <Link href="/dashboard/capital" className="module-link">
-                <span className="status-dot status-dot-purple" /> <T>Capital pool</T>
-                {isAdmin ? <span className="muted"> · {capitalCount} profiles</span> : null}
-              </Link>
-              <Link href="/dashboard/agents" className="module-link">
-                <span className="status-dot status-dot-accent" /> <T>Agents</T>
-              </Link>
-              <Link href="/dashboard/settlement" className="module-link">
-                <span className="status-dot status-dot-amber" /> <T>Settlement</T>
-              </Link>
-              <Link href="/dashboard/node-system/applications" className="module-link">
-                <span className="status-dot" /> <T>Applications</T>
-                {isAdmin ? <span className="muted"> · {applicationCount}</span> : <span className="muted"> · {myApplications}</span>}
-              </Link>
-            </div>
-          </div>
-        </div>
-
+        {/* ─── Recent activity (admin) ─────────────────────────────── */}
         {isAdmin && recentAudit.length > 0 ? (
           <div className="card mt-14">
-            <div className="card-header">
-              <h3><T>Recent activity</T></h3>
-              <Link href="/dashboard/audit" className="card-header-link"><T>View all →</T></Link>
+            <div className="dashboard-recent-header">
+              <h2 className="dashboard-recent-title"><T>Recent activity</T></h2>
+              <Link href="/dashboard/audit" className="muted dashboard-recent-viewall">
+                <T>View all</T> <ArrowRight size={14} aria-hidden />
+              </Link>
             </div>
-            <div className="timeline">
-              {(recentAudit as any[]).map((log: any) => (
-                <div key={log.id} className="timeline-item">
-                  <span className="timeline-dot" />
-                  <div className="timeline-content">
-                    <div className="timeline-action">{log.action.replace(/_/g, " ")}</div>
-                    <div className="timeline-meta">
-                      {log.actor?.name || log.actor?.email || "System"} · {log.targetType} · {new Date(log.createdAt).toLocaleDateString()}
+            <ul className="dashboard-recent-list">
+              {recentAudit.map((entry) => (
+                <li key={entry.id} className="dashboard-recent-item">
+                  <span className="dashboard-recent-dot" aria-hidden />
+                  <div>
+                    <div className="dashboard-recent-action">{entry.action}</div>
+                    <div className="muted dashboard-recent-meta">
+                      {entry.actor?.name || entry.actor?.email || "system"} ·{" "}
+                      {entry.targetType} · {new Date(entry.createdAt).toLocaleDateString()}
                     </div>
                   </div>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         ) : null}
       </div>
