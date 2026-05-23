@@ -1,20 +1,25 @@
 import "@/lib/core/init";
-import { requirePermission } from "@/lib/admin";
-import { apiOk, apiUnauthorized } from "@/lib/core/api-response";
+import { route } from "@/lib/core/api/route";
 import { evaluatePolicy } from "@/lib/modules/policy";
+import { z } from "zod";
 
-export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await requirePermission("review", "policy");
-  if (!auth.ok) return apiUnauthorized();
+const evaluatePolicySchema = z.object({
+  entityType: z.string().optional(),
+  entityId: z.string().optional(),
+  entity: z.record(z.string(), z.unknown()).optional(),
+});
 
-  const { id } = await params;
-  const body = await req.json();
-  const { entityType, entityId, entity } = body;
+export const POST = route.permission<z.infer<typeof evaluatePolicySchema>, unknown, { id: string }>({
+  input: evaluatePolicySchema,
+  rateLimit: "write",
+  permission: { action: "review", resource: "policy" },
+  handler: async ({ input, params }) => {
+    const { entityType, entityId, entity } = input;
 
-  if (!entityType || !entityId || !entity) {
-    return apiOk({ error: "entityType, entityId, and entity are required" });
-  }
+    if (!entityType || !entityId || !entity) {
+      return { error: "entityType, entityId, and entity are required" };
+    }
 
-  const result = await evaluatePolicy(id, entityType, entityId, entity);
-  return apiOk(result);
-}
+    return evaluatePolicy(params.id, entityType, entityId, entity);
+  },
+});

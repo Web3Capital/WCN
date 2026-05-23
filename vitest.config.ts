@@ -29,6 +29,8 @@ export default defineConfig({
       exclude: [
         "**/__tests__/**",
         "**/node_modules/**",
+        "**/*.md",
+        "**/*.mdx",
         // Barrels and pure type/port files have no logic to cover.
         "**/index.ts",
         "**/ports.ts",

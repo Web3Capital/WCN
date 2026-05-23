@@ -1,24 +1,30 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireSignedIn } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
-import { apiOk, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
+import { HttpError, route } from "@/lib/core/api/route";
+import { z } from "zod";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
-  const auth = await requireSignedIn();
-  if (!auth.ok) return apiUnauthorized();
-  if (!isAdminRole(auth.session.user?.role ?? "USER")) return apiUnauthorized();
+const emptyInputSchema = z.object({});
 
-  const prisma = getPrisma();
-  const project = await prisma.project.findUnique({ where: { id: params.id }, select: { id: true } });
-  if (!project) return apiNotFound("Project");
+export const GET = route.session<z.infer<typeof emptyInputSchema>, unknown, { id: string }>({
+  input: emptyInputSchema,
+  rateLimit: "auth",
+  handler: async ({ params, session }) => {
+    if (!isAdminRole(session.user.role ?? "USER")) {
+      throw new HttpError(401, "UNAUTHORIZED", "Authentication required.");
+    }
 
-  const logs = await prisma.auditLog.findMany({
-    where: { targetType: "PROJECT", targetId: params.id },
-    orderBy: { createdAt: "desc" },
-    take: 50,
-    include: { actor: { select: { name: true, email: true } } },
-  });
+    const prisma = getPrisma();
+    const project = await prisma.project.findUnique({ where: { id: params.id }, select: { id: true } });
+    if (!project) throw new HttpError(404, "NOT_FOUND", "Project not found.");
 
-  return apiOk({ activity: logs });
-}
+    const logs = await prisma.auditLog.findMany({
+      where: { targetType: "PROJECT", targetId: params.id },
+      orderBy: { createdAt: "desc" },
+      take: 50,
+      include: { actor: { select: { name: true, email: true } } },
+    });
+
+    return { activity: logs };
+  },
+});
