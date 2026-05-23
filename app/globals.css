@@ -9252,3 +9252,464 @@ html[data-theme="dark"],
   width: 40px !important;
   height: 40px !important;
 }
+
+/* ============================================================
+   HIW EDITORIAL REDESIGN — innovative typography
+   Centered hero · intro spread · outlined-number loop rows
+   ============================================================ */
+
+/* ── Hero overrides: centered, no grid ──────────────────── */
+.hiw-hero-intro {
+  margin-bottom: 0;
+}
+.hiw-hero-lede {
+  margin-inline: auto;
+}
+.hiw-hero-ctas {
+  justify-content: center;
+  margin-top: clamp(20px, 2.5vw, 28px);
+}
+
+/* ── Intro spread (new section below hero) ───────────────── */
+.hiw-intro-section {
+  padding: clamp(40px, 6vw, 64px) 0;
+  background: var(--bg-elev);
+  border-top: var(--hairline) solid var(--line-soft);
+  border-bottom: var(--hairline) solid var(--line-soft);
+}
+.hiw-intro-grid {
+  display: grid;
+  gap: clamp(28px, 4vw, 48px);
+  align-items: start;
+}
+@media (min-width: 960px) {
+  .hiw-intro-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+  }
+}
+.hiw-intro-lede {
+  font-size: clamp(17px, 1.5vw, 20px);
+  line-height: 1.72;
+  color: var(--text);
+  margin: 0;
+  font-weight: 450;
+  max-width: 44rem;
+}
+
+/* ── Loop section h2: editorial serif ───────────────────── */
+.hiw-loop-h2 {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  font-size: clamp(34px, 4.8vw, 56px);
+  letter-spacing: var(--tracking-tighter);
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+  line-height: 1.06;
+}
+
+/* ── Editorial loop — oversized outlined numbers ─────────── */
+.hiw-editorial-loop {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
+}
+.hiw-editorial-step {
+  display: grid;
+  grid-template-columns: clamp(68px, 9vw, 108px) 1fr;
+  gap: 0;
+  padding: clamp(22px, 3.2vw, 38px) 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
+  align-items: center;
+  position: relative;
+}
+.hiw-editorial-step:last-child {
+  border-bottom: none;
+}
+.hiw-editorial-num {
+  font-family: var(--font-mono);
+  font-size: clamp(44px, 6.5vw, 76px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in oklab, var(--accent) 36%, var(--line));
+  user-select: none;
+  text-align: right;
+  padding-right: clamp(16px, 2vw, 26px);
+  border-right: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
+  transition: -webkit-text-stroke-color var(--dur-2) var(--ease-out);
+  align-self: center;
+}
+.hiw-editorial-step:hover .hiw-editorial-num {
+  -webkit-text-stroke-color: color-mix(in oklab, var(--accent) 60%, var(--line));
+}
+.hiw-editorial-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: clamp(16px, 2vw, 26px);
+}
+.hiw-editorial-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hiw-editorial-icon {
+  color: var(--accent);
+  opacity: 0.68;
+  flex-shrink: 0;
+}
+.hiw-editorial-title {
+  font-family: var(--font-serif);
+  font-size: clamp(19px, 2vw, 26px);
+  font-weight: 350;
+  letter-spacing: var(--tracking-tighter);
+  line-height: 1.15;
+  margin: 0;
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+}
+.hiw-editorial-body {
+  margin: 0;
+  font-size: clamp(13px, 1.1vw, 15px);
+  line-height: 1.68;
+  color: var(--muted);
+  max-width: 52ch;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   HIW · WORLD-CLASS EDITORIAL TYPOGRAPHY — every module
+   Hero masthead bar · Intro dropcap · Architecture specimen · Bridge cards
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* — Hero masthead bar (issue mark · section · volume) ———————————————— */
+.hiw-issue-bar {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  justify-content: center;
+  margin: 0 auto clamp(20px, 2.6vw, 32px);
+  max-width: 720px;
+  padding-block: 8px;
+  border-block: 1px solid color-mix(in oklab, var(--line) 80%, transparent);
+}
+.hiw-issue-num,
+.hiw-issue-section,
+.hiw-issue-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--text) 70%, var(--muted));
+  white-space: nowrap;
+}
+.hiw-issue-num {
+  font-weight: 700;
+  color: var(--accent);
+}
+.hiw-issue-section {
+  font-weight: 600;
+}
+.hiw-issue-meta {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.hiw-issue-rule {
+  flex: 1;
+  min-width: 24px;
+  max-width: 120px;
+  height: 1px;
+  background: color-mix(in oklab, var(--line) 90%, transparent);
+}
+
+/* — Hero headline optical refinement ——————————————————————————————— */
+.hiw-page .hiw-hero-title {
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+  letter-spacing: -0.022em;
+}
+.hiw-page .hiw-hero-title em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+}
+
+/* — Intro spread: prose column with dropcap + magazine sidebar —————— */
+.hiw-intro-prose {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.5vw, 18px);
+}
+.hiw-intro-kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.hiw-intro-kicker::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: var(--accent);
+  display: inline-block;
+}
+.hiw-intro-lede--dropcap::first-letter {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 350;
+  font-size: clamp(56px, 7vw, 84px);
+  line-height: 0.82;
+  float: left;
+  padding: 6px 14px 0 0;
+  color: var(--accent);
+  font-variation-settings: "opsz" 144, "SOFT" 80;
+}
+
+/* — Glance panel: refined as magazine TOC sidebar ———————————————— */
+.hiw-glance-list .hiw-glance-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 10px;
+}
+.hiw-glance-list .hiw-glance-index {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  background: transparent;
+  border: none;
+  padding: 0;
+  width: auto;
+  height: auto;
+  min-width: 22px;
+  font-variant-numeric: tabular-nums;
+}
+.hiw-glance-dot {
+  height: 1px;
+  background-image: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--line) 90%, transparent) 0.6px,
+    transparent 0.6px
+  );
+  background-size: 6px 1px;
+  background-repeat: repeat-x;
+  background-position: 0 50%;
+  align-self: center;
+}
+.hiw-glance-list .hiw-glance-title {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  font-variation-settings: "opsz" 24;
+  color: var(--text);
+}
+
+/* — Architecture specimen: editorial row stack —————————————————— */
+.hiw-page .hiw-layers-section {
+  padding-block: clamp(72px, 10vw, 128px);
+}
+.hiw-arch-stack {
+  list-style: none;
+  margin: clamp(32px, 4vw, 56px) auto 0;
+  padding: 0;
+  max-width: 1080px;
+  border-top: 1px solid color-mix(in oklab, var(--line) 80%, transparent);
+}
+.hiw-arch-row {
+  display: grid;
+  grid-template-columns: clamp(96px, 12vw, 152px) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 40px);
+  padding: clamp(26px, 3.6vw, 44px) 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--line) 80%, transparent);
+  align-items: start;
+  position: relative;
+}
+@media (min-width: 960px) {
+  .hiw-arch-row {
+    grid-template-columns: clamp(120px, 12vw, 168px) minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+}
+.hiw-arch-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 0;
+  background: var(--accent);
+  transition: height var(--dur-3) var(--ease-out);
+}
+.hiw-arch-row:hover::before {
+  height: 100%;
+}
+.hiw-arch-row--accent::before { background: var(--accent); }
+.hiw-arch-row--purple::before { background: var(--purple); }
+.hiw-arch-row--amber::before  { background: var(--amber); }
+.hiw-arch-row--green::before  { background: var(--green); }
+.hiw-arch-row--muted::before  { background: color-mix(in oklab, var(--muted) 60%, var(--line)); }
+
+.hiw-arch-mark {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-family: var(--font-mono);
+  line-height: 1;
+  color: transparent;
+  user-select: none;
+}
+.hiw-arch-prefix {
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 700;
+  -webkit-text-stroke: 1px color-mix(in oklab, var(--accent) 50%, var(--line));
+  letter-spacing: -0.02em;
+  align-self: flex-start;
+  padding-top: clamp(8px, 1vw, 14px);
+}
+.hiw-arch-numeral {
+  font-size: clamp(56px, 8vw, 96px);
+  font-weight: 800;
+  -webkit-text-stroke: 1.5px color-mix(in oklab, var(--accent) 38%, var(--line));
+  letter-spacing: -0.05em;
+  transition: -webkit-text-stroke-color var(--dur-2) var(--ease-out);
+}
+.hiw-arch-row--accent .hiw-arch-numeral,
+.hiw-arch-row--accent .hiw-arch-prefix {
+  -webkit-text-stroke-color: color-mix(in oklab, var(--accent) 48%, var(--line));
+}
+.hiw-arch-row--purple .hiw-arch-numeral,
+.hiw-arch-row--purple .hiw-arch-prefix {
+  -webkit-text-stroke-color: color-mix(in oklab, var(--purple) 50%, var(--line));
+}
+.hiw-arch-row--amber .hiw-arch-numeral,
+.hiw-arch-row--amber .hiw-arch-prefix {
+  -webkit-text-stroke-color: color-mix(in oklab, var(--amber) 55%, var(--line));
+}
+.hiw-arch-row--green .hiw-arch-numeral,
+.hiw-arch-row--green .hiw-arch-prefix {
+  -webkit-text-stroke-color: color-mix(in oklab, var(--green) 55%, var(--line));
+}
+.hiw-arch-row--muted .hiw-arch-numeral,
+.hiw-arch-row--muted .hiw-arch-prefix {
+  -webkit-text-stroke-color: color-mix(in oklab, var(--muted) 60%, var(--line));
+}
+.hiw-arch-row:hover .hiw-arch-numeral,
+.hiw-arch-row:hover .hiw-arch-prefix {
+  -webkit-text-stroke-color: var(--accent);
+}
+
+.hiw-arch-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.hiw-arch-label {
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 2.1vw, 28px);
+  font-weight: 350;
+  letter-spacing: var(--tracking-tighter);
+  line-height: 1.12;
+  margin: 0;
+  color: var(--text);
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+}
+.hiw-arch-desc {
+  margin: 0;
+  font-size: clamp(14px, 1.15vw, 16px);
+  line-height: 1.55;
+  color: var(--text);
+  max-width: 42ch;
+}
+.hiw-arch-detail {
+  margin: 0;
+  font-size: clamp(12.5px, 1vw, 14px);
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 44ch;
+  padding-top: 4px;
+  border-top: 1px dashed color-mix(in oklab, var(--line) 70%, transparent);
+}
+@media (min-width: 960px) {
+  .hiw-arch-detail {
+    border-top: none;
+    padding-top: 0;
+    padding-left: clamp(16px, 2vw, 28px);
+    border-left: 1px dashed color-mix(in oklab, var(--line) 70%, transparent);
+    align-self: stretch;
+  }
+}
+
+/* — Bridge cards: editorial entry treatment —————————————————————— */
+.hiw-page .hiw-bridge-card {
+  padding: clamp(28px, 3.6vw, 44px) clamp(24px, 3vw, 36px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 100%;
+}
+.hiw-page .hiw-bridge-card::before {
+  height: 1px;
+}
+.hiw-page .hiw-bridge-card .hiw-bridge-kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.hiw-bridge-kicker-num {
+  color: var(--accent);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.hiw-bridge-kicker-rule {
+  width: 28px;
+  height: 1px;
+  background: color-mix(in oklab, var(--line) 90%, transparent);
+  flex-shrink: 0;
+}
+.hiw-bridge-kicker-text {
+  flex: 1;
+  min-width: 0;
+}
+.hiw-bridge-title {
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 2.6vw, 36px);
+  font-weight: 350;
+  letter-spacing: var(--tracking-tighter);
+  line-height: 1.08;
+  margin: 0;
+  color: var(--text);
+  font-variation-settings: "opsz" 144, "SOFT" 70;
+  max-width: 18ch;
+}
+.hiw-page .hiw-bridge-card .hiw-bridge-body {
+  margin: 0;
+  font-size: clamp(14px, 1.15vw, 16px);
+  line-height: 1.65;
+  color: var(--muted);
+  flex: 1;
+  max-width: 48ch;
+}
+.hiw-page .hiw-bridge-card .hiw-bridge-link {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding-top: 8px;
+  border-top: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
+}
