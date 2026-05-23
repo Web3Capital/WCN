@@ -1,8 +1,8 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
+import { route } from "@/lib/core/api/route";
+import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 const ruleSchema = z.object({
@@ -19,45 +19,42 @@ const ruleSchema = z.object({
   enabled: z.boolean().optional(),
 });
 
-export async function GET() {
-  const auth = await requirePermission("read", "risk");
-  if (!auth.ok) return apiUnauthorized();
+export const GET = route.permission({
+  input: z.object({}),
+  rateLimit: "auth",
+  permission: { action: "read", resource: "risk" },
+  handler: async () => {
+    const prisma = getPrisma();
+    return prisma.riskRule.findMany({ orderBy: { createdAt: "desc" } });
+  },
+});
 
-  const prisma = getPrisma();
-  const rules = await prisma.riskRule.findMany({ orderBy: { createdAt: "desc" } });
-  return apiOk(rules);
-}
+export const POST = route.permission({
+  input: ruleSchema,
+  rateLimit: "write",
+  permission: { action: "manage", resource: "risk" },
+  handler: async ({ input, session }) => {
+    const prisma = getPrisma();
+    const rule = await prisma.riskRule.create({
+      data: {
+        name: input.name,
+        description: input.description,
+        entityType: input.entityType,
+        conditions: input.conditions as Prisma.InputJsonValue,
+        severity: input.severity ?? "MEDIUM",
+        action: input.action ?? "CREATE_FLAG",
+        enabled: input.enabled ?? true,
+      },
+    });
 
-export async function POST(req: Request) {
-  const auth = await requirePermission("manage", "risk");
-  if (!auth.ok) return apiUnauthorized();
+    await writeAudit({
+      actorUserId: session.user.id,
+      action: AuditAction.RISK_RULE_CREATE,
+      targetType: "RISK_RULE",
+      targetId: rule.id,
+      metadata: { name: rule.name, entityType: rule.entityType, severity: rule.severity, action: rule.action },
+    });
 
-  const body = await req.json().catch(() => ({}));
-  const parsed = ruleSchema.safeParse(body);
-  if (!parsed.success) {
-    return apiValidationError(parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })));
-  }
-
-  const prisma = getPrisma();
-  const rule = await prisma.riskRule.create({
-    data: {
-      name: parsed.data.name,
-      description: parsed.data.description,
-      entityType: parsed.data.entityType,
-      conditions: parsed.data.conditions as any,
-      severity: parsed.data.severity ?? "MEDIUM",
-      action: parsed.data.action ?? "CREATE_FLAG",
-      enabled: parsed.data.enabled ?? true,
-    },
-  });
-
-  await writeAudit({
-    actorUserId: auth.session.user!.id,
-    action: AuditAction.RISK_RULE_CREATE,
-    targetType: "RISK_RULE",
-    targetId: rule.id,
-    metadata: { name: rule.name, entityType: rule.entityType, severity: rule.severity, action: rule.action },
-  });
-
-  return apiOk(rule);
-}
+    return rule;
+  },
+});

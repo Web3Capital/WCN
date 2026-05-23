@@ -1,27 +1,28 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireSignedIn } from "@/lib/admin";
 import { TOTPGenerate } from "@/lib/totp";
-import { apiOk, apiUnauthorized, apiConflict } from "@/lib/core/api-response";
+import { HttpError, route } from "@/lib/core/api/route";
+import { z } from "zod";
 
-export async function POST() {
-  const auth = await requireSignedIn();
-  if (!auth.ok) return apiUnauthorized();
+export const POST = route.session({
+  input: z.object({}),
+  rateLimit: "auth",
+  handler: async ({ session }) => {
+    const prisma = getPrisma();
+    const userId = session.user.id;
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { twoFactorEnabled: true } });
 
-  const prisma = getPrisma();
-  const userId = auth.session.user!.id;
-  const user = await prisma.user.findUnique({ where: { id: userId }, select: { twoFactorEnabled: true } });
+    if (user?.twoFactorEnabled) {
+      throw new HttpError(409, "CONFLICT", "2FA already enabled.");
+    }
 
-  if (user?.twoFactorEnabled) {
-    return apiConflict("2FA already enabled.");
-  }
+    const { secret, otpauthUrl } = TOTPGenerate();
 
-  const { secret, otpauthUrl } = TOTPGenerate();
+    await prisma.user.update({
+      where: { id: userId },
+      data: { twoFactorSecret: secret },
+    });
 
-  await prisma.user.update({
-    where: { id: userId },
-    data: { twoFactorSecret: secret },
-  });
-
-  return apiOk({ secret, otpauthUrl });
-}
+    return { secret, otpauthUrl };
+  },
+});
