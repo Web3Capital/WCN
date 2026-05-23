@@ -4,7 +4,6 @@ import { getTranslations } from "next-intl/server";
 import { Landmark, Box, Wrench, Globe, Megaphone, Factory } from "lucide-react";
 import { ApplyForm } from "./ui";
 import { VoltageCallout } from "@/components/brand/voltage-callout";
-import { WCNGlyph } from "@/components/brand/wcn-glyph";
 
 const NODE_TYPES: { icon: ReactNode; titleKey: string; descKey: string }[] = [
   { icon: <Landmark size={18} strokeWidth={1.4} />, titleKey: "capitalTitle", descKey: "capitalDesc" },
@@ -41,15 +40,15 @@ export default async function ApplyPage() {
     <main className="apply-page apply-page-sovereign">
       <div className="container">
         <header className="apply-hero apply-hero-sovereign">
-          <span className="apply-hero-glyph" aria-hidden>
-            <WCNGlyph size={20} variant="ledger" />
-          </span>
-          <span className="eyebrow eyebrow-plain apply-hero-eyebrow">
-            <span className="status-dot apply-hero-eyebrow-dot" aria-hidden />
-            {t("eyebrow")}
-          </span>
+          <div className="apply-masthead" aria-hidden>
+            <span className="apply-masthead-mark">№ 06</span>
+            <span className="apply-masthead-rule" />
+            <span className="apply-masthead-section">{t("eyebrow")}</span>
+            <span className="apply-masthead-rule" />
+            <span className="apply-masthead-meta">Volume · MMXXVI</span>
+          </div>
           <h1>{t.rich("headline", { em: (chunks) => <em>{chunks}</em> })}</h1>
-          <p className="apply-hero-desc">{t("heroDesc")}</p>
+          <p className="apply-hero-desc apply-hero-desc--dropcap">{t("heroDesc")}</p>
         </header>
 
         <div className="apply-layout">
@@ -61,37 +60,49 @@ export default async function ApplyPage() {
 
           <aside className="apply-info-col">
             <div className="apply-info-card">
-              <span className="apply-info-kicker">№ 01 — {t("howItWorks")}</span>
-              <div className="apply-steps">
+              <span className="apply-info-kicker">
+                <span className="apply-info-kicker-num">№ 01</span>
+                <span className="apply-info-kicker-rule" aria-hidden />
+                <span className="apply-info-kicker-label">{t("howItWorks")}</span>
+              </span>
+              <ol className="apply-steps">
                 {STEPS.map((step) => (
-                  <div key={step.num} className="apply-step">
-                    <span className="apply-step-num" aria-hidden>{step.num}</span>
+                  <li key={step.num} className="apply-step">
+                    <span className="apply-step-num" aria-hidden>{String(step.num).padStart(2, "0")}</span>
                     <div className="apply-step-text">
                       <strong>{t(step.titleKey)}</strong>
                       <p>{t(step.descKey)}</p>
                     </div>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ol>
             </div>
 
             <div className="apply-info-card">
-              <span className="apply-info-kicker">№ 02 — {t("nodeTypesTitle")}</span>
-              <div className="apply-node-types">
-                {NODE_TYPES.map((node) => (
-                  <div key={node.titleKey} className="apply-node-type">
+              <span className="apply-info-kicker">
+                <span className="apply-info-kicker-num">№ 02</span>
+                <span className="apply-info-kicker-rule" aria-hidden />
+                <span className="apply-info-kicker-label">{t("nodeTypesTitle")}</span>
+              </span>
+              <ol className="apply-node-types">
+                {NODE_TYPES.map((node, i) => (
+                  <li key={node.titleKey} className="apply-node-type">
+                    <span className="apply-node-num" aria-hidden>{String(i + 1).padStart(2, "0")}</span>
                     <span className="apply-node-icon" aria-hidden>{node.icon}</span>
-                    <div>
+                    <div className="apply-node-text">
                       <strong>{t(node.titleKey)}</strong>
                       <p>{t(node.descKey)}</p>
                     </div>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ol>
             </div>
 
             <div className="apply-tip-card">
-              <span className="apply-tip-kicker">{t("tipLabel")}</span>
+              <span className="apply-tip-kicker">
+                <span className="apply-tip-kicker-rule" aria-hidden />
+                {t("tipLabel")}
+              </span>
               <p>{t("tipMessage")}</p>
             </div>
           </aside>
