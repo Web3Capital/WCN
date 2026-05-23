@@ -9979,3 +9979,413 @@ html[data-theme="dark"],
     grid-template-columns: clamp(48px, 14vw, 64px) minmax(0, 1fr);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   NODES PAGE · WORLD-CLASS EDITORIAL TYPOGRAPHY — every module
+   Masthead bar · Dropcap lede · Tier numerals · Editorial lifecycle · Gov entries
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* — Hero masthead bar — */
+.nodes-masthead {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  justify-content: center;
+  margin: 0 auto clamp(20px, 2.6vw, 32px);
+  max-width: 720px;
+  padding-block: 8px;
+  border-block: 1px solid color-mix(in oklab, var(--line) 80%, transparent);
+}
+.nodes-masthead-mark,
+.nodes-masthead-section,
+.nodes-masthead-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--text) 70%, var(--muted));
+  white-space: nowrap;
+}
+.nodes-masthead-mark {
+  font-weight: 800;
+  color: var(--accent);
+}
+.nodes-masthead-section { font-weight: 600; }
+.nodes-masthead-meta {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.nodes-masthead-rule {
+  flex: 1;
+  min-width: 24px;
+  max-width: 120px;
+  height: 1px;
+  background: color-mix(in oklab, var(--line) 90%, transparent);
+}
+
+/* — Hero h1 Fraunces + optical refinement — */
+.nodes-page .nodes-hero-title {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  letter-spacing: var(--tracking-tighter);
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+  line-height: 1.02;
+  font-size: clamp(40px, 6vw, 80px);
+  text-align: center;
+  margin-bottom: clamp(20px, 2vw, 28px);
+}
+
+/* — Editor's note kicker — */
+.nodes-editor-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.nodes-editor-kicker::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: var(--accent);
+  display: inline-block;
+}
+
+/* — Sub-lede with dropcap — */
+.nodes-hero-sublede {
+  font-size: clamp(16px, 1.4vw, 19px);
+  line-height: 1.7;
+  color: var(--text);
+  margin: 0;
+  font-weight: 450;
+  max-width: 44rem;
+}
+.nodes-hero-sublede--dropcap::first-letter {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 350;
+  font-size: clamp(54px, 6.6vw, 78px);
+  line-height: 0.82;
+  float: left;
+  padding: 6px 14px 0 0;
+  color: var(--accent);
+  font-variation-settings: "opsz" 144, "SOFT" 80;
+}
+
+/* — Responsibility loop panel: TOC sidebar refinement — */
+.nodes-loop-panel .nodes-loop-list { gap: 14px; }
+.nodes-loop-item {
+  display: grid !important;
+  grid-template-columns: auto auto 1fr;
+  align-items: baseline;
+  gap: 10px;
+  padding-block: 6px !important;
+}
+.nodes-loop-panel .nodes-loop-index {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 22px;
+  font-variant-numeric: tabular-nums;
+  align-self: baseline;
+}
+.nodes-loop-dot {
+  height: 1px;
+  width: 28px;
+  align-self: center;
+  background-image: radial-gradient(circle, color-mix(in oklab, var(--line) 95%, transparent) 0.6px, transparent 0.6px);
+  background-size: 5px 1px;
+  background-repeat: repeat-x;
+  background-position: 0 50%;
+}
+.nodes-loop-text {
+  min-width: 0;
+}
+.nodes-loop-panel .nodes-loop-title {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  font-variation-settings: "opsz" 24;
+  line-height: 1.25;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+/* — Section h2 Fraunces — applies to all № 0X sections — */
+.nodes-page .nodes-section-h2 {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  font-size: clamp(32px, 4.4vw, 52px);
+  letter-spacing: var(--tracking-tighter);
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+  line-height: 1.06;
+}
+
+/* — Dual cards (Nodes are / Nodes are not) — */
+.nodes-dual-grid { gap: clamp(16px, 2.5vw, 28px); }
+.nodes-page .nodes-dual-card {
+  padding: clamp(28px, 3.4vw, 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.nodes-dual-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid color-mix(in oklab, var(--line) 80%, transparent);
+}
+.nodes-dual-sigil {
+  font-family: var(--font-mono);
+  font-size: clamp(40px, 4.5vw, 56px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in oklab, var(--accent) 48%, var(--line));
+}
+.nodes-dual-sigil--muted {
+  -webkit-text-stroke-color: color-mix(in oklab, var(--muted) 60%, var(--line));
+}
+.nodes-dual-titlewrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.nodes-dual-kicker {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.nodes-dual-kicker--muted { color: var(--muted); }
+.nodes-page .nodes-dual-title {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 350;
+  letter-spacing: var(--tracking-tighter);
+  line-height: 1.1;
+  margin: 0;
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+}
+.nodes-dual-icon-svg {
+  color: var(--accent);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+.nodes-dual-icon-svg--muted { color: var(--muted); }
+.nodes-dual-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.nodes-dual-row {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 14px;
+  align-items: baseline;
+  padding-block: 4px;
+}
+.nodes-dual-num {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  align-self: baseline;
+}
+.nodes-dual-num--muted { color: var(--muted); }
+.nodes-dual-text {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+/* — Tier hierarchy: hollow numerals + Fraunces titles — */
+.nodes-page .nodes-tier-card {
+  position: relative;
+  padding-top: clamp(28px, 3.4vw, 40px);
+}
+.nodes-tier-numeral {
+  position: absolute;
+  top: clamp(14px, 2vw, 22px);
+  right: clamp(14px, 2vw, 22px);
+  font-family: var(--font-mono);
+  font-size: clamp(40px, 4.4vw, 60px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1.4px color-mix(in oklab, var(--accent) 32%, var(--line));
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+  transition: -webkit-text-stroke-color var(--dur-2) var(--ease-out);
+  pointer-events: none;
+}
+.nodes-tier-card--green   .nodes-tier-numeral { -webkit-text-stroke-color: color-mix(in oklab, var(--green) 42%, var(--line)); }
+.nodes-tier-card--amber   .nodes-tier-numeral { -webkit-text-stroke-color: color-mix(in oklab, var(--amber) 48%, var(--line)); }
+.nodes-tier-card--purple  .nodes-tier-numeral { -webkit-text-stroke-color: color-mix(in oklab, var(--purple) 48%, var(--line)); }
+.nodes-tier-card--muted   .nodes-tier-numeral { -webkit-text-stroke-color: color-mix(in oklab, var(--muted) 55%, var(--line)); }
+.nodes-tier-card:hover .nodes-tier-numeral {
+  -webkit-text-stroke-color: var(--accent);
+}
+.nodes-tier-card--green:hover  .nodes-tier-numeral { -webkit-text-stroke-color: var(--green); }
+.nodes-tier-card--amber:hover  .nodes-tier-numeral { -webkit-text-stroke-color: var(--amber); }
+.nodes-tier-card--purple:hover .nodes-tier-numeral { -webkit-text-stroke-color: var(--purple); }
+.nodes-page .nodes-tier-title {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  font-size: clamp(20px, 2.1vw, 26px);
+  letter-spacing: var(--tracking-tighter);
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+  line-height: 1.14;
+  margin-top: 8px;
+}
+
+/* — Lifecycle as editorial row sequence — */
+.nodes-lifecycle-editorial {
+  list-style: none;
+  margin: clamp(28px, 3.6vw, 48px) 0 0;
+  padding: 0;
+  border-top: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
+}
+.nodes-life-row {
+  display: grid;
+  grid-template-columns: clamp(68px, 9vw, 108px) 1fr;
+  gap: 0;
+  padding: clamp(22px, 3.2vw, 38px) 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
+  align-items: center;
+}
+.nodes-life-num {
+  font-family: var(--font-mono);
+  font-size: clamp(44px, 6.5vw, 76px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in oklab, var(--accent) 36%, var(--line));
+  user-select: none;
+  text-align: right;
+  padding-right: clamp(16px, 2vw, 26px);
+  border-right: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
+  transition: -webkit-text-stroke-color var(--dur-2) var(--ease-out);
+  font-variant-numeric: tabular-nums;
+}
+.nodes-life-row:hover .nodes-life-num {
+  -webkit-text-stroke-color: color-mix(in oklab, var(--accent) 60%, var(--line));
+}
+.nodes-life-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: clamp(16px, 2vw, 26px);
+}
+.nodes-life-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nodes-life-icon {
+  color: var(--accent);
+  opacity: 0.68;
+  flex-shrink: 0;
+  display: inline-flex;
+}
+.nodes-life-title {
+  font-family: var(--font-serif);
+  font-size: clamp(19px, 2vw, 26px);
+  font-weight: 350;
+  letter-spacing: var(--tracking-tighter);
+  line-height: 1.15;
+  margin: 0;
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+}
+.nodes-life-body {
+  margin: 0;
+  font-size: clamp(13px, 1.1vw, 15px);
+  line-height: 1.68;
+  color: var(--muted);
+  max-width: 52ch;
+}
+
+/* — Governance editorial entry cards — */
+.nodes-gov-grid { gap: clamp(16px, 2.4vw, 26px); }
+.nodes-page .nodes-gov-card {
+  padding: clamp(24px, 2.8vw, 36px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.nodes-gov-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: color-mix(in oklab, var(--line) 80%, transparent);
+}
+.nodes-gov-card--green::before { background: var(--green); }
+.nodes-gov-card--amber::before { background: var(--amber); }
+.nodes-gov-card--red::before   { background: var(--red, #dc2626); }
+.nodes-gov-kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.nodes-gov-kicker-num {
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.nodes-gov-card--green .nodes-gov-kicker-num { color: var(--green); }
+.nodes-gov-card--amber .nodes-gov-kicker-num { color: var(--amber); }
+.nodes-gov-card--red   .nodes-gov-kicker-num { color: var(--red, #dc2626); }
+.nodes-gov-kicker-rule {
+  width: 22px;
+  height: 1px;
+  background: color-mix(in oklab, var(--line) 90%, transparent);
+  flex-shrink: 0;
+}
+.nodes-gov-kicker-label {
+  font-weight: 700;
+  color: var(--muted);
+}
+.nodes-page .nodes-gov-text {
+  margin: 0;
+  font-size: clamp(14px, 1.15vw, 16px);
+  line-height: 1.65;
+  color: var(--text);
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-variation-settings: "opsz" 24;
+  max-width: 42ch;
+}
