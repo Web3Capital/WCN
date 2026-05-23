@@ -9252,3 +9252,504 @@ html[data-theme="dark"],
   width: 40px !important;
   height: 40px !important;
 }
+
+/* ============================================================
+   SOVEREIGN MOTION — Scroll storytelling layer
+   ============================================================
+   Four motion verbs:
+     1. RISE    — content enters from below, paper-fold blur
+     2. DRAW    — vertical/horizontal stroke draws itself in
+     3. IMPRINT — short, scale-down stamp (status/confirmation)
+     4. BREATH  — slow continuous opacity/scale (heartbeat)
+   One container vocabulary:
+     [data-reveal-group]  — children stagger automatically
+   ============================================================ */
+
+/* -- Idle state (everything starts hidden) --------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(2px);
+    transition:
+      opacity var(--dur-4) var(--ease-paper),
+      transform var(--dur-4) var(--ease-paper),
+      filter var(--dur-4) var(--ease-paper),
+      clip-path var(--dur-4) var(--ease-paper);
+    transition-delay: calc(var(--reveal-i, 0) * 80ms);
+    will-change: opacity, transform, filter;
+  }
+  [data-reveal="fade"] {
+    transform: none;
+    filter: none;
+  }
+  [data-reveal="draw"] {
+    clip-path: inset(0 100% 0 0);
+    transform: none;
+    filter: none;
+  }
+  [data-reveal="rail-y"] {
+    clip-path: inset(0 0 100% 0);
+    transform: none;
+    filter: none;
+  }
+  [data-reveal][data-revealed="true"] {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+    clip-path: inset(0 0 0 0);
+  }
+  /* When a fully-revealed element later scrolls back into view, we
+     don't want the will-change pinned forever. */
+  [data-reveal][data-revealed="true"] {
+    will-change: auto;
+  }
+}
+
+/* -- Reduced motion: skip all reveal animation ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; filter: none; clip-path: none; }
+}
+
+/* -- Section heads: opt-in cascade ---------------------------- */
+.section-head[data-reveal-group] > [data-reveal] {
+  --reveal-i: 0;
+}
+.section-head[data-reveal-group] > [data-reveal]:nth-child(2) { --reveal-i: 1; }
+.section-head[data-reveal-group] > [data-reveal]:nth-child(3) { --reveal-i: 2; }
+.section-head[data-reveal-group] > [data-reveal]:nth-child(4) { --reveal-i: 3; }
+
+/* ============================================================
+   READING PROGRESS — voltage line at top of viewport
+   ============================================================ */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: transparent;
+  z-index: 200;
+  pointer-events: none;
+  transform-origin: 0 50%;
+}
+.reading-progress::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--voltage-500) 70%, transparent),
+    var(--voltage-500) 60%,
+    color-mix(in oklab, var(--voltage-500) 95%, var(--ledger-settle))
+  );
+  transform: scaleX(var(--reading-progress, 0));
+  transform-origin: 0 50%;
+  transition: transform 120ms linear;
+  box-shadow:
+    0 0 8px color-mix(in oklab, var(--voltage-500) 40%, transparent),
+    0 0 2px color-mix(in oklab, var(--voltage-500) 60%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reading-progress::before { transition: none; }
+}
+
+/* ============================================================
+   WHY NOW TIMELINE — rail draw + entry stagger + Now pulse
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  /* The rail draws itself top → bottom on reveal. */
+  .why-now-timeline[data-reveal] .why-now-rail-segment {
+    transform: scaleY(0);
+    transform-origin: 0 0;
+    transition: transform 700ms var(--ease-paper);
+    transition-delay: calc(var(--reveal-i, 0) * 120ms);
+  }
+  .why-now-timeline[data-reveal][data-revealed="true"] .why-now-rail-segment {
+    transform: scaleY(1);
+  }
+  /* Each entry rises from below the rail tick. */
+  .why-now-entry[data-reveal] {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(2px);
+    transition:
+      opacity 560ms var(--ease-paper),
+      transform 560ms var(--ease-paper),
+      filter 560ms var(--ease-paper);
+    transition-delay: calc(var(--reveal-i, 0) * 140ms + 200ms);
+  }
+  .why-now-entry[data-reveal][data-revealed="true"] {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  /* Tick ink-stamps on reveal. */
+  .why-now-entry[data-reveal] .why-now-tick {
+    transform: scale(0.4);
+    opacity: 0;
+    transition:
+      transform 360ms var(--ease-spring),
+      opacity 360ms var(--ease-out);
+    transition-delay: calc(var(--reveal-i, 0) * 140ms + 300ms);
+  }
+  .why-now-entry[data-reveal][data-revealed="true"] .why-now-tick {
+    transform: scale(1);
+    opacity: 1;
+  }
+  /* The "Now" tick: never-ending voltage breath after reveal. */
+  .why-now-entry[data-highlight="true"][data-revealed="true"] .why-now-tick {
+    animation: nowPulse 3.2s var(--ease-inout) infinite;
+    animation-delay: 800ms;
+  }
+}
+@keyframes nowPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 6px color-mix(in oklab, var(--voltage-500) 16%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 10px color-mix(in oklab, var(--voltage-500) 22%, transparent),
+                0 0 18px color-mix(in oklab, var(--voltage-500) 45%, transparent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .why-now-entry[data-highlight="true"] .why-now-tick { animation: none !important; }
+}
+
+/* ============================================================
+   LEDGER SPINE — sequential ignition on viewport entry
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  .ledger-spine[data-reveal] .ledger-spine-dot {
+    opacity: 0.15;
+    transform: scale(0.6);
+    transition:
+      opacity 360ms var(--ease-out),
+      transform 360ms var(--ease-spring),
+      box-shadow 360ms var(--ease-out);
+  }
+  .ledger-spine[data-reveal] .ledger-spine-step:nth-child(1) .ledger-spine-dot {
+    transition-delay: 0ms;
+  }
+  .ledger-spine[data-reveal] .ledger-spine-step:nth-child(2) .ledger-spine-dot {
+    transition-delay: 220ms;
+  }
+  .ledger-spine[data-reveal] .ledger-spine-step:nth-child(3) .ledger-spine-dot {
+    transition-delay: 440ms;
+  }
+  .ledger-spine[data-reveal][data-revealed="true"] .ledger-spine-dot {
+    opacity: 0.85;
+    transform: scale(1);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--dot-color) 14%, transparent);
+  }
+  .ledger-spine[data-reveal] .ledger-spine-rail-fill {
+    animation-play-state: paused;
+  }
+  .ledger-spine[data-reveal][data-revealed="true"] .ledger-spine-rail-fill {
+    animation-play-state: running;
+  }
+}
+
+/* ============================================================
+   ARCHITECTURE LAYERS — per-layer cascade + rail intensifies
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  .architecture-layers[data-reveal] .architecture-layer {
+    opacity: 0;
+    transform: translateX(-12px);
+    filter: blur(3px);
+    transition:
+      opacity 520ms var(--ease-paper),
+      transform 520ms var(--ease-paper),
+      filter 520ms var(--ease-paper);
+  }
+  .architecture-layers[data-reveal] .architecture-layer:nth-child(1) { transition-delay: 120ms; }
+  .architecture-layers[data-reveal] .architecture-layer:nth-child(2) { transition-delay: 240ms; }
+  .architecture-layers[data-reveal] .architecture-layer:nth-child(3) { transition-delay: 360ms; }
+  .architecture-layers[data-reveal] .architecture-layer:nth-child(4) { transition-delay: 480ms; }
+  .architecture-layers[data-reveal] .architecture-layer:nth-child(5) { transition-delay: 600ms; }
+  .architecture-layers[data-reveal][data-revealed="true"] .architecture-layer {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+  /* The rail itself starts dim, glows up when fully revealed. */
+  .architecture-layers[data-reveal] .architecture-rail {
+    opacity: 0.4;
+    transition: opacity 800ms var(--ease-paper);
+    transition-delay: 200ms;
+  }
+  .architecture-layers[data-reveal][data-revealed="true"] .architecture-rail {
+    opacity: 1;
+  }
+  /* Per-layer marker ignites with its layer. */
+  .architecture-layers[data-reveal] .architecture-layer::before {
+    transform: translateY(-50%) scale(0.4);
+    opacity: 0;
+    transition:
+      transform 320ms var(--ease-spring),
+      opacity 320ms var(--ease-out),
+      background var(--dur-2) var(--ease-out),
+      border-color var(--dur-2) var(--ease-out),
+      box-shadow var(--dur-2) var(--ease-out);
+  }
+  .architecture-layers[data-reveal] .architecture-layer:nth-child(1)::before { transition-delay: 220ms; }
+  .architecture-layers[data-reveal] .architecture-layer:nth-child(2)::before { transition-delay: 340ms; }
+  .architecture-layers[data-reveal] .architecture-layer:nth-child(3)::before { transition-delay: 460ms; }
+  .architecture-layers[data-reveal] .architecture-layer:nth-child(4)::before { transition-delay: 580ms; }
+  .architecture-layers[data-reveal] .architecture-layer:nth-child(5)::before { transition-delay: 700ms; }
+  .architecture-layers[data-reveal][data-revealed="true"] .architecture-layer::before {
+    transform: translateY(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   VOLTAGE CALLOUT — glyph breath + button conduction
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  .voltage-callout-glyph {
+    animation: glyphBreath 5.2s var(--ease-inout) infinite;
+    transform-origin: center;
+  }
+  .voltage-callout[data-anim-paused="true"] .voltage-callout-glyph {
+    animation-play-state: paused;
+  }
+  /* The primary button gets a slow voltage sweep across its surface. */
+  .voltage-callout .button.button-lg {
+    position: relative;
+    overflow: hidden;
+  }
+  .voltage-callout .button.button-lg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      120deg,
+      transparent 30%,
+      color-mix(in oklab, var(--paper-50) 35%, transparent) 50%,
+      transparent 70%
+    );
+    transform: translateX(-100%);
+    animation: voltageSweep 6s var(--ease-inout) infinite;
+    animation-delay: 1.5s;
+    pointer-events: none;
+  }
+  .voltage-callout[data-anim-paused="true"] .button.button-lg::after {
+    animation-play-state: paused;
+  }
+}
+@keyframes glyphBreath {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  50% {
+    transform: scale(1.03);
+    filter: drop-shadow(0 0 12px color-mix(in oklab, var(--voltage-500) 35%, transparent));
+  }
+}
+@keyframes voltageSweep {
+  0%   { transform: translateX(-100%); }
+  60%  { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .voltage-callout-glyph,
+  .voltage-callout .button.button-lg::after { animation: none !important; }
+}
+
+/* ============================================================
+   COUNTER NUMBER — tabular alignment so digits don't jitter
+   ============================================================ */
+[data-counter] {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ============================================================
+   INPUT FOCUS VOLTAGE — voltage line grows along the bottom
+   ============================================================
+   Implementation: a 1.5px voltage gradient is rendered as a
+   background-image at the bottom of the input. On focus, its
+   background-size animates from 0 → 100%, painting in from left.
+   Coexists with the existing border/shadow focus treatment. */
+@media (prefers-reduced-motion: no-preference) {
+  input:not(.unstyled),
+  textarea:not(.unstyled),
+  select:not(.unstyled) {
+    background-color: var(--card);
+    background-image: linear-gradient(90deg, var(--voltage-500), color-mix(in oklab, var(--voltage-500) 75%, var(--ledger-settle)));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0 1.5px;
+    transition:
+      border-color var(--dur-2) var(--ease-out),
+      box-shadow var(--dur-2) var(--ease-out),
+      background-size 360ms var(--ease-paper);
+  }
+  input:focus:not(.unstyled),
+  textarea:focus:not(.unstyled),
+  select:focus:not(.unstyled) {
+    background-size: 100% 1.5px;
+  }
+}
+
+/* ============================================================
+   COPY FEEDBACK — voltage ink wipe under the copied text
+   ============================================================
+   Usage: add class .copy-flash to an element, remove it 1.4s later. */
+.copy-flash {
+  position: relative;
+}
+.copy-flash::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--voltage-500),
+    transparent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  animation: inkWipe 1.4s var(--ease-paper) forwards;
+  pointer-events: none;
+}
+@keyframes inkWipe {
+  0%   { transform: scaleX(0); transform-origin: 0 50%; opacity: 1; }
+  40%  { transform: scaleX(1); transform-origin: 0 50%; opacity: 1; }
+  100% { transform: scaleX(1); transform-origin: 100% 50%; opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .copy-flash::after { animation: none; }
+}
+
+/* ============================================================
+   SECTION HEAD STATUS — keep accessible bullets stable during reveal
+   ============================================================ */
+[data-reveal] .status-dot.status-dot-pulse,
+[data-reveal] .status-dot.status-dot-ripple {
+  /* Avoid double-animating when the parent is sliding in. */
+  animation-delay: calc(var(--reveal-i, 0) * 80ms + 600ms);
+}
+
+/* ============================================================
+   WIKI ACTIVE-HEADING — voltage anchor tick + active highlight
+   ============================================================
+   The ActiveHeading client marks every h2/h3 in the article body
+   with `data-spy="true"` and flips `data-active="true"` on the
+   one nearest the reading line. We render a 2px voltage tick on
+   the left margin — faint when idle, lit when active. The h2
+   itself gets a subtle color/weight shift on activation. */
+.docs-article-body h2[data-spy="true"],
+.docs-article-body h3[data-spy="true"] {
+  position: relative;
+}
+.docs-article-body h2[data-spy="true"]::before,
+.docs-article-body h3[data-spy="true"]::before {
+  content: "";
+  position: absolute;
+  /* Place the tick OUTSIDE the article column so it doesn't push text. */
+  left: -22px;
+  top: 50%;
+  width: 2px;
+  height: 16px;
+  background: var(--line-strong);
+  border-radius: 1px;
+  transform: translateY(-50%) scaleY(0.6);
+  transition:
+    background var(--dur-2) var(--ease-out),
+    transform var(--dur-3) var(--ease-paper),
+    box-shadow var(--dur-3) var(--ease-out);
+  opacity: 0.55;
+}
+.docs-article-body h3[data-spy="true"]::before {
+  height: 12px;
+}
+/* H2 has an existing border-top — its tick sits 12px below the top to align
+   with the heading line, not the rule above it. */
+.docs-article-body h2[data-spy="true"]::before {
+  top: auto;
+  bottom: 50%;
+  transform: translateY(70%) scaleY(0.6);
+}
+.docs-article-body h2[data-active="true"]::before,
+.docs-article-body h3[data-active="true"]::before {
+  background: var(--voltage-500);
+  opacity: 1;
+  transform: translateY(-50%) scaleY(1);
+  box-shadow:
+    0 0 6px color-mix(in oklab, var(--voltage-500) 60%, transparent),
+    0 0 1px color-mix(in oklab, var(--voltage-500) 85%, transparent);
+}
+.docs-article-body h2[data-active="true"]::before {
+  transform: translateY(50%) scaleY(1);
+}
+.docs-article-body h2[data-active="true"],
+.docs-article-body h3[data-active="true"] {
+  color: var(--text);
+}
+/* Narrow viewports — keep ticks inside the column so they don't clip. */
+@media (max-width: 900px) {
+  .docs-article-body h2[data-spy="true"]::before,
+  .docs-article-body h3[data-spy="true"]::before {
+    left: -12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .docs-article-body h2[data-spy="true"]::before,
+  .docs-article-body h3[data-spy="true"]::before {
+    transition: none;
+  }
+}
+
+/* ============================================================
+   BADGE TACTILITY — paper-stamp lift on hover/focus
+   ============================================================
+   Tiny but pervasive: every .badge across the site picks up a
+   1px lift + soft glow on hover, and a stamp-down on active. This
+   keeps the editorial / instrument feel while making interactive
+   badges feel pressable. Inert badges (no link wrapper) are unaffected
+   by the active state — only the hover lift fires. */
+.badge {
+  /* Existing rule already sets background+border transitions —
+     here we add transform + shadow. We extend, not replace. */
+  transition:
+    background var(--dur-1) var(--ease-out),
+    border-color var(--dur-1) var(--ease-out),
+    transform var(--dur-1) var(--ease-spring),
+    box-shadow var(--dur-2) var(--ease-out);
+}
+a:hover > .badge,
+button:hover > .badge,
+.badge:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 1px 0 color-mix(in oklab, currentColor 12%, transparent),
+    0 4px 12px color-mix(in oklab, currentColor 8%, transparent);
+}
+a:active > .badge,
+button:active > .badge,
+.badge:active {
+  transform: translateY(0) scale(0.985);
+  transition-duration: 80ms;
+}
+/* Architecture badges on home page — apply the same tactility. */
+.architecture-badge {
+  transition:
+    transform var(--dur-1) var(--ease-spring),
+    box-shadow var(--dur-2) var(--ease-out);
+}
+.architecture-badge:hover {
+  transform: translateY(-1px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .badge,
+  .architecture-badge { transition: none; }
+  .badge:hover,
+  .architecture-badge:hover { transform: none; box-shadow: none; }
+}
+

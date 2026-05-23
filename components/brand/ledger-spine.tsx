@@ -9,9 +9,22 @@ type Props = {
     deal?: string;
     settle?: string;
   };
+  /**
+   * When true (default), the spine participates in the global scroll-reveal
+   * sequence: dots ignite one-by-one (node → deal → settle, 220ms apart)
+   * when the spine enters the viewport. Set to false for spines used as
+   * static legends inside dashboards where the ignition would be noise.
+   */
+  ignite?: boolean;
 };
 
-export function LedgerSpine({ active = null, compact = false, className, labels }: Props) {
+export function LedgerSpine({
+  active = null,
+  compact = false,
+  className,
+  labels,
+  ignite = true,
+}: Props) {
   const items = [
     { key: "node", label: labels?.node ?? "Node", color: "var(--ledger-node)" },
     { key: "deal", label: labels?.deal ?? "Deal", color: "var(--ledger-deal)" },
@@ -23,6 +36,7 @@ export function LedgerSpine({ active = null, compact = false, className, labels 
       className={`ledger-spine${compact ? " ledger-spine-compact" : ""}${className ? " " + className : ""}`}
       role="navigation"
       aria-label="Three-ledger map"
+      {...(ignite ? { "data-reveal": "fade" } : {})}
     >
       {items.map((item, i) => (
         <div key={item.key} className="ledger-spine-step" data-active={active === item.key}>

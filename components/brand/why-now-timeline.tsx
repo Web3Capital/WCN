@@ -5,7 +5,13 @@
  * and a body paragraph below. The rail itself is a thin line with a
  * tick at every year, terminating at "Now" which is highlighted.
  *
- * Server component.
+ * Motion: when the whole timeline enters the viewport, the rail draws
+ * itself downward and each entry stamps in with a staggered tick. The
+ * "Now" tick keeps a slow voltage breath after reveal. All styled in
+ * globals.css under "SOVEREIGN MOTION".
+ *
+ * Server component — the reveal flag is set by the global ScrollReveal
+ * client observer (one observer for the whole page).
  */
 
 type Entry = {
@@ -20,13 +26,15 @@ type Props = {
 
 export function WhyNowTimeline({ entries }: Props) {
   return (
-    <div className="why-now-timeline">
+    <div className="why-now-timeline" data-reveal="fade">
       <ol className="why-now-rail">
         {entries.map((entry, i) => (
           <li
             key={entry.year}
             className="why-now-entry"
             data-highlight={entry.highlight ? "true" : "false"}
+            data-reveal="fade"
+            style={{ ["--reveal-i" as string]: i }}
           >
             <div className="why-now-tick" aria-hidden />
             <div className="why-now-content">

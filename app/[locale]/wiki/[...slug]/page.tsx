@@ -13,6 +13,7 @@ import { MetaGrid, Meta } from "@/components/docs/mdx/MetaGrid";
 import { Steps, Step } from "@/components/docs/mdx/Steps";
 import { Statement } from "@/components/docs/mdx/Statement";
 import { Tabs, Tab } from "@/components/docs/mdx/Tabs";
+import { ActiveHeading } from "@/components/brand/active-heading";
 import type { Metadata } from "next";
 import { locales } from "@/i18n/config";
 
@@ -128,6 +129,7 @@ export default async function WikiPage({ params }: { params: { slug: string[] } 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
       />
+      <ActiveHeading />
       <article className="docs-article">
         <DocsBreadcrumb items={crumbs} />
 
