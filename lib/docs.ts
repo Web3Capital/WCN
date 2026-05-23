@@ -23,6 +23,7 @@ export interface DocEntry {
   chapterTitle: string;    // e.g. "项目介绍"
   chapterIcon?: string;
   filePath: string;        // relative from content/docs
+  mtimeMs: number;         // last filesystem modification time, used by editorial "Updated" stamp
 }
 
 export interface ChapterEntry {
@@ -122,7 +123,9 @@ function loadAll(locale: string = DEFAULT_LOCALE): { docs: DocEntry[]; chapters:
     const docs: DocEntry[] = [];
 
     for (const file of mdxFiles) {
-      const raw = fs.readFileSync(path.join(dirPath, file), "utf8");
+      const absPath = path.join(dirPath, file);
+      const raw = fs.readFileSync(absPath, "utf8");
+      const stat = fs.statSync(absPath);
       const { data, content } = matter(raw);
       const fm = data as Partial<DocMeta>;
 
@@ -145,6 +148,7 @@ function loadAll(locale: string = DEFAULT_LOCALE): { docs: DocEntry[]; chapters:
         chapterTitle,
         chapterIcon,
         filePath: path.join(dir.name, file),
+        mtimeMs: stat.mtimeMs,
       };
       docs.push(entry);
     }
@@ -207,4 +211,33 @@ export function buildSearchIndex(locale: string = DEFAULT_LOCALE): { title: stri
       .replace(/\{\/\*.*?\*\/\}/g, "")
       .slice(0, 2000),
   }));
+}
+
+/**
+ * Approximate reading time in minutes. CJK runs much denser than English; we
+ * treat each Chinese/Japanese/Korean character as ~1/2 word so the resulting
+ * minute count tracks how long the average reader actually spends.
+ */
+export function readingMinutes(content: string): number {
+  const stripped = content
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/import\s.*?\n/g, " ");
+  const cjk = (stripped.match(/[一-鿿぀-ヿ가-힯]/g) || []).length;
+  const ascii = stripped.replace(/[一-鿿぀-ヿ가-힯]/g, " ").split(/\s+/).filter(Boolean).length;
+  const minutes = cjk / 500 + ascii / 220;
+  return Math.max(1, Math.round(minutes));
+}
+
+/**
+ * Position of a doc within its chapter (1-based index + total).
+ * Returns null if the doc isn't part of any known chapter (shouldn't happen).
+ */
+export function getDocPosition(doc: DocEntry, locale: string = DEFAULT_LOCALE): { index: number; total: number } | null {
+  const chapters = getChapters(locale);
+  const ch = chapters.find((c) => c.slug === doc.chapterSlug);
+  if (!ch) return null;
+  const i = ch.docs.findIndex((d) => d.href === doc.href);
+  if (i < 0) return null;
+  return { index: i + 1, total: ch.docs.length };
 }

@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
-import { getAllDocs, getDocBySlug, getAdjacentDocs, getDocHeadings, getChapters } from "@/lib/docs";
+import { getAllDocs, getDocBySlug, getAdjacentDocs, getDocHeadings, getChapters, readingMinutes, getDocPosition } from "@/lib/docs";
 import { DocsBreadcrumb } from "@/components/docs/DocsBreadcrumb";
 import { DocsTableOfContents } from "@/components/docs/DocsTableOfContents";
 import { DocsNav } from "@/components/docs/DocsNav";
@@ -112,6 +112,24 @@ export default async function WikiPage({ params }: { params: { slug: string[]; l
     { label: doc.meta.title },
   ];
 
+  const isChapterOverview = doc.slug.length === 1;
+  const position = getDocPosition(doc, params.locale);
+  const sectionTotal = position ? Math.max(0, position.total - 1) : 0; // exclude index.mdx
+  const minutes = readingMinutes(doc.content);
+  const chapterNum = String(doc.meta.chapter).padStart(2, "0");
+  const sectionNum = isChapterOverview ? null : String(doc.meta.order).padStart(2, "0");
+  const markLabel = isChapterOverview ? `№ ${chapterNum}` : `№ ${chapterNum}·${sectionNum}`;
+  const positionLabel = isChapterOverview
+    ? `${sectionTotal} ${params.locale === "zh" ? "篇" : "articles"}`
+    : params.locale === "zh"
+      ? `第 ${doc.meta.order} / ${sectionTotal} 篇`
+      : `Section ${doc.meta.order} of ${sectionTotal}`;
+  const readLabel = params.locale === "zh" ? `${minutes} 分钟` : `${minutes} min read`;
+  const updatedLabel = new Date(doc.mtimeMs).toLocaleDateString(
+    params.locale === "zh" ? "zh-CN" : "en-US",
+    { year: "numeric", month: "short", day: "numeric" },
+  );
+
   const articleLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -128,17 +146,35 @@ export default async function WikiPage({ params }: { params: { slug: string[]; l
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
       />
-      <article className="docs-article">
+      <article className="docs-article wiki-article">
         <DocsBreadcrumb items={crumbs} />
 
-        <header className="docs-article-header">
+        <div className="wiki-article-bar" aria-label="Article metadata">
+          <span className="wiki-article-mark">{markLabel}</span>
+          <span className="wiki-article-rule" aria-hidden />
+          <span className="wiki-article-chapter">{doc.chapterTitle}</span>
+          <span className="wiki-article-rule" aria-hidden />
+          <span className="wiki-article-readmeta">
+            {readLabel}
+            {positionLabel ? <> · {positionLabel}</> : null}
+          </span>
+        </div>
+
+        <header className="docs-article-header wiki-article-header">
           <h1>{doc.meta.title}</h1>
           {doc.meta.description && (
-            <p className="docs-article-desc">{doc.meta.description}</p>
+            <p className="docs-article-desc wiki-article-lede">{doc.meta.description}</p>
           )}
         </header>
 
-        <div className="docs-article-body">
+        <div className="wiki-article-updated">
+          <span className="wiki-article-updated-label">
+            {params.locale === "zh" ? "更新于" : "Updated"}
+          </span>
+          <time dateTime={new Date(doc.mtimeMs).toISOString()}>{updatedLabel}</time>
+        </div>
+
+        <div className="docs-article-body wiki-article-body">
           {content}
         </div>
 

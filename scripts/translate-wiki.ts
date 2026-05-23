@@ -105,6 +105,23 @@ async function tr(text: string): Promise<string> {
   }
 }
 
+/* ------------------------- jsx-safe quote escaping ------------------------- */
+/**
+ * Convert ASCII straight quotes inside a JSX attribute value to typographic
+ * quotes so they don't collide with the surrounding attribute delimiter.
+ * Alternates “ then ” so any pair the translator inserted reads naturally.
+ */
+function escapeInnerQuotes(value: string, delimiter: string): string {
+  if (!value.includes(delimiter)) return value;
+  if (delimiter === '"') {
+    let open = true;
+    return value.replace(/"/g, () => (open = !open) ? "”" : "“");
+  }
+  // single-quote delimiter: alternate ‘ then ’
+  let open = true;
+  return value.replace(/'/g, () => (open = !open) ? "’" : "‘");
+}
+
 /* ------------------------- slugify ------------------------- */
 function slugify(s: string): string {
   return s
@@ -166,7 +183,11 @@ async function translateLine(line: string): Promise<string> {
       if (NON_TRANSLATABLE_ATTRS.has(p.attr)) continue;
       if (!ZH.test(p.val)) continue;
       const translated = await tr(p.val);
-      const replacement = `${p.attr}=${p.quote}${translated}${p.quote}`;
+      // Translator turns CJK guillemets into ASCII straight quotes, which
+      // collide with the JSX attribute delimiter. Convert any inner straight
+      // quote of the same kind to typographic so MDX still parses.
+      const safe = escapeInnerQuotes(translated, p.quote);
+      const replacement = `${p.attr}=${p.quote}${safe}${p.quote}`;
       result = result.replace(p.match, replacement);
     }
     // If, after attribute substitution, there is still un-translated CJK text

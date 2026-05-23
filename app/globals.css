@@ -9980,6 +9980,200 @@ html[data-theme="dark"],
   }
 }
 
+/* — Wiki article (chapter overview + section pages) — */
+.wiki-article {
+  --wiki-line: color-mix(in oklab, var(--line) 80%, transparent);
+}
+.wiki-article-bar {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  margin: clamp(16px, 2vw, 24px) 0 clamp(24px, 3vw, 36px);
+  padding-block: 8px;
+  border-block: 1px solid var(--wiki-line);
+}
+.wiki-article-mark,
+.wiki-article-chapter,
+.wiki-article-readmeta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--text) 70%, var(--muted));
+  white-space: nowrap;
+}
+.wiki-article-mark {
+  font-weight: 800;
+  color: var(--accent);
+}
+.wiki-article-chapter {
+  font-weight: 600;
+}
+.wiki-article-readmeta {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.wiki-article-rule {
+  flex: 1;
+  min-width: 24px;
+  height: 1px;
+  background: color-mix(in oklab, var(--line) 90%, transparent);
+}
+
+/* Editorial header — applied to docs-article-header when wiki-article-header is co-classed */
+.wiki-article-header h1 {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  font-size: clamp(36px, 5.5vw, 64px);
+  letter-spacing: var(--tracking-tighter);
+  line-height: 1.02;
+  margin: 0 0 clamp(16px, 1.8vw, 22px);
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+  color: var(--text);
+}
+.wiki-article-header h1 em {
+  font-style: italic;
+  font-weight: 350;
+  color: var(--accent);
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+}
+.wiki-article-lede {
+  font-size: clamp(16px, 1.35vw, 19px);
+  line-height: 1.55;
+  color: var(--text);
+  max-width: 62ch;
+  margin: 0 0 clamp(20px, 2.4vw, 28px);
+  font-weight: 450;
+}
+.wiki-article-lede::first-letter {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 350;
+  font-size: clamp(46px, 6vw, 72px);
+  line-height: 0.82;
+  float: left;
+  padding: 6px 12px 0 0;
+  color: var(--accent);
+  font-variation-settings: "opsz" 144, "SOFT" 80;
+}
+
+.wiki-article-updated {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 clamp(28px, 3.4vw, 40px);
+  padding: 6px 0;
+  border-top: 1px solid var(--wiki-line);
+  border-bottom: 1px solid var(--wiki-line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  width: fit-content;
+}
+.wiki-article-updated-label {
+  font-weight: 700;
+  color: color-mix(in oklab, var(--text) 60%, var(--muted));
+}
+.wiki-article-updated time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Article body: drop-cap on first paragraph when no Hero precedes it */
+.wiki-article-body > p:first-of-type::first-letter {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 350;
+  font-size: clamp(44px, 5.6vw, 68px);
+  line-height: 0.82;
+  float: left;
+  padding: 8px 12px 0 0;
+  color: var(--accent);
+  font-variation-settings: "opsz" 144, "SOFT" 80;
+}
+/* If a Hero is the first element, neutralize the lede drop-cap so the user
+   doesn't get two competing drop-caps stacked. */
+.wiki-article-body:has(> .docs-hero) > p:first-of-type::first-letter {
+  all: unset;
+}
+
+/* When MDX provides a Hero, that block becomes the editorial title block. Hide
+   the static header to avoid duplicate h1s. */
+.docs-article:has(.docs-hero) > .wiki-article-header,
+.docs-article:has(.docs-hero) > .wiki-article-updated { /* updated stamp stays — Hero owns the title only */
+  /* keep updated stamp visible; only hide the duplicate header */
+}
+.docs-article:has(.docs-hero) > .wiki-article-header { display: none; }
+
+/* Editorial restyling of Hero so it matches the masthead language */
+.docs-hero {
+  margin: 0 0 clamp(24px, 3vw, 36px);
+  padding: 0 0 clamp(28px, 3.4vw, 40px);
+  border-bottom: 1px solid var(--wiki-line);
+  background: none;
+}
+.docs-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: clamp(16px, 1.8vw, 20px);
+}
+.docs-hero-title h1 {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  font-size: clamp(36px, 5.5vw, 64px);
+  letter-spacing: var(--tracking-tighter);
+  line-height: 1.02;
+  margin: 0;
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+  color: var(--text);
+}
+.docs-hero-title h1 em {
+  font-style: italic;
+  font-weight: 350;
+  color: var(--accent);
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+}
+.docs-hero-lead {
+  font-size: clamp(16px, 1.35vw, 19px);
+  line-height: 1.55;
+  color: var(--text);
+  margin: clamp(16px, 1.8vw, 22px) 0 0;
+  max-width: 62ch;
+  font-weight: 450;
+}
+.docs-hero-lead::first-letter {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 350;
+  font-size: clamp(46px, 6vw, 72px);
+  line-height: 0.82;
+  float: left;
+  padding: 6px 12px 0 0;
+  color: var(--accent);
+  font-variation-settings: "opsz" 144, "SOFT" 80;
+}
+
+@media (max-width: 720px) {
+  .wiki-article-bar {
+    flex-wrap: wrap;
+  }
+  .wiki-article-rule {
+    display: none;
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════════════
    NODES PAGE · WORLD-CLASS EDITORIAL TYPOGRAPHY — every module
    Masthead bar · Dropcap lede · Tier numerals · Editorial lifecycle · Gov entries
