@@ -1,54 +1,52 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireSignedIn } from "@/lib/admin";
 import { TOTPVerify } from "@/lib/totp";
 import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiUnauthorized, apiConflict, apiValidationError, zodToApiError } from "@/lib/core/api-response";
-import { parseBody, verify2FASchema } from "@/lib/core/validation";
+import { HttpError, route } from "@/lib/core/api/route";
+import { verify2FASchema } from "@/lib/core/validation";
 
-export async function POST(req: Request) {
-  const auth = await requireSignedIn();
-  if (!auth.ok) return apiUnauthorized();
+export const POST = route.session({
+  input: verify2FASchema,
+  rateLimit: "auth",
+  handler: async ({ input, session }) => {
+    const prisma = getPrisma();
+    const userId = session.user.id;
+    const { code } = input;
 
-  const body = await req.json().catch(() => ({}));
-  const parsed = parseBody(verify2FASchema, body);
-  if (!parsed.ok) return zodToApiError(parsed.error);
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { twoFactorSecret: true, twoFactorEnabled: true, accountStatus: true },
+    });
 
-  const prisma = getPrisma();
-  const userId = auth.session.user!.id;
-  const { code } = parsed.data;
+    if (!user?.twoFactorSecret) {
+      throw new HttpError(400, "VALIDATION_ERROR", "Invalid input.", [
+        { path: "code", message: "Run 2FA setup first." },
+      ]);
+    }
+    if (user.twoFactorEnabled) {
+      throw new HttpError(409, "CONFLICT", "2FA already enabled.");
+    }
 
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { twoFactorSecret: true, twoFactorEnabled: true, accountStatus: true },
-  });
+    if (!TOTPVerify(user.twoFactorSecret, code)) {
+      throw new HttpError(401, "UNAUTHORIZED", "Invalid code.");
+    }
 
-  if (!user?.twoFactorSecret) {
-    return apiValidationError([{ path: "code", message: "Run 2FA setup first." }]);
-  }
-  if (user.twoFactorEnabled) {
-    return apiConflict("2FA already enabled.");
-  }
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        twoFactorEnabled: true,
+        accountStatus: user.accountStatus === "PENDING_2FA" ? "ACTIVE" : user.accountStatus,
+      },
+    });
 
-  if (!TOTPVerify(user.twoFactorSecret, code)) {
-    return apiUnauthorized("Invalid code.");
-  }
+    await writeAudit({
+      actorUserId: userId,
+      action: AuditAction.TWO_FACTOR_ENABLE,
+      targetType: "USER",
+      targetId: userId,
+      metadata: {},
+    });
 
-  await prisma.user.update({
-    where: { id: userId },
-    data: {
-      twoFactorEnabled: true,
-      accountStatus: user.accountStatus === "PENDING_2FA" ? "ACTIVE" : user.accountStatus,
-    },
-  });
-
-  await writeAudit({
-    actorUserId: userId,
-    action: AuditAction.TWO_FACTOR_ENABLE,
-    targetType: "USER",
-    targetId: userId,
-    metadata: {},
-  });
-
-  return apiOk({ message: "2FA enabled successfully." });
-}
+    return { message: "2FA enabled successfully." };
+  },
+});

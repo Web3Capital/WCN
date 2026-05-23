@@ -1,41 +1,43 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requirePermission } from "@/lib/admin";
 import { isAdminRole } from "@/lib/permissions";
 import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
+import { HttpError, route } from "@/lib/core/api/route";
+import { z } from "zod";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
-  const auth = await requirePermission("read", "file");
-  if (!auth.ok) return apiUnauthorized();
+export const GET = route.permission({
+  input: z.object({}),
+  rateLimit: "auth",
+  permission: { action: "read", resource: "file" },
+  handler: async ({ params, session }) => {
+    const prisma = getPrisma();
+    const file = await prisma.file.findUnique({
+      where: { id: params.id },
+      include: { uploader: { select: { name: true, email: true } } },
+    });
 
-  const prisma = getPrisma();
-  const file = await prisma.file.findUnique({
-    where: { id: params.id },
-    include: { uploader: { select: { name: true, email: true } } },
-  });
+    if (!file) throw new HttpError(404, "NOT_FOUND", "File not found.");
 
-  if (!file) return apiNotFound("File");
+    if (!isAdminRole(session.user.role) && file.uploaderUserId !== session.user.id) {
+      throw new HttpError(401, "UNAUTHORIZED", "Authentication required.");
+    }
 
-  if (!isAdminRole(auth.session.user?.role ?? "USER") && file.uploaderUserId !== auth.session.user!.id) {
-    return apiUnauthorized();
-  }
+    await prisma.fileAccessLog.create({
+      data: {
+        fileId: file.id,
+        userId: session.user.id,
+        action: "VIEW",
+      },
+    });
 
-  await prisma.fileAccessLog.create({
-    data: {
-      fileId: file.id,
-      userId: auth.session.user!.id,
-      action: "VIEW",
-    },
-  });
+    await writeAudit({
+      actorUserId: session.user.id,
+      action: AuditAction.FILE_DOWNLOAD,
+      targetType: "FILE",
+      targetId: file.id,
+      metadata: { filename: file.filename },
+    });
 
-  await writeAudit({
-    actorUserId: auth.session.user!.id,
-    action: AuditAction.FILE_DOWNLOAD,
-    targetType: "FILE",
-    targetId: file.id,
-    metadata: { filename: file.filename },
-  });
-
-  return apiOk(file);
-}
+    return file;
+  },
+});

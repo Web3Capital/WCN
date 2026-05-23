@@ -1,32 +1,34 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
+import { HttpError, route } from "@/lib/core/api/route";
 import { generatePresignedUpload } from "@/lib/modules/storage/service";
+import { z } from "zod";
 
-export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const auth = await requirePermission("create", "file");
-  if (!auth.ok) return apiUnauthorized();
+export const POST = route.permission({
+  input: z.object({}),
+  rateLimit: "write",
+  permission: { action: "create", resource: "file" },
+  handler: async ({ params, session }) => {
+    const { id } = params;
+    const prisma = getPrisma();
+    const file = await prisma.file.findUnique({ where: { id } });
+    if (!file) throw new HttpError(404, "NOT_FOUND", "File not found.");
+    if (!file.storageKey) throw new HttpError(404, "NOT_FOUND", "File has no storage key not found.");
 
-  const prisma = getPrisma();
-  const file = await prisma.file.findUnique({ where: { id } });
-  if (!file) return apiNotFound("File");
-  if (!file.storageKey) return apiNotFound("File has no storage key");
+    const presigned = await generatePresignedUpload(
+      file.storageKey,
+      file.mimeType ?? "application/octet-stream",
+    );
 
-  const presigned = await generatePresignedUpload(
-    file.storageKey,
-    file.mimeType ?? "application/octet-stream",
-  );
+    await writeAudit({
+      actorUserId: session.user.id,
+      action: AuditAction.FILE_PRESIGN,
+      targetType: "FILE",
+      targetId: id,
+      workspaceId: file.workspaceId,
+    });
 
-  await writeAudit({
-    actorUserId: auth.session.user!.id,
-    action: AuditAction.FILE_PRESIGN,
-    targetType: "FILE",
-    targetId: id,
-    workspaceId: file.workspaceId,
-  });
-
-  return apiOk(presigned);
-}
+    return presigned;
+  },
+});
