@@ -1,15 +1,17 @@
 import "@/lib/core/init";
-import { requireSignedIn } from "@/lib/admin";
-import { apiOk, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
+import { HttpError, route } from "@/lib/core/api/route";
 import { resolveAugmentedNode } from "@/lib/modules/augmented-node";
+import { z } from "zod";
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await requireSignedIn();
-  if (!auth.ok) return apiUnauthorized();
+const emptyInputSchema = z.object({});
 
-  const { id } = await params;
-  const view = await resolveAugmentedNode(id);
-  if (!view) return apiNotFound("Node");
+export const GET = route.session<z.infer<typeof emptyInputSchema>, unknown, { id: string }>({
+  input: emptyInputSchema,
+  rateLimit: "auth",
+  handler: async ({ params }) => {
+    const view = await resolveAugmentedNode(params.id);
+    if (!view) throw new HttpError(404, "NOT_FOUND", "Node not found.");
 
-  return apiOk(view);
-}
+    return view;
+  },
+});

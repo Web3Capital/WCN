@@ -1,27 +1,31 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requirePermission } from "@/lib/admin";
 import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
+import { HttpError, route } from "@/lib/core/api/route";
+import { z } from "zod";
 
-export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const auth = await requirePermission("delete", "file");
-  if (!auth.ok) return apiUnauthorized();
+const emptyInputSchema = z.object({});
 
-  const prisma = getPrisma();
-  const grant = await prisma.accessGrant.findUnique({ where: { id } });
-  if (!grant) return apiNotFound("AccessGrant");
+export const DELETE = route.permission<z.infer<typeof emptyInputSchema>, unknown, { id: string }>({
+  input: emptyInputSchema,
+  rateLimit: "write",
+  permission: { action: "delete", resource: "file" },
+  handler: async ({ params, session }) => {
+    const { id } = params;
+    const prisma = getPrisma();
+    const grant = await prisma.accessGrant.findUnique({ where: { id } });
+    if (!grant) throw new HttpError(404, "NOT_FOUND", "AccessGrant not found.");
 
-  await prisma.accessGrant.delete({ where: { id } });
+    await prisma.accessGrant.delete({ where: { id } });
 
-  await writeAudit({
-    actorUserId: auth.session.user!.id,
-    action: AuditAction.ACCESS_GRANT_REVOKE,
-    targetType: "ACCESS_GRANT",
-    targetId: id,
-    workspaceId: grant.workspaceId,
-  });
+    await writeAudit({
+      actorUserId: session.user.id,
+      action: AuditAction.ACCESS_GRANT_REVOKE,
+      targetType: "ACCESS_GRANT",
+      targetId: id,
+      workspaceId: grant.workspaceId,
+    });
 
-  return apiOk({ deleted: true });
-}
+    return { deleted: true };
+  },
+});

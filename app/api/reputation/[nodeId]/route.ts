@@ -1,35 +1,35 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requireSignedIn } from "@/lib/admin";
-import { apiOk, apiUnauthorized, apiNotFound } from "@/lib/core/api-response";
+import { HttpError, route } from "@/lib/core/api/route";
+import { z } from "zod";
 
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ nodeId: string }> },
-) {
-  const { nodeId } = await params;
-  const auth = await requireSignedIn();
-  if (!auth.ok) return apiUnauthorized();
+const emptyInputSchema = z.object({});
 
-  const prisma = getPrisma();
+export const GET = route.session<z.infer<typeof emptyInputSchema>, unknown, { nodeId: string }>({
+  input: emptyInputSchema,
+  rateLimit: "auth",
+  handler: async ({ params }) => {
+    const { nodeId } = params;
+    const prisma = getPrisma();
 
-  const [score, badges, history] = await Promise.all([
-    prisma.reputationScore.findUnique({
-      where: { nodeId },
-      include: { node: { select: { name: true, type: true } } },
-    }),
-    prisma.reputationBadge.findMany({
-      where: { nodeId },
-      orderBy: { awardedAt: "desc" },
-    }),
-    prisma.reputationHistory.findMany({
-      where: { nodeId },
-      orderBy: { snapshotAt: "desc" },
-      take: 30,
-    }),
-  ]);
+    const [score, badges, history] = await Promise.all([
+      prisma.reputationScore.findUnique({
+        where: { nodeId },
+        include: { node: { select: { name: true, type: true } } },
+      }),
+      prisma.reputationBadge.findMany({
+        where: { nodeId },
+        orderBy: { awardedAt: "desc" },
+      }),
+      prisma.reputationHistory.findMany({
+        where: { nodeId },
+        orderBy: { snapshotAt: "desc" },
+        take: 30,
+      }),
+    ]);
 
-  if (!score) return apiNotFound("Reputation score not found for this node");
+    if (!score) throw new HttpError(404, "NOT_FOUND", "Reputation score not found for this node not found.");
 
-  return apiOk({ score, badges, history });
-}
+    return { score, badges, history };
+  },
+});
