@@ -5,6 +5,7 @@ import {
   BookOpen, Search, Lightbulb, Settings, Layers,
   Globe, Bot, ShieldCheck, Coins, DoorOpen,
   Building2, Map, Trophy, Handshake, Archive,
+  ArrowUpRight,
 } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -38,33 +39,64 @@ export default async function WikiLandingPage() {
   const chapters = getChapters();
   const t = await getTranslations("wiki");
 
+  const totalPages = chapters.reduce((acc, ch) => acc + ch.docs.length, 0);
+
   return (
-    <div className="docs-landing">
-      <header className="docs-landing-hero">
-        <h1>{t.rich("heading", { em: (chunks) => <em>{chunks}</em> })}</h1>
-        <p>{t("subtitle")}</p>
+    <div className="docs-landing wiki-editorial">
+      <header className="wiki-masthead">
+        <div className="wiki-masthead-bar" aria-hidden>
+          <span className="wiki-masthead-mark">№ 01</span>
+          <span className="wiki-masthead-rule" />
+          <span className="wiki-masthead-section">Wiki · Compendium</span>
+          <span className="wiki-masthead-rule" />
+          <span className="wiki-masthead-meta">Volume · MMXXVI</span>
+        </div>
+        <h1 className="wiki-masthead-title">
+          {t.rich("heading", { em: (chunks) => <em>{chunks}</em> })}
+        </h1>
+        <p className="wiki-masthead-lede">{t("subtitle")}</p>
+        <div className="wiki-masthead-stats">
+          <span className="wiki-masthead-stat">
+            <span className="wiki-masthead-stat-num">{String(chapters.length).padStart(2, "0")}</span>
+            <span className="wiki-masthead-stat-label">Chapters</span>
+          </span>
+          <span className="wiki-masthead-stat-divider" aria-hidden />
+          <span className="wiki-masthead-stat">
+            <span className="wiki-masthead-stat-num">{totalPages}</span>
+            <span className="wiki-masthead-stat-label">Articles</span>
+          </span>
+        </div>
       </header>
 
-      <div className="docs-landing-chapters">
-        {chapters.map((ch) => {
+      <ol className="wiki-chapters">
+        {chapters.map((ch, i) => {
           const firstDoc = ch.docs[0];
           const href = firstDoc?.href ?? "/wiki";
           const icon = CHAPTER_ICONS[ch.slug];
+          const num = String(i + 1).padStart(2, "0");
 
           return (
-            <Link key={ch.slug} href={href as any} className="docs-landing-card">
-              <span className="docs-landing-card-header">
-                {icon && <span className="docs-landing-card-icon">{icon}</span>}
-                <span className="docs-landing-card-title">{ch.title}</span>
-              </span>
-              {ch.description && (
-                <span className="docs-landing-card-desc">{ch.description}</span>
-              )}
-              <span className="docs-landing-card-count">{ch.docs.length} {t("pages")}</span>
-            </Link>
+            <li key={ch.slug} className="wiki-chapter-item">
+              <Link href={href as any} className="wiki-chapter-card">
+                <span className="wiki-chapter-num" aria-hidden>{num}</span>
+                <div className="wiki-chapter-body">
+                  <div className="wiki-chapter-head">
+                    {icon && <span className="wiki-chapter-icon" aria-hidden>{icon}</span>}
+                    <h2 className="wiki-chapter-title">{ch.title}</h2>
+                  </div>
+                  {ch.description && (
+                    <p className="wiki-chapter-desc">{ch.description}</p>
+                  )}
+                  <div className="wiki-chapter-meta">
+                    <span className="wiki-chapter-count">{ch.docs.length} {t("pages")}</span>
+                    <ArrowUpRight size={14} className="wiki-chapter-arrow" aria-hidden />
+                  </div>
+                </div>
+              </Link>
+            </li>
           );
         })}
-      </div>
+      </ol>
     </div>
   );
 }

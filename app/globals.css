@@ -9713,3 +9713,269 @@ html[data-theme="dark"],
   padding-top: 8px;
   border-top: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   WIKI LANDING · WORLD-CLASS EDITORIAL TYPOGRAPHY
+   Issue masthead bar · Fraunces title · Editorial chapter cards
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.wiki-editorial {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(48px, 6vw, 88px) clamp(20px, 3vw, 32px);
+}
+
+/* — Wiki masthead — */
+.wiki-masthead {
+  margin-bottom: clamp(48px, 6vw, 80px);
+  padding: 0;
+  background: none;
+  border-bottom: 1px solid color-mix(in oklab, var(--line) 80%, transparent);
+  padding-bottom: clamp(36px, 4.5vw, 56px);
+}
+.wiki-masthead-bar {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  margin: 0 0 clamp(24px, 3vw, 36px);
+  padding-block: 8px;
+  border-block: 1px solid color-mix(in oklab, var(--line) 80%, transparent);
+}
+.wiki-masthead-mark,
+.wiki-masthead-section,
+.wiki-masthead-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--text) 70%, var(--muted));
+  white-space: nowrap;
+}
+.wiki-masthead-mark {
+  font-weight: 800;
+  color: var(--accent);
+}
+.wiki-masthead-section {
+  font-weight: 600;
+}
+.wiki-masthead-meta {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.wiki-masthead-rule {
+  flex: 1;
+  min-width: 24px;
+  height: 1px;
+  background: color-mix(in oklab, var(--line) 90%, transparent);
+}
+.wiki-masthead-title {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  font-size: clamp(48px, 8vw, 112px);
+  letter-spacing: var(--tracking-tighter);
+  line-height: 0.96;
+  margin: 0 0 clamp(20px, 2.6vw, 32px);
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+  color: var(--text);
+}
+.wiki-masthead-title em {
+  font-style: italic;
+  font-weight: 350;
+  color: var(--accent);
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+}
+.wiki-masthead-lede {
+  font-size: clamp(17px, 1.5vw, 21px);
+  line-height: 1.55;
+  color: var(--text);
+  max-width: 62ch;
+  margin: 0 0 clamp(28px, 3.6vw, 44px);
+  font-weight: 450;
+}
+.wiki-masthead-lede::first-letter {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 350;
+  font-size: clamp(56px, 7vw, 88px);
+  line-height: 0.82;
+  float: left;
+  padding: 6px 14px 0 0;
+  color: var(--accent);
+  font-variation-settings: "opsz" 144, "SOFT" 80;
+}
+.wiki-masthead-stats {
+  display: flex;
+  align-items: stretch;
+  gap: clamp(20px, 3vw, 40px);
+  padding-top: clamp(16px, 2vw, 24px);
+  border-top: 1px solid color-mix(in oklab, var(--line) 60%, transparent);
+}
+.wiki-masthead-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.wiki-masthead-stat-num {
+  font-family: var(--font-mono);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.wiki-masthead-stat-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.wiki-masthead-stat-divider {
+  width: 1px;
+  background: color-mix(in oklab, var(--line) 90%, transparent);
+  align-self: stretch;
+}
+
+/* — Wiki chapters grid (editorial cards) — */
+.wiki-chapters {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: clamp(14px, 1.6vw, 20px);
+  animation: pageIn var(--dur-3) var(--ease-out) both;
+}
+.wiki-chapter-item {
+  display: contents;
+}
+.wiki-chapter-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: clamp(56px, 6vw, 76px) minmax(0, 1fr);
+  gap: clamp(12px, 1.4vw, 18px);
+  padding: clamp(20px, 2.4vw, 28px);
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in oklab, var(--line) 90%, transparent);
+  background: var(--card);
+  color: var(--text);
+  text-decoration: none;
+  transition:
+    transform var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out),
+    background var(--dur-2) var(--ease-out);
+  overflow: hidden;
+}
+.wiki-chapter-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 0;
+  background: var(--accent);
+  transition: height var(--dur-3) var(--ease-out);
+}
+.wiki-chapter-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--accent) 35%, var(--line));
+  box-shadow: 0 18px 40px color-mix(in oklab, var(--accent) 8%, rgba(0, 0, 0, 0.08));
+  background: color-mix(in oklab, var(--card) 92%, var(--accent) 4%);
+}
+.wiki-chapter-card:hover::before {
+  height: 100%;
+}
+.wiki-chapter-card:hover .wiki-chapter-num {
+  -webkit-text-stroke-color: var(--accent);
+}
+.wiki-chapter-card:hover .wiki-chapter-arrow {
+  transform: translate(2px, -2px);
+  color: var(--accent);
+}
+.wiki-chapter-card:hover .wiki-chapter-title {
+  color: var(--accent);
+}
+.wiki-chapter-num {
+  font-family: var(--font-mono);
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1.4px color-mix(in oklab, var(--accent) 38%, var(--line));
+  user-select: none;
+  align-self: start;
+  font-variant-numeric: tabular-nums;
+  transition: -webkit-text-stroke-color var(--dur-2) var(--ease-out);
+}
+.wiki-chapter-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.wiki-chapter-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.wiki-chapter-icon {
+  color: var(--accent);
+  opacity: 0.7;
+  flex-shrink: 0;
+  display: inline-flex;
+}
+.wiki-chapter-title {
+  font-family: var(--font-serif);
+  font-size: clamp(19px, 1.9vw, 24px);
+  font-weight: 350;
+  letter-spacing: var(--tracking-tighter);
+  line-height: 1.14;
+  margin: 0;
+  color: var(--text);
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+  transition: color var(--dur-2) var(--ease-out);
+}
+.wiki-chapter-desc {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted);
+  flex: 1;
+  max-width: 44ch;
+}
+.wiki-chapter-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in oklab, var(--line) 60%, transparent);
+}
+.wiki-chapter-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.wiki-chapter-arrow {
+  color: color-mix(in oklab, var(--muted) 80%, transparent);
+  transition: transform var(--dur-2) var(--ease-out), color var(--dur-2) var(--ease-out);
+  flex-shrink: 0;
+}
+
+@media (max-width: 720px) {
+  .wiki-chapters {
+    grid-template-columns: 1fr;
+  }
+  .wiki-chapter-card {
+    grid-template-columns: clamp(48px, 14vw, 64px) minmax(0, 1fr);
+  }
+}
