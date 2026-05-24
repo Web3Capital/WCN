@@ -1,0 +1,57 @@
+---
+title: '12.3 La tercera etapa: liquidación y capa de activos'
+chapter: 12
+order: 3
+description: >-
+  Captura de tarifas y raíz estatal en cadena en la etapa de madurez del
+  protocolo de evaluación comparativa: bajo la premisa de que PoB es un insumo
+  confiable, se promueve la liquidación, la posesión de identidad y la
+  certificación selectiva en cadena, no el punto de partida de la narrativa,
+  sino los resultados comerciales.
+---
+
+<Hero badge="12.3 · Liquidación y Capa de Activos" lead="Sólo cuando la red de nodos, la densidad de transacciones, el PoB y la gobernanza de los agentes cumplan con los estándares, se promoverá sistemáticamente la liquidación y la tenencia de activos; la parte en cadena debería ser “resúmenes y pruebas necesarios” en lugar de una replicación estatal completa.">
+# La capa de liquidación se come la calidad de entrada de PoB; cuando la entrada es escasa, cualquier cadena es solo una base de datos costosa.
+</Hero>
+
+<MetaGrid>
+  <Meta label="objetivos centrales" value="Mecanismo de liquidación + portabilidad digital de identidad/autoridad + implementación selectiva en cadena" />
+  <Meta label="Condiciones previas" value="La señal de conmutación de 12.1/12.2 se ha cumplido continuamente (ni un solo pulso mensual)" />
+  <Meta label="en principio" value="Las cosas que pueden resolverse eficientemente fuera de la cadena no deben incluirse en la cadena; debe haber un verificador claro o una contraparte en la cadena." />
+</MetaGrid>
+
+## Referencia de la industria
+
+- **Cambio de tarifas de Uniswap y precipitación de gobernanza**: una vez que se demuestre el volumen de transacciones y la profundidad del grupo, la capa de protocolo conllevará tarifas a largo plazo y gobernanza de parámetros; Las reglas de liquidación de WCN deberían solidificarse una vez que se demuestren el flujo de caja y la densidad de PoB.
+- **Estado de Ethereum y capas de disponibilidad de datos**: no es necesario que todos copien el estado completo; WCN puede mantener datos detallados del acuerdo dentro de los límites de cumplimiento, y solo el compromiso, el hash raíz o la prueba de firma/ZK permanecen en la cadena (según el cumplimiento y la selección de tecnología).
+- **RWA/Ruta del token de valores de cumplimiento**: los activos en cadena generalmente están restringidos por entidades legales y divulgación; La tercera fase de WCN debería alinear las condiciones duales de "el negocio se ha realizado + un camino legal claro" para evitar el empaquetado inverso.
+
+## entregables específicos
+
+<CardGrid cols={2}>
+  <Card title="Formalización de liquidación" icon="coins">**Entrega**: Reglas contables y tabla de mapeo de condiciones de activación de PoB, interfaz de disputas y arbitraje, informes de conciliación y auditoría. **Indicadores**: ciclo de liquidación, tasa de disputas, tasa de morosidad/reversión, consistencia de conciliación entre múltiples entidades.</Card>
+  <Card title="Portación de identidad y permiso" icon="id-card">**Entrega**: modelo unificado de identidad, rol, reputación o participación del nodo (si se adopta) y permisos del sistema; Procesos de cierre de sesión y herencia. **Indicadores**: Tasa de trazabilidad de cambios de permisos, número de usos fraudulentos e incidentes de cuentas compartidas.</Card>
+  <Card title="libro mayor de valor a largo plazo" icon="trending-up">**Entrega**: vistas de contribuciones y resultados que se pueden consultar entre trimestres (se utilizan para incentivos, intercambio o referencia de gobernanza, la forma específica está determinada por la gobernanza). **Indicadores**: Coherencia en el recálculo del libro de cuentas, tasa de aprobación del muestreo de auditoría externa.</Card>
+  <Card title="Selectivo en cadena" icon="link-2">**Entrega**: lista de activos en cadena (qué está en cadena, por qué está en cadena, quién verifica), supuestos de puente o custodia, interruptores de actualización y pausa. **Indicadores**: Diferencia entre eventos dentro de la cadena y conciliación de PoB fuera de la cadena, tiempo de recuperación de accidentes.</Card>
+</CardGrid>
+
+## Métricas de éxito (ejemplo)
+
+- Cualquier liquidación se puede rastrear hasta la cadena completa de: **registro PoB → versión de regla → identidad del participante**.
+- Existe una ruta de degradación documentada cuando fallan los componentes dentro de la cadena (pausar la acuñación, retroceder a la liquidación fuera de la cadena, etc.).
+- Para las auditorías de muestreo propuestas por los reguladores o socios principales, la exportación del material se puede completar dentro del tiempo acordado.
+
+## Principales riesgos en esta etapa
+
+<CardGrid cols={2}>
+  <Card title="Cumplimiento y Jurisdicción" icon="scale">Error de cálculo del token/atributo de seguridad. **Varios**: Las opiniones legales determinan los límites de los productos, y no al revés.</Card>
+  <Card title="Contratos inteligentes y seguridad" icon="lock-open">La capa de activos atrae superficies de ataque. **Mitigación**: auditoría, recompensas por errores, límites y firmas múltiples; ninguna clave de usuario se guarda en custodia a menos que sea necesario.</Card>
+  <Card title="Oráculos y dependencias fuera de la cadena" icon="link">El estado en cadena es inconsistente con PoB. **Lanzamiento lento**: verificación de múltiples fuentes, liquidación retrasada, período de impugnación.</Card>
+  <Card title="reacción narrativa" icon="megaphone">El mercado sólo habla de cadenas y no de negocios. **Comunicado**: Los KPI externos aún priorizan la calidad de la salida y la liquidación de la red.</Card>
+</CardGrid>
+
+## ¿Por qué debe colocarse después?
+
+<Callout type="warning">Si se omiten las fases 1 y 2, no habrá una entrada estable a la capa de liquidación y la capa de activos se convertirá fácilmente en un “certificado fantasma”. Esto es opuesto al camino insostenible de una gran cantidad de proyectos sin flujo de efectivo en 2017-2018 después de la emisión de tokens; también es coherente con el camino de los principales protocolos actuales de "establecer primero el volumen y las prácticas de gobernanza, y luego ampliar la utilidad de los tokens".</Callout>
+
+<Statement>La tercera fase marca la evolución de WCN de una "red empresarial de alta confianza" a un "sistema a largo plazo auditable, distribuible y opcionalmente anclado en la cadena", siempre que los números de las dos primeras fases puedan resistir inspecciones aleatorias.</Statement>

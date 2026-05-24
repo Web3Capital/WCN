@@ -1,0 +1,67 @@
+---
+title: 5.1 Descripción general de la arquitectura de cinco capas
+description: >-
+  Las cinco capas responden respectivamente a cinco preguntas centrales,
+  formando una cadena de valor completa desde la demanda hasta la liquidación.
+chapter: 5
+order: 1
+---
+
+<Hero badge="5.1 · Descripción general de la arquitectura" lead="La mayoría de los proyectos Web3 combinan funcionalidades y las llaman “arquitectura”. El diseño de cinco capas de WCN surge de una comprensión simple: cualquier sistema complejo de colaboración multipartita sin una clara división jerárquica del trabajo eventualmente se convertirá en una plataforma caótica. El banco de inversión TradFi ha utilizado un sistema de división del trabajo establecido durante 100 años (suscripción → investigación → ventas → comercio → compensación), y WCN utiliza una arquitectura de cinco capas para implementar una división estructural del trabajo similar en Web3.">
+# Las cinco capas, desde la demanda hasta la liquidación, le dan a la colaboración multipartita Web3 un esqueleto de sistema por primera vez.
+</Hero>
+
+<MetaGrid>
+  <Meta label="principios arquitectónicos" value="Responsabilidades estratificadas, avance secuencial y recopilación de resultados." />
+  <Meta label="Referencia de diseño" value="División del trabajo de banca de inversión TradFi + estratificación de plataforma SaaS" />
+  <Meta label="características principales" value="La salida de la capa anterior es la entrada de la siguiente capa." />
+</MetaGrid>
+
+## Responda cinco preguntas en cada uno de los cinco pisos.
+
+<Steps>
+  <Step title="L1 · Nivel de proyecto y activo: ¿Quién hace la demanda?">Las partes del proyecto y las partes del activo ingresan al sistema para expresar necesidades de financiamiento, crecimiento y servicios. Este es el punto de entrada de la demanda de toda la red; sin una demanda real, todas las capas posteriores estarán inactivas.</Step>
+  <Step title="L2 · Capa de asignación de capital: ¿Quién capta la demanda?">El lado del capital conecta fondos y proyectos a través de capacidades de juicio y asignación. No se trata de un simple "matching", sino de un proceso sistemático de selección, de matching y de inversión estructurado.</Step>
+  <Step title="L3 · Capa de ejecución y servicio: ¿Quién hace las cosas?">Legal, Auditoría, Desarrollo, Crecimiento y Agentes impulsan la ejecución de Tareas. Esta capa determina si la "conexión" puede convertirse en "resultado".</Step>
+  <Step title="L4 · Distribución y capa de liquidez: ¿Quién es el responsable de emprender el mercado?">Los intercambios, los creadores de mercado, los medios, los KOL y las comunidades envían resultados desde dentro del sistema al mercado externo. No hay distribución, el resultado simplemente se incluye en un bucle.</Step>
+  <Step title="L5 · Capa de Verificación y Liquidación: ¿Quién probará y liquidará?">Proof Desk recopila evidencia, audita la verificación, la contabilidad de atribución de PoB y la liquidación asigna valor. Esta es la capa de cierre y salida de valor de todo el sistema.</Step>
+</Steps>
+
+---
+
+## ¿Por qué es el quinto piso, no el tercero o el séptimo?
+
+<CardGrid cols={2}>
+  <Card title="menos de cinco pisos" icon="ban">Si se fusionan la ejecución y la distribución, el sistema no puede distinguir entre "personas que hacen cosas" y "personas que corren la voz": la atribución y la liquidación se confundirán. Si la verificación se fusiona con la capa de ejecución, los conflictos de intereses entre revisores y ejecutores son inevitables.</Card>
+  <Card title="Más de cinco pisos" icon="ban">Si la capa de capital se divide en una "capa de selección" y una "capa de asignación", aumentará la complejidad pero no agregará nuevos puntos de juicio de valor. El nivel cinco es el conjunto mínimamente completo de transformaciones de información y responsabilidad.</Card>
+</CardGrid>
+
+> **Analogía**: la división central del trabajo del banco de inversión TradFi también consta de cinco enlaces: **Suscripción** (entrada de proyecto) → **Investigación** (juicio y selección) → **Ventas** (igualación de capital) → **Transacción** (ejecución y liquidación) → **Liquidación** (entrega final). Esta división del trabajo ha sido probada en el mercado durante 100 años y ha demostrado ser la estructura más eficaz en la colaboración multipartita.
+
+---
+
+## La quinta capa es una secuencia empresarial, no un módulo paralelo.
+
+<Callout type="warning">
+L1 Proyectos y Activos → L2 Asignación de Capital → L3 Ejecución y Servicios → L4 Distribución y Liquidez → L5 Verificación y Liquidación
+</Callout>
+
+Características clave:
+- **Flujo unidireccional**: la salida de la capa anterior es la entrada de la siguiente capa. Los requisitos del proyecto se envían a la capa de capital, los acuerdos de capital se envían a la capa de ejecución, los resultados de la ejecución se envían a la capa de distribución y los efectos de la distribución se envían a la capa de verificación.
+- **Bucle de retroalimentación**: los resultados de la capa de verificación (reputación, atribución, datos PoB) se retroalimentarán a L1-L4, mejorando la precisión de las coincidencias y la eficiencia de ejecución.
+- **Expansión Independiente**: Cada capa puede agregar capacidades de forma independiente (más nodos de capital, más proveedores de servicios, más Agentes) sin la necesidad de reconstruir otras capas.
+
+---
+
+## Comparación con la arquitectura existente.
+
+<CardGrid cols={2}>
+  <Card title="frente a CRM tradicional (Salesforce/HubSpot)" icon="chart-bar">CRM solo gestiona las relaciones con los clientes y los embudos de ventas, sin asignación de capital, colaboración de servicios ni verificación de resultados. Las cinco capas de WCN cubren la cadena completa desde la demanda hasta la liquidación.</Card>
+  <Card title="vs. herramientas DAO (Instantánea + Gnosis Safe)" icon="landmark">Las herramientas DAO se centran en la gobernanza y la gestión de fondos, sin promoción de acuerdos, ejecución de servicios ni verificación de atribuciones. WCN resuelve "hacer cosas", no sólo "votar".</Card>
+  <Card title="frente a la plataforma de emparejamiento Web3" icon="refresh-cw">La plataforma de comparación solo realiza conexiones L1-L2, independientemente de la ejecución L3, la distribución L4 y la autenticación L5. El resultado es "introducido pero no completado".</Card>
+  <Card title="frente al banco de inversión TradFi" icon="landmark">Los bancos de inversión tienen una división del trabajo completa en cinco niveles, pero están centralizadas, tienen umbrales altos y son opacas. WCN utiliza una estructura en red para lograr una división del trabajo similar, pero reduce el umbral de participación en un orden de magnitud.</Card>
+</CardGrid>
+
+<Callout type="tip">
+Comprender la secuencia de cinco capas es el primer paso para comprender WCN: primero está la demanda, luego el capital, luego la ejecución, luego la distribución y, finalmente, la verificación y la liquidación. Este no es un marco teórico, sino una secuencia inevitable de lógica empresarial.
+</Callout>

@@ -1,0 +1,65 @@
+---
+title: 7.3 Cycle de vie des agents
+description: "Enregistrez, autorisez, exécutez, surveillez, mettez à niveau, suspendez, quittez\_; aligner la liste FAQ des modèles de gouvernance, d’audit et de diligence raisonnable par des tiers."
+chapter: 7
+order: 3
+---
+
+<Hero badge="7.3 · Cycle de vie" lead="Les agents ont besoin d'un cycle de vie comme les comptes des employés et les versions de modèle : qui peut le créer, qui peut l'autoriser, comment le surveiller pendant le fonctionnement, comment le mettre en pause en cas d'accident et comment traiter les données après leur élimination. Sans machine à états, il n’existe pas de couche d’exécution fiable et il est impossible d’expliquer à l’auditeur « ce qui s’exécutait dans le système à ce moment-là ».">
+# Les agents doivent être identifiables, contraignants, évolutifs et révocables.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Ce que fait cette page" value="Machine à états + action de gouvernance + réponse d'audit" />
+  <Meta label="thèmes centraux" value="Lien complet entre Inscrit et Retraité" />
+  <Meta label="Points forts de la lecture" value="Limites d'autorisation, déclencheurs de suspension, contrôle de mise à niveau" />
+</MetaGrid>
+
+## état critique
+
+<CardGrid cols={3}>
+  <Card title="Inscrit" icon="file-text">Inscrit au catalogue (nom, type, modèle par défaut, nœud propriétaire, description d'utilisation). Les données professionnelles n'ont pas encore été reçues, ce qui équivaut à "le compte a été créé mais les autorisations n'ont pas été activées".</Card>
+  <Card title="Autorisé" icon="key">Complétez l'examen des autorisations : domaine de données, liste blanche des outils, limite d'appels quotidienne et si l'écriture sur des systèmes externes est autorisée. Correspond à la liaison de rôle dans l'IAM d'entreprise.</Card>
+  <Card title="Actif" icon="play">Exécuter des tâches dans le cadre de l'autorisation et rédiger des journaux structurés **en continu** (résumé des entrées, hachage de sortie, appels d'outils, résultats d'approbation).</Card>
+  <Card title="En pause / Suspendu" icon="pause">Exemples de conditions de déclenchement : tentatives anormales non autorisées, échecs consécutifs dans l'échantillonnage de la qualité des résultats, incidents de sécurité et interdictions de conformité. La pause devrait couper les outils et les rappels externes en un seul clic.</Card>
+  <Card title="Mise à niveau" icon="arrow-up">Modifications de version du modèle, d'invite, d'outil ou de limite ; Le numéro de commande de modification, l'approbateur, l'heure d'effet et le package de restauration doivent être enregistrés. Comparez les MLOps avec la gestion du changement (comme ITIL).</Card>
+  <Card title="À la retraite" icon="flag">Si l’entreprise est hors ligne ou ne répond pas aux normes, elle sera éliminée ; la période de conservation des journaux en lecture seule sera conservée et les champs sensibles utilisés pour la formation seront supprimés ou anonymisés (conformément à la politique).</Card>
+</CardGrid>
+
+## chemin du cycle de vie
+
+<Callout type="info">
+Enregistrement → Évaluation des risques et autorisation → En ligne (actif) → Surveillance continue et inspection aléatoire → Suspension déclenchée par un événement → Mise à niveau de modification (avec approbation) → Stratégie de retraite et de rétention
+</Callout>
+
+<Steps>
+  <Step title="accéder">Clarifier les scénarios commerciaux, la classification des données, l'opportunité de traiter les informations personnelles/les termes de confidentialité ; interdire "entrer en premier et trouver une solution plus tard".</Step>
+  <Step title="Autoriser">Autorisations minimales : diviser la portée de l'API par type d'agent ; règle du duo pour les opérations sensibles ou Human in the Loop (HITL).</Step>
+  <Step title="courir">SLA : étiquettes de réclamation des clients concernant la latence, le taux d'erreur et les hallucinations ; des indicateurs similaires aux outils d'observabilité tels que LangSmith, mais les résultats doivent être saisis dans le système de tâches WCN.</Step>
+  <Step title="Revoir">Contrôles ponctuels réguliers : comparaison de plusieurs versions de modèles avec la même entrée, échantillons d'invites de l'équipe rouge et si les appels d'outils sont hors limites.</Step>
+  <Step title="quitter">Les agents retraités ne doivent plus apparaître dans la liste de répartition ; la sortie historique peut toujours être référencée par Proof mais marquée avec la version du modèle.</Step>
+</Steps>
+
+<Statement>Objectif de conception du cycle de vie : **réponse à tout moment** : quel agent est en cours d'exécution, quel modèle est utilisé, à quoi peut-on accéder et qui a approuvé la dernière modification.</Statement>
+
+## Cadre de gouvernance et de gestion des risques (condensé)
+
+| Dimensions | Points clés |
+| --- | --- |
+| Propriété | Chaque agent possède un nœud propriétaire ou une personne responsable de la plateforme ; en cas d'incident en cours, veuillez d'abord contacter le propriétaire |
+| Changement | Les modifications de production passent par la fenêtre de modification et sont annulées ; le changement de modèle majeur peut nécessiter des niveaux de gris parallèles |
+| Données | La formation/la conservation des journaux et la transmission transfrontalière sont conformes à l'emplacement et au contrat du nœud |
+| Sécurité | Séquestre des clés et des informations d'identification de l'outil ; interdire aux agents de conserver de manière persistante les mots de passe des utilisateurs en clair |
+| Vérification | Période de conservation des journaux ≥ exigences en matière de suivi des litiges commerciaux ; soutenir l'exportation vers des tiers en matière de diligence raisonnable |
+
+<Callout type="warning">
+L’absence de possibilité de suspension et de retrait tacite permet aux « agents zombies » de conserver pendant longtemps des autorisations expirées – une source courante de violations de données et de pénalités de non-conformité.
+</Callout>
+
+## La différence fondamentale avec la « boucle normalement ouverte » de style AutoGPT
+
+La boucle autonome est par défaut **aucun point de terminaison clair** ; le cycle de vie du WCN lie chaque exécution au **vieillissement des tâches et des autorisations**. La tâche se termine ou l'autorisation expire → Les appels de l'agent doivent être rejetés ou saisis en lecture seule au lieu de continuer à « réfléchir » en arrière-plan.
+
+<Callout type="tip">
+Une phrase pour expliquer à un auditeur ou à un LP : **Nos agents sont comme des travaux par lots contrôlés, pas comme des travailleurs automatisés infatigables. **
+</Callout>

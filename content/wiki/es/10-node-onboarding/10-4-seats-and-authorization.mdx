@@ -1,0 +1,49 @@
+---
+title: 10.4 Plazas y Autorización
+chapter: 10
+order: 4
+description: >-
+  Seat define "quién eres"; La autorización define "lo que puede alcanzar": los
+  dos se asignan uno por uno a los KPI y las obligaciones de evidencia, similar
+  a la matriz de autoridad de productos de intercambio RBAC +.
+---
+
+<Hero badge="10.4 · Plazas y Autorización" lead="Sin ACL claras, las redes de múltiples agencias degenerarán en grupos de WeChat. WCN divide el puesto y el derecho: el primero es el cargo de la organización y el alcance de la responsabilidad en la red, y el segundo es una combinación booleana específica que se puede leer, escribir y liquidar en el sistema; la lógica es cercana a la tabla de permisos de subcuenta de intercambio y rol de SSO empresarial.">
+# El asiento es la posición y la autorización es el límite; cuanto más cerca del acuerdo, más estrecha será la autorización y más estricta la auditoría.
+</Hero>
+
+<MetaGrid>
+  <Meta label="cuestiones centrales" value="¿Cómo formalizar la posición de los nodos en la red?" />
+  <Meta label="eje del asiento" value="Función/Región/Pista/Tarea" />
+  <Meta label="eje de autorización" value="Acceso / Participación / Operaciones / Elegibilidad de facturación" />
+</MetaGrid>
+
+## Cuatro tipos de asientos (se pueden apilar)
+
+<CardGrid cols={2}>
+  <Card title="Asientos funcionales" icon="settings">Identidades de responsabilidad principal como capital, proyecto, servicio, distribución, región y agente. Determine la plantilla de flujo de trabajo predeterminada y la categoría de KPI (por ejemplo, el lado del capital es el tiempo de respuesta + tasa de conversión de inversión, el lado del servicio es la tasa de entrega a tiempo + tasa de aprobación de reinspecciones).</Card>
+  <Card title="escaños regionales" icon="globe">Cobertura de país/ciudad/zona horaria; a menudo va acompañado de **exclusividad o cuota** (por ejemplo, solo N nodos maestros en la misma jurisdicción) para evitar el acaparamiento del orden interno y la dilución de la reputación.</Card>
+  <Card title="Asientos de la industria" icon="tag">Etiquetas como AI, RWA, pagos, infraestructura; impulsar la ponderación de coincidencias L1-L2 y la elegibilidad de campañas de marca compartida.</Card>
+  <Card title="asiento de trabajo" icon="target">Vincular ID de oferta, ID de tarea o código de actividad específicos; los permisos están limitados por tiempo y se reciclan o degradan cuando finaliza la tarea, similar al control de acceso de consultores basado en proyectos.</Card>
+</CardGrid>
+
+---
+
+## Cuatro tipos de autorización (simétrica con responsabilidades)
+
+<CardGrid cols={2}>
+  <Card title="Acceso (Leer)" icon="eye">Visible Deal Room, versión del documento, alcance del tablero indicador. Se puede desglosar a nivel de campo de acuerdo con el "principio de necesidad de saber" (estrategia de PDF con marca de agua para comparar salas de datos de bancos de inversión).</Card>
+  <Card title="Comprometer" icon="door-open">Puede ofertar, comentar, reclamar tareas y unirse a la secuencia de la reunión. Por lo general, es necesario anteponer las declaraciones de conflicto.</Card>
+  <Card title="Derecho a operar (Ley)" icon="wrench">Acciones en cadena o a nivel de API: acuñar credenciales, activar asignaciones, invocar lotes de agentes. **A menudo se requiere una doble revisión** o un bloqueo de tiempo.</Card>
+  <Card title="Calificación de liquidación (liquidación)" icon="coins">Condiciones para ingresar a la ruta de atribución de valor y atribución de PoB: paquete de evidencia completo, firma del Revisor y sin tickets de disputa abierta. Si no se cumplen, **los permisos se pueden congelar** mientras la identidad aún exista.</Card>
+</CardGrid>
+
+<Callout type="info">**Seat** responde "¿Qué tipo de responsabilidad institucional representa usted?"; **Autorización** responde "¿A quién puedes mover en esta ronda?" Actualizar puestos no equivale automáticamente a una autorización de expansión: se requiere una revisión de cumplimiento y seguridad.</Callout>
+
+---
+
+## ¿Por qué el sistema depende de esta capa?
+
+Sin puestos ni autorización, el mapa de colaboración no se puede automatizar: los algoritmos de coincidencia, las reglas de control de riesgos y los registros de auditoría pierden sus sujetos. WCN se ha actualizado de "quién sabe quién" a "quién hizo qué, a qué objeto, en qué momento y con qué autorización", el mismo requisito de granularidad que los registros de órdenes de intercambio y las pistas de auditoría del usuario final.
+
+<Statement>La cadena asiento + autorización + evidencia es la estructura más pequeña que se puede escalar a nivel institucional; si falta alguno, se le devolverán los favores y las promesas verbales.</Statement>

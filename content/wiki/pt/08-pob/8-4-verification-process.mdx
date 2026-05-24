@@ -1,0 +1,56 @@
+---
+title: 8.4 Processo de verificação
+description: >-
+  Envio de incidente → pacote de evidências → fila de revisão → conclusão →
+  arquivamento e contabilização; Proof Desk, documentos complementares, disputas
+  e vestígios de auditoria.
+chapter: 8
+order: 4
+---
+
+<Hero badge="8.4 · Processo de verificação" lead="O que o consenso on-chain confirma é a sequência da transação e a transição de estado; o que o PoB confirma é “se isso aconteceu como afirmado no mundo dos negócios”. O processo de verificação comprime narrativas subjetivas em fluxos de trabalho auditáveis: integridade dos materiais, consistência temporal, autoconsistência de atribuição e comparação com regras de exclusão (8.3).">
+# Aconteceu ≠ Confirmado. Somente após a conclusão da cadeia de verificação o resultado entrará no livro-razão do PoB e se tornará uma entrada de valor de longo prazo.
+</Hero>
+
+<MetaGrid>
+  <Meta label="O que esta página faz" value="Funções de link de cinco etapas e prova de mesa" />
+  <Meta label="temas principais" value="Ônus da prova, revisão, conclusão, depósito de não repúdio" />
+  <Meta label="Lendo destaques" value="Suplemento/rejeição/disputa; analogia e diferença com o processo de produção de blocos PoW" />
+</MetaGrid>
+
+## Cinco etapas para verificação (visualização de fluxo de trabalho)
+
+<Steps>
+  <Step title="① Envio de evento">Gere um **número de evento exclusivo** para o estado final e vincule Negócio, Tarefa, nós relacionados e tipos de declaração (financiamento/serviço/crescimento, etc.). A submissão tem o **ônus da prova**: quaisquer lacunas nos materiais devem ser preenchidas pelo remetente dentro do prazo.</Step>
+  <Step title="② Carregar pacote de evidências">Envie contratos, referências on-chain, caminhos bancários/de garantia (dessensibilização de compliance), e-mails/atas, formulários de aceitação, etc. de acordo com o modelo. **Análogo ao GIPS**: Os dados devem ser suficientes para permitir que uma parte independente faça esforços razoáveis ​​para rever a conclusão, em vez de apenas "confiar no requerente".</Step>
+  <Step title="③ Fila de revisão">O auditor verifica: **Autenticidade** (se é consistente com terceiros ou na cadeia), **Integridade** (se o estado final é fechado), **Sequência de tempo** (se é retroativo), **Limite de atribuição** (se entra em conflito com 8.5), **Regras de exclusão** (se se enquadra em 8.3). Pode ser combinado com auditorias de múltiplas assinaturas, rotação ou amostragem.</Step>
+  <Step title="④ Geração de conclusão">**Aprovado** / **Suplemento** / **Rejeitado** / **Escalonamento de disputas**. Deveria haver uma frequência e um prazo para a apresentação de documentos suplementares, a fim de evitar atrasos intermináveis; registros de objeções devem ser mantidos para disputas, para evitar "passar pelo silêncio".</Step>
+  <Step title="⑤ Arquivamento em conta">Após a aprovação, o registro de eventos PoB (incluindo hash de conclusão, metadados principais e versão) é gravado. Este registo é semelhante a uma entrada de desempenho auditada: pode servir de âncora para posterior liquidação, reputação e revalidação.</Step>
+</Steps>
+
+<Callout type="info">
+Comparado com PoW: o que os mineiros provam é **poder computacional**; o que a auditoria do PoB prova é **a consistência dos materiais e dos fatos**. Comparação com PoA: PoA confia na **identidade do certificador**; O PoB ainda exige **pacote de evidências**, e a identidade do revisor não substitui o material.
+</Callout>
+
+---
+
+## Proof Desk: Centro de verificação, não disco de rede
+
+<CardGrid cols={2}>
+  <Card title="Colete evidências" icon="inbox">Campo estruturado + versão do anexo; evite perder arquivos na janela de bate-papo e torná-la inauditável.</Card>
+  <Card title="revisão gerencial" icon="scale">Prioridade de fila, SLA, revisão dupla ou regras de inspeção aleatória podem ser gerenciadas.</Card>
+  <Card title="Deixe espaço para disputa" icon="message-square">As razões para objeções e decisões são deixadas de lado para facilitar a revisão subsequente e a iteração das regras.</Card>
+  <Card title="Conclusão de saída" icon="flag">Esclareça o estado final: **Se deve entrar no PoB**; se falhar, não entrará na semântica de distribuição de valor de longo prazo.</Card>
+</CardGrid>
+
+---
+
+## O lugar onde o anti-trapaça está no nível do processo
+
+- **Verificação cruzada**: o tempo de permanência na rede, o nome de domínio de e-mail de terceiros e o número do contrato são consistentes com as divulgações públicas.
+- **Eventos mutuamente exclusivos**: Apenas uma cadeia dominante **Arquivada** é permitida para a mesma rodada de financiamento e a mesma meta de aceitação, a menos que seja dividida por decisão.
+- **Resfriamento e frequência**: frequência anormalmente alta, materiais padronizados acionam revisão manual ou assistida por algoritmo.
+
+<Callout type="tip">
+O processo de verificação empurrou a WCN de “quem tem a voz mais alta” para “quem tem os materiais mais resistentes”. Sem esta etapa, o PoB não é diferente do crédito de registro do Excel fora da rede e é mais suscetível a adulterações.
+</Callout>

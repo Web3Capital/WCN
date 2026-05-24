@@ -1,0 +1,59 @@
+---
+title: 7.2 Agententyp
+description: >-
+  Die fünf Arten von Agenten bilden unterschiedliche Tool-Berechtigungen,
+  Protokollgranularität und Abrechnungskaliber ab; Sie richten sich nach den
+  Rollen im Orchestrierungsrahmen, sind jedoch an die Governance gebunden.
+chapter: 7
+order: 2
+---
+
+<Hero badge="7.2 · Agententyp" lead="Multi-Agent-Frameworks wie CrewAI verwenden „Rollen“, um Eingabeaufforderungen und Tools zu organisieren; WCN aktualisiert Rollen auf Governance-Objekte: Jeder Agententyp entspricht einer anderen Datensichtbarkeit, ausführbaren Aktionen und PoB-Zuordnungsvorlagen. Ohne Klassifizierung werden Berechtigungen und Abrechnung verwechselt.">
+# Fünf Typen = fünf Missionsidentitäten, nicht fünf Chat-Skins.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Was diese Seite macht" value="Typdefinition × Erlaubnis × Protokoll × PoB-Kaliber" />
+  <Meta label="Kernthemen" value="Forschung / Deal / Wachstum / Ausführung / Liquidität" />
+  <Meta label="Lese-Highlights" value="Wer kann was sehen, welche Werkzeuge können angepasst werden, welche Spuren können hinterlassen werden" />
+</MetaGrid>
+
+## Fünf typische Agenten
+
+<CardGrid cols={2}>
+  <Card title="Forschungsagent" icon="search">Informationsabruf, Zusammenfassung aus mehreren Quellen, strukturierte Tabelle vergleichbarer Unternehmen/Tracks und Ausfüllen von Due-Diligence-Listen. **Tool-Beispiele**: Intranet-Dokument-RAG, zulässige Daten-API von Drittanbietern, die eine direkte Verbindung zum Crawlen von Webseiten verbietet (Anti-Injection). **LLM-Hinweis**: Faktenverweise müssen Quellanker haben; Werte sind standardmäßig als „zu überprüfen“ gekennzeichnet.</Card>
+  <Card title="Deal-Agent" icon="handshake">Passende Kandidaten für Kapitalprojekte, Pitch-Entwürfe auf Teaser-Ebene, Empfehlungen zum Status der Deal-Phase. **Verboten**: Ohne Genehmigung verbindliche Bedingungen oder exklusive Verpflichtungen im Namen von Knoten herausgeben. **Copilot-Vergleich**: Copilot optimiert Einzelmanuskripte; Die Deal-Agent-Ausgabe muss über eine Deal_ID und eine Zusammenfassung der Empfehlungslogik zur Überprüfung verfügen.</Card>
+  <Card title="Wachstumsmittel" icon="trending-up">Mehrversionskopie, Trichter-Aufzählungspunkte, Attributionszusammenfassung nach der Kampagne (verbunden mit der Wachstumsaufgabe). **Risiko**: Vor der Veröffentlichung nach außen muss das manuelle Release-Gate durchlaufen werden. Vermeiden Sie die Kombination mit Schlagworten wie „Gewinnverpflichtung“.</Card>
+  <Card title="Ausführungsagent" icon="settings">Besprechungsprotokolle, Aufgabenaufschlüsselung, Erinnerungsentwurf und Quittungsverfolgungsliste. **Benchmark**: Kommt der Unternehmensautomatisierung (Zapier/Make) + LLM am nächsten, aber jeder Vorschlag sollte mit Besprechungsnotizen und Zeitstempeln verknüpft sein.</Card>
+  <Card title="Liquiditätsagent" icon="droplet">Zusammenfassung der Liquiditäts- und Marktzustandsüberwachung, Checklistenstatus, Beschreibung des Alarms für abnormale Schwellenwerte. **TradFi Lenovo**: Ähnlich wie bei der „natürlichen Sprachschicht“ einer bestimmten Art von Risiko-Dashboard in Aladdin liegt die Entscheidungsbefugnis immer noch beim Trading Desk/Knoten.</Card>
+</CardGrid>
+
+## Warum können sie nicht zu einem „Superagenten“ gemischt werden?
+
+Allzweck-Agenten im LangChain-Stil nutzen oft das gleiche Toolset; In institutionellen Szenarien wird das **Prinzip der geringsten Privilegien** verletzt. Nach der Klassifizierung kann das System Folgendes tun:
+
+<CardGrid cols={2}>
+  <Card title="Wer kann was sehen" icon="eye">Die Forschung kann eine breite Palette von Materialien lesen; Liquidität kann nur Marktpreise und vereinbarte Verträge lesen; Deal liest standardmäßig keine sensiblen Felder der Gehaltsstufen in der gesamten Datenbank.</Card>
+  <Card title="Wer kann was tun?" icon="wrench">Die Ausführung kann Aufgaben und Kommentare schreiben; Wachstum kann nur Marketing-Entwurfsbereiche schreiben; Kein Agent kann standardmäßig Geld überweisen oder Verträge unterzeichnen.</Card>
+  <Card title="Wer sollte welches Protokoll führen?" icon="clipboard-list">Die Forschung zeichnet die Suchanfrage und die Fragment-ID auf; Deal zeichnet die empfohlenen Funktionen und Versionen auf; Die Liquidität zeichnet die Indikatordefinition und die Datenzeit auf.</Card>
+  <Card title="Wie und wer kommt zu PoB?" icon="circle-check">Attributionsvorlagen sind nach Typ unterteilt: „Angenommene Forschungsabsätze“ und „Angenommene Wachstumsmaterialien“ verfügen beispielsweise über unterschiedliche Beweisfelder, um Streitigkeiten bei der Einigung zu vermeiden.</Card>
+</CardGrid>
+
+## Mapping-Beziehung mit Multi-Agent-Orchestrierung
+
+Der *Agent/Knoten* in CrewAI/LangGraph kann mit den Typen von WCN verglichen werden, aber WCN behebt drei zusätzliche Dinge: **(1)** Die für jeden Typ zulässige Tool-Whitelist; **(2)** Die Zustandsmaschine mit dem Vorteil menschlicher Zustimmung; **(3)** Die Ausgabe ist an „task_id“, Knotenannahmeereignis, gebunden. Ohne (3) ist es, egal wie schön das Arrangement ist, nur ein internes Experiment.
+
+<Callout type="warning">
+Nicht klassifiziert → Berechtigungserweiterung → Protokolle können nicht verteidigt werden → PoB kann nicht bepreist werden. Typ ist eine Voraussetzung für Governance und Kommerzialisierung, keine Dekoration eines Dokuments.
+</Callout>
+
+## Kurzes Beispiel: gleiche Veranstaltung, mehrere Arten der Zusammenarbeit
+
+<Steps>
+  <Step title="Forschung">Rufen Sie Nachrichten zur öffentlichen Finanzierung und ein internes Memo ab, um eine „Konfliktpunkte- und Fragenliste“ zu erstellen.</Step>
+  <Step title="Handeln">Geben Sie einen Entwurf der „Nächsten Runde der Kommunikationspunkte“ basierend auf der Liste mit passenden Begründungen aus (kein automatischer E-Mail-Versand).</Step>
+  <Step title="Ausführung">Schreiben Sie den Besprechungsabschluss als Aktionspunkt mit Eigentümer/Fälligkeit und hängen Sie ihn an die Aufgabe an.</Step>
+  <Step title="Wachstum (optional)">Erstellen Sie eine externe neutrale Aktualisierungskopie aus den übernommenen Fakten und klicken Sie manuell, um sie zu veröffentlichen.</Step>
+</Steps>
+
+<Statement>Das Ziel von Typen besteht darin, auf Architekturebene zu antworten: Wenn etwas schief geht, liegt es an einem Problem mit dem Modell, den Tools, der Konfiguration oder der menschlichen Akzeptanz? Es kann zerlegt werden, bevor es verwaltet werden kann.</Statement>

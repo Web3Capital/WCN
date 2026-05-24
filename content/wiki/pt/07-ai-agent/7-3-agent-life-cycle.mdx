@@ -1,0 +1,68 @@
+---
+title: 7.3 Ciclo de vida do agente
+description: >-
+  Registrar, autorizar, executar, monitorar, atualizar, suspender, sair; alinhar
+  a lista de perguntas frequentes sobre governança de modelo, auditoria e due
+  diligence de terceiros.
+chapter: 7
+order: 3
+---
+
+<Hero badge="7.3 · Ciclo de vida" lead="Os agentes precisam de um ciclo de vida como contas de funcionários e versões de modelo: quem pode criá-los, quem pode autorizá-los, como monitorá-los durante a operação, como pausá-los quando ocorre um acidente e como processar os dados após serem eliminados. Sem uma máquina de estado, não existe uma camada de execução confiável e é impossível explicar ao auditor “o que estava em execução no sistema naquele momento”.">
+# Os agentes devem ser identificáveis, restringíveis, atualizáveis ​​e revogáveis.
+</Hero>
+
+<MetaGrid>
+  <Meta label="O que esta página faz" value="Máquina estatal + ação de governança + resposta de auditoria" />
+  <Meta label="temas principais" value="Link completo de registrado para aposentado" />
+  <Meta label="Lendo destaques" value="Limites de autorização, gatilhos de suspensão, controle de atualização" />
+</MetaGrid>
+
+## estado crítico
+
+<CardGrid cols={3}>
+  <Card title="Registrado" icon="file-text">Registrado no catálogo (nome, tipo, modelo padrão, nó proprietário, descrição de uso). Os dados comerciais ainda não foram recebidos, o que equivale a “a conta foi criada mas as permissões não foram ativadas”.</Card>
+  <Card title="Autorizado" icon="key">Conclua a revisão de permissões: domínio de dados, lista de permissões de ferramentas, limite diário de chamadas e se a gravação em sistemas externos é permitida. Corresponde à vinculação de função no IAM corporativo.</Card>
+  <Card title="Ativo" icon="play">Execute tarefas no escopo de autorização e grave logs estruturados **continuamente** (resumo de entrada, hash de saída, chamadas de ferramenta, resultados de aprovação).</Card>
+  <Card title="Pausado/Suspenso" icon="pause">Exemplos de condições de gatilho: tentativas anormais não autorizadas, falhas consecutivas na amostragem da qualidade da saída, incidentes de segurança e proibições de conformidade. A pausa deve interromper ferramentas e retornos de chamada externos com um clique.</Card>
+  <Card title="Atualizado" icon="arrow-up">Versão do modelo, prompt, ferramenta ou alterações de limite; o número do pedido de alteração, o aprovador, o tempo efetivo e o pacote de reversão devem ser registrados. Compare MLOps com gerenciamento de mudanças (como ITIL).</Card>
+  <Card title="Aposentado" icon="flag">Caso o negócio esteja offline ou não atenda aos padrões, será eliminado; o período de retenção de log somente leitura será mantido e os campos confidenciais usados ​​para treinamento serão excluídos ou anonimizados (de acordo com a política).</Card>
+</CardGrid>
+
+## caminho do ciclo de vida
+
+<Callout type="info">
+Registro → Avaliação e autorização de risco → On-line (Ativo) → Monitoramento contínuo e inspeção aleatória → Suspensão orientada por evento → Atualização de mudança (com aprovação) → Estratégia de retirada e retenção
+</Callout>
+
+<Steps>
+  <Step title="acesso">Esclarecer cenários de negócios, classificação de dados, se deve processar termos de PII/confidencialidade; proíbe "entrar primeiro e descobrir uma solução depois".</Step>
+  <Step title="Autorizar">Permissões mínimas: Divida o escopo da API por tipo de Agente; regra de duas pessoas para operações confidenciais ou Human in the Loop (HITL).</Step>
+  <Step title="correr">SLA: rótulos de reclamação do cliente para latência, taxa de erro e alucinações; indicadores semelhantes a ferramentas de observabilidade como LangSmith, mas os resultados devem ser inseridos no sistema de tarefas WCN.</Step>
+  <Step title="Análise">Verificações pontuais regulares: comparação de várias versões de modelos com a mesma entrada, amostras de prompt da equipe vermelha e se as chamadas de ferramenta estão fora dos limites.</Step>
+  <Step title="desistir">Agentes Aposentados não deverão mais constar na lista de despacho; a saída histórica ainda pode ser referenciada pelo Proof, mas marcada com a versão do modelo.</Step>
+</Steps>
+
+<Statement>Objetivo do design do ciclo de vida: **responder a qualquer momento** - qual Agente está em execução, qual modelo é usado, o que pode ser acessado e quem aprovou a última alteração.</Statement>
+
+## Estrutura de Governança e Gestão de Riscos (Condensada)
+
+| Dimensões | Pontos-chave |
+| --- | --- |
+| Propriedade | Cada Agente possui um nó proprietário ou responsável pela plataforma; se houver um incidente de funcionamento, entre em contato primeiro com o proprietário |
+| Alterar | As alterações de produção passam pela janela de alteração e reversão; a troca de modelos principais pode exigir escala de cinza paralela |
+| Dados | Formação/retenção de registos e transmissão transfronteiriça em conformidade com a localização e o contrato do nó |
+| Segurança | Garantia de chaves e credenciais de ferramentas; proíbe que agentes mantenham persistentemente senhas de usuário em texto simples |
+| Auditoria | Período de retenção de registros ≥ requisitos de rastreamento de disputas comerciais; apoiar exportação para due diligence de terceiros |
+
+<Callout type="warning">
+A falta de capacidade de suspender e retirar tacitamente permite que “agentes zumbis” mantenham permissões expiradas por um longo período – uma fonte comum de violações de dados e penalidades de conformidade.
+</Callout>
+
+## A diferença fundamental do "loop normalmente aberto" do estilo AutoGPT
+
+O padrão do loop autônomo é **no clear endpoint**; o ciclo de vida do WCN vincula cada execução ao **tempo de tarefa e autorização**. A tarefa termina ou a autorização expira → As chamadas do agente devem ser rejeitadas ou inseridas como somente leitura em vez de continuarem a "pensar" em segundo plano.
+
+<Callout type="tip">
+Uma frase ao explicar a um auditor ou LP: **Nossos agentes são como trabalhos em lote controlados, não como trabalhadores automatizados incansáveis. **
+</Callout>

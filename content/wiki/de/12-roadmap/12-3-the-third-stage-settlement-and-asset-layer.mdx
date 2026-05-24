@@ -1,0 +1,57 @@
+---
+title: '12.3 Die dritte Stufe: Abrechnungs- und Vermögensschicht'
+chapter: 12
+order: 3
+description: >-
+  Gebührenerfassung und State Root On-Chain im Reifestadium des
+  Benchmarking-Protokolls: Unter der Voraussetzung, dass PoB ein
+  vertrauenswürdiger Input ist, werden Abrechnung, Identitätsübertragung und
+  selektive On-Chain-Zertifizierung gefördert – nicht der Ausgangspunkt der
+  Erzählung, sondern die Geschäftsergebnisse.
+---
+
+<Hero badge="12.3 · Abrechnungs- und Vermögensschicht" lead="Nur wenn das Knotennetzwerk, die Deal-Dichte, der PoB und die Agent-Governance den Standards entsprechen, werden die Abwicklung und der Vermögenstransport systematisch gefördert; Der On-Chain-Teil sollte aus „notwendigen Zusammenfassungen und Beweisen“ und nicht aus einer vollständigen Zustandsreplikation bestehen.">
+# Die Abrechnungsschicht frisst die Eingabequalität von PoB; Wenn die Eingabe dünn ist, ist jede Kette nur eine teure Datenbank.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Kernziele" value="Abwicklungsmechanismus + digitales Tragen von Identität/Autorität + selektive On-Chain-Implementierung" />
+  <Meta label="Voraussetzungen" value="Das Schaltsignal 12.1/12.2 wurde kontinuierlich eingehalten (kein einziger Monatsimpuls)" />
+  <Meta label="grundsätzlich" value="Dinge, die außerhalb der Kette effizient gelöst werden können, sollten nicht in die Kette gelegt werden; Es muss einen eindeutigen Prüfer oder Kontrahenten in der Kette geben." />
+</MetaGrid>
+
+## Branchenreferenz
+
+- **Uniswap-Gebührenwechsel und Governance-Niederschlag**: Nachdem das Transaktionsvolumen und die Pool-Tiefe nachgewiesen sind, wird die Protokollschicht langfristige Gebühren und Parameter-Governance tragen; Die WCN-Abrechnungsregeln sollten gefestigt werden, nachdem der Cashflow und die PoB-Dichte nachgewiesen wurden.
+- **Ethereum-Status und Datenverfügbarkeitsschichtung**: Der vollständige Status muss nicht von jedem kopiert werden; WCN kann detaillierte Geschäftsdaten innerhalb der Compliance-Grenzen aufbewahren und nur die Verpflichtung, der Root-Hash oder der ZK-/Signaturnachweis verbleiben in der Kette (abhängig von Compliance und Technologieauswahl).
+- **RWA / Compliance Securities Token Path**: Vermögenswerte in der Kette sind im Allgemeinen durch juristische Personen und Offenlegung eingeschränkt; In der dritten Phase des WCN sollten die doppelten Bedingungen „Geschäft wurde durchgeführt + klarer rechtlicher Weg“ in Einklang gebracht werden, um eine umgekehrte Verpackung zu vermeiden.
+
+## konkrete Leistungen
+
+<CardGrid cols={2}>
+  <Card title="Formalisierung der Abrechnung" icon="coins">**Lieferung**: Buchhaltungsregeln und PoB-Trigger-Bedingungszuordnungstabelle, Streit- und Schlichtungsschnittstelle, Abstimmungs- und Prüfberichte. **Indikatoren**: Abwicklungszyklus, Streitquote, Forderungsausfall-/Rückzahlungsquote, Konsistenz der Abstimmung zwischen mehreren Unternehmen.</Card>
+  <Card title="Identität und Erlaubnis tragend" icon="id-card">**Bereitstellung**: Einheitliches Modell der Knotenidentität, Rolle, Reputation oder Absteckung (sofern übernommen) und Systemberechtigungen; Abmelde- und Vererbungsprozesse. **Indikatoren**: Rückverfolgbarkeitsrate von Berechtigungsänderungen, Anzahl der betrügerischen Nutzung und Vorfälle mit gemeinsamen Konten.</Card>
+  <Card title="langfristiges Wertbuch" icon="trending-up">**Lieferung**: Ansichten von Beiträgen und Ergebnissen, die vierteljährlich abgefragt werden können (wird für Anreize, Teilen oder Governance-Referenz verwendet, die konkrete Form wird von der Governance bestimmt). **Indikatoren**: Konsistenz der Neuberechnung des Geschäftsbuchs, Erfolgsquote bei externen Prüfungsstichproben.</Card>
+  <Card title="Selektive On-Chain" icon="link-2">**Lieferung**: On-Chain-Asset-Liste (was ist in der Kette, warum ist es in der Kette, wer überprüft), Überbrückungs- oder Verwahrungsannahmen, Upgrade- und Pausenschalter. **Indikatoren**: Unterschied zwischen On-Chain-Ereignissen und Off-Chain-PoB-Abgleich, Unfallwiederherstellungszeit.</Card>
+</CardGrid>
+
+## Erfolgskennzahlen (Beispiel)
+
+- Jede Abrechnung kann auf die vollständige Kette von **PoB-Datensatz → Regelversion → Teilnehmeridentität** zurückgeführt werden.
+– Es gibt einen dokumentierten Downgrade-Pfad, wenn On-Chain-Komponenten ausfallen (Pause Minting, Rollback zur Off-Chain-Abwicklung usw.).
+- Bei Stichprobenprüfungen, die von Aufsichtsbehörden oder wichtigen Partnern vorgeschlagen werden, kann der Materialexport innerhalb der vereinbarten Zeit abgeschlossen werden.
+
+## Hauptrisiken in dieser Phase
+
+<CardGrid cols={2}>
+  <Card title="Compliance und Gerichtsstand" icon="scale">Fehleinschätzung des Tokens/Sicherheitsattributs. **Verschiedenes**: Rechtsmeinungen bestimmen Produktgrenzen, nicht umgekehrt.</Card>
+  <Card title="Intelligente Verträge und Sicherheit" icon="lock-open">Die Asset-Schicht lockt Angriffsflächen an. **Abhilfe**: Auditing, Bug Bounties, Limits und Mehrfachsignaturen; Es werden keine Benutzerschlüssel hinterlegt, es sei denn, dies ist erforderlich.</Card>
+  <Card title="Orakel und Off-Chain-Abhängigkeiten" icon="link">Der On-Chain-Status stimmt nicht mit PoB überein. **Langsame Veröffentlichung**: Überprüfung aus mehreren Quellen, verzögerte Abwicklung, Herausforderungszeitraum.</Card>
+  <Card title="narrative Gegenreaktion" icon="megaphone">Der Markt redet nur über Ketten und nicht über Geschäfte. **Veröffentlichung**: Externe KPIs priorisieren weiterhin die Netzwerkleistung und die Abwicklungsqualität.</Card>
+</CardGrid>
+
+## Warum muss es danach platziert werden?
+
+<Callout type="warning">Wenn Phase 1–2 übersprungen wird, gibt es keinen stabilen Input für die Abwicklungsschicht und die Vermögenswertschicht wird leicht zu einem „Shell-Zertifikat“. Dies steht im Gegensatz zum nicht nachhaltigen Weg einer großen Anzahl von Cashflow-freien Projekten in den Jahren 2017–2018 nach der Ausgabe von Token; es steht auch im Einklang mit dem Weg der heute führenden Protokolle, „zuerst Volumen- und Governance-Praktiken zu etablieren und dann den Nutzen von Token zu erweitern“.</Callout>
+
+<Statement>Die dritte Phase markiert die Entwicklung von WCN von einem „High-Trust-Business-Netzwerk“ zu einem „überprüfbaren, verteilbaren, optional verankerten On-Chain-Langzeitsystem“ – vorausgesetzt, dass die Zahlen in den ersten beiden Phasen stichprobenartigen Überprüfungen standhalten.</Statement>

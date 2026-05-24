@@ -1,0 +1,53 @@
+---
+title: 8.4 Processus de vérification
+description: "Soumission d'un incident → ensemble de preuves → file d'attente d'examen → conclusion → classement et comptabilité\_; Bureau des preuves, documents complémentaires, litiges et traces d'audit."
+chapter: 8
+order: 4
+---
+
+<Hero badge="8.4 · Processus de vérification" lead="Ce que le consensus en chaîne confirme, c'est la séquence de transactions et la transition d'état ; ce que PoB confirme, c’est « si cette chose s’est produite comme le prétend le monde des affaires ». Le processus de vérification compresse les récits subjectifs en flux de travail vérifiables : exhaustivité des documents, cohérence temporelle, auto-cohérence de l'attribution et comparaison avec les règles d'exclusion (8.3).">
+# Arrivé ≠ Confirmé. Ce n’est qu’après avoir terminé la chaîne de vérification que le résultat entrera dans le grand livre PoB et deviendra une entrée de valeur à long terme.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Ce que fait cette page" value="Fonctions de liaison et de bureau d'épreuves en cinq étapes" />
+  <Meta label="thèmes centraux" value="Charge de la preuve, examen, conclusion, dépôt de non-répudiation" />
+  <Meta label="Points forts de la lecture" value="Supplément/rejet/litige ; analogie et différence avec le processus de production de blocs PoW" />
+</MetaGrid>
+
+## Cinq étapes de vérification (vue Workflow)
+
+<Steps>
+  <Step title="① Soumission d'un événement">Générez un **numéro d'événement unique** pour l'état final et liez l'accord, la tâche, les nœuds associés et les types d'instructions (financement/service/croissance, etc.). La soumission porte la **charge de la preuve** : toute lacune dans les documents doit être comblée par la partie qui la soumet dans le délai imparti.</Step>
+  <Step title="② Télécharger le dossier de preuves">Soumettez les contrats, les références en chaîne, les chemins bancaires/entiercement (désensibilisation à la conformité), les e-mails/minutes, les formulaires d'acceptation, etc. selon le modèle. **Analogique à GIPS** : les données doivent être suffisantes pour permettre à une partie indépendante de déployer des efforts raisonnables pour réviser la conclusion, plutôt que de simplement « faire confiance au demandeur ».</Step>
+  <Step title="③ File d'attente de révision">L'auditeur vérifie : **Authenticité** (si elle est cohérente avec un tiers ou sur la chaîne), **Intégrité** (si l'état final est fermé), **Séquence temporelle** (si elle est antidatée), **Limite d'attribution** (si elle est en conflit avec 8.5), **Règles d'exclusion** (si elle tombe dans 8.3). Peut être combiné avec des audits multi-signatures, par rotation ou par échantillonnage.</Step>
+  <Step title="④ Génération de conclusions">**Réussi** / **Supplément** / **Rejeté** / **Escalade des litiges**. Il devrait y avoir une fréquence et une limite de temps pour les documents supplémentaires afin d'éviter des retards interminables ; Des registres d'objection doivent être conservés pour les litiges afin d'éviter de « passer sous silence ».</Step>
+  <Step title="⑤ Dépôt de compte">Après le passage, le grand livre des événements PoB (y compris le hachage de conclusion, les métadonnées clés et la version) est écrit. Cet enregistrement est similaire à une entrée de performance auditée : il peut servir de point d'ancrage pour un règlement, une réputation et une revalidation ultérieurs.</Step>
+</Steps>
+
+<Callout type="info">
+Par rapport à PoW : ce que les mineurs prouvent, c'est la **puissance de calcul** ; ce que l'audit PoB prouve, c'est **la cohérence des matériaux et des faits**. Comparaison avec PoA : PoA fait confiance à l'**identité du certificateur** ; PoB nécessite toujours un **ensemble de preuves** et l'identité de l'examinateur ne remplace pas le matériel.
+</Callout>
+
+---
+
+## Proof Desk : centre de vérification, pas disque réseau
+
+<CardGrid cols={2}>
+  <Card title="Recueillir des preuves" icon="inbox">Champ structuré + version pièce jointe ; évitez de perdre des fichiers dans la fenêtre de discussion et de la rendre non auditable.</Card>
+  <Card title="revue de direction" icon="scale">Les règles de priorité de file d'attente, de SLA, de double révision ou d'inspection aléatoire peuvent être gérées.</Card>
+  <Card title="Laisser place à la contestation" icon="message-square">Les motifs des objections et des décisions sont laissés de côté pour faciliter l’examen ultérieur et l’itération des règles.</Card>
+  <Card title="Conclusion de sortie" icon="flag">Clarifier l'état final : **S'il faut entrer dans le PoB** ; s'il échoue, il ne doit pas entrer dans la sémantique de distribution de valeur à long terme.</Card>
+</CardGrid>
+
+---
+
+## L'endroit où se situe l'anti-triche au niveau du processus
+
+- **Vérification croisée** : le temps passé en chaîne, le nom de domaine de messagerie tiers et le numéro de contrat sont-ils conformes aux divulgations publiques.
+- **Événements mutuellement exclusifs** : une seule chaîne dominante **Archivée** est autorisée pour le même cycle de financement et le même objectif d'acceptation, à moins qu'elle ne soit divisée par décision.
+- **Refroidissement et fréquence** : des documents modélisés à une fréquence anormalement élevée déclenchent une révision manuelle ou assistée par un algorithme.
+
+<Callout type="tip">
+Le processus de vérification a fait passer WCN de « qui a la voix la plus forte » à « qui a les matériaux les plus résistants ». Sans cette étape, le PoB n’est pas différent du crédit d’enregistrement Excel hors chaîne et est plus susceptible d’être falsifié.
+</Callout>

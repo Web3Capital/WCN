@@ -1,0 +1,68 @@
+---
+title: 7.3 Lebenszyklus des Agenten
+description: >-
+  Registrieren, autorisieren, ausführen, überwachen, aktualisieren, anhalten,
+  beenden; Angleichen der FAQ-Liste zu Modell-Governance, Prüfung und
+  Due-Diligence von Drittanbietern.
+chapter: 7
+order: 3
+---
+
+<Hero badge="7.3 · Lebenszyklus" lead="Agenten benötigen einen Lebenszyklus wie Mitarbeiterkonten und Modellversionen: Wer kann ihn erstellen, wer kann ihn autorisieren, wie kann er während des Betriebs überwacht werden, wie kann er pausiert werden, wenn ein Unfall auftritt, und wie werden die Daten nach der Beseitigung verarbeitet? Ohne eine Zustandsmaschine gibt es keine vertrauenswürdige Ausführungsschicht und es ist unmöglich, dem Prüfer zu erklären, „was zu diesem Zeitpunkt im System lief“.">
+# Agenten müssen identifizierbar, einschränkbar, aktualisierbar und widerrufbar sein.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Was diese Seite macht" value="Zustandsmaschine + Governance-Aktion + Audit-Reaktion" />
+  <Meta label="Kernthemen" value="Vollständiger Link von „Registriert“ zu „Ruhestand“." />
+  <Meta label="Lese-Highlights" value="Autorisierungsgrenzen, Auslöser für Aussetzungen, Upgrade-Kontrolle" />
+</MetaGrid>
+
+## kritischer Zustand
+
+<CardGrid cols={3}>
+  <Card title="Eingetragen" icon="file-text">Im Katalog registriert (Name, Typ, Standardmodell, Besitzerknoten, Nutzungsbeschreibung). Die Geschäftsdaten wurden noch nicht empfangen, was gleichbedeutend ist mit „Das Konto wurde erstellt, aber die Berechtigungen wurden nicht aktiviert“.</Card>
+  <Card title="Autorisiert" icon="key">Führen Sie die Berechtigungsüberprüfung durch: Datendomäne, Tool-Whitelist, tägliches Anruflimit und ob das Schreiben in externe Systeme erlaubt ist. Entspricht der Rollenbindung im Unternehmens-IAM.</Card>
+  <Card title="Aktiv" icon="play">Führen Sie Aufgaben im Rahmen der Autorisierung aus und schreiben Sie strukturierte Protokolle **kontinuierlich** (Eingabezusammenfassung, Ausgabe-Hash, Tool-Aufrufe, Genehmigungsergebnisse).</Card>
+  <Card title="Pausiert / Suspendiert" icon="pause">Beispiele für Auslöserbedingungen: ungewöhnliche unbefugte Versuche, aufeinanderfolgende Fehler bei der Ausgabequalitätsprüfung, Sicherheitsvorfälle und Compliance-Verbote. Durch das Pausieren sollten Tools und externe Rückrufe mit einem Klick unterbrochen werden.</Card>
+  <Card title="Aktualisiert" icon="arrow-up">Modellversion, Eingabeaufforderung, Werkzeug- oder Grenzänderungen; Änderungsauftragsnummer, Genehmiger, effektive Zeit und Rollback-Paket müssen erfasst werden. Vergleichen Sie MLOps mit Change Management (z. B. ITIL).</Card>
+  <Card title="Im Ruhestand" icon="flag">Wenn das Unternehmen offline ist oder die Standards nicht erfüllt, wird es liquidiert; Der Aufbewahrungszeitraum für schreibgeschützte Protokolle wird beibehalten und vertrauliche Felder, die für Schulungen verwendet werden, werden gelöscht oder anonymisiert (gemäß den Richtlinien).</Card>
+</CardGrid>
+
+## Lebenszykluspfad
+
+<Callout type="info">
+Registrierung → Risikobewertung und Autorisierung → Online (Aktiv) → Kontinuierliche Überwachung und Stichprobenkontrolle → Ereignisgesteuerte Aussetzung → Änderungsupgrade (mit Genehmigung) → Ruhestands- und Aufbewahrungsstrategie
+</Callout>
+
+<Steps>
+  <Step title="Zugang">Klären Sie Geschäftsszenarien, Datenklassifizierung und die Verarbeitung personenbezogener Daten/Vertraulichkeitsbestimmungen. verbieten Sie „erst einsteigen und später eine Lösung finden“.</Step>
+  <Step title="Autorisieren">Mindestberechtigungen: API-Bereich nach Agent-Typ aufteilen; Zwei-Personen-Regel für sensible Operationen oder Human in the Loop (HITL).</Step>
+  <Step title="laufen">SLA: Etiketten für Kundenbeschwerden für Latenz, Fehlerrate und Halluzinationen; ähnliche Indikatoren wie Observability-Tools wie LangSmith, die Ergebnisse müssen jedoch in das WCN-Aufgabensystem eingegeben werden.</Step>
+  <Step title="Rezension">Regelmäßige Stichproben: Vergleich mehrerer Modellversionen mit der gleichen Eingabe, Red-Team-Prompt-Proben und ob Tool-Aufrufe außerhalb der Grenzen liegen.</Step>
+  <Step title="aufhören">Ausgeschiedene Agenten dürfen nicht mehr in der Einsatzliste erscheinen; Die historische Ausgabe kann weiterhin von Proof referenziert werden, ist jedoch mit der Modellversion gekennzeichnet.</Step>
+</Steps>
+
+<Statement>Lebenszyklus-Designziel: **Jederzeit antworten** – welcher Agent ausgeführt wird, welches Modell verwendet wird, worauf zugegriffen werden kann und wer die letzte Änderung genehmigt hat.</Statement>
+
+## Rahmenwerk für Governance und Risikomanagement (gekürzt)
+
+| Abmessungen | Wichtige Punkte |
+| --- | --- |
+| Eigentum | Jeder Agent hat eine verantwortliche Person für den Eigentümerknoten oder die Plattform; Sollte es zu einem Zwischenfall kommen, wenden Sie sich bitte zuerst an den Eigentümer |
+| Ändern | Produktionsänderungen durchlaufen das Änderungsfenster und führen ein Rollback durch. Bei größeren Modellwechseln können parallele Graustufen erforderlich sein |
+| Daten | Schulung/Protokollaufbewahrung und grenzüberschreitende Übertragung richten sich nach Knotenstandort und Vertrag |
+| Sicherheit | Hinterlegung von Schlüsseln und Werkzeugzugangsdaten; Agenten verbieten, Benutzer-Klartext-Passwörter dauerhaft aufzubewahren |
+| Prüfung | Protokollaufbewahrungsfrist ≥ Anforderungen an die Nachverfolgung von Geschäftsstreitigkeiten; Unterstützung beim Export an Dritte, Due Diligence |
+
+<Callout type="warning">
+Das Fehlen der Möglichkeit, stillschweigend zu suspendieren und in den Ruhestand zu gehen, ermöglicht es „Zombie-Agenten“, abgelaufene Berechtigungen für lange Zeit zu behalten – eine häufige Ursache für Datenschutzverletzungen und Compliance-Strafen.
+</Callout>
+
+## Der grundlegende Unterschied zum „normalerweise offenen Regelkreis“ im AutoGPT-Stil
+
+Die autonome Schleife ist standardmäßig auf **kein klarer Endpunkt** eingestellt; Der WCN-Lebenszyklus verknüpft jeden Lauf mit der **Aufgaben- und Autorisierungsalterung**. Der Auftrag endet oder die Berechtigung erlischt → Agentenanrufe sollten abgewiesen oder schreibgeschützt eingegeben werden, anstatt im Hintergrund weiter zu „denken“.
+
+<Callout type="tip">
+Ein Satz, wenn man es einem Auditor oder LP erklärt: **Unsere Agenten sind wie kontrollierte Batch-Jobs, nicht wie unermüdliche automatisierte Arbeiter. **
+</Callout>

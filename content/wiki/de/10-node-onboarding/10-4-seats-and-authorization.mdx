@@ -1,0 +1,49 @@
+---
+title: 10.4 Sitzplätze und Autorisierung
+chapter: 10
+order: 4
+description: >-
+  Der Sitz definiert „wer Sie sind“; Die Autorisierung definiert „was Sie
+  erreichen können“ – die beiden werden nacheinander KPIs und Nachweispflichten
+  zugeordnet, ähnlich der RBAC + Exchange-Produktautoritätsmatrix.
+---
+
+<Hero badge="10.4 · Sitzplätze und Autorisierung" lead="Ohne klare ACLs werden behördenübergreifende Netzwerke zu WeChat-Gruppen verkommen. WCN teilt Sitz und Berechtigung auf: Ersteres ist die Berufsbezeichnung und der Verantwortungsbereich der Organisation im Netzwerk, und letzteres ist eine spezifische boolesche Kombination, die im System lesbar, beschreibbar und abrechenbar ist – die Logik ähnelt der Tabelle der Unternehmens-SSO-Rolle + Exchange-Unterkontoberechtigungen.">
+# Der Sitz ist die Position und die Autorisierung ist die Grenze; Je näher der Vergleich, desto enger die Ermächtigung und desto strenger die Prüfung.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Kernthemen" value="Wie formalisiert man die Position von Knoten im Netzwerk?" />
+  <Meta label="Sitzachse" value="Funktion/Region/Track/Aufgabe" />
+  <Meta label="Berechtigungsachse" value="Zugang / Teilnahme / Betrieb / Abrechnungsberechtigung" />
+</MetaGrid>
+
+## Vier Sitzarten (stapelbar)
+
+<CardGrid cols={2}>
+  <Card title="Funktionssitze" icon="settings">Hauptverantwortungsidentitäten wie Kapital, Projekt, Service, Vertrieb, Region und Agent. Bestimmen Sie die Standard-Workflow-Vorlage und die KPI-Kategorie (z. B. ist die Kapitalseite Reaktionszeit + Investitionsumwandlungsrate, die Serviceseite ist die Lieferpünktlichkeitsrate + Wiederholungsprüfungserfolgsrate).</Card>
+  <Card title="regionale Sitze" icon="globe">Abdeckung von Land/Stadt/Zeitzone; oft begleitet von **Exklusivität oder Quote** (z. B. nur N Master-Knoten in derselben Jurisdiktion), um internes Order-Grabbering und Reputationsverwässerung zu vermeiden.</Card>
+  <Card title="Branchensitze" icon="tag">Tags wie KI, RWA, Zahlungen, Infrastruktur; Fördern Sie die L1–L2-Match-Gewichtung und die Eignung für Co-Branding-Kampagnen.</Card>
+  <Card title="Aufgabensitz" icon="target">Binden Sie eine bestimmte Deal-ID, Aufgaben-ID oder einen Aktivitätscode. Berechtigungen werden zeitlich begrenzt und nach Abschluss der Aufgabe wiederverwendet oder herabgestuft – ähnlich wie bei der projektbasierten Zugriffskontrolle für Berater.</Card>
+</CardGrid>
+
+---
+
+## Vier Arten von Berechtigungen (symmetrisch zu den Verantwortlichkeiten)
+
+<CardGrid cols={2}>
+  <Card title="Zugriff (Lesen)" icon="eye">Sichtbarer Deal Room, Dokumentversion, Umfang der Anzeigetafel. Es kann nach dem „Need-to-know-Prinzip“ (mit Wasserzeichen versehene PDF-Strategie zum Benchmarking von Investmentbank-Datenräumen) auf Feldebene heruntergebrochen werden.</Card>
+  <Card title="Engagieren" icon="door-open">Sie können bieten, kommentieren, Aufgaben beanspruchen und an der Besprechungssequenz teilnehmen. Konflikterklärungen müssen in der Regel vorangestellt werden.</Card>
+  <Card title="Betriebsrecht (Gesetz)" icon="wrench">Aktionen auf Ketten- oder API-Ebene: Anmeldeinformationen prägen, Zuweisungen auslösen, Agent-Batches aufrufen. Oft ist eine **doppelte Überprüfung** oder eine Zeitsperre erforderlich.</Card>
+  <Card title="Abrechnungsqualifikation (Abrechnung)" icon="coins">Bedingungen für den Eintritt in den PoB-Zuordnungs- und Wertzuordnungspfad: vollständiges Beweispaket, Unterschrift des Prüfers und keine offenen Streitigkeiten. Wenn dies nicht der Fall ist, können **Berechtigungen eingefroren werden**, solange die Identität noch existiert.</Card>
+</CardGrid>
+
+<Callout type="info">**Sitz** antwortet: „Welche institutionelle Verantwortung vertreten Sie?“; **Autorisierung** antwortet „Wen dürfen Sie in dieser Runde bewegen?“ Das Upgraden von Sitzplätzen ist nicht automatisch gleichbedeutend mit einer Erweiterungsberechtigung – eine Compliance- und Sicherheitsprüfung ist erforderlich.</Callout>
+
+---
+
+## Warum ist das System auf diese Schicht angewiesen?
+
+Ohne Sitzplätze und Autorisierung kann die Zusammenarbeitskarte nicht automatisiert werden – Matching-Algorithmen, Risikokontrollregeln und Prüfprotokolle verlieren alle ihre Themen. WCN wurde von „Wer weiß wen“ auf „Wer hat was mit welchem ​​Objekt zu welcher Zeit und mit welcher Autorisierung getan“ aktualisiert – dieselben Granularitätsanforderungen wie Börsenauftragsprotokolle und Endbenutzer-Prüfprotokolle.
+
+<Statement>Sitz + Autorisierung + Beweiskette ist die kleinste Struktur, die auf institutioneller Ebene skaliert werden kann; Fehlt einer, werden Gefälligkeiten und mündliche Zusagen erwidert.</Statement>

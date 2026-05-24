@@ -1,0 +1,77 @@
+---
+title: 7.1 Warum Agent wichtig ist
+description: >-
+  Die Unterschiede zwischen dem relativ verbreiteten Agent-Stack und Copilot;
+  LLM-Fähigkeiten und Geschäftsbeschränkungen; TradFi-Präzedenzfall und WCNs
+  kontrollierte Ausführungsebene.
+chapter: 7
+order: 1
+---
+
+<Hero badge="7.1 · Die Bedeutung von Agent" lead="Wenn die wertvolle Zeit des Knotens durch wiederholte Recherche, Protokolle, Nachverfolgung und vorläufige Überprüfung belegt ist, erreicht die Netzwerkkapazität ihren Höhepunkt. Der Agent sollte diese Aktionen aus persönlicher Erfahrung in überprüfbare und wiederverwendbare Systemfunktionen extrahieren – und gleichzeitig klarstellen: Es handelt sich nicht um ein unbeaufsichtigtes AutoGPT, sondern um einen Ausführungsassistenten, bei dem „Menschen Ziele und rote Linien festlegen und das System den Prozess und die Ergebnisse aufzeichnet.“">
+# Der Agent verstärkt die Ausführung und Standardisierung, ohne die letztendliche Verantwortung zu übertragen.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Was diese Seite macht" value="Branchenkoordinaten + LLM-Realität + WCN-Designentscheidungen" />
+  <Meta label="Kernthemen" value="Kontrollierte Automatisierung vs. autonome Agenten" />
+  <Meta label="Lese-Highlights" value="Framework-Vergleich, Modellgrenzen, TradFi-Benchmarking, Closed-Loop-Wert" />
+</MetaGrid>
+
+## Was sind die Unterschiede zu gängigen AI Agent-Frameworks?
+
+| Formular | Typischer Vertreter | Stärken | Unterschied zu WCN |
+| --- | --- | --- | --- |
+| Orchestrierung mehrerer Rollen | CrewAI, Teil des LangGraph-Workflows | Rollenaufteilung, lesbare Aufgabenkette | Selten einheitliche Proof-/PoB-/Knotenübergreifende Abwicklung; WCN erfordert die Ausgabe der gebundenen Aufgaben-ID und der Adoptionskette |
+| Toolchain-Agent | LangChain-Agenten, LlamaIndex-Agent | Flexibler Zugriff auf API, RAG und Funktionsaufrufe | Standard: „Anpassen, wenn möglich“; WCN erfordert Whitelist-Tools, Berechtigungsdomänen, obligatorische Protokolle und manuelle Gates |
+| Büro-Copilot | Microsoft Copilot, Notion AI | Dokumentinternes Entwerfen, Zusammenfassen, Umschreiben | Einzelmandanten-Zusammenarbeitskontext; schwierig zu realisierende Multi-Party-Deal-Attribution und konsistente On-Chain-/Off-Chain-Prüfung |
+| Zielgesteuerter autonomer Agent | Experimente vom Typ AutoGPT, BabyAGI | Selbstzerlegung von Unterzielen, zyklische Ausführung | Hohe unvorhersehbare Kosten, hohes Risiko von Autoritätsüberschreitungen und Halluzinationen; grundsätzlicher Konflikt mit institutioneller Compliance |
+
+<Statement>Der Agent von WCN ähnelt eher einem „Ausführungsdienst mit SLA“: Eingabebereiche, Toolsets, Modellversionen und Genehmigungspunkte können alle konfiguriert und widerrufen werden, statt einer Schleife mit offenem Ende „bis das Ziel erreicht ist“.</Statement>
+
+## Aktuelle Möglichkeiten und harte Einschränkungen von LLM für Geschäftsaufgaben
+
+**GPT-4-Serie (einschließlich Argumentationsmodelle der O-Serie)**: Starke Langkontext- und Befehlskonformität, geeignet für strukturierte Extraktion, Vergleich mehrerer Dokumente und Entwurfserstellung; Es ist immer noch möglich, Referenzen zu fabrizieren und ähnliche Entitäten zu verwechseln, und ist ohne RAG nicht für private Echtzeitdaten verfügbar. **Claude**: Das Lesen langer Texte und die sorgfältige Verweigerung von Antworten tragen zur Konformitätstendenz des ersten Entwurfs bei, für numerische Werte und Querverweise von Begriffen ist jedoch weiterhin eine menschliche Überprüfung erforderlich. **Gemini**: Die multimodale Integration mit dem Google-Ökosystem ist vorteilhaft für die E-Mail-/Kalenderunterstützung; Die Konsistenz der Terminologie über Sprachen und Fachgebiete hinweg muss durch Glossare und Vorlagen eingeschränkt werden.
+
+Zu den üblichen Einschränkungen für institutionelle Unternehmen gehören: **Schulungsfristen und Wissensdrift** (Daten nach der Investition und regulatorische Aktualisierungen erfordern externe, verlässliche Quellen); **probabilistische Ausgabe** (zwei Schlussfolgerungen aus derselben Eingabeaufforderung können geringfügig unterschiedlich sein und Schlüsseltabellen erfordern deterministische Regeln oder eine manuelle Freigabe); **sofortige Einschleusung und Datenverlust** (das Risiko steigt, wenn der Agent externe Webseiten liest oder Benutzer Inhalte einfügen); **Kosten und Verzögerung** (Der vollständige Deal-Flow mit dem größten Modell ist nicht nachhaltig und muss auf kleine Modelle + stichprobenartige Inspektionen umgeleitet werden).
+
+<Callout type="warning">
+Die reibungslose Präsentation von LLM mit „verifizierten Fakten“ zu verwechseln, ist der häufigste Grund für das Scheitern von Bereitstellungen. Die WCN-Seite sollte standardmäßig Folgendes vorgeben: Agentenausgabe = zu überprüfendes Material, es sei denn, es wird in die Adoptionskette und den Nachweis aufgenommen.
+</Callout>
+
+## „Kontrollierte Automatisierung“ gibt es bereits in TradFi
+
+Bei diesen Systemen handelt es sich nicht um autonome Arbeiter in der Science-Fiction, sondern um eine Mischung aus Regeln + Modellen + manueller Überprüfung, im Einklang mit der WCN-Philosophie:
+
+- **JPMorgan COIN (Contract Intelligence)**: Nutzen Sie maschinelles Lernen, um rechtliche Bedingungen und kommerzielle Kreditdokumente zu analysieren und Tausende von juristischen Stunden in messbare Prozesse zu komprimieren; Der Schwerpunkt liegt auf Audit-Trails und der manuellen Ausnahmeverarbeitung und nicht darauf, dass Maschinen allein Kreditentscheidungen treffen.
+- **Goldman Sachs**: Kontinuierliche Investitionen in die Verarbeitung natürlicher Sprache und interne Hilfstools in öffentlichen Materialien für Forschungszusammenfassungen, Compliance-Abruf und Entwicklereffizienz; Die Gemeinsamkeit besteht in den Intranet-Datengrenzen und der Berechtigungsschichtung.
+- **BlackRock Aladdin**: Der Kern der Risiko- und Analyseplattform sind Datenverträge, konsistente Indikatoren und Governance auf institutioneller Ebene; Wenn AI verbunden ist, muss es den gleichen Satz an Berechtigungen und der gleichen Versionsverwaltung befolgen – entsprechend den vom Agenten typisierten Berechtigungen und Lebenszyklus in WCN.
+
+<Callout type="tip">
+Die Lehre aus TradFi lautet: **Automatisierungsvorteile entstehen durch Prozessstandardisierung, nicht durch Modellbrillanz. ** WCN schreibt zunächst die Aufgaben, Beweise und Umsetzung klar auf, damit der Agent einen stabilen ROI erzielen kann.
+</Callout>
+
+## Was genau löst Agent in WCN?
+
+<CardGrid cols={2}>
+  <Card title="Verbessern Sie die Effizienz" icon="zap">Erster Entwurf des Forschungspakets, Sitzungsprotokolle und Aufgabenaufteilung, Folgeerinnerungen, passende Kandidatensortierung – verkürzen Sie die Zeitspanne für Knoten von „wissen“ auf „vorangehen“.</Card>
+  <Card title="Standardisierung" icon="ruler">Die Ausgabevorlage ist an den Feldern in Proof Desk ausgerichtet, wodurch die Nacharbeit bei der Überprüfung durch „Jeder schreibt auf eine Weise“ reduziert wird.</Card>
+  <Card title="überprüfbar" icon="file-text">Modellversion, Eingabeaufforderungs-Hash, Abruffragment-ID und Tool-Aufrufdatensätze bilden eine Verteidigungskette, um die interne Überprüfung und externe Erklärung zu erleichtern.</Card>
+  <Card title="Erweiterbar" icon="globe">Derselbe Satz kontrollierter Agent-Konfigurationen kann in mehreren Regionen und mehreren Knoten wiederverwendet werden. Der Unterschied liegt eher in den Berechtigungen und Datendomänen als in der Mundpropaganda.</Card>
+</CardGrid>
+
+## Konkretes Workflow-Beispiel (vereinfachte Version)
+
+<Steps>
+  <Step title="Erstes Screening auf der Fundraising-Seite">Der Research Agent generiert eine Tabelle „Rote Linie/Gelbe Linie/zu überprüfen“, indem er Materialien von öffentlichen Informationen + Knoten gemäß der Checkliste hochlädt; Der Deal Agent kontaktiert die Projektpartei nicht automatisch, sondern gibt sie nur zur Überprüfung an den designierten Node-Eigentümer aus und erstellt dann mit einem Klick eine Aufgabe.</Step>
+  <Step title="Regelmäßige Post-Investment-Besprechung">Der Ausführungsagent generiert Aktionselemente und Eigentümer basierend auf der Aufzeichnungs-/Protokollvorlage. die Knoten werden geändert und in das Tasksystem geschrieben; Nicht angenommene Absätze werden nicht als PoB-Kandidaten gezählt.</Step>
+  <Step title="Liquiditätsereignis">Der Liquiditätsagent überwacht die vereinbarten Indikatorschwellenwerte und erstellt einen „Abrechnungsentwurf“; ob externe Kommunikation noch manuell vom Knoten gesendet wird.</Step>
+</Steps>
+
+## Warum der Agent „jetzt“ in die Netzwerkschicht eingefügt werden muss
+
+Die Modellfähigkeiten haben eine große Anzahl von Prozesshandlungen im Wirtschaftsbereich abgedeckt, aber was der Branche fehlt, ist eine Trägerschicht, die überprüfbar, zuordenbar und abrechnungsfähig ist. Wenn WCN nur eine Chat-Shell erstellt, überschneidet sich ihr Wert mit jedem SaaS-Assistenten; Wenn der Agent mit Aufgaben, Protokollen, Proof und PoB verbunden ist, wird eine Differenzierung gebildet: **Das System kann unterscheiden, ob die gleiche Ausgabe übernommen wird und ob sie eine geschlossene Schleife fördert. **
+
+<Callout type="info">
+Zusammenfassung: Der wichtige Grund für Agent besteht nicht darin, KI-Hotspots zu jagen, sondern **die Ausführung innerhalb der Compliance-Grenzen zu skalieren** und die Ausführung von unsichtbaren persönlichen Gewohnheiten in netzwerksteuerbare und messbare Vermögenswerte umzuwandeln.
+</Callout>

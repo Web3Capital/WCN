@@ -1,0 +1,56 @@
+---
+title: '12.3 A terceira etapa: liquidação e camada de ativos'
+chapter: 12
+order: 3
+description: >-
+  Captura de taxas e raiz estatal on-chain no estágio de maturidade do protocolo
+  de benchmarking: Na premissa de que o PoB é uma entrada confiável, são
+  promovidas liquidações, suporte de identidade e certificação seletiva on-chain
+  - não o ponto de partida da narrativa, mas os resultados do negócio.
+---
+
+<Hero badge="12.3 · Liquidação e Camada de Ativos" lead="Somente quando a rede de nós, a densidade do negócio, o PoB e a governança do agente atenderem aos padrões, a liquidação e o transporte de ativos serão sistematicamente promovidos; a parte on-chain deveria ser “resumos e provas necessárias” em vez de replicação completa do estado.">
+# A camada de liquidação consome a qualidade de entrada do PoB; quando a entrada é escassa, qualquer cadeia é apenas um banco de dados caro.
+</Hero>
+
+<MetaGrid>
+  <Meta label="objetivos principais" value="Mecanismo de liquidação + transporte digital de identidade/autoridade + implementação seletiva na cadeia" />
+  <Meta label="Pré-condições" value="O sinal de comutação de 12.1/12.2 foi atendido continuamente (nem um único pulso mensal)" />
+  <Meta label="em princípio" value="Coisas que podem ser resolvidas fora da cadeia de forma eficiente não devem ser colocadas na cadeia; deve haver um verificador ou contraparte claro na cadeia." />
+</MetaGrid>
+
+## Referência da indústria
+
+- **Troca de taxas Uniswap e precipitação de governança**: Depois que o volume de transações e a profundidade do pool forem comprovados, a camada de protocolo carregará taxas de longo prazo e governança de parâmetros; As regras de liquidação do WCN devem ser solidificadas após a comprovação do fluxo de caixa e da densidade do PoB.
+- **Estado Ethereum e camadas de disponibilidade de dados**: O estado completo não precisa ser copiado por todos; WCN pode manter dados detalhados do negócio dentro dos limites de conformidade, e apenas o compromisso, o hash raiz ou a prova de ZK/assinatura permanecem na cadeia (dependendo da conformidade e da seleção de tecnologia).
+- **RWA / Compliance Securities Token Path**: Ativos na cadeia são geralmente restritos por entidades legais e divulgação; a terceira fase da WCN deve alinhar as condições duplas de "negócios executados + caminho legal claro" para evitar embalagem reversa.
+
+## resultados específicos
+
+<CardGrid cols={2}>
+  <Card title="Formalização de liquidação" icon="coins">**Entrega**: Regras contábeis e tabela de mapeamento de condições de acionamento PoB, interface de disputa e arbitragem, relatórios de reconciliação e auditoria. **Indicadores**: Ciclo de liquidação, taxa de disputa, taxa de inadimplência/reversão, consistência de reconciliação multientidade.</Card>
+  <Card title="Identidade e permissão" icon="id-card">**Entrega**: Modelo unificado de identidade, função, reputação ou piquetagem do nó (se adotado) e permissões do sistema; processos de logout e herança. **Indicadores**: Taxa de rastreabilidade de alteração de permissão, número de usos fraudulentos e incidentes de contas compartilhadas.</Card>
+  <Card title="razão de valor de longo prazo" icon="trending-up">**Entrega**: Visualizações de contribuições e resultados que podem ser consultados entre trimestres (usados ​​para incentivos, compartilhamento ou referência de governança, a forma específica é determinada pela governança). **Indicadores**: Consistência de recálculo do livro contábil, taxa de aprovação de amostragem de auditoria externa.</Card>
+  <Card title="Seletivo na cadeia" icon="link-2">**Entrega**: lista de ativos na rede (o que está na rede, por que está na rede, quem verifica), suposições de ponte ou custódia, interruptores de atualização e pausa. **Indicadores**: Diferença entre eventos on-chain e reconciliação PoB off-chain, tempo de recuperação de acidentes.</Card>
+</CardGrid>
+
+## Métricas de sucesso (exemplo)
+
+- Qualquer liquidação pode ser rastreada até a cadeia completa de: **registro PoB → versão da regra → identidade do participante**.
+- Existe um caminho de downgrade documentado quando os componentes da cadeia falham (pausar a cunhagem, reverter para liquidação fora da cadeia, etc.).
+- Para auditorias de amostragem propostas por reguladores ou grandes parceiros, a exportação do material pode ser concluída dentro do prazo acordado.
+
+## Principais riscos nesta fase
+
+<CardGrid cols={2}>
+  <Card title="Conformidade e Jurisdição" icon="scale">Julgamento incorreto de atributos de token/segurança. **Diversos**: As opiniões jurídicas determinam os limites do produto, e não o contrário.</Card>
+  <Card title="Contratos inteligentes e segurança" icon="lock-open">A camada de ativos atrai superfícies de ataque. **Mitigação**: Auditoria, recompensas de bugs, limites e assinaturas múltiplas; nenhuma chave de usuário está sob custódia, a menos que seja necessário.</Card>
+  <Card title="Oráculos e dependências fora da cadeia" icon="link">O status na cadeia é inconsistente com o PoB. **Liberação lenta**: verificação de múltiplas fontes, liquidação atrasada, período de desafio.</Card>
+  <Card title="reação narrativa" icon="megaphone">O mercado só fala de redes e não de negócios. **Lançamento**: KPIs externos ainda priorizam a produção da rede e a qualidade da liquidação.</Card>
+</CardGrid>
+
+## Por que deve ser colocado depois
+
+<Callout type="warning">Se a Fase 1–2 for ignorada, não haverá entrada estável para a camada de liquidação e a camada de ativos tornar-se-á facilmente um “certificado shell”. Isto é o oposto do caminho insustentável de um grande número de projetos sem fluxo de caixa em 2017-2018 após a emissão de tokens; também é consistente com o caminho dos principais protocolos atuais para “primeiro estabelecer práticas de volume e governança e, em seguida, expandir a utilidade dos tokens”.</Callout>
+
+<Statement>A terceira fase marca a evolução da WCN de uma “rede de negócios de alta confiança” para um “sistema de longo prazo auditável, distribuível e opcionalmente ancorado na cadeia” – desde que os números nas duas primeiras fases possam resistir a inspeções aleatórias.</Statement>

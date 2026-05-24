@@ -1,0 +1,67 @@
+---
+title: 5.1 Présentation de l'architecture à cinq couches
+description: >-
+  Les cinq niveaux répondent respectivement à cinq questions fondamentales,
+  formant une chaîne de valeur complète, de la demande au règlement.
+chapter: 5
+order: 1
+---
+
+<Hero badge="5.1 · Aperçu de l'architecture" lead="La plupart des projets Web3 regroupent les fonctionnalités et les appellent « architecture ». La conception à cinq niveaux de WCN découle d'une compréhension simple : tout système de collaboration multipartite complexe sans division hiérarchique claire du travail finira par devenir une plate-forme chaotique. La banque d'investissement TradFi a utilisé un système de division du travail établi sur 100 ans (souscription → recherche → ventes → trading → compensation), et WCN utilise une architecture à cinq couches pour mettre en œuvre une division structurelle similaire du travail dans Web3.">
+# Les cinq couches, de la demande au règlement, donnent pour la première fois à la collaboration multipartite Web3 un squelette de système.
+</Hero>
+
+<MetaGrid>
+  <Meta label="principes architecturaux" value="Responsabilités superposées, avancement séquentiel et collecte de résultats" />
+  <Meta label="Référence de conception" value="Répartition du travail dans la banque d'investissement TradFi + superposition de plate-forme SaaS" />
+  <Meta label="fonctionnalités principales" value="La sortie de la couche précédente est l'entrée de la couche suivante" />
+</MetaGrid>
+
+## Répondez à cinq questions sur chacun des cinq étages.
+
+<Steps>
+  <Step title="L1 · Niveau projet et actif : qui fait la demande ?">Les parties au projet et aux actifs entrent dans le système pour exprimer leurs besoins en matière de financement, de croissance et de services. Il s’agit du point d’entrée de la demande sur l’ensemble du réseau : sans demande réelle, toutes les couches suivantes seront inactives.</Step>
+  <Step title="L2 · Couche d'allocation du capital : qui capte la demande ?">Le côté capital relie les fonds et les projets grâce à des capacités de jugement et d’allocation. Il ne s'agit pas d'un simple « appariement », mais d'un processus systématique de sélection, d'appariement et d'investissement structuré.</Step>
+  <Step title="L3 · Couche d'exécution et de service : qui fait avancer les choses ?">Les services juridiques, d'audit, de développement, de croissance et d'agents pilotent l'exécution des tâches. Cette couche détermine si la « connexion » peut devenir « résultat ».</Step>
+  <Step title="L4 · Couche de distribution et de liquidité : qui est responsable de l'organisation du marché ?">Les bourses, les teneurs de marché, les médias, les KOL et les communautés envoient les résultats du système vers le marché externe. Il n’y a pas de distribution, le résultat est simplement bouclé à l’intérieur.</Step>
+  <Step title="L5 · Couche de vérification et de règlement : qui prouvera et réglera ?">Proof Desk collecte des preuves, vérifie les audits, comptabilise l'attribution des PoB et Settlement attribue de la valeur. C’est la couche de fermeture et la sortie de valeur de l’ensemble du système.</Step>
+</Steps>
+
+---
+
+## Pourquoi est-ce le cinquième étage, pas le troisième ou le septième étage ?
+
+<CardGrid cols={2}>
+  <Card title="moins de cinq étages" icon="ban">Si l'exécution et la distribution sont fusionnées, le système ne peut pas faire la distinction entre « les gens qui font les choses » et « les gens qui font passer le message » - l'attribution et le règlement seront confondus. Si la vérification est fusionnée avec la couche d’exécution, les conflits d’intérêts entre les réviseurs et les exécuteurs sont inévitables.</Card>
+  <Card title="Plus de cinq étages" icon="ban">Si la couche de capital est divisée en une « couche de sélection » et une « couche d’allocation », cela augmentera la complexité mais n’ajoutera pas de nouveaux points de jugement de valeur. Le niveau cinq est l’ensemble minimum complet de transformations d’informations et de responsabilités.</Card>
+</CardGrid>
+
+> **Analogie** : La division principale du travail de la banque d'investissement TradFi comprend également cinq liens - **Souscription** (saisie du projet) → **Recherche** (jugement et sélection) → **Ventes** (appariement du capital) → **Transaction** (exécution et règlement) → **Liquidation** (livraison finale). Cette division du travail a fait ses preuves sur le marché depuis 100 ans et s'est avérée être la structure la plus efficace en matière de collaboration multipartite.
+
+---
+
+## La cinquième couche est une séquence métier, pas un module parallèle
+
+<Callout type="warning">
+Projets et actifs L1 → Allocation du capital L2 → Exécution et services L3 → Distribution et liquidité L4 → Vérification et règlement L5
+</Callout>
+
+Principales caractéristiques :
+- **Flux unidirectionnel** : La sortie de la couche précédente est l'entrée de la couche suivante. Les exigences du projet sont sorties vers la couche de capital, les transactions financières sont sorties vers la couche d'exécution, les résultats d'exécution sont sortis vers la couche de distribution et les effets de distribution sont sortis vers la couche de vérification.
+- **Feedback Loop** : les résultats de la couche de vérification (réputation, attribution, données PoB) seront renvoyés aux L1-L4, améliorant ainsi la précision de la correspondance et l'efficacité de l'exécution.
+- **Extension indépendante** : chaque couche peut ajouter indépendamment des capacités (plus de nœuds de capital, plus de fournisseurs de services, plus d'agents) sans qu'il soit nécessaire de reconstruire d'autres couches.
+
+---
+
+## Comparaison avec l'architecture existante
+
+<CardGrid cols={2}>
+  <Card title="vs CRM traditionnel (Salesforce/HubSpot)" icon="chart-bar">Le CRM gère uniquement les relations clients et les entonnoirs de vente, sans allocation de capital, collaboration de service et vérification des résultats. Les cinq niveaux du WCN couvrent la chaîne complète, de la demande au règlement.</Card>
+  <Card title="par rapport aux outils DAO (Snapshot + Gnosis Safe)" icon="landmark">Les outils DAO se concentrent sur la gouvernance et la gestion de fonds, sans promotion de transactions, exécution de services et vérification d'attribution. WCN résout le problème en « faisant les choses », pas seulement en « votant ».</Card>
+  <Card title="contre la plateforme de mise en relation Web3" icon="refresh-cw">La plateforme de correspondance effectue uniquement les connexions L1-L2, indépendamment de l'exécution L3, de la distribution L4 et de l'authentification L5. Le résultat est « introduit mais pas terminé ».</Card>
+  <Card title="vs la banque d'investissement TradFi" icon="landmark">Les banques d’investissement ont une division complète du travail à cinq niveaux, mais elle est centralisée, a des seuils élevés et est opaque. WCN utilise une structure en réseau pour parvenir à une division similaire du travail, mais abaisse le seuil de participation d'un ordre de grandeur.</Card>
+</CardGrid>
+
+<Callout type="tip">
+Comprendre la séquence à cinq niveaux est la première étape pour comprendre le WCN : il y a d'abord la demande, puis le capital, puis l'exécution, puis la distribution et enfin la vérification et le règlement. Il ne s’agit pas d’un cadre théorique, mais d’une séquence inévitable de logique métier.
+</Callout>

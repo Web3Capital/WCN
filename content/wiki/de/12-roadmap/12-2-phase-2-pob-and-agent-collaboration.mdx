@@ -1,0 +1,59 @@
+---
+title: '12.2 Phase 2: Zusammenarbeit zwischen PoB und Agent'
+chapter: 12
+order: 2
+description: >-
+  Beim Benchmarking von Uniswap v2/v3 und Ethereum steht Rollup im Mittelpunkt:
+  Der Standard wird gefestigt und die Zusammensetzbarkeit verbessert; PoB kann
+  orchestriert werden und der Agent kann geprüft und zurückgesetzt werden.
+---
+
+<Hero badge="12.2 · Zusammenarbeit zwischen PoB und Agenten" lead="Die erste Stufe beweist, dass „das Netzwerk laufen kann“; Diese Phase beweist, dass „das Netzwerk in großem Maßstab laufen kann“ – PoB wird zu einem zusammensetzbaren Vertrauensbuch und der Agent wird zu einer eingeschränkten Ausführungsschicht und nicht zu einer Black-Box-Automatisierung.">
+# Vom manuellen Spleißen bis zum Systembetrieb: Standards, Protokolle, Berechtigungen und replizierbare Methoden werden in derselben Phase angepasst.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Kernziele" value="PoB-Standardisierung + Agent-Engineering-Governance" />
+  <Meta label="Erfolgskriterium" value="SLA für die Zusammenarbeit zwischen Mensch und Maschine, PoB-Versionierung und Verantwortlichkeit für Ausnahmen" />
+  <Meta label="Mache es immer noch nicht" value="Weisen Sie der Kette den gesamten Wert zu; Lassen Sie den Agenten selbstständig risikoreiche Verpflichtungen eingehen" />
+</MetaGrid>
+
+## Branchenreferenz
+
+- **Uniswap v2→v3**: Von einem allgemeinen Pool zu zentralisierten Liquiditäts- und Gebührenstufen handelt es sich um eine doppelte Entwicklung von „Regelverfeinerung + Kapitaleffizienz“; WCN Phase 2 entspricht der Versionierung von PoB-Feldern, Audit-Ebenen, Anreizen und Attributionsregeln.
+- **Ethereum L2-Route**: Schichtausführung und -abwicklung, und das Hauptnetzwerk stellt die Endgültigkeit sicher; WCN schichtet „menschliche Entscheidungsfindung/Agentenausführung/PoB-Aufzeichnungen“ ein, und Agent ersetzt nicht die Compliance- und Endüberprüfungsgrenzen.
+- **Ausgereifter Web2-Markt**: Uber/Airbnb vervollständigen die mittlere Vertrauens- und Sicherheitsebene vor der Skalierung; Phase 2 vervollständigt die überprüfbare Automatisierung, anstatt einfach nur die Anzahl der Funktionen hinzuzufügen.
+
+## konkrete Leistungen
+
+<CardGrid cols={2}>
+  <Card title="PoB-Stabilisierung" icon="circle-check">**Lieferung**: PoB-Schemaversion, Änderungsprotokoll, SLA-Überprüfung, Einspruchs- und Überprüfungsprozess; PoB-Vorlagenbibliothek nach Deal-Typ. **Indikatoren**: PoB-Strukturkonsistenz über Monate hinweg, Überprüfungsrückstandstage, Trend bei der Zuordnungsstreitigkeitsrate.</Card>
+  <Card title="Formalisierung des Agenten" icon="bot">**Bereitstellung**: Rollenberechtigungsmatrix, Tool-Whitelist, Aufbewahrungsrichtlinie für Sitzungs-/Aufgabenprotokolle, Human-in-the-Loop-Triggerbedingungen. **Indikatoren**: Akzeptanzrate der Agentenausgabe, Anzahl nicht autorisierter Abhörvorgänge, Anzahl der Rollbacks und Patches (Stabilitätsagent).</Card>
+  <Card title="Produktisierung der Knotenmethodik" icon="ruler">**Lieferung**: Das Playbook (Checkliste, Vorlagen, Schulungsmaterialien) hochwertiger Knoten gelangt in das System. **Indikatoren**: Die Zeit, die ein neuer Knoten benötigt, um die „Qualifikation erster Ordnung“ zu erreichen, Playbook-Nutzungsrate und Ausgabevergleich.</Card>
+  <Card title="Dichte im geschlossenen Kreislauf" icon="refresh-cw">**Lieferung**: Die Anzahl der Deals, die innerhalb einer Zeiteinheit parallel im selben Netzwerk vorangetrieben werden können, und Regeln für Ressourcenkonflikte. **Indikatoren**: Deal-Durchsatz pro Person/Knoten, Stagnationsrate der Phase (welche Karte hat die meisten).</Card>
+</CardGrid>
+
+## Erfolgskennzahlen (Beispiel)
+
+- PoB **v1.x** Während des Sperrzeitraums werden Breaking Changes nur über Governance-/Versionsnummern veröffentlicht und es wird einen Migrationsleitfaden geben.
+- Für agentenbezogene Vorfälle (falsche Verweise, Datenlecks, nicht autorisierte Vorgänge) gibt es Postmortem- und Regelpatches, die wiederhergestellt werden können.
+- **Replizierbar**: Die neue Region oder neue Branche erreicht innerhalb von 90 Tagen nach einem voreingestellten Playbook Trichtermetriken (wie durch den Betrieb definiert), die mit dem Ausgangswert vergleichbar sind.
+
+## Signale zum Eintritt in die dritte Stufe (Zusammenfassung)
+
+Abrechnungsobjekte (wer zahlt an wen, welcher PoB liegt zugrunde, wie werden Streitigkeiten gelöst) können auf dem Papier und im System abgeglichen werden; Das Identitäts- und Autoritätsmodell reicht aus, um Buchhaltung und Prüfung zu unterstützen, ohne auf temporäre Tabellen angewiesen zu sein. Einzelheiten finden Sie unter [12.4](/wiki/roadmap/12-4-Milestones and Phase Switching Signals).
+
+## Hauptrisiken in dieser Phase
+
+<CardGrid cols={2}>
+  <Card title="Automatisierte Vertrauensinkongruenz" icon="triangle-alert">Der Agent beschleunigt die Fehlerausbreitung. **Release**: hierarchische Automatisierung, Schattenmodus, Zufallsinspektion und Red Teaming.</Card>
+  <Card title="PoB-Overengineering" icon="library">Zu detaillierte Standards bremsen das Geschäft. **Release**: Nehmen Sie den „minimalen überprüfbaren Satz“ als Endergebnis, und die restlichen Felder sind schrittweise.</Card>
+  <Card title="Organisationen verlassen sich auf Heldenknoten" icon="user">Die Skalierung hängt immer noch von einigen wenigen Leuten ab. **Freigabe**: Pflichtdokumentation und Übergabemechanismen sind in KPIs enthalten.</Card>
+  <Card title="Machen Sie im Voraus Kapital" icon="banknote">NFT/Token hat den Kontakt zum Geschäftsrhythmus verloren. **Freigabe**: Die Asset-Schicht wird Projekte erst dann initiieren, wenn der Schwellenwert 12.4 erreicht ist.</Card>
+</CardGrid>
+
+## Warum diese Phase nach Phase 1 kommen muss
+
+<Callout type="warning">Ohne stabile Deal- und Proof-Samples werden PoB-Standards zu einem Luftschloss; Ohne klare manuelle Prozesse wird Agent das Chaos nur verstärken. Dies ist das Gleiche, als ob Rollup zu einer starren Anforderung wird, nachdem L1-Gebühren und Überlastungen „tatsächlich auftreten“ – die Komplexität sollte von der tatsächlichen Auslastung bestimmt werden.</Callout>
+
+<Statement>Am Ende der zweiten Phase soll es nach außen hin zeigen können, wie die Mensch-Maschine-Kollaboration unter gleichen Regeln stabil zu überprüfbareren Ergebnissen führen kann und dass auftretende Vorfälle zur Verantwortung gezogen und behoben werden können.</Statement>

@@ -1,0 +1,73 @@
+---
+title: 12.4 Hitos y señales de cambio de etapa
+chapter: 12
+order: 4
+description: >-
+  Ir/no ir impulsado por la madurez: Cuantificar el umbral, el antipatrón y el
+  ritmo de revisión de las Fases 1→2, 2→3; compare la etapa de activación de la
+  red principal en lugar de la hoja de ruta de marketing.
+---
+
+<Hero badge="12.4 · Señales de conmutación" lead="El cambio de fase debería ser como una actualización de Ethereum o un hito de la red principal: desencadenado por condiciones preestablecidas y datos de observación, y puede explicarse al mundo exterior “por qué ahora es posible entrar en la siguiente fase”.">
+# El calendario sólo se utiliza para planificar el ritmo de revisión; las condiciones de control de acceso son la única base para cambiar de etapa.
+</Hero>
+
+<MetaGrid>
+  <Meta label="respuesta central" value="¿Qué condición cuantificable desencadena un cambio de fase?" />
+  <Meta label="Dimensión del juicio" value="Nodo, acuerdo, prueba, PoB, agente, ingresos, evento de riesgo" />
+  <Meta label="lógica subyacente" value="Impulsado por la madurez + verificación continua de la ventana (no es una casualidad de un mes)" />
+</MetaGrid>
+
+## ¿Por qué rechazar la "hoja de ruta puramente horaria"?
+
+El paso del tiempo no garantiza que se produzca el aprendizaje. Ethereum utiliza la red de investigación y prueba como control de puerta; Uniswap utiliza un volumen de transacciones verificable en cadena como estándar de facto. Si WCN sólo pasa páginas trimestralmente, fácilmente caerá en "prometeciones excesivas en aras de la narrativa", una enfermedad compartida por un gran número de proyectos únicos de TGE.
+
+<Callout type="info">Se recomienda realizar una revisión de la hoja de ruta cada trimestre: comparar las señales en la siguiente tabla para determinar "permanecer/adelante/regresar para fortalecer" y registrar las causas fundamentales del incumplimiento (demanda, producto, cumplimiento, organización).</Callout>
+
+## Fase 1 → Fase 2: señal de conmutación (recomendado para control de acceso)
+
+<Steps>
+  <Step title="Red y circuito cerrado">Al menos un tipo de acuerdo principal completa múltiples bucles cerrados de un extremo a otro; múltiples roles en el lado del nodo tienen participación continua (no registro de un solo evento); y hay datos de referencia para las tasas y ciclos de conversión de etapas.</Step>
+  <Step title="Prototipo de prueba y PoB">El conjunto mínimo de campos de la prueba y la ruta de auditoría se ejecutan de manera estable; PoB puede generar un libro de cuentas por etapas legible (incluida la versión o la intención del registro de cambio); hay una entrada para objeciones.</Step>
+  <Step title="Control de Negocios y Riesgos">Al menos una línea de ingresos se puede conciliar mensualmente; los incidentes importantes de cumplimiento/reputación tienen registros de eliminación y parches de reglas; No hay acusaciones de "fraude sistémico" sin resolver.</Step>
+</Steps>
+
+**Anti-Patrón (Si no está satisfecho, no se le permitirá ingresar a la Fase 2)**: Faltan pruebas en áreas grandes, pero aún así se afirma que fue exitoso; El agente no está estandarizado pero se ha conectado a gran escala; no hay ingresos, pero sí énfasis en el "growth hacking".
+
+## Fase 2 → Fase 3: señal de conmutación (recomendado para control de acceso)
+
+<Steps>
+  <Step title="PoB y estándares">El esquema PoB está versionado; los cambios radicales tienen estrategias migratorias; La auditoría de SLA y las disputas de atribución tienen tendencias a la baja rastreables o umbrales de tolerancia claros.</Step>
+  <Step title="Gobernanza de agentes">Se implementan estrategias de permisos, registros, reversión y cobertura manual; los accidentes pueden ser post mortem; Los accesos no autorizados y los eventos de datos se controlan cuantitativamente.</Step>
+  <Step title="Acuerdo listo">El libro mayor fuera de la cadena o el objeto de liquidación se ha definido a nivel de regla (quién, según qué PoB, ruta de disputa); el modelo de identidad y permiso puede admitir la liquidación, no solo la visualización.</Step>
+</Steps>
+
+**Antipatrón**: Las reglas de liquidación siguen siendo completamente verbales; el desarrollo de contratos en cadena no está sincronizado con la calidad de PoB; obligando a la capa de activos a atender a los nodos de financiación.
+
+## Combinación de indicadores (sin toma de decisiones en un solo punto)
+
+<CardGrid cols={2}>
+  <Card title="umbral multidimensional" icon="chart-bar">Consulte también: cantidad y calidad de las transacciones, tasa de integridad de las pruebas, estructura de ingresos, registro de eventos de PoB/agente, eventos de riesgo. **PROHIBIDO** Utilice únicamente DAU o "cantidad LOI" para decidir.</Card>
+  <Card title="ventana persistente" icon="calendar">Se recomienda que las señales clave alcancen el estándar durante **2 o 3 períodos estadísticos consecutivos** (como mensual o trimestralmente) para evitar la distorsión de la campaña en un solo mes; se observan protocolos similares en la estabilidad de múltiples etapas de la red de prueba.</Card>
+  <Card title="Replicabilidad" icon="ruler">Nuevas verticales o nuevas regiones pueden alcanzar el objetivo según el manual, lo que demuestra que los individuos no heroicos son accidentales: comparando la "tasa de éxito de implementación" de SaaS escalable.</Card>
+  <Card title="tolerancia al riesgo" icon="shield">El sistema aún puede funcionar o puede degradarse de manera ordenada bajo presión, como la ausencia de personal clave, la salida de un solo nodo, consultas regulatorias externas, etc.</Card>
+</CardGrid>
+
+## Comparación con la ruta de "lanzamiento único"
+
+| Dimensiones | Etapas (WCN) | Pila completa a la vez |
+|------|----------------|----------------|
+| Diagnóstico de fallas | Atribuible a Red/Estándares/Automatización/Facturación | A menudo atribuible al desenfoque |
+| Eficiencia del capital | Cada etapa puede financiarse o verificarse de forma independiente mediante cooperación | Grandes cantidades en la etapa inicial se hunden en la cadena y el cumplimiento |
+| Acumulación de confianza | Cada etapa tiene salidas comprobables aleatorias | Depende de la narrativa y el tiempo |
+| Diálogo regulatorio | Divulgación progresiva y ajuste de límites | Fácil de cruzar la línea de una vez |
+
+## Resumen de riesgos (en todas las etapas)
+
+<CardGrid cols={2}>
+  <Card title="Error de juicio escénico" icon="ban">"Anunciar por la fuerza la siguiente etapa" del ritmo de financiación. **Comunicado**: Lista de verificación de control de acceso público y alcance de la evidencia de cumplimiento (dentro del permiso de cumplimiento).</Card>
+  <Card title="Gamificación de indicadores" icon="gamepad-2">Desliza el registro y la oferta no es válida. **Comunicado**: Inspección de calidad y muestras aleatorias de auditoría.</Card>
+  <Card title="Negocio de secuestro de tecnología" icon="link-2">Los OKR de cadena y token superan a los OKR de acuerdo. **Mitigación**: KPI de doble vía de la Junta/Gobierno.</Card>
+</CardGrid>
+
+<Statement>La importancia de la señal de conmutación es evitar el autoengaño internamente y proporcionar una "narrativa de ritmo verificable" externamente similar a la puerta de escenario estilo Ethereum y la evolución de la versión principal del protocolo DeFi.</Statement>

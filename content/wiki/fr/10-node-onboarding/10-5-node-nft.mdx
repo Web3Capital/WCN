@@ -1,0 +1,50 @@
+---
+title: 10.5 Nœud NFT
+chapter: 10
+order: 5
+description: "Nœud NFT\_: informations d'identification de siège programmables\_; Comparaison avec les informations d'identification vérifiables ENS, SBT, W3C - un modèle de confiance hybride d'identité composable sur la chaîne + protocole hors chaîne et ACL."
+---
+
+<Hero badge="10.5 · Nœud NFT" lead="L'utilisation principale de Node NFT est le transport programmable d'identités et d'autorisations : le portefeuille contient « l'accès du système à un certain type de siège selon une certaine version de règles » - pas un certificat de droit à dividende, ni un PFP à ciel ouvert. L'idée de conception s'appuie sur des cartes de contrôle d'accès professionnelles (physiques) et des assertions d'attributs SAML/OIDC (informatique traditionnelle), mais utilise des objets en chaîne pour réaliser une vérification combinable entre applications.">
+# Il y a d’abord les sièges post-événement et les boucles fermées, puis les certificats en chaîne ; si l’ordre est inversé, l’émission deviendra une coquille vide.
+</Hero>
+
+<MetaGrid>
+  <Meta label="définition" value="Objet d'identité en chaîne + autorisations + pointeur d'historique (facultatif)" />
+  <Meta label="non-cible" value="Des collections qui promettent des revenus fixes, sont ouvertes à la spéculation et sont découplées de la livraison" />
+  <Meta label="pile de confiance" value="Certificat de détention en chaîne + protocole hors chaîne + statut en temps réel de l'ACL côté système" />
+</MetaGrid>
+
+## Comparaison avec trois types courants de technologies d'identité
+
+| Solutions | Points forts | Limites | Choix de nœud NFT |
+| --- | --- | --- | --- |
+| **ENS** | Lisible par l'homme, largement intégré | N'exprime pas nativement les autorisations et les relations organisationnelles complexes | Peut être juxtaposé à ENS : ENS fait référence aux personnes/marques, Node NFT fait référence aux **sièges institutionnels** |
+| **SBT (jeton de liaison d'âme)** | L'accent est mis sur la non-transférabilité et le caractère contraignant de la réputation | Les scénarios de mise à niveau, de migration de siège et de gel de la conformité sont rigides | WCN peut utiliser des certificats dont la **transférabilité est déterminée par la politique** (cartographie verrouillable et rétractable) |
+| **Identifiants vérifiables du W3C** | Modèle standard de confidentialité, divulgation sélective | Faible composabilité en chaîne et affichage natif du portefeuille | Les déclarations clés peuvent être écrites en double : VC est utilisé pour la divulgation de conformité, NFT est utilisé pour le **contrôle d'accès rapide au sein du protocole** |
+
+<CardGrid cols={2}>
+  <Card title="porteur d'identité" icon="id-card">La chaîne prouve qu '«une certaine adresse est liée à un certain sujet de nœud et à une certaine génération de siège»; les autorisations d'actualisation sont souvent transmises via la version des métadonnées ou la racine de l'état de la chaîne latérale, plutôt que de changer fréquemment de portefeuille.</Card>
+  <Card title="Transporteur d'autorisation" icon="key">Comme condition **nécessaire mais pas suffisante** pour appeler l'API, saisir des fonctions contractuelles ou déverrouiller le routage frontal ; en fin de compte, l'ACL du serveur et l'indicateur de conformité prévaudront - comme pour le jeton matériel + la session serveur.</Card>
+  <Card title="Support de record (évolution)" icon="chart-bar">Le score de réputation, le niveau et les pointeurs de hachage de tâche historiques peuvent être montés ; les preuves complètes se trouvent encore principalement dans le stockage d'objets hors chaîne + Proof Desk pour éviter les problèmes de gaz et de confidentialité sur le réseau principal.</Card>
+  <Card title="Programmabilité" icon="link-2">Contrats de support et d'incitation, listes blanches de marketing conjointes, accueil SDK inter-partenaires ; des restrictions doivent être apportées au niveau du contrat intelligent** Le nœud NFT ne peut pas être exprimé sous forme de titres ou de certificats de dépôt**.</Card>
+</CardGrid>
+
+---
+
+## Ce que Node NFT n'est explicitement pas
+
+<CardGrid cols={2}>
+  <Card title="Pas un produit financier" icon="ban">Aucune promesse de capital, de revenu fixe ou de participation automatique aux bénéfices liée à la taille de la direction – clairement séparée des limites légales des fonds/dépôts agréés.</Card>
+  <Card title="Pas un pur avatar" icon="ban">La couche visuelle est inutile ; la valeur vient de la relation contraignante avec les comptes WCN, les obligations contractuelles et les KPI.</Card>
+  <Card title="Casting sans licence" icon="ban">Le pouvoir de décision réside du côté de la gouvernance/exploitation du réseau ; L'ouverture de la monnaie détruira la rareté des sièges et le principe du contrôle des risques.</Card>
+  <Card title="Pas un passe-partout sur une chaîne" icon="ban">Lorsque la clé privée est perdue, que le sujet met fin au contrat ou que la conformité est déclenchée, elle doit être traitée via des méthodes d'exploitation et de maintenance telles que le gel de la cartographie, la rotation des adresses et l'invalidation des clés générationnelles.</Card>
+</CardGrid>
+
+---
+
+## Principes de mise en œuvre
+
+<Callout type="warning">**Le réseau d'entreprise d'abord** : ayez d'abord de véritables normes de transaction, de tâche, d'examinateur et de preuve, puis élargissez la portée du NFT. Autrement, nous courrons le même risque que de "vendre d'abord les cartes de membre et ensuite rénover le club" : la réputation et le contrôle seront mis à rude épreuve.</Callout>
+
+<Statement>Au stade actuel, Node NFT doit être compris comme une **carte numérique pour les réseaux professionnels** : vérifiable sur la chaîne, responsable hors chaîne, et le système peut être récupéré en un clic - plutôt qu'une cible spéculative sur la chaîne.</Statement>

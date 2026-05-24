@@ -1,0 +1,67 @@
+---
+title: 5.1 Visão geral da arquitetura de cinco camadas
+description: >-
+  As cinco camadas respondem respectivamente a cinco questões centrais, formando
+  uma cadeia de valor completa, desde a procura até à liquidação.
+chapter: 5
+order: 1
+---
+
+<Hero badge="5.1 · Visão Geral da Arquitetura" lead="A maioria dos projetos Web3 agrupa funcionalidades e chama isso de “arquitetura”. O design de cinco camadas da WCN resulta de uma compreensão simples: qualquer sistema complexo de colaboração multipartidária sem uma divisão hierárquica de trabalho clara acabará por se tornar uma plataforma caótica. O banco de investimento TradFi usou um sistema de divisão de trabalho estabelecido ao longo de 100 anos (subscrição → pesquisa → vendas → negociação → compensação), e o WCN usa uma arquitetura de cinco camadas para implementar uma divisão estrutural de trabalho semelhante na Web3.">
+# As cinco camadas, da demanda à liquidação, dão à colaboração multipartidária da Web3 um esqueleto de sistema pela primeira vez.
+</Hero>
+
+<MetaGrid>
+  <Meta label="princípios arquitetônicos" value="Responsabilidades em camadas, avanço sequencial e coleta de resultados" />
+  <Meta label="Referência de projeto" value="Divisão de trabalho do banco de investimento TradFi + camadas de plataforma SaaS" />
+  <Meta label="recursos principais" value="A saída da camada anterior é a entrada da próxima camada" />
+</MetaGrid>
+
+## Responda cinco perguntas em cada um dos cinco andares.
+
+<Steps>
+  <Step title="L1 · Nível de projeto e ativo: Quem faz a demanda?">As partes do projeto e as partes dos ativos entram no sistema para expressar necessidades de financiamento, crescimento e serviços. Este é o ponto de entrada de demanda de toda a rede – sem demanda real, todas as camadas subsequentes ficarão ociosas.</Step>
+  <Step title="L2 · Camada de alocação de capital: Quem atende a demanda?">O lado do capital conecta fundos e projetos através de capacidades de julgamento e alocação. Não se trata de um simples “matching”, mas de um processo sistemático de triagem, matching e investimento estruturado.</Step>
+  <Step title="L3 · Camada de execução e serviço: Quem faz as coisas?">Jurídico, Auditoria, Desenvolvimento, Crescimento e Agentes impulsionam a execução de tarefas. Esta camada determina se a “conexão” pode se tornar “resultado”.</Step>
+  <Step title="L4 · Camada de distribuição e liquidez: Quem é responsável pela gestão do mercado?">Bolsas, criadores de mercado, mídia, KOLs e comunidades enviam resultados de dentro do sistema para o mercado externo. Não há distribuição, o resultado é apenas um loop interno.</Step>
+  <Step title="L5 · Camada de Verificação e Liquidação: Quem irá provar e liquidar?">O Proof Desk coleta evidências, verificação de auditorias, contabilidade de atribuição de PoB e liquidação atribui valor. Esta é a camada de fechamento e saída de valor de todo o sistema.</Step>
+</Steps>
+
+---
+
+## Por que é o quinto andar e não o terceiro ou sétimo andar?
+
+<CardGrid cols={2}>
+  <Card title="menos de cinco andares" icon="ban">Se a execução e a distribuição forem fundidas, o sistema não conseguirá distinguir entre “pessoas que fazem coisas” e “pessoas que espalham a palavra” – atribuição e liquidação serão confundidas. Se a verificação for incorporada à camada de execução, os conflitos de interesse entre revisores e executores serão inevitáveis.</Card>
+  <Card title="Mais de cinco andares" icon="ban">Se a camada de capital for dividida numa "camada de triagem" e numa "camada de alocação", aumentará a complexidade, mas não acrescentará novos pontos de julgamento de valor. O nível cinco é o conjunto minimamente completo de transformações de informações e responsabilidades.</Card>
+</CardGrid>
+
+> **Analogia**: A principal divisão de trabalho do banco de investimento TradFi também consiste em cinco links - **Subscrição** (entrada do projeto) → **Pesquisa** (julgamento e triagem) → **Vendas** (correspondência de capital) → **Transação** (execução e liquidação) → **Liquidação** (entrega final). Esta divisão de trabalho foi testada no mercado há 100 anos e provou ser a estrutura mais eficaz na colaboração multipartidária.
+
+---
+
+## A quinta camada é uma sequência de negócios, não um módulo paralelo
+
+<Callout type="warning">
+Projetos e Ativos L1 → Alocação de Capital L2 → Execução e Serviços L3 → Distribuição e Liquidez L4 → Verificação e Liquidação L5
+</Callout>
+
+Principais recursos:
+- **Fluxo unidirecional**: A saída da camada anterior é a entrada da próxima camada. Os requisitos do projeto são enviados para a camada de capital, os negócios de capital são enviados para a camada de execução, os resultados da execução são enviados para a camada de distribuição e os efeitos de distribuição são enviados para a camada de verificação.
+- **Feedback Loop**: Os resultados da camada de verificação (reputação, atribuição, dados PoB) serão retroalimentados para L1-L4, melhorando a precisão da correspondência e a eficiência de execução.
+- **Expansão Independente**: Cada camada pode adicionar capacidades de forma independente (mais nós de capital, mais provedores de serviços, mais Agentes) sem a necessidade de reconstruir outras camadas.
+
+---
+
+## Comparação com arquitetura existente
+
+<CardGrid cols={2}>
+  <Card title="versus CRM tradicional (Salesforce/HubSpot)" icon="chart-bar">O CRM gerencia apenas o relacionamento com os clientes e os funis de vendas, sem alocação de capital, colaboração de serviços e verificação de resultados. As cinco camadas da WCN cobrem toda a cadeia, desde a procura até à liquidação.</Card>
+  <Card title="vs. ferramentas DAO (Instantâneo + Gnosis Seguro)" icon="landmark">As ferramentas DAO concentram-se na governança e gestão de fundos, sem promoção de negócios, execução de serviços e verificação de atribuição. A WCN resolve “fazer coisas”, não apenas “votar”.</Card>
+  <Card title="vs. plataforma de matchmaking Web3" icon="refresh-cw">A plataforma correspondente realiza apenas conexões L1-L2, independentemente da execução L3, distribuição L4 e autenticação L5. O resultado é “introduzido, mas não concluído”.</Card>
+  <Card title="vs. banco de investimento TradFi" icon="landmark">Os bancos de investimento têm uma divisão de trabalho completa em cinco níveis, mas é centralizada, tem limiares elevados e é opaca. A WCN utiliza uma estrutura em rede para alcançar uma divisão de trabalho semelhante, mas reduz o limiar de participação numa ordem de grandeza.</Card>
+</CardGrid>
+
+<Callout type="tip">
+Compreender a sequência de cinco camadas é o primeiro passo para compreender a WCN – primeiro há procura, depois capital, depois execução, depois distribuição e, finalmente, verificação e liquidação. Este não é um quadro teórico, mas uma sequência inevitável de lógica empresarial.
+</Callout>

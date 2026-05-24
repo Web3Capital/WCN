@@ -1,0 +1,93 @@
+---
+title: 4.2 Prozess vom Knoten bis zur Siedlung
+description: >-
+  Vollständiger Arbeitsablauf: Ressourceneingabe → Deal Room →
+  Aufgabenausführung → Proof Desk → PoB → Abrechnung, einschließlich Zeitplan
+  und Ausnahmebehandlung.
+chapter: 4
+order: 2
+---
+
+<Hero badge="4.2 · Vollständiger Prozess" lead="Diese Seite listet nicht nur die Module auf, sondern verbindet die Module auch entsprechend ihrer tatsächlichen Betriebslogik – von der ersten Sekunde, in der Ressourcen in das System gelangen, bis zum letzten Schritt, in dem der Wert abgerechnet wird. Jede Phase verfügt über einen erwarteten Zeitplan, wichtige Ergebnisse und Mechanismen zur Ausnahmebehandlung.">
+# Vom Knoteneintritt bis zum Abschluss der Abrechnung hat jeder Schritt des WCN Eigentümer, Status und Ausgabe.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Prozessstufe" value="Drei Stufen: Ressourceneingabe → Ausführungsförderung → Überprüfung und Abrechnung" />
+  <Meta label="Typischer Zyklus" value="Einfacher geschlossener Kreislauf 1–2 Wochen, komplexer Deal 4–8 Wochen" />
+  <Meta label="Benchmarking-Referenz" value="PE/VC-Pipeline-Management" />
+</MetaGrid>
+
+---
+
+## Der erste Absatz: Ressourcen gelangen in das System (Tag 0-2)
+
+Ausgangspunkt des Systembetriebs ist nicht ein Formular oder eine Seite, sondern wertvolle Ressourcen werden von einem verantwortlichen Knoten in das Netzwerk eingebracht.
+
+<CardGrid cols={2}>
+  <Card title="Projektknoten" icon="package">Senden Sie Projektinformationen: Produktphase, Finanzierungsbedarf, Token-Situation, Zielregion und Kernteam. Die Daten gelangen in die Projektaufnahme und werden strukturiert eingegeben.</Card>
+  <Card title="Kapitalknoten" icon="coins">Registrierte Investitionspräferenzen: Phase (Seed/A/B), Track (DeFi/AI/RWA/Infra), Nennwertbereich, regionale Präferenz. Präferenzen werden für den späteren Abgleich in das Kapitalprofil eingegeben.</Card>
+  <Card title="Dienstknoten" icon="wrench">Geben Sie Ausführungsfunktionen ein: Recht, Prüfung, Sicherheit, Branding, Entwicklung, Forschung usw. Die Funktion wird in die Service-Registrierung eingetragen und kann von Deal aufgerufen werden.</Card>
+  <Card title="Regionaler Knoten" icon="globe">Betreten Sie das lokale Netzwerk: Länder-/Stadtabdeckung, Branchenbeziehungen, regulatorisches Bewusstsein, Veranstaltungsressourcen. Lokale Unterstützung bei grenzüberschreitenden Geschäften.</Card>
+</CardGrid>
+
+> **Vergleich mit TradFi**: Dies entspricht der CRM-Einstiegsphase von PE/VC (Pipeline-Aufnahme von Pitchbook/DealCloud). Der Unterschied besteht darin, dass WCN vom ersten Schritt an eine Mehrparteien-Kooperationsstruktur etabliert hat und nicht eine einseitige interne Verwaltung.
+
+---
+
+## Der zweite Absatz: Deal- und Aufgabenfortschritt (Tag 2-14+)
+
+Nachdem Ressourcen in das System gelangt sind, müssen sie von „Information“ zu „Workflow“ wechseln.
+
+<CardGrid cols={2}>
+  <Card title="Erstellung von Deal-Rooms" icon="handshake">Das System erstellt einen Deal Room für den Abgleich von Opportunities: Identifizierung des Deal-Inhabers, der Parteien, der Stückliste und der Meilensteine. Dies ist kein Gruppenchat – jeder hat klare Rollen und Verantwortlichkeiten.</Card>
+  <Card title="Aufgabenversand" icon="clipboard-list">Weisen Sie menschlichen Knoten oder Agenten bestimmte Aufgaben zu. Jede Aufgabe hat einen Eigentümer, eine Frist, Ausgabeanforderungen und Akzeptanzkriterien. Eine „vage Erklärung“ gibt es nicht.</Card>
+  <Card title="Ausführungsfortschritt" icon="zap">Besprechungen, Due Diligence, Materialzusammenstellung, rechtliche Prüfung, Vertragsgestaltung, Wachstumsdurchführung – alle Aktionen finden statt oder werden im System aufgezeichnet. Der Agent hilft bei Recherchen, Protokollen und Erinnerungen.</Card>
+  <Card title="Statusverfolgung" icon="chart-bar">Jeder Deal und jede Aufgabe hat einen Echtzeitstatus (in Bearbeitung/Antwort ausstehend/blockiert/abgeschlossen). Execution Agent erkennt Verzögerungen automatisch und gibt Warnungen aus.</Card>
+</CardGrid>
+
+<Callout type="info">
+**Zeitplan-Referenz**: Das einfache Andocken von Diensten (z. B. Dienstanbieter für den Abgleich von Prüfanforderungen) kann in 3–5 Tagen abgeschlossen sein. Komplexe Finanzierungsgeschäfte (mehrere Besprechungsrunden, Due Diligence, rechtliche Aspekte) dauern in der Regel 4–8 Wochen. WCN verringert nicht die Komplexität des Geschäfts selbst, sondern beseitigt Reibungsverluste bei der Koordination. Untersuchungen von TradFi zeigen, dass 30–40 % der Zeit bei einem typischen Geschäft für die Synchronisierung und Beschleunigung von Informationen aufgewendet wird.
+</Callout>
+
+---
+
+## Der dritte Absatz: Überprüfung und Abwicklung (3-7 Tage nach Abschluss des Geschäfts)
+
+Nachdem das Ergebnis gebildet wurde, wechselt das System von der Ausführungslogik zur Beweislogik.
+
+<CardGrid cols={2}>
+  <Card title="Beweisverpackung" icon="paperclip">Der Deal-Eigentümer übermittelt die Ergebnisnachweise an das Beweispaket: Vertrag/Vereinbarung, Zahlungsaufzeichnung, Leistungen, On-Chain-Hash, Besprechungsprotokolle, E-Mail-Bestätigung usw. Die Art und Menge der Nachweise hängt vom Deal-Typ ab.</Card>
+  <Card title="Überprüfungswarteschlange" icon="search">Das Beweispaket gelangt in die Prüferwarteschlange. Der Prüfer prüft: Materialvollständigkeit, Authentizität, zeitliche Rationalität und Risikomarker. Prüfer und Deal-Teilnehmer dürfen sich nicht überschneiden (Interessenvermeidung).</Card>
+  <Card title="Attributionszuordnung" icon="target">Nach bestandener Prüfung weist das System den Teilnehmern Zuordnungen zu: Wer hat empfohlen (%), wer hat geworben (%), wer hat ausgeführt (%) und wer hat bewertet (%). Die Zuschreibung basiert auf einer Beweiskette und nicht auf subjektiven Verhandlungen.</Card>
+  <Card title="PoB-Generierung und -Abrechnung" icon="scale">Nachdem die Zuordnung bestätigt wurde, werden die Geschäftsergebnisse in das PoB-Hauptbuch eingegeben und als Abrechnungseingabe verwendet. PoB wird im periodischen Settlement Run verarbeitet und die Teilnehmer erhalten eine entsprechende Wertverteilung.</Card>
+</CardGrid>
+
+---
+
+## Ausnahmebehandlung: wenn der Prozess hängen bleibt
+
+Echte Geschäfte laufen nicht immer reibungslos. WCN hat für jede Ausnahme einen Behandlungsmechanismus entwickelt:
+
+<CardGrid cols={2}>
+  <Card title="Der Deal ist ins Stocken geraten" icon="pause">Wenn ein Deal länger als eine festgelegte Anzahl von Tagen keine Statusaktualisierung aufweist, benachrichtigt der Ausführungsagent den Deal-Inhaber automatisch. Deals, die ständig nicht reagieren, werden als blockiert markiert, um die Energie der relevanten Knoten freizugeben.</Card>
+  <Card title="Zeitüberschreitung der Aufgabe" icon="clock">Wenn die Aufgabe die Frist überschreitet und nicht abgeschlossen wird, aktualisiert das System die Benachrichtigung automatisch. Der Aufgabeneigentümer muss Gründe angeben (Verzögerung/Blockierung/Absage). Nicht reagierende Aufgaben wirken sich auf die Reputationswerte des Knotens aus.</Card>
+  <Card title="Unzureichende Beweise" icon="mail">Wenn der Prüfer feststellt, dass die Beweise unvollständig sind, wird das Beweispaket mit einer Liste der fehlenden Elemente zurückgesandt. Der Deal Owner hat eine zeitlich begrenzte Wiederauffüllung. Der nicht erfüllte Deal, der dreimal zurückgegeben wird, gelangt in den Streitbeilegungskanal.</Card>
+  <Card title="Kontroverse um die Zuschreibung" icon="triangle-alert">Wenn mehrere Parteien Einwände gegen das Zuordnungsverhältnis haben, treten sie in das Schlichtungsverfahren ein: Der unabhängige Prüfungsausschuss trifft die endgültige Entscheidung auf der Grundlage der Beweiskette. Die Urteilsergebnisse werden im System erfasst und bilden einen Zuordnungspräzedenzfall.</Card>
+</CardGrid>
+
+<Callout type="warning">
+Die Ausnahmebehandlung ist keine Hilfsfunktion, sondern der Schlüssel zur Vertrauenswürdigkeit des Systems. Einem System, das mit Ausfällen und Streitigkeiten nicht umgehen kann, wird man im echten Geschäft nicht vertrauen können. WCN ist mit Ausnahmepfaden als erstklassige Bürger konzipiert.
+</Callout>
+
+---
+
+## Vollständiges Flussdiagramm
+
+<Callout type="info">
+**Ressourceneintrag** (Tag 0–2)→ **Erstellung und Zuordnung von Geschäftsräumen** (Tag 2–3)→ **Aufgabenzuweisung und -ausführung** (Tag 3–14+)→ **Ergebnisbildung** (Tag N)→ **An Proof Desk übermittelte Nachweise** (Tag N+1)→ **Prüfung und Zuordnung** (Tag N+3–5)→ **PoB-Generierung** (Tag N+5)→ **Zyklusabrechnung** (Abrechnungslauf)
+</Callout>
+
+<Callout type="tip">
+Der dreistufige Prozess stellt eine vollständige Wertschöpfungskette dar: Ressourceneingabe → Workflow-Fortschritt → Ergebnisüberprüfung und -abrechnung. Jeder Abschnitt verfügt über klare Eingaben, Besitzer, Zeitvorgaben und Ausnahmebehandlung. Dabei handelt es sich nicht um einen theoretischen Rahmen, sondern um ein Betriebssystem, das entwickelt und überprüft werden kann.
+</Callout>

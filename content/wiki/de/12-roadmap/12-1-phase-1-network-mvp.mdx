@@ -1,0 +1,62 @@
+---
+title: '12.1 Phase 1: Netzwerk-MVP'
+chapter: 12
+order: 1
+description: >-
+  Benchmark Uniswap v1: einzelne klare Produkthypothese; Zugang zum
+  Lieferknoten, Deal Minimum Closed Loop, Proof Traces, messbarer früher
+  Cashflow und PoB-Prototyp.
+---
+
+<Hero badge="12.1 · Netzwerk-MVP" lead="In dieser Phase werden Uniswap v1 und der frühe „Single-Point-Durchbruch“ von Ethereum bewertet: Es wird keine Full-Stack-Chain-Infrastruktur aufgebaut, sondern nur überprüft, ob weiterhin „strukturierter Deal + Knotennetzwerk + überprüfbare Ergebnisse“ erzielt werden können.">
+# Das Ergebnis ist das minimal akzeptable Unternehmensnetzwerk, nicht das endgültige Architekturdiagramm im Whitepaper.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Kernziele" value="Minimal überprüfbares Netzwerk (Knoten + Deal + Beweis + Einkommen)" />
+  <Meta label="Erfolgskriterium" value="Der geschlossene Regelkreis ist wiederholbar, Beweise können stichprobenartig überprüft werden und die Einheitsökonomie verfügt über Stichproben." />
+  <Meta label="Tue es bewusst nicht" value="Komplexe Abwicklungsverträge, groß angelegter On-Chain-Status und Token als Hauptnarrativ" />
+</MetaGrid>
+
+## Branchenreferenz
+
+- **Uniswap v1**: Nur ETH/ERC20-Einzel-AMM-Formel, Transaktionsvolumen und Liquidität verwenden, um die Produkthypothese zu beweisen, und dann v2/v3 und Governance iterieren; WCN Phase 1 ist das Gleiche, zunächst werden „Transaktionen und Traces“ verwendet, um den Netzwerkwert nachzuweisen.
+- **Ethereum Phase 0→1**: Zuerst Konsens und Sicherheitsbasis, dann Sharding; WCN stellt „Kette und Vermögenswerte“ in den Hintergrund, was gleichbedeutend ist mit der Stabilisierung des „Geschäftskonsenses“ (wer nimmt teil, was gilt als abgeschlossen).
+- **Solana-Anwendungsschicht zuerst**: In der frühen Phase des Ökosystems werden spezifische Anwendungen die Leistungsanforderungen bestimmen; In der WCN-Phase 1 wird das Deal- und Node-Verhalten die Anforderungen an die Produkt- und Risikokontrolle beeinflussen, und nicht das Kettendesign, das das Geschäft umgekehrt beeinflusst.
+
+## Spezifische Leistungen (können in Meilensteindokumente geschrieben werden)
+
+<CardGrid cols={2}>
+  <Card title="Knotenzulassung und Tiering" icon="users">**Lieferung**: Eintrittskriterien, Rollen-Tags (Projekt/Kapital/Service/Verteilung/Region usw.), Verstoß- und Austrittsregeln dokumentiert. **Metriken**: Anzahl der aktiven Knoten, Teilnahmerate nach Rolle, Wiederholungsteilnahmerate (nicht einmalige Aktivitäten).</Card>
+  <Card title="Minimaler Deal-Room-Prozess" icon="handshake">**Lieferung**: Der kürzeste SOP-Weg vom Opportunity-Einstieg bis zum Stufenaufstieg (z. B. Due Diligence/Bedingungen/Lieferung); ein einzelner „goldener Pfad“-Dealtyp, der durchlaufen wird. **Indikatoren**: Anzahl der Deals, die in die Promotion-Phase eintreten, Conversion-Rate der Phase, durchschnittlicher Zyklus (nach Deal-Typ).</Card>
+  <Card title="Proof Desk und Audit-Portal" icon="clipboard-list">**Lieferung**: Ergebnis- und Beweisfeldstandards, Überprüfungswarteschlange, erste Version der Attributionsregeln. **Indikatoren**: Rate der eingereichten Nachweise, Pünktlichkeit der Überprüfung, Verhältnis von Anfechtungen/Abgelehnten (Qualitäts-Proxy-Indikator).</Card>
+  <Card title="frühen Cashflow" icon="coins">**Lieferung**: Die Abrechnung und der Abgleich von Sitzplatzgebühren, Servicegebühren und transaktionsbezogenen Gebühren können durchgeführt werden. **Indikatoren**: MRR/prototypisch wiederkehrender vierteljährlicher Umsatz, Verteilung der Kundenstückpreise, Zahlungseinzugszyklus; Mindestens eine Umsatzart ist ungleich Null und kann Jahr für Jahr überprüft werden.</Card>
+</CardGrid>
+
+## Erfolgsmetriken (empfohlene Schwellenwerte, die von Governance/Betrieb festgelegt werden)
+
+| Abmessungen | Beispielmetriken | Beschreibung |
+|------|----------|------|
+| Netzwerk | Knoten mit mehreren Rollen sind kontinuierlich aktiv | Nicht-Kampagnen-Pulsregistrierung |
+| Geschlossener Kreislauf | Stichprobengröße für End-to-End-Deals | Ähnliche Deals können wiederholt abgeschlossen werden |
+| Qualität | Vollständigkeitsrate des Nachweises und Erfolgsquote der Überprüfung | Vermeiden Sie „nur Erzählung ohne Beweise“ |
+| Geschäft | Die Einheitsökonomie ist positiv oder der Weg ist klar | Prototyp des CAC/LTV-Benchmarking-SaaS/Marktplatzes |
+
+## Signale zum Eintritt in die zweite Phase (Zusammenfassung)
+
+PoB hat sich von „einprägsam“ zu „für Dritte verständlich“ gewandelt: Die Regeln sind dokumentiert, die Stichprobengröße reicht für Fehlertypstatistiken aus und der manuelle Prozess vor dem Agentenzugriff wurde stabilisiert. Einzelheiten finden Sie unter [12.4](/wiki/roadmap/12-4-Milestones and Phase Switching Signals).
+
+## Hauptrisiken in dieser Phase
+
+<CardGrid cols={2}>
+  <Card title="Nachfragerisiko" icon="triangle-alert">Deal Unzureichende Versorgung oder Qualität → Netzwerk im Leerlauf. **Langsame Veröffentlichung**: Konzentrieren Sie sich auf eine einzelne Branche oder eine einzelne Deal-Typ-Penetration.</Card>
+  <Card title="Standard ist zu unterschiedlich" icon="trending-down">Zu viele Individualisierungen pro Bestellung → Nachweis nicht vergleichbar. **Release**: Mindestfeldsatz und Vorlagenphase erzwingen.</Card>
+  <Card title="vorzeitiges Wickeln" icon="link-2">Technische Erzählungen erschweren die Produktiteration. **Release**: Die Kette ist nur eine zukünftige Option und nicht Teil der Kern-OKRs der Phase 1.</Card>
+  <Card title="Compliance und Reputation" icon="shield">Die Grenzen der Finanzförderung sind fließend. **Release**: Rollengrenzen, Haftungsausschlüsse und Bewertungsvoraussetzungen.</Card>
+</CardGrid>
+
+## Warum es besser ist als „ein Schritt“
+
+<Callout type="warning">„Mainnet + Token + Full-featured Platform“ wird im selben Quartal eingeführt, was normalerweise zu erhöhter Sicherheit, unkontrollierbarer Compliance und der Unfähigkeit führt, festzustellen, ob der Fehler vom Produkt oder der Infrastruktur herrührt. Phase 1 komprimiert Fehler in diagnostizierbare Dimensionen (Knoten? Deal? Beweis? Abrechnung?), was im Einklang mit dem von Vitalik befürworteten Protokoll steht, um die Koordinierungskosten schrittweise zu reduzieren, und Uniswap, um Komplexität durch Versionsiteration zu absorbieren.</Callout>
+
+<Statement>Am Ende der ersten Phase sollte die Außenwelt in der Lage sein, drei Fragen zu beantworten: Wer war im Netzwerk, was wurde getan und was wurde bezahlt – mit Belegen für die Antworten.</Statement>

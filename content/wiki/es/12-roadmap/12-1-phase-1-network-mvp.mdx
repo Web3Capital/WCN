@@ -1,0 +1,62 @@
+---
+title: '12.1 Fase 1: MVP de la red'
+chapter: 12
+order: 1
+description: >-
+  Benchmark Uniswap v1: hipótesis de un solo producto claro; acceso al nodo de
+  entrega, bucle cerrado mínimo del acuerdo, seguimientos de prueba, flujo de
+  caja temprano medible y prototipo de PoB.
+---
+
+<Hero badge="12.1 · MVP de la red" lead="Esta etapa compara Uniswap v1 y el “avance de punto único” inicial de Ethereum: no construye una infraestructura de cadena de pila completa, sino que solo verifica si el “acuerdo estructurado + red de nodos + resultados auditables” puede continuar ocurriendo.">
+# El entregable es la red empresarial mínima aceptable, no el diagrama de arquitectura final del documento técnico.
+</Hero>
+
+<MetaGrid>
+  <Meta label="objetivos centrales" value="Red mínima verificable (nodo + negocio + prueba + ingresos)" />
+  <Meta label="criterio de éxito" value="El circuito cerrado es repetible, la prueba se puede verificar aleatoriamente y la economía unitaria tiene muestras." />
+  <Meta label="No hacerlo deliberadamente" value="Contratos de liquidación complejos, estado en cadena a gran escala y Token como narrativa principal" />
+</MetaGrid>
+
+## Referencia de la industria
+
+- **Uniswap v1**: solo fórmula AMM única ETH/ERC20, utiliza el volumen de transacciones y la liquidez para probar la hipótesis del producto, y luego itera v2/v3 y la gobernanza; La fase 1 de WCN es la misma: primero utilice "transacciones y seguimientos" para demostrar el valor de la red.
+- **Ethereum Fase 0→1**: primero el consenso y la base de seguridad, luego la fragmentación; WCN deja atrás "cadena y activos", lo que equivale a estabilizar primero el "consenso empresarial" (quién participa, qué se considera completado).
+- **Primera capa de aplicación de Solana**: en la etapa inicial del ecosistema, aplicaciones específicas impulsarán los requisitos de rendimiento; En la Fase 1 de WCN, el comportamiento de los acuerdos y los nodos impulsará las necesidades de control de riesgos y productos, en lugar de que el diseño de la cadena impulse el negocio a la inversa.
+
+## Entregables específicos (se pueden escribir en documentos de hitos)
+
+<CardGrid cols={2}>
+  <Card title="Admisión de nodos y niveles" icon="users">**Entrega**: Criterios de entrada, etiquetas de roles (proyecto/capital/servicio/distribución/región, etc.), reglas de infracción y salida documentadas. **Métricas**: número de nodos activos, tasa de participación por rol, tasa de participación repetida (actividades que no son únicas).</Card>
+  <Card title="Proceso mínimo de la sala de acuerdos" icon="handshake">**Entrega**: el SOP de camino más corto desde la entrada de la oportunidad hasta el avance de la etapa (como la debida diligencia/términos/entrega); un único tipo de acuerdo "camino dorado" recorrido. **Indicadores**: Número de acuerdos que ingresan a la etapa de promoción, tasa de conversión de etapa, ciclo promedio (por tipo de acuerdo).</Card>
+  <Card title="Escritorio de pruebas y portal de auditoría" icon="clipboard-list">**Entrega**: Estándares de campo de resultados y evidencia, cola de revisión, primera versión de reglas de atribución. **Indicadores**: tasa de presentación de pruebas, puntualidad de las revisiones, proporción de impugnaciones/rechazos (indicador indirecto de calidad).</Card>
+  <Card title="flujo de caja inicial" icon="coins">**Entrega**: Se puede ejecutar la facturación y conciliación de tarifas de asiento, tarifas de servicio y tarifas relacionadas con transacciones. **Indicadores**: MRR/prototipo de ingresos recurrentes trimestrales, distribución de precios unitarios para clientes, ciclo de cobro de pagos; al menos un tipo de ingreso es distinto de cero y puede revisarse año tras año.</Card>
+</CardGrid>
+
+## Métricas de éxito (umbrales recomendados establecidos por la gobernanza/operaciones)
+
+| Dimensiones | Métricas de ejemplo | Descripción |
+|------|----------|------|
+| Red | Los nodos multifunción están continuamente activos | Registro de pulsos fuera de campaña |
+| Bucle cerrado | Tamaño de muestra de acuerdos de extremo a extremo | Se pueden completar acuerdos similares repetidamente |
+| Calidad | Tasa de finalización de pruebas y tasa de aprobación de revisiones | Evite "sólo narrativa sin pruebas" |
+| Negocios | Las economías unitarias son positivas o el camino está despejado | Prototipo de evaluación comparativa CAC/LTV SaaS/mercado |
+
+## Señales para entrar a la segunda fase (resumen)
+
+PoB ha cambiado de "memorable" a "comprensible para terceros": las reglas están documentadas, el tamaño de la muestra es suficiente para las estadísticas del tipo de error y se ha estabilizado el proceso manual antes del acceso del Agente. Consulte [12.4](/wiki/roadmap/12-4-Milestones and Phase Switching Signals) para obtener más detalles.
+
+## Principales riesgos en esta etapa
+
+<CardGrid cols={2}>
+  <Card title="riesgo de demanda" icon="triangle-alert">Oferta Suministro o calidad insuficiente → Red inactiva. **Lanzamiento lento**: céntrese en una única penetración vertical o de tipo acuerdo único.</Card>
+  <Card title="El estándar es demasiado divergente" icon="trending-down">Demasiada personalización por pedido → Las pruebas no se pueden comparar. **Versión**: Aplicar el conjunto mínimo de campos y la fase de creación de plantillas.</Card>
+  <Card title="bobinado prematuro" icon="link-2">La narrativa técnica exprime la iteración del producto. **Comunicado**: La cadena es solo una opción futura y no forma parte de los OKR principales de la Fase 1.</Card>
+  <Card title="Cumplimiento y reputación" icon="shield">Los límites de la promoción financiera son borrosos. **Versión**: Límites de funciones, exenciones de responsabilidad y requisitos previos de calificación de reseñas.</Card>
+</CardGrid>
+
+## Por qué es mejor que "un paso"
+
+<Callout type="warning">"Mainnet + Token + Plataforma con todas las funciones" se lanza en el mismo trimestre, lo que generalmente resulta en: seguridad ampliada, cumplimiento incontrolable e incapacidad de determinar si la falla proviene del producto o de la infraestructura. La fase 1 comprime las fallas en dimensiones diagnosticables (¿nodo? ¿Acuerdo? ¿Prueba? ¿Facturación?), lo cual es consistente con el protocolo defendido por Vitalik para reducir los costos de coordinación en etapas y Uniswap para absorber la complejidad a través de la iteración de la versión.</Callout>
+
+<Statement>Al final de la primera fase, el mundo exterior debería poder responder tres preguntas: quién estaba en la red, qué se hizo y qué se pagó, con evidencia de las respuestas.</Statement>

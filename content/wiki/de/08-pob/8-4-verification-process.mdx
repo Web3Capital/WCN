@@ -1,0 +1,56 @@
+---
+title: 8.4 Verifizierungsprozess
+description: >-
+  Einreichung des Vorfalls → Beweispaket → Überprüfungswarteschlange →
+  Schlussfolgerung → Einreichung und Abrechnung; Proof Desk, ergänzende
+  Dokumente, Streitfälle und Prüfspuren.
+chapter: 8
+order: 4
+---
+
+<Hero badge="8.4 · Verifizierungsprozess" lead="Was der On-Chain-Konsens bestätigt, ist die Transaktionssequenz und der Zustandsübergang; Was PoB bestätigt, ist, „ob diese Sache so passiert ist, wie in der Geschäftswelt behauptet.“ Der Verifizierungsprozess komprimiert subjektive Erzählungen in überprüfbare Arbeitsabläufe: Vollständigkeit der Materialien, zeitliche Konsistenz, Selbstkonsistenz der Zuschreibung und Vergleich mit Ausschlussregeln (8.3).">
+# Geschehen ≠ Bestätigt. Erst nach Abschluss der Verifizierungskette gelangt das Ergebnis in das PoB-Ledger und wird zu einem langfristigen Werteingang.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Was diese Seite macht" value="Link- und Proof-Desk-Funktionen in fünf Schritten" />
+  <Meta label="Kernthemen" value="Beweislast, Überprüfung, Schlussfolgerung, Nichtabstreitbarkeitseinreichung" />
+  <Meta label="Lese-Highlights" value="Nachtrag/Ablehnung/Einspruch; Analogie und Unterschied zum PoW-Blockproduktionsprozess" />
+</MetaGrid>
+
+## Fünf Schritte zur Verifizierung (Workflow-Ansicht)
+
+<Steps>
+  <Step title="① Einreichung der Veranstaltung">Generieren Sie eine **eindeutige Ereignisnummer** für den Endzustand und binden Sie Deal, Task, zugehörige Knoten und Anweisungstypen (Finanzierung/Dienstleistung/Wachstum usw.). Die Einreichung trägt die **Beweislast**: Eventuelle Lücken in den Materialien müssen von der einreichenden Partei innerhalb der Frist geschlossen werden.</Step>
+  <Step title="② Beweispaket hochladen">Senden Sie Verträge, On-Chain-Referenzen, Bank-/Treuhandpfade (Compliance-Desensibilisierung), E-Mails/Protokolle, Annahmeformulare usw. gemäß der Vorlage. **Analog zu GIPS**: Die Daten sollten ausreichen, um es einer unabhängigen Partei zu ermöglichen, angemessene Anstrengungen zu unternehmen, um die Schlussfolgerung zu überprüfen, anstatt nur „dem Antragsteller zu vertrauen“.</Step>
+  <Step title="③ Überprüfungswarteschlange">Der Prüfer prüft: **Authentizität** (ob sie mit einem Dritten oder in der Kette übereinstimmt), **Integrität** (ob der Endzustand geschlossen ist), **Zeitsequenz** (ob sie rückdatiert ist), **Attributionsgrenze** (ob sie im Widerspruch zu 8.5 steht), **Ausschlussregeln** (ob sie unter 8.3 fällt). Kombinierbar mit Multi-Signatur-, Rotations- oder Stichprobenaudits.</Step>
+  <Step title="④ Schlussfolgerungsgenerierung">**Bestanden** / **Ergänzung** / **Abgelehnt** / **Streiteskalation**. Es sollte eine Häufigkeit und eine zeitliche Begrenzung für ergänzende Dokumente geben, um endlose Verzögerungen zu vermeiden; Bei Streitigkeiten sollten Einspruchsprotokolle geführt werden, um ein „Vorbeigehen durch Schweigen“ zu vermeiden.</Step>
+  <Step title="⑤ Einreichung berücksichtigen">Nach dem Bestehen wird das PoB-Ereignis-Ledger (einschließlich Abschluss-Hash, Schlüsselmetadaten und Version) geschrieben. Dieser Datensatz ähnelt einem geprüften Leistungseintrag: Er kann als Anker für die spätere Abrechnung, Reputation und Revalidierung dienen.</Step>
+</Steps>
+
+<Callout type="info">
+Im Vergleich zu PoW: Was Miner beweisen, ist **Rechenleistung**; Was das PoB-Audit beweist, ist **die Konsistenz von Materialien und Fakten**. Vergleich mit PoA: PoA vertraut der **Identität des Zertifizierers**; Für PoB ist weiterhin ein **Beweispaket** erforderlich, und die Identität des Prüfers ersetzt nicht das Material.
+</Callout>
+
+---
+
+## Proof Desk: Verifizierungszentrum, keine Netzwerkfestplatte
+
+<CardGrid cols={2}>
+  <Card title="Sammeln Sie Beweise" icon="inbox">Strukturiertes Feld + Anhangsversion; Vermeiden Sie den Verlust von Dateien im Chat-Fenster und machen Sie es unüberprüfbar.</Card>
+  <Card title="Managementbewertung" icon="scale">Es können Warteschlangenpriorität, SLA, doppelte Überprüfung oder zufällige Inspektionsregeln verwaltet werden.</Card>
+  <Card title="Lassen Sie Raum für Streit" icon="message-square">Die Gründe für Einwände und Entscheidungen bleiben unberücksichtigt, um eine spätere Überprüfung und Regelwiederholung zu erleichtern.</Card>
+  <Card title="Ausgabeschluss" icon="flag">Klären Sie den Endzustand: **Ob PoB eingegeben werden soll**; Wenn dies fehlschlägt, wird es nicht in die Semantik der langfristigen Wertverteilung aufgenommen.</Card>
+</CardGrid>
+
+---
+
+## Der Ort, an dem Anti-Cheating stattfindet, liegt auf der Prozessebene
+
+- **Gegenprüfung**: Stimmen die On-Chain-Zeit, der E-Mail-Domänenname des Drittanbieters und die Vertragsnummer mit den öffentlichen Offenlegungen überein?
+- **Sich gegenseitig ausschließende Ereignisse**: Nur eine **archivierte** dominante Kette ist für dieselbe Finanzierungsrunde und dasselbe Akzeptanzziel zulässig, es sei denn, sie wird durch eine Entscheidung aufgeteilt.
+- **Abkühlung und Häufigkeit**: Ungewöhnlich häufige, auf Vorlagen basierende Materialien lösen eine manuelle oder algorithmusgestützte Überprüfung aus.
+
+<Callout type="tip">
+Der Verifizierungsprozess hat WCN von „Wer hat die lauteste Stimme“ zu „Wer hat die härtesten Materialien“ gemacht. Ohne diesen Schritt unterscheidet sich PoB nicht von der Off-Chain-Excel-Aufzeichnung von Guthaben und ist anfälliger für Manipulationen.
+</Callout>

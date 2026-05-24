@@ -1,0 +1,67 @@
+---
+title: 7.4 Grenzen des Agenten
+description: >-
+  Alphabetisierung, Genehmigung, Finanzierung und rechtliche rote Linien; die
+  Risikomatrix von Illusion und Überforderung; Arbeitsteilung zwischen Mensch
+  und Maschine und bremsbares Design.
+chapter: 7
+order: 4
+---
+
+<Hero badge="7.4 · Agentengrenzen" lead="Je stärker die Fähigkeit, desto strengere Grenzen sind erforderlich: Welche Ausgaben können nur entworfen werden, welche Aktionen müssen HITL sein und welche Daten werden niemals die Domäne verlassen. Die Grenze besteht nicht darin, die Innovation einzuschränken, sondern darin, LLM von einer „nicht rechenschaftspflichtigen Black Box“ in eine „vertretbare Komponente“ umzuwandeln – im Gegensatz zu Copilot, das nur empfiehlt und der Benutzer die volle Verantwortung dafür trägt, muss WCN die Verantwortlichkeiten explizit auf der Netzwerkebene aufteilen.">
+# Nur kontrollierte Agenten können das Abrechnungs- und Reputationssystem betreten.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Was diese Seite macht" value="Erlaubter Satz/Verbotener Satz/Risiko- und Kontrollmaßnahmen" />
+  <Meta label="Kernthemen" value="Die endgültige Zusage und die Finanzierungsrechte bleiben bei der Person" />
+  <Meta label="Lese-Highlights" value="Rechtliches, Finanzierung, PoB, externe Verpflichtungen, Protokolle" />
+</MetaGrid>
+
+## Was der Agent tun kann (erlaubte Menge)
+
+<CardGrid cols={2}>
+  <Card title="Recherchieren und organisieren" icon="search">Zusammenfassung, Vergleichsmatrix, vorläufiges Due-Diligence-Screening, Aufzählungszeichen mit Quellenangabe; Passend für GPT-4 / Claude Langartikel + RAG. Die Ausgabe-Standardbezeichnung lautet „nicht rechtlich verifiziert“.</Card>
+  <Card title="Ablauf und Protokoll" icon="file-text">Entwurf eines Sitzungsprotokolls, Aktionspunkte, Vorlagen für Folge-E-Mails; Kernszenarien der Ausführungsklasse. Fehler in der Zeitleiste und bei der Sprecherzuordnung müssen manuell korrigiert werden.</Card>
+  <Card title="Wachstum und Überwachung" icon="chart-bar">Narrative Beschreibungen von Copywriting-Variationen, Kanal-Highlights und Indikatoranomalien; Benachrichtigungen in natürlicher Sprache nach liquiditätsähnlichen, schreibgeschützten Kursen.</Card>
+  <Card title="Automatisierung mit geringem Risiko" icon="settings">Füllen Sie Formulare aus, beschriften Sie sie und synchronisieren Sie Statusfelder im Rahmen expliziter Berechtigungen. Ähnlich wie RPA, aber mit LLM, das unstrukturierte Eingaben analysiert.</Card>
+</CardGrid>
+
+## Was der Agent nicht tun kann (verbotener Satz)
+
+<CardGrid cols={3}>
+  <Card title="Kein Ersatz für einen Vertragsabschluss" icon="ban">Elektronische Signaturen, verbindliche Bedingungen und Exklusiv-/Glücksspielabschlüsse erfordern menschliche und rechtliche Prozesse.</Card>
+  <Card title="Die Finanzierung kann nicht allein erfolgen" icon="ban">Überweisungen, Mittelzuweisungen, On-Chain-Autorisierungen, Treuhandanweisungen – sogar Tools zur Wallet-Verbindung erfordern mehrere menschliche Genehmigungen und Einschränkungen.</Card>
+  <Card title="Es können keine Rechts-/Steuer-/Prüfungsgutachten abgegeben werden" icon="ban">Zusammenfassungen von Vorschriften können durchsucht werden, abschließende Schlussfolgerungen wie „für Sie legal“ sind nicht zulässig.</Card>
+  <Card title="PoB konnte nicht abgeschlossen werden" icon="ban">Proof-Desk- und Governance-Regeln bestimmen die Akzeptanz; Agenten können vorab geprüft und sortiert werden, können jedoch nicht „durch Selbstzertifizierung“ bestehen.</Card>
+  <Card title="Gehen Sie keine externen Verpflichtungen ein, die über Ihre Befugnisse hinausgehen" icon="ban">Einkommen, regulatorischer Status, Zeit in der Kanzlei, Werbebeziehungen – es ist verboten, Erklärungen auf Anwaltskanzleienebene automatisch zu erstellen und zu versenden.</Card>
+  <Card title="Protokollierung und Übernahme können nicht umgangen werden" icon="ban">Der kritische Pfad muss unterbrechbar und rollbar sein; Der stille Aufruf nicht registrierter Tools ist verboten.</Card>
+</CardGrid>
+
+## Risikomatrix (vereinfacht)
+
+| Risiko | Leistung | Kontrollideen |
+| --- | --- | --- |
+| Illusion | Erfundene Fälle, falsche Gesetze, falsche Firmennamen | Pflichtangebot; Geben Sie „unbekannt“ aus, wenn Sie unsicher sind; Überprüfung der Schlüsselfeldregel |
+| Sofortige Injektion | Schädliche Webseiten/PDFs, die zu Datenlecks oder unbefugtem Zugriff führen | Werkzeugisolation; Sandbox für nicht vertrauenswürdige Inhalte; ausgehende Aktionen HITL |
+| Datenleck | Schulungen oder Protokolle nehmen die Vertraulichkeit weg | Datenklassifizierung; Log-Desensibilisierung; Löschen von Schlüsseln nach der Pensionierung |
+| Übermäßige Autonomie | Endlosschleifen und Gebühren im AutoGPT-Stil | Budget und Schrittlimit auf Aufgabenebene; Keine Aufgabe bedeutet keine Ausführung |
+| Unklare Verantwortlichkeiten | Ich weiß nicht, wer es genehmigt hat, wenn etwas schief gelaufen ist | Annahmedatensatz + Genehmigungskette + Modell-/Prompt-Versionsnummer |
+
+<Callout type="warning">
+Ohne Grenzen ist KI keine stärkere Ausführungsebene, sondern ein Hebel, der Fehler verstärkt – insbesondere bei hochriskanten Texterstellungs- und Finanzierungsprozessen.
+</Callout>
+
+## Abgrenzung der Verantwortlichkeiten mit Microsoft Copilot/Universal Assistant
+
+In den Allgemeinen Geschäftsbedingungen von Copilot heißt es: **Es wird empfohlen, dass der Benutzer für die Überprüfung verantwortlich ist**. Die WCN-Netzwerkseite muss auch die **Mehrparteien-Attribution** unterstützen: Daher muss die Agentengrenze in Typrichtlinien und Aufgabenverträgen festgeschrieben werden, anstatt sich ausschließlich auf die Selbstdisziplin des Endbenutzers zu verlassen.
+
+<Statement>Was WCN braucht, ist ein Agent, der erklärt werden kann, verantwortlich ist und PoB betreten kann; „Das Modell sagt es“ kann nicht als der Knoten angesehen werden, der es sagt.</Statement>
+
+## TradFi-Enthüllung: Die Automatisierung stoppt vor der Entscheidungskette
+
+COIN-Systeme verarbeiten große Mengen an Dokumentenanalysen, und **Kreditentscheidungen unterliegen immer noch den Bankrichtlinien und der menschlichen Überprüfung**; Aladdin betont, dass die Risikokaliber konsistent sind und **Portfoliomanager weiterhin die Investitionsverantwortung tragen**. WCN folgt dem gleichen Prinzip: **Der Agent verringert die Reibung und ersetzt nicht die Signaturberechtigung. **
+
+<Callout type="tip">
+Ein Satz zur Produktakzeptanz: **Wenn Sie den Agenten löschen, ist der Geschäftsprozess immer noch legal und kann ausgeführt werden, aber er wird langsamer sein** – die Grenze ist ungefähr korrekt. Wenn der Löschvorgang des Agenten die Schleife nicht schließen kann, bedeutet dies, dass die menschliche Verbindung übermäßig beeinträchtigt wurde.
+</Callout>

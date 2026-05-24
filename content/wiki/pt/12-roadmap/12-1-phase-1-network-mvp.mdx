@@ -1,0 +1,62 @@
+---
+title: '12.1 Fase 1: MVP de rede'
+chapter: 12
+order: 1
+description: >-
+  Benchmark Uniswap v1: hipótese de produto único e claro; acesso ao nó de
+  entrega, ciclo fechado mínimo do negócio, rastreamentos de prova, fluxo de
+  caixa antecipado mensurável e protótipo PoB.
+---
+
+<Hero badge="12.1 · MVP de rede" lead="Este estágio compara o Uniswap v1 e o “avanço de ponto único” inicial do Ethereum: ele não constrói uma infraestrutura de cadeia full-stack, mas apenas verifica se “negócio estruturado + rede de nós + resultados auditáveis” pode continuar a ocorrer.">
+# A entrega é a rede comercial mínima aceitável, não o diagrama de arquitetura final no white paper.
+</Hero>
+
+<MetaGrid>
+  <Meta label="objetivos principais" value="Rede Mínima Verificável (Nó + Negócio + Prova + Renda)" />
+  <Meta label="critério de sucesso" value="O circuito fechado é repetível, a prova pode ser verificada aleatoriamente e a economia unitária possui amostras." />
+  <Meta label="Deliberadamente não fazendo isso" value="Contratos de liquidação complexos, status on-chain em grande escala e Token como narrativa principal" />
+</MetaGrid>
+
+## Referência da indústria
+
+- **Uniswap v1**: Somente fórmula AMM única ETH/ERC20, usa volume de transação e liquidez para provar a hipótese do produto e, em seguida, itera v2/v3 e governança; A Fase 1 do WCN é a mesma, primeiro use “transações e rastreamentos” para provar o valor da rede.
+- **Ethereum Fase 0→1**: Consenso e base de segurança primeiro, depois fragmentação; A WCN coloca “cadeia e ativos” para trás, o que equivale a estabilizar primeiro o “consenso empresarial” (quem participa, o que conta como concluído).
+- **Primeira camada de aplicação Solana**: Na fase inicial do ecossistema, aplicações específicas impulsionarão os requisitos de desempenho; na Fase 1 da WCN, o comportamento do negócio e do nó impulsionará as necessidades de controle de produtos e riscos, em vez de o design da cadeia impulsionar os negócios ao contrário.
+
+## Entregas específicas (podem ser escritas em documentos de marcos)
+
+<CardGrid cols={2}>
+  <Card title="Admissão e classificação de nós" icon="users">**Entrega**: Critérios de entrada, etiquetas de função (projeto/capital/serviço/distribuição/região, etc.), violação e regras de saída documentadas. **Métricas**: número de nós ativos, taxa de participação por função, taxa de participação repetida (atividades não únicas).</Card>
+  <Card title="Processo Mínimo da Sala de Negociação" icon="handshake">**Entrega**: o SOP do caminho mais curto desde a entrada da oportunidade até o avanço do estágio (como due diligence/termos/entrega); um único tipo de negócio "caminho dourado" executado. **Indicadores**: Número de negócios que entram na fase de promoção, taxa de conversão da fase, ciclo médio (por tipo de negócio).</Card>
+  <Card title="Proof Desk e Portal de Auditoria" icon="clipboard-list">**Entrega**: padrões de campo de resultados e evidências, fila de revisão, primeira versão das regras de atribuição. **Indicadores**: Taxa de envio de provas, pontualidade da revisão, proporção contestada/rejeitada (indicador proxy de qualidade).</Card>
+  <Card title="fluxo de caixa antecipado" icon="coins">**Entrega**: O faturamento e a reconciliação de taxas de assento, taxas de serviço e taxas relacionadas a transações podem ser executados. **Indicadores**: MRR/protótipo de receita recorrente trimestral, distribuição de preço unitário do cliente, ciclo de cobrança; pelo menos um tipo de receita é diferente de zero e pode ser revisto ano após ano.</Card>
+</CardGrid>
+
+## Métricas de sucesso (limiares recomendados definidos pela governança/operações)
+
+| Dimensões | Métricas de exemplo | Descrição |
+|------|----------|------|
+| Rede | Nós multifuncionais estão continuamente ativos | Registro de pulso não_campaign |
+| Ciclo fechado | Tamanho da amostra de negócio ponta a ponta | Negócios semelhantes podem ser concluídos repetidamente |
+| Qualidade | Taxa de conclusão da prova e taxa de aprovação na revisão | Evite “apenas narrativa sem provas” |
+| Negócios | A economia unitária é positiva ou o caminho está claro | Protótipo de benchmarking CAC/LTV SaaS/market place |
+
+## Sinais para entrar na segunda fase (resumo)
+
+O PoB mudou de "memorável" para "compreensível por terceiros": as regras são documentadas, o tamanho da amostra é suficiente para estatísticas de tipo de erro e o processo manual antes do acesso do Agente ser estabilizado. Consulte [12.4](/wiki/roadmap/12-4-Milestones and Phase Switching Signals) para obter detalhes.
+
+## Principais riscos nesta fase
+
+<CardGrid cols={2}>
+  <Card title="risco de demanda" icon="triangle-alert">Oferta Fornecimento ou qualidade insuficiente → Rede ociosa. **Lançamento lento**: concentre-se em uma única penetração vertical ou de tipo de negócio único.</Card>
+  <Card title="O padrão é muito divergente" icon="trending-down">Muita personalização por pedido → A prova não pode ser comparada. **Lançamento**: impõe conjunto mínimo de campos e fase de modelagem.</Card>
+  <Card title="enrolamento prematuro" icon="link-2">A narrativa técnica comprime a iteração do produto. **Lançamento**: A cadeia é apenas uma opção futura e não faz parte dos OKRs principais da Fase 1.</Card>
+  <Card title="Conformidade e reputação" icon="shield">Os limites da promoção financeira são confusos. **Lançamento**: Limites de funções, isenções de responsabilidade e pré-requisitos de classificação de revisão.</Card>
+</CardGrid>
+
+## Por que é melhor do que “um passo”
+
+<Callout type="warning">“Mainnet + Token + Plataforma Completa” é lançada no mesmo trimestre, o que geralmente resulta em: segurança ampliada, conformidade incontrolável e incapacidade de determinar se a falha vem do produto ou da infraestrutura. A Fase 1 compacta as falhas em dimensões diagnosticáveis ​​(nó? Negócio? Prova? Faturamento?), o que é consistente com o protocolo defendido por Vitalik para reduzir custos de coordenação em etapas e Uniswap para absorver a complexidade por meio da iteração de versões.</Callout>
+
+<Statement>No final da primeira fase, o mundo exterior deverá ser capaz de responder a três perguntas: quem estava na rede, o que foi feito e o que foi pago – com provas das respostas.</Statement>

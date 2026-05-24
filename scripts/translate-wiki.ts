@@ -24,23 +24,41 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 
-const SRC = path.join(process.cwd(), "content", "wiki", "zh");
-const DST = path.join(process.cwd(), "content", "wiki", "en");
-const CACHE_PATH = path.join(process.cwd(), "scripts", ".translate-wiki-cache.json");
-
-const ZH = /[一-鿿]/;
-const NON_TRANSLATABLE_ATTRS = new Set([
-  "href", "icon", "id", "src", "className", "class", "type", "cols",
-  "rows", "slug", "name", "key", "ref", "alt", // alt could be Chinese — but let's keep simple for now; actually translate alt
-]);
-// Actually: alt is descriptive text, should translate. Remove from non-translatable.
-NON_TRANSLATABLE_ATTRS.delete("alt");
-
 /* ------------------------- args ------------------------- */
 const args = process.argv.slice(2);
-const chapterArgIdx = args.indexOf("--chapter");
-const onlyChapter = chapterArgIdx >= 0 ? args[chapterArgIdx + 1] : null;
+function argFlag(name: string): string | null {
+  const i = args.indexOf(name);
+  return i >= 0 ? args[i + 1] : null;
+}
+const SRC_LOCALE = argFlag("--source") ?? "zh";
+const TGT_LOCALE = argFlag("--target") ?? "en";
+const onlyChapter = argFlag("--chapter");
 const rewriteOnly = args.includes("--rewrite-only");
+
+const SRC = path.join(process.cwd(), "content", "wiki", SRC_LOCALE);
+const DST = path.join(process.cwd(), "content", "wiki", TGT_LOCALE);
+const CACHE_PATH = path.join(
+  process.cwd(), "scripts",
+  `.translate-wiki-cache-${SRC_LOCALE}-${TGT_LOCALE}.json`
+);
+
+/** Google Translate's "tl" / "sl" param codes for our project locales. */
+const LOCALE_TO_GOOGLE: Record<string, string> = {
+  zh: "zh-CN", en: "en", ja: "ja", ko: "ko",
+  es: "es", fr: "fr", de: "de", pt: "pt", ar: "ar", ru: "ru",
+};
+
+/** Detect "needs translation" text. CJK source uses CJK regex; otherwise
+ *  any non-ASCII-only run is "needs translation" — but practically when we
+ *  translate from `en` we want to translate every string regardless. */
+const NEEDS_TRANSLATION = SRC_LOCALE === "zh"
+  ? /[一-鿿]/
+  : /\S/; // anything non-empty
+
+const NON_TRANSLATABLE_ATTRS = new Set([
+  "href", "icon", "id", "src", "className", "class", "type", "cols",
+  "rows", "slug", "name", "key", "ref",
+]);
 
 /* ------------------------- cache ------------------------- */
 const cache: Record<string, string> = fs.existsSync(CACHE_PATH)
@@ -58,7 +76,11 @@ function flushCache() {
 async function gtranslate(text: string): Promise<string> {
   const url =
     "https://translate.googleapis.com/translate_a/t?" +
-    new URLSearchParams({ client: "dict-chrome-ex", sl: "zh-CN", tl: "en" }).toString();
+    new URLSearchParams({
+      client: "dict-chrome-ex",
+      sl: LOCALE_TO_GOOGLE[SRC_LOCALE] ?? SRC_LOCALE,
+      tl: LOCALE_TO_GOOGLE[TGT_LOCALE] ?? TGT_LOCALE,
+    }).toString();
   const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -84,7 +106,7 @@ async function gtranslate(text: string): Promise<string> {
 }
 
 async function tr(text: string): Promise<string> {
-  if (!ZH.test(text)) return text;
+  if (!NEEDS_TRANSLATION.test(text)) return text;
   const trimmed = text.trim();
   if (cache[trimmed]) {
     // Preserve original surrounding whitespace.
@@ -133,16 +155,21 @@ function slugify(s: string): string {
 }
 
 /**
- * Take "1.1 What is WCN" → "1-1-what-is-wcn"
- * Preserve the numeric chapter-section prefix from the original Chinese filename
- * to maintain ordering and meta `order` mapping.
+ * Decide the target-locale filename.
+ *
+ * - Source is zh: original filename contains Chinese characters; slugify the
+ *   translated title (with the numeric prefix preserved) to produce a clean
+ *   ASCII filename. This is how en/ was built from zh/.
+ * - Source is anything else (typically en): the source filename is already an
+ *   ASCII slug; keep it verbatim so URLs stay consistent across all locales
+ *   (e.g. /ja/wiki/project-intro/1-1-what-is-wcn).
  */
-function buildEnFilename(origZhFilename: string, enTitle: string): string {
-  if (origZhFilename === "index.mdx") return "index.mdx";
-  // Original like "1-1-wcn-是什么.mdx" → keep "1-1-" prefix, slug the rest from enTitle
-  const prefixMatch = origZhFilename.match(/^(\d+(?:-\d+)*)-/);
+function buildTgtFilename(origSrcFilename: string, tgtTitle: string): string {
+  if (origSrcFilename === "index.mdx") return "index.mdx";
+  if (SRC_LOCALE !== "zh") return origSrcFilename;
+  const prefixMatch = origSrcFilename.match(/^(\d+(?:-\d+)*)-/);
   const prefix = prefixMatch ? prefixMatch[1] + "-" : "";
-  const titleSlug = slugify(enTitle).replace(/^\d+(-\d+)*-/, "");
+  const titleSlug = slugify(tgtTitle).replace(/^\d+(-\d+)*-/, "");
   return `${prefix}${titleSlug || "untitled"}.mdx`;
 }
 
@@ -181,7 +208,7 @@ async function translateLine(line: string): Promise<string> {
     }
     for (const p of pieces) {
       if (NON_TRANSLATABLE_ATTRS.has(p.attr)) continue;
-      if (!ZH.test(p.val)) continue;
+      if (!NEEDS_TRANSLATION.test(p.val)) continue;
       const translated = await tr(p.val);
       // Translator turns CJK guillemets into ASCII straight quotes, which
       // collide with the JSX attribute delimiter. Convert any inner straight
@@ -193,7 +220,7 @@ async function translateLine(line: string): Promise<string> {
     // If, after attribute substitution, there is still un-translated CJK text
     // outside of any tag in this line (e.g. `<Hero>foo中文bar</Hero>` on one line),
     // try a per-segment translation of text between tags.
-    if (ZH.test(result.replace(/<[^>]+>/g, ""))) {
+    if (NEEDS_TRANSLATION.test(result.replace(/<[^>]+>/g, ""))) {
       // Strip tags, translate the remaining CJK runs.
       result = await translateInlineText(result);
     }
@@ -201,7 +228,7 @@ async function translateLine(line: string): Promise<string> {
   }
 
   // Plain markdown / inline JSX line
-  if (ZH.test(line)) {
+  if (NEEDS_TRANSLATION.test(line)) {
     return await translateInlineText(line);
   }
   return line;
@@ -217,7 +244,7 @@ async function translateInlineText(line: string): Promise<string> {
   for (let i = 0; i < parts.length; i++) {
     const seg = parts[i];
     if (i % 2 === 1) continue; // tag span
-    if (!ZH.test(seg)) continue;
+    if (!NEEDS_TRANSLATION.test(seg)) continue;
     parts[i] = await tr(seg);
   }
   return parts.join("");
@@ -232,7 +259,7 @@ async function translateBody(body: string): Promise<string> {
     if (/^```/.test(line)) { inFence = !inFence; continue; }
     if (inFence) continue;
     if (/^\s*import\s/.test(line)) continue;
-    if (!ZH.test(line)) continue;
+    if (!NEEDS_TRANSLATION.test(line)) continue;
     lines[i] = await translateLine(line);
   }
   return lines.join("\n");
@@ -246,7 +273,7 @@ async function translateMdxFile(srcPath: string): Promise<{ enFilename: string; 
   // Translate string-typed frontmatter values that contain CJK.
   for (const k of Object.keys(fm)) {
     const v = fm[k];
-    if (typeof v === "string" && ZH.test(v)) {
+    if (typeof v === "string" && NEEDS_TRANSLATION.test(v)) {
       fm[k] = (await tr(v));
     }
   }
@@ -255,7 +282,7 @@ async function translateMdxFile(srcPath: string): Promise<{ enFilename: string; 
   const body = await translateBody(parsed.content);
 
   const out = matter.stringify(body, fm);
-  const enFilename = buildEnFilename(path.basename(srcPath), enTitle);
+  const enFilename = buildTgtFilename(path.basename(srcPath), enTitle);
   return { enFilename, content: out, enTitle };
 }
 
@@ -263,7 +290,7 @@ async function translateMetaJson(srcPath: string, dstPath: string): Promise<void
   const data = JSON.parse(fs.readFileSync(srcPath, "utf8")) as Record<string, unknown>;
   for (const k of ["title", "description"]) {
     const v = data[k];
-    if (typeof v === "string" && ZH.test(v)) {
+    if (typeof v === "string" && NEEDS_TRANSLATION.test(v)) {
       data[k] = await tr(v);
     }
   }
@@ -315,6 +342,12 @@ async function processChapter(chapterDir: string): Promise<ChapterPlan> {
  * Chapter slugs are unchanged (defined in _meta.json `slug`).
  */
 function rewriteInternalLinks(plans: ChapterPlan[]) {
+  // When source is already an ASCII-slug locale (typically en), target inherits
+  // identical filenames — no internal-link rewriting is needed.
+  if (SRC_LOCALE !== "zh") {
+    console.log(`\n🔗 (source=${SRC_LOCALE}, slugs preserved — skipping rewrite)`);
+    return;
+  }
   // Build chapter-slug → { zhFileSlug: enFileSlug } map.
   const slugMap: Record<string, Record<string, string>> = {};
   for (const plan of plans) {

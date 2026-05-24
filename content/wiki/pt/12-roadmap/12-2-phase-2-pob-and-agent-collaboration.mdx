@@ -1,0 +1,59 @@
+---
+title: '12.2 Fase 2: Colaboração entre PoB e Agente'
+chapter: 12
+order: 2
+description: >-
+  O benchmarking do Uniswap v2/v3 e do Ethereum toma o Rollup como o estágio
+  central: o padrão é solidificado e a capacidade de composição é aprimorada; O
+  PoB pode ser orquestrado e o Agente pode ser auditado e revertido.
+---
+
+<Hero badge="12.2 · Colaboração entre PoB e Agente" lead="A primeira etapa prova que “a rede pode funcionar”; este estágio prova que “a rede pode funcionar em grande escala” - o PoB torna-se um livro-razão confiável combinável e o Agente torna-se uma camada de execução restrita em vez de uma automação de caixa preta.">
+# Da emenda manual à operação do sistema: padrões, logs, permissões e métodos replicáveis ​​são alinhados no mesmo estágio.
+</Hero>
+
+<MetaGrid>
+  <Meta label="objetivos principais" value="Padronização PoB + Governança de engenharia de agentes" />
+  <Meta label="critério de sucesso" value="SLA de colaboração homem-máquina, controle de versão PoB e responsabilidade por exceções" />
+  <Meta label="Ainda não estou fazendo isso" value="Alocar todo valor para a cadeia; deixe o agente assumir compromissos de alto risco de forma independente" />
+</MetaGrid>
+
+## Referência da indústria
+
+- **Uniswap v2→v3**: De um pool geral para liquidez centralizada e níveis de taxas, é uma evolução dupla de "refinamento de regras + eficiência de capital"; A Fase 2 do WCN corresponde ao versionamento dos campos PoB, níveis de auditoria, incentivos e regras de atribuição.
+- **Rota Ethereum L2**: Execução e liquidação da camada, e a rede principal garante a finalidade; O WCN coloca em camadas "tomada de decisão humana/execução do agente/registros PoB", e o agente não substitui os limites de conformidade e revisão final.
+- **Mercado Web2 maduro**: Uber/Airbnb completam a camada intermediária de confiança e segurança antes de escalar; A Fase 2 conclui a automação auditável em vez de simplesmente adicionar o número de funções.
+
+## resultados específicos
+
+<CardGrid cols={2}>
+  <Card title="Estabilização PoB" icon="circle-check">**Entrega**: versão do esquema PoB, log de alterações, revisão de SLA, processo de objeção e reconsideração; Biblioteca de modelos PoB por tipo de negócio. **Indicadores**: consistência da estrutura do PoB entre meses, dias de pendências de revisão, tendência da taxa de disputa de atribuição.</Card>
+  <Card title="Formalização do agente" icon="bot">**Entrega**: matriz de permissão de função, lista de permissões de ferramentas, política de retenção de log de sessão/tarefa, condições de acionamento humano no circuito. **Indicadores**: Taxa de adoção de saída do agente, número de interceptações não autorizadas, número de rollbacks e patches (agente de estabilidade).</Card>
+  <Card title="Produtização da metodologia Node" icon="ruler">**Entrega**: o manual (lista de verificação, modelos, materiais de treinamento) de nós de alto valor entra no sistema. **Indicadores**: O tempo que leva para um novo nó atingir a "qualificação de primeira ordem", taxa de uso do playbook e comparação de resultados.</Card>
+  <Card title="densidade de circuito fechado" icon="refresh-cw">**Entrega**: o número de negócios que podem ser avançados em paralelo na mesma rede dentro de uma unidade de tempo e regras de conflito de recursos. **Indicadores**: Taxa de transferência de negócios por pessoa/nó, taxa de estagnação do estágio (qual cartão tem mais).</Card>
+</CardGrid>
+
+## Métricas de sucesso (exemplo)
+
+- PoB **v1.x** Durante o período de congelamento, alterações significativas só serão divulgadas por meio de governança/números de versão, e haverá um guia de migração.
+- Incidentes relacionados a agentes (referências erradas, vazamentos de dados, operações não autorizadas) possuem patches postmortem e de regras que podem ser restaurados.
+- **Replicável**: nova região ou nova vertical atinge métricas de funil (conforme definido pelas operações) comparáveis ​​à linha de base dentro de 90 dias de acordo com um manual predefinido.
+
+## Sinais para entrar na terceira fase (resumo)
+
+Os objetos de liquidação (quem paga a quem, em que PoB se baseia, como as disputas são resolvidas) podem ser alinhados no papel e no sistema; o modelo de identidade e autoridade é suficiente para apoiar a contabilidade e a auditoria sem depender de tabelas temporárias. Consulte [12.4](/wiki/roadmap/12-4-Milestones and Phase Switching Signals) para obter detalhes.
+
+## Principais riscos nesta fase
+
+<CardGrid cols={2}>
+  <Card title="Incompatibilidade de confiança automatizada" icon="triangle-alert">O agente acelera a propagação de erros. **Lançamento**: automação hierárquica, modo sombra, inspeção aleatória e red teaming.</Card>
+  <Card title="Excesso de engenharia do PoB" icon="library">Padrões demasiado detalhados atrasam os negócios. **Lançamento**: considere o "conjunto mínimo auditável" como resultado final e os campos restantes são graduais.</Card>
+  <Card title="As organizações contam com nós heróis" icon="user">O dimensionamento ainda depende de algumas pessoas. **Lançamento**: Documentação obrigatória e mecanismos de transferência estão incluídos nos KPIs.</Card>
+  <Card title="Capitalize antecipadamente" icon="banknote">NFT/Token está fora de sintonia com o ritmo dos negócios. **Lançamento**: a camada de ativos só iniciará projetos depois que o limite de 12,4 for atingido.</Card>
+</CardGrid>
+
+## Por que esta fase deve vir depois da Fase 1
+
+<Callout type="warning">Sem amostras estáveis ​​de Deal and Proof, os padrões PoB se tornarão um castelo no ar; sem processos manuais claros, o Agent apenas amplificará o caos. Isso é o mesmo que o Rollup se tornar um requisito rígido depois que as taxas L1 e o congestionamento "realmente ocorrerem" - a complexidade deve ser impulsionada pela carga real.</Callout>
+
+<Statement>No final da segunda fase, deverá ser capaz de demonstrar ao mundo exterior como a colaboração homem-máquina pode produzir de forma estável resultados mais verificáveis ​​sob o mesmo conjunto de regras, e que quaisquer incidentes que ocorram podem ser responsabilizados e corrigidos.</Statement>

@@ -1,0 +1,59 @@
+---
+title: "12.2 Phase 2\_: collaboration PoB et agent"
+chapter: 12
+order: 2
+description: >-
+  L'analyse comparative d'Uniswap v2/v3 et d'Ethereum prend Rollup comme scène
+  centrale : la norme est solidifiée et la composabilité est améliorée ; Le PoB
+  peut être orchestré et l'agent peut être audité et restauré.
+---
+
+<Hero badge="12.2 · Collaboration PoB et agent" lead="La première étape prouve que « le réseau peut fonctionner » ; cette étape prouve que « le réseau peut fonctionner à grande échelle » : le PoB devient un registre de confiance composable et l'agent devient une couche d'exécution contrainte plutôt qu'une automatisation de boîte noire.">
+# De l'épissage manuel au fonctionnement du système : les normes, les journaux, les autorisations et les méthodes réplicables sont alignés à la même étape.
+</Hero>
+
+<MetaGrid>
+  <Meta label="objectifs fondamentaux" value="Standardisation PoB + Gouvernance de l'ingénierie des agents" />
+  <Meta label="critère de réussite" value="Collaboration homme-machine SLA, gestion des versions PoB et responsabilité des exceptions" />
+  <Meta label="Je ne le fais toujours pas" value="Allouer toute la valeur à la chaîne ; laisser l'agent prendre de manière indépendante des engagements à haut risque" />
+</MetaGrid>
+
+## Référence de l'industrie
+
+- **Uniswap v2→v3** : d'un pool général à des niveaux centralisés de liquidité et de frais, il s'agit d'une double évolution de « raffinement des règles + efficacité du capital » ; WCN Phase 2 correspond au versioning des champs PoB, des niveaux d'audit, des incitations et des règles d'attribution.
+- **Route Ethereum L2** : exécution et règlement des couches, et le réseau principal garantit la finalité ; WCN superpose « prise de décision humaine/exécution de l'agent/enregistrements PoB », et l'agent ne remplace pas les limites de conformité et de révision finale.
+- **Marché Web2 mature** : Uber/Airbnb complètent la couche intermédiaire de confiance et de sécurité avant la mise à l'échelle ; La phase 2 complète l'automatisation vérifiable plutôt que de simplement ajouter le nombre de fonctions.
+
+## livrables spécifiques
+
+<CardGrid cols={2}>
+  <Card title="Stabilisation du PoB" icon="circle-check">**Livraison** : version du schéma PoB, journal des modifications, révision du SLA, processus d'objection et de réexamen ; Bibliothèque de modèles PoB par type de transaction. **Indicateurs** : Cohérence de la structure du PoB sur plusieurs mois, jours de retard dans l'examen, tendance du taux de litiges d'attribution.</Card>
+  <Card title="Formalisation des agents" icon="bot">**Livraison** : matrice d'autorisations de rôle, liste blanche des outils, politique de conservation des journaux de sessions/tâches, conditions de déclenchement de l'humain dans la boucle. **Indicateurs** : taux d'adoption des sorties de l'agent, nombre d'interceptions non autorisées, nombre de restaurations et de correctifs (agent de stabilité).</Card>
+  <Card title="Productisation de la méthodologie des nœuds" icon="ruler">**Livraison** : le playbook (liste de contrôle, modèles, matériel de formation) des nœuds de grande valeur entre dans le système. **Indicateurs** : temps nécessaire à un nouveau nœud pour atteindre la « qualification de premier ordre », taux d'utilisation du playbook et comparaison des résultats.</Card>
+  <Card title="densité en boucle fermée" icon="refresh-cw">**Livraison** : nombre de transactions pouvant être avancées en parallèle sur le même réseau dans un délai unitaire et règles de conflit de ressources. **Indicateurs** : débit de transaction par personne/nœud, taux de stagnation des étapes (quelle carte en a le plus).</Card>
+</CardGrid>
+
+## Mesures de réussite (exemple)
+
+- PoB **v1.x** Pendant la période de gel, les modifications importantes ne seront publiées que via les numéros de gouvernance/version, et il y aura un guide de migration.
+- Les incidents liés aux agents (mauvaises références, fuites de données, opérations non autorisées) comportent des correctifs post-mortem et de règles qui peuvent être restaurés.
+- **Réplicable** : une nouvelle région ou un nouveau secteur vertical atteint des métriques d'entonnoir (telles que définies par les opérations) comparables à la référence dans les 90 jours selon un playbook prédéfini.
+
+## Signaux pour entrer dans la troisième étape (résumé)
+
+Les objets du règlement (qui paie à qui, sur quelle PoB est basé, comment les litiges sont résolus) peuvent être alignés sur papier et dans le système ; le modèle d'identité et d'autorité est suffisant pour prendre en charge la comptabilité et l'audit sans recourir à des tables temporaires. Voir [12.4](/wiki/roadmap/12-4-Milestones and Phase Switching Signaux) pour plus de détails.
+
+## Principaux risques à ce stade
+
+<CardGrid cols={2}>
+  <Card title="Inadéquation de confiance automatisée" icon="triangle-alert">L'agent accélère la propagation des erreurs. **Version** : automatisation hiérarchique, mode ombre, inspection aléatoire et équipe rouge.</Card>
+  <Card title="Sur-ingénierie PoB" icon="library">Des normes trop détaillées ralentissent les affaires. **Version** : prenez « l'ensemble minimum auditable » comme ligne de fond, et les champs restants sont progressifs.</Card>
+  <Card title="Les organisations s'appuient sur des nœuds héros" icon="user">La mise à l’échelle repose encore sur quelques personnes. **Version** : la documentation obligatoire et les mécanismes de transfert sont inclus dans les KPI.</Card>
+  <Card title="Capitaliser à l’avance" icon="banknote">NFT/Token est déconnecté du rythme des affaires. **Release** : la couche d'actifs ne lancera des projets qu'une fois le seuil 12,4 atteint.</Card>
+</CardGrid>
+
+## Pourquoi cette phase doit venir après la phase 1
+
+<Callout type="warning">Sans échantillons stables de Deal and Proof, les normes PoB deviendront un château en l’air ; sans processus manuels clairs, Agent ne fera qu’amplifier le chaos. Cela revient à dire que le Rollup devient une exigence rigide après que les frais L1 et la congestion « se produisent réellement » - la complexité devrait être déterminée par la charge réelle.</Callout>
+
+<Statement>À la fin de la deuxième phase, il devrait être en mesure de démontrer au monde extérieur comment la collaboration homme-machine peut produire de manière stable des résultats plus vérifiables selon le même ensemble de règles, et que tout incident survenant peut être tenu pour responsable et corrigé.</Statement>

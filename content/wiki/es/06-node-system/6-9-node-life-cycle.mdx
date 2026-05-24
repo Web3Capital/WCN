@@ -1,0 +1,56 @@
+---
+title: 6.9 Ciclo de vida del nodo
+description: >-
+  Máquina de estado completa desde la solicitud, revisión, en línea hasta
+  revisión, renovación, degradación y salida.
+chapter: 6
+order: 9
+---
+
+<Hero badge="6.9 · Ciclo de vida del nodo" lead="Las licencias financieras y las relaciones con clientes institucionales requieren una revisión anual y una revisión activada; Lo mismo se aplica a los asientos de los nodos. Las listas blancas estáticas harán que los nodos zombies ocupen rutas y marcas, diluyendo los beneficios marginales de los nodos de alta calidad: el ciclo de vida es la válvula reguladora de la curva de calidad.">
+# Los asientos se definen mediante verificación continua, no mediante admisión única.
+</Hero>
+
+<MetaGrid>
+  <Meta label="objetivos de diseño" value="Prevenir la inflación del asiento; hacer que las contribuciones, infracciones y renovaciones sean legibles en la misma máquina de estado" />
+  <Meta label="Analogía con TradFi" value="Similar a la inspección anual del corredor de bolsa, actualización periódica de KYC para clientes principales y ciclo de capacitación de analistas sobre cumplimiento" />
+  <Meta label="Uso de datos" value="Control de riesgos del servicio de registro de cambios de estado, incentivos y divulgación externa (anonimato agregado)" />
+</MetaGrid>
+
+## Máquina de estado de nodo
+
+<CardGrid cols={3}>
+  <Card title="Aplicado" description="Presentar calificaciones, recomendaciones, planes de negocios y cobertura propuesta; llevar a cabo una revisión preliminar de las operaciones y los materiales de cumplimiento para verificar su integridad y conflictos de intereses." icon="file-text" />
+  <Card title="Aprobado" description="Las calificaciones están aprobadas pero no se han completado la firma del acuerdo, la activación del permiso y la capacitación; Esto es común en verificaciones de antecedentes o colas legales." icon="circle-check" />
+  <Card title="Activo" description="Permisos de envío de PoB y enrutamiento con todas las funciones; participación en estadísticas de KPI y grupos de incentivos." icon="zap" />
+  <Card title="Libertad condicional" description="Ejemplos de condiciones desencadenantes: el número de introducciones es inferior al mínimo durante dos trimestres consecutivos, las quejas de los clientes son ciertas y la sospecha de fraude PoB es pendiente." icon="triangle-alert" />
+  <Card title="Suspendido" description="Autoridad temporalmente congelada: investigando violaciones, pendiente de materiales complementarios o cooperación judicial; no participará en la distribución durante este período." icon="lock" />
+  <Card title="Renovado / Revocado" description="Si se supera la renovación, se actualizará el período de autorización; si se revoca, entrará en período de enfriamiento y la marca será retirada de los estantes. Los registros clave se conservarán de conformidad con la ley o el acuerdo." icon="refresh-cw" />
+</CardGrid>
+
+---
+
+## trayectoria del ciclo de vida
+
+<Callout type="warning">
+Solicitud → Diligencia debida y acuerdo → Activación del permiso → Operación activa → Revisión trimestral/anual → Renovación, actualización, degradación o salida; Se puede insertar una revisión temporal para eventos importantes.
+</Callout>
+
+<CardGrid cols={2}>
+  <Card title="Etapa de admisión" description="Evaluar la autenticidad de los recursos, la reputación histórica y la superposición con los subgrafos existentes; solicitar tareas piloto si es necesario." icon="search" />
+  <Card title="etapa en línea" description="Capacitación completa sobre reglas, pruebas de calificación de confidencialidad e incorporación de herramientas del sistema; firmar los límites de las habilidades para hablar externamente." icon="clipboard-list" />
+  <Card title="fase de ejecución" description="Realice un seguimiento de la canalización, el circuito cerrado, la calidad de PoB y los comentarios de los clientes mediante KPI; Pesos de enrutamiento basados ​​en datos." icon="zap" />
+  <Card title="Etapa de renovación" description="Compare las contribuciones y las decisiones de registro de violaciones: renovación, reducción de permisos, período de observación o eliminación." icon="star" />
+</CardGrid>
+
+<Statement>Los nodos no son activos permanentes al estilo NFT, sino contratos de tipo servicio sujetos a desempeño y cumplimiento; Un diseño adecuado permite que la red mantenga una calidad marginal sin degradación durante el período de expansión.</Statement>
+
+---
+
+## Justificación del sistema para un ciclo de vida estricto
+
+La expansión estática causará tres tipos de problemas: **Las rutas están ocupadas por nodos de baja producción**, **Aumentan los costos de procesamiento de disputas PoB** y **Los nuevos nodos se ven disuadidos debido a que los nodos antiguos ocupan espacio** (selección adversa). La renovación dinámica implica el "alquiler de asiento" como una contribución continua, lo que es consistente con la lógica de la revisión anual del libro de cobertura del banquero en TradFi.
+
+<Callout type="info">
+Se recomienda exponer una transparencia mínima en la capa de producto: por ejemplo, tasas de retención de nodos agregadas por pista y cambios en la duración promedio del circuito cerrado, para que los participantes del mercado puedan entender si la red se está volviendo más gruesa o más delgada, sin revelar los secretos comerciales de los nodos individuales.
+</Callout>

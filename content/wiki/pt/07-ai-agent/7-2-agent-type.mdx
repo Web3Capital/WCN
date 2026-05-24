@@ -1,0 +1,59 @@
+---
+title: 7.2 Tipo de agente
+description: >-
+  Os cinco tipos de Agentes mapeiam diferentes permissões de ferramentas,
+  granularidade de log e calibres de liquidação; estão alinhados com funções no
+  quadro de orquestração, mas estão vinculados à governação.
+chapter: 7
+order: 2
+---
+
+<Hero badge="7.2 · Tipo de agente" lead="Estruturas multiagentes como CrewAI usam “funções” para organizar prompts e ferramentas; WCN atualiza funções para objetos de governança: cada tipo de Agente corresponde a diferentes visibilidades de dados, ações executáveis ​​e modelos de atribuição PoB. Sem classificação, as permissões e a liquidação serão confusas.">
+# Cinco tipos = cinco identidades de missão, não cinco skins de chat.
+</Hero>
+
+<MetaGrid>
+  <Meta label="O que esta página faz" value="Definição de tipo × Permissão × Log × Calibre PoB" />
+  <Meta label="temas principais" value="Pesquisa / Negócio / Crescimento / Execução / Liquidez" />
+  <Meta label="Lendo destaques" value="Quem pode ver o quê, quais ferramentas podem ser ajustadas, quais marcas podem ser deixadas" />
+</MetaGrid>
+
+## Cinco agentes típicos
+
+<CardGrid cols={2}>
+  <Card title="Agente de Pesquisa" icon="search">Recuperação de informações, resumo de múltiplas fontes, tabela estruturada de empresas/faixas comparáveis ​​e preenchimento de lista de due diligence. **Exemplos de ferramentas**: documento da intranet RAG, API de dados de terceiros permitida, proibindo conexão direta a qualquer rastreamento de página da web (antiinjeção). **Nota LLM**: As referências aos fatos devem ter âncoras de origem; os valores são marcados como "a serem verificados" por padrão.</Card>
+  <Card title="Agente de negócios" icon="handshake">Candidatos para correspondência de projetos de capital, rascunhos de argumentos de venda em nível de teaser, recomendações de status de estágio de negócio. **Proibido**: Emissão de termos vinculativos ou compromissos exclusivos em nome de nós sem autorização. **Comparação do copiloto**: o Copilot otimiza manuscritos individuais; A saída do Deal Agent precisa ter deal_id e um resumo da lógica de recomendação para revisão.</Card>
+  <Card title="Agente de Crescimento" icon="trending-up">Cópia multiversão, marcadores de funil, resumo de atribuição pós-campanha (vinculado à tarefa de crescimento). **Risco**: Deve passar pelo portão de lançamento manual antes de publicar para o mundo exterior; evite combinar com palavras imediatas como “compromisso de lucro”.</Card>
+  <Card title="Agente de Execução" icon="settings">Atas de reuniões, detalhamento de tarefas, rascunho de lembretes e lista de rastreamento de recebimentos. **Benchmark**: Mais próximo da automação empresarial (Zapier/Make) + LLM, mas cada sugestão deve estar vinculada a notas de reunião e carimbos de data/hora.</Card>
+  <Card title="Agente de Liquidez" icon="droplet">Resumo do monitoramento da liquidez e da saúde do mercado, status da lista de verificação, descrição do alarme de limite anormal. **TradFi Lenovo**: Semelhante à “camada de linguagem natural” de um certo tipo de painel de risco no Aladdin, o poder de tomada de decisão ainda reside na mesa/nó de negociação.</Card>
+</CardGrid>
+
+## Por que eles não podem ser misturados em um “superagente”?
+
+Agentes de uso geral no estilo LangChain geralmente compartilham o mesmo conjunto de ferramentas; em cenários institucionais, o **princípio do menor privilégio** será violado. Após a classificação, o sistema pode fazer:
+
+<CardGrid cols={2}>
+  <Card title="Quem pode ver o que" icon="eye">A pesquisa pode ler uma ampla variedade de materiais; A liquidez só pode ler preços de mercado e contratos acordados; O Deal não lê campos confidenciais de níveis salariais em todo o banco de dados por padrão.</Card>
+  <Card title="Quem pode fazer o quê" icon="wrench">A execução pode escrever tarefas e comentários; O crescimento só pode escrever rascunhos de áreas de marketing; nenhum tipo de Agente pode transferir dinheiro ou assinar contratos por padrão.</Card>
+  <Card title="Quem deve manter qual registro?" icon="clipboard-list">A pesquisa registra a consulta de pesquisa e o ID do fragmento; Deal registra os recursos e versões recomendados; A liquidez registra a definição do indicador e o tempo dos dados.</Card>
+  <Card title="Como e quem entra no PoB" icon="circle-check">Os modelos de atribuição são divididos por tipo: por exemplo, "Parágrafos de pesquisa adotados" e "Materiais de crescimento adotados" têm campos de prova diferentes para evitar disputas de resolução.</Card>
+</CardGrid>
+
+## Mapeando o relacionamento com orquestração multiagente
+
+O *agent / node* em CrewAI / LangGraph pode ser comparado aos tipos de WCN, mas o WCN corrige três coisas adicionais: **(1)** A lista de permissões de ferramentas permitida para cada tipo; **(2)** A máquina de estado com vantagem de aprovação humana; **(3)** A saída está vinculada a `task_id`, evento de adoção do nó. Sem (3), por mais bonito que seja o arranjo, é apenas um experimento interno.
+
+<Callout type="warning">
+Não classificado → Expansão da permissão → Logs não podem ser defendidos → PoB não pode ser precificado. O tipo é um pré-requisito para governança e comercialização, não uma decoração de documento.
+</Callout>
+
+## Pequeno exemplo: mesmo evento, vários tipos de colaboração
+
+<Steps>
+  <Step title="Pesquisar">Obtenha notícias sobre financiamento público + memorando interno para gerar "Pontos de conflito e lista de perguntas".</Step>
+  <Step title="Negócio">Produza um rascunho de "Próxima rodada de pontos de comunicação" com base na lista, com motivos correspondentes (sem envio automático por e-mail).</Step>
+  <Step title="Execução">Escreva a conclusão da reunião como um item de ação com o proprietário/devido e anexe-o à Tarefa.</Step>
+  <Step title="Crescimento (opcional)">Gere uma cópia externa de atualização neutra a partir dos fatos adotados e clique manualmente para publicá-la.</Step>
+</Steps>
+
+<Statement>O objetivo dos tipos é responder no nível arquitetural: se algo der errado, será um problema com o modelo, com as ferramentas, com a configuração ou com a adoção humana - pode ser dividido antes de poder ser gerenciado.</Statement>

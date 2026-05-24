@@ -1,0 +1,67 @@
+---
+title: 7.5 ¿Cómo ingresa el Agente al circuito cerrado del negocio?
+description: >-
+  Vinculación de tareas, adopción, cadena de evidencia y PoB: convertir las
+  cantidades generadas en resultados liquidables; contraejemplo y flujo de
+  trabajo de ejemplo positivo.
+chapter: 7
+order: 5
+---
+
+<Hero badge="7.5 · Agente y circuito cerrado" lead="El agente LangChain que se ejecuta en la demostración solo demuestra que “puede generar”; El circuito cerrado de la WCN requiere demostrar “promover los resultados”. Por lo tanto, es necesario registrar: qué resultado depende de qué tarea, quién lo adoptó, qué cambios de estado se desencadenaron después de la adopción y si la evidencia final pasó la prueba. Sin este enlace, es sólo otra ventana de chat.">
+# La adopción y la prueba son las puertas del valor; la generación no lo es.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Que hace esta pagina" value="Condiciones de cierre + ejemplos de flujo de trabajo + interfaz con PoB" />
+  <Meta label="temas centrales" value="Salida → Adopción → Resultado → Prueba → PoB" />
+  <Meta label="Lecturas destacadas" value="vinculación de tareas, eventos humanos, trazabilidad" />
+</MetaGrid>
+
+## El camino principal hacia el circuito cerrado.
+
+<Callout type="info">
+Despacho de tareas (incluido el tipo y los criterios de aceptación) → El agente se ejecuta dentro de la autorización → Se almacena la salida estructurada → El propietario del nodo adopta/rechaza/revisa → La máquina de estado avanza en el acuerdo o la tarea → Envío de evidencia de resultados → Revisión del escritorio de pruebas → Generar registro PoB → Ingresar a la capa de liquidación y reputación
+</Callout>
+
+<Statement>El valor del Agente es un **impulsor de resultados** identificable: el sistema puede distinguir entre "se generaron 10 páginas" y "se adoptaron 3 de ellas y condujeron a la celebración de reuniones/se modificaron los términos/se cumplieron las condiciones de pago".</Statement>
+
+## Condiciones necesarias para que la salida del Agente entre en Prueba
+
+<CardGrid cols={2}>
+  <Card title="Enlace de ID de tarea" icon="link">Cada salida de la máquina está asociada con un `task_id` (o identificador equivalente); Se prohíben los "resultados fantasma" que deambulan en chats privados o documentos fuera de línea.</Card>
+  <Card title="Seguimientos de entrada y versión" icon="clipboard-list">Nombre del modelo, versión, temperatura o parámetros equivalentes, ID del fragmento de recuperación, hash adjunto de clave; para facilitar la reproducción y la recopilación de pruebas en caso de disputas.</Card>
+  <Card title="registro de adopción humana" icon="circle-check">Eventos explícitos: `adopted_by`, `timestamp`, diferencia de modificación opcional; A diferencia del "usuario copiado" implícito de Copilot, debe estar estructurado.</Card>
+  <Card title="Correlación de resultados" icon="refresh-cw">Se puede rastrear hasta acuerdos, hitos o eventos comerciales dentro y fuera de la cadena (como la presentación de contratos, anuncios de bolsa de valores); de lo contrario, no se podrá realizar la liquidación de atribuciones.</Card>
+</CardGrid>
+
+<Callout type="warning">
+Si falta alguna de las condiciones → se clasificará como "generada por herramienta" y no se incluirá en PoB; Por el mismo motivo que "los correos electrónicos sin números de transacción y documentos de trabajo" en TradFi no se pueden incluir en la cuenta.
+</Callout>
+
+## Tres ejemplos concretos de flujo de trabajo
+
+<Steps>
+  <Step title="Iteración del material de financiación">Tarea: “Capítulo de riesgo material serie A v3”. El agente de investigación extrae divulgaciones de riesgos de productos de la competencia → genera borradores con referencias → eliminación y adopción de nodos → carga el hash de PDF revisado → Asociados de prueba "borrador final para la reunión de inversionistas" → registra el PoB después de que se cierra la reunión.</Step>
+  <Step title="igualación de capital">Deal Agent genera los 5 elementos mejor clasificados y los motivos coincidentes → el nodo solo adopta 2 de ellos y crea una tarea de introducción → los correos electrónicos posteriores son enviados por humanos; PoB solo registra las recomendaciones adoptadas y los resultados verificados posteriores, y no registra la clasificación de no adoptadas.</Step>
+  <Step title="Seguimiento posterior a la inversión">El Agente de Liquidez informa un párrafo anormal → El Agente de Ejecución genera un borrador interno de copia de tarea/Slack → La persona a cargo del control de riesgos adopta uno y crea una Tarea de "Banco de Custodia de Seguimiento" → El recibo se ingresa en el paquete de evidencia → La prueba se pasa y luego se envía al PoB.</Step>
+</Steps>
+
+## Contraejemplo: Parece muy ocupado, circuito cerrado cero
+
+- La exploración ilimitada al estilo AutoGPT produce una gran cantidad de notas, sin tarea, sin propietario → **ruido**.
+- Copilot genera correos electrónicos bonitos pero no se envían desde la tarea WCN, sin etiqueta de adopción → **No atribuible**.
+
+
+## ¿Qué decide este paso?
+
+<CardGrid cols={2}>
+  <Card title="¿Es la IA sólo una herramienta?" icon="bot">Se convierte en la capa de ejecución oficial solo después de ingresar al circuito cerrado; de lo contrario, no se diferencia de ningún embalaje LLM.</Card>
+  <Card title="" icon="coins">Sin una cadena de prueba, no hay PoB; los incentivos y la participación en las ganancias carecen de credenciales.</Card>
+  <Card title="¿Es manejable el Agente?" icon="shield"></Card>
+  <Card title="Diferenciación WCN" icon="zap"></Card>
+</CardGrid>
+
+<Callout type="tip">
+Suggestions for acceptance criteria: **Can you use logs to explain clearly in 30 minutes during a dispute** - who asked the Agent to do what, what was adopted, and what is the final business result. Si se puede hacer, el diseño de circuito cerrado está básicamente calificado.
+</Callout>

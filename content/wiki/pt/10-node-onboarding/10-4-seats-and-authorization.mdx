@@ -1,0 +1,49 @@
+---
+title: 10.4 Assentos e Autorização
+chapter: 10
+order: 4
+description: >-
+  Seat define “quem você é”; a autorização define "o que você pode alcançar" -
+  os dois são mapeados um por um para KPIs e obrigações de evidência, semelhante
+  à matriz de autoridade de produto de troca RBAC +.
+---
+
+<Hero badge="10.4 · Assentos e Autorização" lead="Sem ACLs claras, as redes multiagências degenerarão em grupos WeChat. WCN divide Assento e Direitos: o primeiro é o cargo da organização e o escopo de responsabilidade na rede, e o último é uma combinação booleana específica que é legível, gravável e liquidável no sistema – a lógica é próxima da função SSO da empresa + tabela de permissão de subconta de troca.">
+# O assento é a posição e a autorização é o limite; quanto mais próximo do acordo, mais restrita será a autorização e mais rigorosa será a auditoria.
+</Hero>
+
+<MetaGrid>
+  <Meta label="questões centrais" value="Como formalizar a posição dos nós na rede?" />
+  <Meta label="eixo do assento" value="Função/Região/Trajeto/Tarefa" />
+  <Meta label="eixo de autorização" value="Acesso / Participação / Operações / Elegibilidade para cobrança" />
+</MetaGrid>
+
+## Quatro tipos de assentos (podem ser empilhados)
+
+<CardGrid cols={2}>
+  <Card title="Assentos funcionais" icon="settings">Identidades de responsabilidade principal, como capital, projeto, serviço, distribuição, região e agente. Determine o modelo de fluxo de trabalho padrão e a categoria de KPI (por exemplo, o lado do capital é o tempo de resposta + taxa de conversão do investimento, o lado do serviço é a taxa de entrega no prazo + taxa de aprovação de reinspeção).</Card>
+  <Card title="assentos regionais" icon="globe">Cobertura de país/cidade/fuso horário; muitas vezes acompanhada de **exclusividade ou cota** (por exemplo, apenas N nós mestres na mesma jurisdição) para evitar a captura de ordem interna e a diluição da reputação.</Card>
+  <Card title="Assentos da indústria" icon="tag">Tags como IA, RWA, pagamentos, infraestrutura; impulsionar a ponderação de correspondência L1–L2 e a elegibilidade de campanhas de marca conjunta.</Card>
+  <Card title="assento de tarefa" icon="target">Vincule ID de negócio, ID de tarefa ou código de atividade específico; as permissões têm limite de tempo e são recicladas ou rebaixadas quando a tarefa termina - semelhante ao controle de acesso de consultor baseado em projeto.</Card>
+</CardGrid>
+
+---
+
+## Quatro tipos de autorização (simétrica com responsabilidades)
+
+<CardGrid cols={2}>
+  <Card title="Acesso (Leitura)" icon="eye">Sala de negócios visível, versão do documento, escopo do quadro de indicadores. Ele pode ser dividido em nível de campo de acordo com o "princípio da necessidade de saber" (estratégia PDF com marca d'água para benchmarking de salas de dados de bancos de investimento).</Card>
+  <Card title="Envolver" icon="door-open">Você pode dar lances, comentar, reivindicar tarefas e participar da sequência da reunião. Geralmente, as declarações de conflito devem ser anexadas.</Card>
+  <Card title="Direito de operar (Agir)" icon="wrench">Ações em cadeia ou em nível de API: criar credenciais, acionar alocações, invocar lotes de agentes. **Revisão dupla** ou bloqueio de tempo geralmente são necessários.</Card>
+  <Card title="Qualificação de Liquidação (Liquidação)" icon="coins">Condições para entrar no caminho de atribuição e alocação de valor do PoB: pacote de evidências completo, assinatura do Revisor e nenhum ticket de disputa aberto. Se não forem atendidas, **as permissões poderão ser congeladas** enquanto a identidade ainda existir.</Card>
+</CardGrid>
+
+<Callout type="info">**Seat** responde "Que tipo de responsabilidade institucional você representa?"; **Autorização** responde "Quem você pode mover nesta rodada?" A atualização de licenças não equivale automaticamente à autorização de expansão: é necessária uma análise de conformidade e segurança.</Callout>
+
+---
+
+## Por que o sistema depende dessa camada?
+
+Sem assentos e autorização, o mapa de colaboração não pode ser automatizado – algoritmos de correspondência, regras de controle de risco e registros de auditoria perdem seus assuntos. O WCN foi atualizado de "quem sabe quem" para "quem fez o que, para qual objeto, em que momento e sob qual autorização" - o mesmo requisito de granularidade dos registros de ordens de troca e das trilhas de auditoria do usuário final.
+
+<Statement>Assento + autorização + cadeia de evidências é a menor estrutura que pode ser dimensionada em nível institucional; se faltar um, favores e promessas verbais serão retribuídos.</Statement>

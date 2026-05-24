@@ -1,0 +1,73 @@
+---
+title: 12.4 Marcos e sinais de mudança de estágio
+chapter: 12
+order: 4
+description: >-
+  Avançar/não avançar orientado pela maturidade: quantificar o limite, o
+  antipadrão e o ritmo de revisão da Fase 1→2, 2→3; compare o estágio da rede
+  principal em vez do roteiro de marketing.
+---
+
+<Hero badge="12.4 · Sinais de comutação" lead="A mudança de fase deve ser como uma atualização do Ethereum ou um marco da rede principal: acionada por condições predefinidas e dados observacionais, e pode ser explicada ao mundo exterior “por que agora é possível entrar na próxima fase”.">
+# O calendário é utilizado apenas para planejar o ritmo de revisão; as condições de controle de acesso são a única base para a troca de estágios.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Resposta principal" value="Que condição quantificável aciona uma mudança de fase?" />
+  <Meta label="Dimensão do Julgamento" value="Nó, Negócio, Prova, PoB, Agente, Renda, Evento de Risco" />
+  <Meta label="lógica subjacente" value="Orientado à maturidade + verificação contínua da janela (não é um acaso de um mês)" />
+</MetaGrid>
+
+## Por que rejeitar o "roteiro de calendário puro"
+
+A passagem do tempo não garante que o aprendizado ocorra. Ethereum usa a rede de pesquisa e teste como controle de portão; Uniswap usa volume de transações verificáveis ​​em cadeia como seu padrão de fato. Se a WCN apenas virar as páginas trimestralmente, cairá facilmente em “promessas excessivas por uma questão de narrativa” – uma doença partilhada por um grande número de projetos pontuais de TGE.
+
+<Callout type="info">Recomenda-se realizar uma revisão trimestral do roteiro: comparar os sinais na tabela abaixo para determinar "permanecer/avançar/retornar para fortalecer" e registrar as causas profundas da não conformidade (demanda, produto, conformidade, organização).</Callout>
+
+## Fase 1 → Fase 2: sinal de comutação (recomendado para controle de acesso)
+
+<Steps>
+  <Step title="Rede e circuito fechado">Pelo menos um tipo de negócio principal completa vários loops fechados de ponta a ponta; múltiplas funções no lado do nó têm participação contínua (não registro de evento único); e há dados de base para taxas e ciclos de conversão de estágio.</Step>
+  <Step title="Protótipo de prova e PoB">O conjunto mínimo de campos do Proof e o caminho de auditoria funcionam de forma estável; PoB pode gerar um livro de contas escalonado legível (incluindo versão ou intenção de registro de alteração); há uma entrada para objeções.</Step>
+  <Step title="Controle de Negócios e Riscos">Pelo menos uma linha de receita pode ser reconciliada mensalmente; os principais incidentes de conformidade/reputação têm registros de descarte e patches de regras; não há acusações não resolvidas de “fraude sistêmica”.</Step>
+</Steps>
+
+**Antipadrão (se você não estiver satisfeito, não poderá entrar na Fase 2)**: A prova está faltando em grandes áreas, mas ainda afirma ter sucesso; O agente não é padronizado, mas está conectado em larga escala; não há receita, mas ênfase no “growth hacking”.
+
+## Fase 2 → Fase 3: sinal de comutação (recomendado para controle de acesso)
+
+<Steps>
+  <Step title="PoB e padrões">O esquema PoB é versionado; mudanças radicais têm estratégias de migração; auditoria de SLA e disputas de atribuição têm tendências de queda rastreáveis ​​ou limites de tolerância claros.</Step>
+  <Step title="Governança de agentes">São implementadas permissões, logs, rollback e estratégias de cobertura manual; os acidentes podem ser post-mortem; acessos não autorizados e eventos de dados são monitorados quantitativamente.</Step>
+  <Step title="Liquidação pronta">O livro-razão ou objeto de liquidação fora da cadeia foi definido no nível da regra (quem, com base em qual PoB, caminho de disputa); o modelo de identidade e permissão pode oferecer suporte à liquidação, não apenas à exibição.</Step>
+</Steps>
+
+**Antipadrão**: as regras de liquidação ainda são totalmente verbais; o desenvolvimento de contratos em cadeia está fora de sincronia com a qualidade do PoB; forçando a camada de ativos a atender aos nós de financiamento.
+
+## Combinação de indicadores (sem tomada de decisão pontual)
+
+<CardGrid cols={2}>
+  <Card title="limiar multidimensional" icon="chart-bar">Veja também: quantidade e qualidade do negócio, taxa de completude da prova, estrutura de receita, registro de eventos do PoB/agente, eventos de risco. **BANIDO** Use apenas DAU ou "quantidade LOI" para decidir.</Card>
+  <Card title="janela persistente" icon="calendar">Recomenda-se que os principais sinais atinjam o padrão por **2–3 períodos estatísticos consecutivos** (como mensal ou trimestralmente) para evitar distorção de campanha em um único mês - protocolos semelhantes são observados na estabilidade de vários estágios da rede de teste.</Card>
+  <Card title="Replicabilidade" icon="ruler">Novos setores verticais ou novas regiões podem atingir a meta do manual, provando que indivíduos não heróicos são acidentais – comparando a “taxa de sucesso de implementação” de SaaS escalável.</Card>
+  <Card title="tolerância ao risco" icon="shield">O sistema ainda pode operar ou pode ser rebaixado de maneira ordenada sob pressão, como ausência de pessoal-chave, saída de um único nó, consultas regulatórias externas, etc.</Card>
+</CardGrid>
+
+## Comparação com o caminho de "lançamento único"
+
+| Dimensões | Etapas (WCN) | Pilha completa de uma só vez |
+|------|----------------|----------------|
+| Diagnóstico de falhas | Atribuível a Rede/Padrões/Automação/Faturamento | Muitas vezes atribuível ao desfoque |
+| Eficiência de capital | Cada fase pode ser financiada de forma independente ou verificada através da cooperação | Grandes quantias na fase inicial são investidas na cadeia e na conformidade |
+| Acumulação de confiança | Cada estágio possui saídas verificáveis ​​aleatórias | Depende da narrativa e do tempo |
+| Diálogo Regulatório | Divulgação Progressiva e Reforço de Limites | Fácil de cruzar a linha de uma só vez |
+
+## Visão geral dos riscos (entre estágios)
+
+<CardGrid cols={2}>
+  <Card title="Erro de julgamento de palco" icon="ban">“Anunciar à força a próxima etapa” do ritmo de financiamento. **Lançamento**: Lista de verificação de controle de acesso público e escopo das evidências de conformidade (dentro da permissão de conformidade).</Card>
+  <Card title="Gamificação de indicadores" icon="gamepad-2">Deslize o registro e a oferta inválida. **Lançamento**: Inspeção de qualidade e amostras aleatórias de auditoria.</Card>
+  <Card title="Negócio de sequestro de tecnologia" icon="link-2">OKR de cadeia e token superam o OKR de negócio. **Mitigação**: KPI de dupla faixa de diretoria/governança.</Card>
+</CardGrid>
+
+<Statement>O significado do sinal de comutação é evitar o autoengano internamente e fornecer uma “narrativa de ritmo verificável” externamente semelhante ao stage gating no estilo Ethereum e à evolução da versão principal do protocolo DeFi.</Statement>

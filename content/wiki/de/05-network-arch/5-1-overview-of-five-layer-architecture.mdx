@@ -1,0 +1,67 @@
+---
+title: 5.1 Überblick über die Fünf-Schichten-Architektur
+description: >-
+  Die fünf Schichten beantworten jeweils fünf Kernfragen und bilden eine
+  vollständige Wertschöpfungskette von der Nachfrage bis zur Abrechnung.
+chapter: 5
+order: 1
+---
+
+<Hero badge="5.1 · Architekturübersicht" lead="Die meisten Web3-Projekte stapeln Funktionalität und nennen sie „Architektur“. Das fünfschichtige Design von WCN basiert auf einem einfachen Verständnis: Jedes komplexe Mehrparteien-Kollaborationssystem ohne klare hierarchische Arbeitsteilung wird letztendlich zu einer chaotischen Plattform. Die Investmentbank TradFi nutzt ein über 100 Jahre etabliertes Arbeitsteilungssystem (Underwriting → Forschung → Vertrieb → Handel → Clearing), und WCN nutzt eine fünfschichtige Architektur, um eine ähnliche strukturelle Arbeitsteilung in Web3 zu implementieren.">
+# Die fünf Schichten, von der Nachfrage bis zur Abrechnung, geben der Web3-Mehrparteien-Zusammenarbeit erstmals ein Systemgerüst.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Architekturprinzipien" value="Mehrschichtige Verantwortlichkeiten, sequenzielle Weiterentwicklung und Ergebniserfassung" />
+  <Meta label="Designreferenz" value="TradFi-Investmentbanking-Arbeitsteilung + SaaS-Plattform-Schichtung" />
+  <Meta label="Kernfunktionen" value="Die Ausgabe der vorherigen Ebene ist die Eingabe der nächsten Ebene" />
+</MetaGrid>
+
+## Beantworten Sie auf jeder der fünf Etagen fünf Fragen.
+
+<Steps>
+  <Step title="L1 · Projekt- und Asset-Ebene: Wer stellt den Bedarf?">Projektparteien und Vermögensparteien treten in das System ein, um Finanzierungs-, Wachstums- und Servicebedürfnisse auszudrücken. Dies ist der Bedarfseinstiegspunkt des gesamten Netzwerks – ohne echte Nachfrage bleiben alle nachfolgenden Schichten im Leerlauf.</Step>
+  <Step title="L2 · Kapitalallokationsschicht: Wer deckt die Nachfrage ab?">Die Kapitalseite verbindet Fonds und Projekte durch Urteilsvermögen und Allokationskompetenzen. Es handelt sich nicht um ein einfaches „Matching“, sondern um einen systematischen Screening-, Matching- und strukturierten Investmentprozess.</Step>
+  <Step title="L3 · Ausführungs- und Serviceschicht: Wer erledigt die Dinge?">Recht, Prüfung, Entwicklung, Wachstum und Agenten steuern die Ausführung von Aufgaben. Diese Schicht bestimmt, ob „Verbindung“ zu „Ergebnis“ werden kann.</Step>
+  <Step title="L4 · Vertriebs- und Liquiditätsschicht: Wer ist für das Marktgeschäft verantwortlich?">Börsen, Market Maker, Medien, KOLs und Communities senden Ergebnisse aus dem System an den externen Markt. Es findet keine Verteilung statt, das Ergebnis wird nur in einer Schleife nach innen geleitet.</Step>
+  <Step title="L5 · Verifizierungs- und Abrechnungsebene: Wer prüft und regelt?">Proof Desk sammelt Beweise, prüft die Verifizierung, PoB-Zuordnungsbuchhaltung und die Abrechnung weist Werte zu. Dies ist die Abschlussschicht und der Wertausgang des gesamten Systems.</Step>
+</Steps>
+
+---
+
+## Warum ist es der fünfte Stock und nicht der dritte oder siebte Stock?
+
+<CardGrid cols={2}>
+  <Card title="weniger als fünf Stockwerke" icon="ban">Wenn Ausführung und Verteilung zusammengeführt werden, kann das System nicht zwischen „Personen, die Dinge tun“ und „Personen, die das Wort verbreiten“ unterscheiden – Zuschreibung und Abrechnung werden verwechselt. Wenn die Verifizierung in die Ausführungsschicht integriert wird, sind Interessenkonflikte zwischen Prüfern und Ausführenden unvermeidbar.</Card>
+  <Card title="Mehr als fünf Etagen" icon="ban">Wenn die Kapitalschicht in eine „Screening-Schicht“ und eine „Allokationsschicht“ aufgeteilt wird, erhöht sich die Komplexität, es werden jedoch keine neuen Wertbeurteilungspunkte hinzugefügt. Stufe fünf ist der minimal vollständige Satz von Informations- und Verantwortungstransformationen.</Card>
+</CardGrid>
+
+> **Analogie**: Die Kernarbeitsteilung der Investmentbank TradFi besteht ebenfalls aus fünf Gliedern: **Underwriting** (Projekteintrag) → **Recherche** (Beurteilung und Prüfung) → **Verkäufe** (Kapitalabgleich) → **Transaktion** (Ausführung und Abwicklung) → **Liquidation** (endgültige Lieferung). Diese Arbeitsteilung ist seit 100 Jahren am Markt erprobt und hat sich als die effektivste Struktur in der Mehrparteienzusammenarbeit erwiesen.
+
+---
+
+## Die fünfte Schicht ist eine Geschäftssequenz, kein paralleles Modul
+
+<Callout type="warning">
+L1 Projekte und Vermögenswerte → L2 Kapitalallokation → L3 Ausführung und Dienstleistungen → L4 Vertrieb und Liquidität → L5 Überprüfung und Abwicklung
+</Callout>
+
+Hauptmerkmale:
+- **Einseitiger Fluss**: Die Ausgabe der vorherigen Ebene ist die Eingabe der nächsten Ebene. Projektanforderungen werden an die Kapitalschicht ausgegeben, Kapitalgeschäfte werden an die Ausführungsschicht ausgegeben, Ausführungsergebnisse werden an die Verteilungsschicht ausgegeben und Verteilungseffekte werden an die Verifizierungsschicht ausgegeben.
+- **Feedback-Schleife**: Die Ergebnisse der Verifizierungsschicht (Reputation, Attribution, PoB-Daten) werden an L1-L4 zurückgemeldet, wodurch die Übereinstimmungsgenauigkeit und die Ausführungseffizienz verbessert werden.
+- **Unabhängige Erweiterung**: Jede Schicht kann unabhängig voneinander Funktionen hinzufügen (mehr Kapitalknoten, mehr Dienstanbieter, mehr Agenten), ohne dass andere Schichten neu aufgebaut werden müssen.
+
+---
+
+## Vergleich mit bestehender Architektur
+
+<CardGrid cols={2}>
+  <Card title="vs. traditionelles CRM (Salesforce/HubSpot)" icon="chart-bar">CRM verwaltet nur Kundenbeziehungen und Verkaufstrichter, ohne Kapitalzuweisung, Servicezusammenarbeit und Ergebnisüberprüfung. Die fünf Schichten von WCN decken die gesamte Kette von der Nachfrage bis zur Abwicklung ab.</Card>
+  <Card title="vs. DAO-Tools (Snapshot + Gnosis Safe)" icon="landmark">DAO-Tools konzentrieren sich auf Governance und Fondsmanagement, ohne Geschäftsförderung, Serviceausführung und Zuordnungsprüfung. WCN löst „Dinge tun“, nicht nur „Abstimmen“.</Card>
+  <Card title="vs. Web3-Matchmaking-Plattform" icon="refresh-cw">Die Matching-Plattform führt nur L1-L2-Verbindungen durch, unabhängig von L3-Ausführung, L4-Verteilung und L5-Authentifizierung. Das Ergebnis ist „eingeführt, aber nicht abgeschlossen“.</Card>
+  <Card title="vs. TradFi Investmentbank" icon="landmark">Investmentbanken verfügen über eine vollständig fünfstufige Arbeitsteilung, die jedoch zentralisiert ist, hohe Schwellenwerte aufweist und undurchsichtig ist. WCN nutzt eine vernetzte Struktur, um eine ähnliche Arbeitsteilung zu erreichen, senkt jedoch die Teilnahmeschwelle um eine Größenordnung.</Card>
+</CardGrid>
+
+<Callout type="tip">
+Das Verständnis der fünfstufigen Abfolge ist der erste Schritt zum Verständnis von WCN – zuerst gibt es Nachfrage, dann Kapital, dann Ausführung, dann Verteilung und schließlich Verifizierung und Abrechnung. Dabei handelt es sich nicht um einen theoretischen Rahmen, sondern um eine unvermeidliche Abfolge der Geschäftslogik.
+</Callout>

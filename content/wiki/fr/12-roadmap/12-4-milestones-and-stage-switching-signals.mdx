@@ -1,0 +1,70 @@
+---
+title: 12.4 Jalons et signaux de changement d'étape
+chapter: 12
+order: 4
+description: "Go/no-go basé sur la maturité\_: quantifier le seuil, l'anti-modèle et le rythme de révision de la phase 1→2, 2→3\_; évaluez le contrôle de la scène du réseau principal plutôt que la feuille de route marketing."
+---
+
+<Hero badge="12.4 · Signaux de commutation" lead="Le changement de phase devrait être comme une mise à niveau d'Ethereum ou une étape importante du réseau principal : déclenché par des conditions prédéfinies et des données d'observation, et peut être expliqué au monde extérieur “pourquoi il est désormais possible d'entrer dans la phase suivante”.">
+# Le calendrier sert uniquement à planifier le rythme des révisions ; les conditions de contrôle d'accès constituent la seule base pour décider s'il faut changer d'étage.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Réponse principale" value="Quelle condition quantifiable déclenche un changement de phase ?" />
+  <Meta label="Dimension du jugement" value="Nœud, transaction, preuve, PoB, agent, revenu, événement à risque" />
+  <Meta label="logique sous-jacente" value="Axé sur la maturité + vérification continue de la fenêtre (pas un hasard d'un mois)" />
+</MetaGrid>
+
+## Pourquoi rejeter la « feuille de route purement temporelle »
+
+Le passage du temps ne garantit pas que l’apprentissage se produise. Ethereum utilise le réseau de recherche et de test comme contrôle de porte ; Uniswap utilise le volume de transactions vérifiable en chaîne comme norme de facto. Si WCN ne tourne les pages que tous les trimestres, il deviendra facilement « trop prometteur au nom du récit » – une maladie partagée par un grand nombre de projets ponctuels de TGE.
+
+<Callout type="info">Il est recommandé de réaliser une revue de la feuille de route tous les trimestres : comparer les signaux du tableau ci-dessous pour déterminer « rester/avancer/revenir pour renforcer », et enregistrer les causes profondes de la non-conformité (demande, produit, conformité, organisation).</Callout>
+
+## Phase 1 → Phase 2 : signal de commutation (recommandé pour le contrôle d'accès)
+
+<Steps>
+  <Step title="Réseau et boucle fermée">Au moins un type de transaction principal réalise plusieurs boucles fermées de bout en bout ; plusieurs rôles du côté du nœud ont une participation continue (pas d'inscription à un seul événement) ; et il existe des données de base pour les taux et les cycles de conversion d'étape.</Step>
+  <Step title="Prototype de preuve et PoB">L'ensemble de champs minimum et le chemin d'audit de la preuve fonctionnent de manière stable ; PoB peut produire un livre de comptes par étapes lisible (y compris la version ou l'intention de modification de l'enregistrement) ; il y a une entrée pour les objections.</Step>
+  <Step title="Contrôle des affaires et des risques">Au moins une ligne de revenus peut être rapprochée mensuellement ; les incidents majeurs de conformité/réputation ont des enregistrements d'élimination et des correctifs de règles ; il n’y a aucune accusation de « fraude systémique » non résolue.</Step>
+</Steps>
+
+**Anti-modèle (si vous n'êtes pas satisfait, vous n'êtes pas autorisé à entrer dans la phase 2)** : la preuve manque dans de grandes zones mais revendique toujours le succès ; L'agent n'est pas standardisé mais a été connecté à grande échelle ; il n’y a pas de revenus mais l’accent est mis sur le « Growth Hacking ».
+
+## Phase 2 → Phase 3 : signal de commutation (recommandé pour le contrôle d'accès)
+
+<Steps>
+  <Step title="PoB et normes">Le schéma PoB est versionné ; les changements radicaux ont des stratégies de migration ; l'audit SLA et les litiges d'attribution ont des tendances à la baisse traçables ou des seuils de tolérance clairs.</Step>
+  <Step title="Gouvernance des agents">Les stratégies d'autorisations, de journaux, de restauration et de couverture manuelle sont mises en œuvre ; les accidents peuvent être post mortem ; les accès non autorisés et les événements liés aux données sont surveillés quantitativement.</Step>
+  <Step title="Règlement prêt">Le grand livre hors chaîne ou l'objet de règlement a été défini au niveau de la règle (qui, en fonction de quel PoB, chemin de contestation) ; le modèle d'identité et d'autorisation peut prendre en charge le règlement, pas seulement l'affichage.</Step>
+</Steps>
+
+**Anti-modèle** : les règles de règlement sont toujours entièrement verbales ; le développement de contrats en chaîne n'est pas synchronisé avec la qualité du PoB ; obligeant la couche d’actifs à répondre aux besoins des nœuds de financement.
+
+## Combinaison d'indicateurs (pas de prise de décision en un seul point)
+
+<CardGrid cols={2}>
+  <Card title="seuil multidimensionnel" icon="chart-bar">Examinez également : la quantité et la qualité des transactions, le taux d'exhaustivité des preuves, la structure des revenus, le journal des événements PoB/Agent, les événements à risque. ** INTERDIT ** Utilisez uniquement DAU ou "quantité LOI" pour décider.</Card>
+  <Card title="fenêtre persistante" icon="calendar">Il est recommandé que les signaux clés atteignent la norme pendant **2 à 3 périodes statistiques consécutives** (telles que mensuelles ou trimestrielles) pour éviter toute distorsion de campagne au cours d'un seul mois - des protocoles similaires sont observés dans la stabilité à plusieurs niveaux du réseau de test.</Card>
+  <Card title="Réplicabilité" icon="ruler">De nouveaux secteurs verticaux ou de nouvelles régions peuvent atteindre l'objectif du playbook, prouvant que les individus non héroïques sont accidentels - en comparant le « taux de réussite de la mise en œuvre » d'un SaaS évolutif.</Card>
+  <Card title="tolérance au risque" icon="shield">Le système peut toujours fonctionner ou peut être déclassé de manière ordonnée sous des pressions telles que l'absence de personnel clé, la sortie d'un seul nœud, des enquêtes réglementaires externes, etc.</Card>
+</CardGrid>
+
+## Comparaison avec le chemin "lancement unique"
+
+| Dimensions | Étapes (WCN) | Pile complète à la fois |
+|------|----------------|----------------|
+| Diagnostic de panne | Attribuable au réseau/normes/automatisation/facturation | Souvent attribuable au flou |
+| Efficacité du capital | Chaque étape peut être financée de manière indépendante ou vérifiée grâce à la coopération | De grandes quantités au début sont coulées dans la chaîne et la conformité |
+| Accumulation de confiance | Chaque étape a des sorties vérifiables aléatoires | Cela dépend du récit et du temps |
+| Dialogue sur la réglementation | Divulgation progressive et resserrement des frontières | Facile de franchir la ligne en une seule fois |
+
+## Aperçu des risques (à travers les étapes)
+
+<CardGrid cols={2}>
+  <Card title="Erreur de jugement sur scène" icon="ban">Forcément « annoncer la prochaine étape » pour le rythme de financement. **Publication** : liste de contrôle du contrôle d'accès public et portée des preuves de conformité (dans le cadre de l'autorisation de conformité).</Card>
+  <Card title="Gamification des indicateurs" icon="gamepad-2">Inscription par balayage et accord invalide. **Publication** : Inspection qualité et échantillons d'audit aléatoires.</Card>
+  <Card title="Entreprise de kidnapping technologique" icon="link-2">Les OKR de chaîne et de jeton l'emportent sur les OKR de transaction. **Atténuation** : KPI à double voie Conseil d'administration/Gouvernance.</Card>
+</CardGrid>
+
+<Statement>L'importance du signal de commutation est d'empêcher l'auto-tromperie en interne et de fournir un « récit de rythme vérifiable » en externe similaire au gate gate de style Ethereum et à l'évolution de la version principale du protocole DeFi.</Statement>

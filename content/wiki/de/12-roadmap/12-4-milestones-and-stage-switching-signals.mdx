@@ -1,0 +1,73 @@
+---
+title: 12.4 Meilensteine ​​und Stufenwechselsignale
+chapter: 12
+order: 4
+description: >-
+  Reifegradgesteuertes Go/No-Go: Quantifizierung des Schwellenwerts, des
+  Anti-Patterns und des Überprüfungsrhythmus von Phase 1→2, 2→3; Benchmarken Sie
+  das Mainnet-Stage-Gating und nicht die Marketing-Roadmap.
+---
+
+<Hero badge="12.4 · Schaltsignale" lead="Der Phasenwechsel sollte wie ein Ethereum-Upgrade oder ein Mainnet-Meilenstein sein: ausgelöst durch voreingestellte Bedingungen und Beobachtungsdaten und kann der Außenwelt erklärt werden, „warum es jetzt möglich ist, in die nächste Phase einzutreten.“">
+# Der Kalender dient lediglich der Planung des Überprüfungsrhythmus; Die Zugangskontrollbedingungen sind die einzige Grundlage für den Stufenwechsel.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Kernantwort" value="Welcher quantifizierbare Zustand löst einen Phasenwechsel aus?" />
+  <Meta label="Beurteilungsdimension" value="Knoten, Deal, Beweis, PoB, Agent, Einkommen, Risikoereignis" />
+  <Meta label="zugrunde liegende Logik" value="Reifegradgesteuerte + kontinuierliche Fensterüberprüfung (kein einmonatiger Zufall)" />
+</MetaGrid>
+
+## Warum die „reine Fahrplan-Roadmap“ ablehnen?
+
+Der Lauf der Zeit ist keine Garantie dafür, dass Lernen stattfindet. Ethereum nutzt das Forschungs- und Testnetzwerk als Torsteuerung; Uniswap verwendet als De-facto-Standard ein überprüfbares On-Chain-Transaktionsvolumen. Wenn WCN die Seiten nur vierteljährlich umblättert, wird es leicht dazu verfallen, „aus Gründen der Erzählung zu viel zu versprechen“ – eine Krankheit, die eine große Anzahl einmaliger TGE-Projekte teilt.
+
+<Callout type="info">Es wird empfohlen, vierteljährlich eine Roadmap-Überprüfung durchzuführen: Vergleichen Sie die Signale in der Tabelle unten, um „Bleiben/Vorwärts/Zurück zur Stärkung“ zu bestimmen, und erfassen Sie die Grundursachen für die Nichteinhaltung (Nachfrage, Produkt, Compliance, Organisation).</Callout>
+
+## Phase 1 → Phase 2: Schaltsignal (empfohlen für Zutrittskontrolle)
+
+<Steps>
+  <Step title="Netzwerk und geschlossener Kreislauf">Mindestens ein Kern-Deal-Typ schließt mehrere geschlossene End-to-End-Schleifen ab; Mehrere Rollen auf der Knotenseite haben eine kontinuierliche Teilnahme (keine Einzelereignisregistrierung); und es gibt Basisdaten für Stufenkonversionsraten und -zyklen.</Step>
+  <Step title="Proof- und PoB-Prototyp">Der minimale Feldsatz und Prüfpfad von Proof laufen stabil; PoB kann ein lesbares, abgestuftes Geschäftsbuch (einschließlich Versions- oder Änderungsdatensatzabsicht) ausgeben; Es besteht die Möglichkeit, Einsprüche einzulegen.</Step>
+  <Step title="Geschäfts- und Risikokontrolle">Mindestens eine Einnahmezeile kann monatlich abgeglichen werden; Bei größeren Compliance-/Reputationsvorfällen gibt es Entsorgungsaufzeichnungen und Regelpatches. Es gibt keine ungeklärten Vorwürfe wegen „systemischen Betrugs“.</Step>
+</Steps>
+
+**Anti-Pattern (Wenn Sie nicht zufrieden sind, dürfen Sie nicht in Phase 2 einsteigen)**: Der Beweis fehlt in großen Bereichen, behauptet aber dennoch Erfolg; Der Agent ist nicht standardisiert, sondern wurde in großem Umfang vernetzt. Es gibt keine Einnahmen, aber der Schwerpunkt liegt auf „Growth Hacking“.
+
+## Phase 2 → Phase 3: Schaltsignal (empfohlen für Zutrittskontrolle)
+
+<Steps>
+  <Step title="PoB und Standards">PoB-Schema ist versioniert; Breaking Changes haben Migrationsstrategien; Die Prüfung von SLAs und Zuordnungsstreitigkeiten weist nachvollziehbare Abwärtstrends oder klare Toleranzschwellen auf.</Step>
+  <Step title="Agenten-Governance">Es werden Berechtigungen, Protokolle, Rollbacks und manuelle Abdeckungsstrategien implementiert. Unfälle können postmortal erfolgen; Unbefugte Zugriffe und Datenereignisse werden quantitativ überwacht.</Step>
+  <Step title="Siedlung bereit">Das Off-Chain-Ledger oder Abrechnungsobjekt wurde auf Regelebene definiert (wer, basierend auf welchem ​​PoB, Streitweg); Das Identitäts- und Berechtigungsmodell kann die Abrechnung und nicht nur die Anzeige unterstützen.</Step>
+</Steps>
+
+**Anti-Pattern**: Abrechnungsregeln sind immer noch vollständig verbal; Die Vertragsentwicklung in der Kette stimmt nicht mit der PoB-Qualität überein; Dadurch wird die Vermögensschicht gezwungen, sich um Finanzierungsknoten zu kümmern.
+
+## Indikatorenkombination (keine Einzelpunktentscheidung)
+
+<CardGrid cols={2}>
+  <Card title="mehrdimensionale Schwelle" icon="chart-bar">Sehen Sie sich auch Folgendes an: Quantität und Qualität des Geschäfts, Vollständigkeitsnachweisquote, Umsatzstruktur, PoB/Agent-Ereignisprotokoll, Risikoereignisse. **VERBOTEN** Verwenden Sie zur Entscheidung nur DAU oder „LOI-Menge“.</Card>
+  <Card title="Persistentes Fenster" icon="calendar">Es wird empfohlen, dass Schlüsselsignale den Standard für **2–3 aufeinanderfolgende statistische Zeiträume** (z. B. monatlich oder vierteljährlich) erreichen, um Kampagnenverzerrungen in einem einzelnen Monat zu vermeiden – ähnliche Protokolle werden bei der mehrstufigen Stabilität des Testnetzwerks beobachtet.</Card>
+  <Card title="Reproduzierbarkeit" icon="ruler">Neue Branchen oder neue Regionen können das Ziel gemäß dem Playbook erreichen und beweisen, dass nicht-heldenhafte Personen zufällig sind – ein Benchmarking der „Implementierungserfolgsrate“ von skalierbarem SaaS.</Card>
+  <Card title="Risikotoleranz" icon="shield">Das System kann unter Druck wie dem Fehlen von Schlüsselpersonal, dem Ausscheiden eines einzelnen Knotens, externen behördlichen Anfragen usw. weiterhin funktionieren oder auf geordnete Weise herabgestuft werden.</Card>
+</CardGrid>
+
+## Vergleich mit dem Weg „einmaliger Start“.
+
+| Abmessungen | Etappen (WCN) | Vollständiger Stapel auf einmal |
+|------|----------------|----------------|
+| Fehlerdiagnose | Zuordenbar zu Netzwerk/Standards/Automatisierung/Abrechnung | Oft auf Unschärfe zurückzuführen |
+| Kapitaleffizienz | Jede Stufe kann unabhängig finanziert oder durch Kooperation überprüft werden | Große Beträge im Frühstadium bleiben in der Kette versinken und werden nicht eingehalten
+| Vertrauensaufbau | Jede Stufe verfügt über zufällig überprüfbare Ausgänge | Hängt von der Erzählung und der Zeit ab |
+| Regulierungsdialog | Fortschreitende Offenlegung und Verschärfung der Grenzen | Einfaches Überqueren der Ziellinie auf einmal |
+
+## Risikoübersicht (stufenübergreifend)
+
+<CardGrid cols={2}>
+  <Card title="Fehleinschätzung der Bühne" icon="ban">Für den Finanzierungsrhythmus zwangsweise „die nächste Stufe ankündigen“. **Veröffentlichung**: Checkliste für die öffentliche Zugangskontrolle und Umfang des Compliance-Nachweises (im Rahmen der Compliance-Genehmigung).</Card>
+  <Card title="Gamifizierung von Indikatoren" icon="gamepad-2">Swipe-Registrierung und ungültiges Angebot. **Freigabe**: Qualitätsprüfung und Stichprobenkontrolle.</Card>
+  <Card title="Technologie-Entführungsgeschäft" icon="link-2">Chain- und Token-OKR überwiegen Deal-OKR. **Minderung**: Zweigleisiger KPI für Vorstand/Governance.</Card>
+</CardGrid>
+
+<Statement>Die Bedeutung des Schaltsignals besteht darin, Selbsttäuschung intern zu verhindern und nach außen eine „überprüfbare Rhythmus-Erzählung“ bereitzustellen, die dem Stage-Gating im Ethereum-Stil und der Entwicklung der Hauptversion des DeFi-Protokolls ähnelt.</Statement>

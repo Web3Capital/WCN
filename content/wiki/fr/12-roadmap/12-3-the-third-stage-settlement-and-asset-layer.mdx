@@ -1,0 +1,52 @@
+---
+title: "12.3 La troisième étape\_: la couche de règlement et d'actifs"
+chapter: 12
+order: 3
+description: "Capture des frais et racine de l'état en chaîne dans la phase de maturité du protocole d'analyse comparative\_: en partant du principe que le PoB est une entrée fiable, le règlement, l'identité et la certification sélective en chaîne sont promus - non pas le point de départ du récit, mais les résultats commerciaux."
+---
+
+<Hero badge="12.3 · Couche de règlement et d'actifs" lead="Ce n'est que lorsque le réseau de nœuds, la densité des transactions, le PoB et la gouvernance des agents répondront aux normes que le règlement et le portage d'actifs seront systématiquement promus ; la partie en chaîne devrait être constituée de « résumés et preuves nécessaires » plutôt que d'une réplication complète de l'état.">
+# La couche de règlement consomme la qualité d’entrée du PoB ; lorsque l'entrée est mince, n'importe quelle chaîne n'est qu'une base de données coûteuse.
+</Hero>
+
+<MetaGrid>
+  <Meta label="objectifs fondamentaux" value="Mécanisme de règlement + portage numérique de l'identité/autorité + mise en œuvre sélective en chaîne" />
+  <Meta label="Conditions préalables" value="Le signal de commutation 12,1/12,2 a été atteint en permanence (pas une seule impulsion mensuelle)" />
+  <Meta label="en principe" value="Les problèmes qui peuvent être résolus efficacement hors chaîne ne doivent pas être mis sur la chaîne ; il doit y avoir un vérificateur ou une contrepartie clair sur la chaîne." />
+</MetaGrid>
+
+## Référence de l'industrie
+
+- **Changement de frais Uniswap et précipitation de la gouvernance** : Une fois le volume des transactions et la profondeur du pool prouvés, la couche de protocole supportera les frais à long terme et la gouvernance des paramètres ; Les règles de règlement des WCN devraient être solidifiées une fois que les flux de trésorerie et la densité des PoB auront été prouvés.
+- **Superposition de l'état d'Ethereum et de la disponibilité des données** : l'état complet n'a pas besoin d'être copié par tout le monde ; WCN peut conserver les données détaillées des transactions dans les limites de conformité, et seuls l'engagement, le hachage racine ou la preuve ZK/signature restent sur la chaîne (en fonction de la conformité et de la sélection technologique).
+- **RWA / Compliance Securities Token Path** : les actifs en chaîne sont généralement limités par les entités juridiques et la divulgation ; la troisième phase du WCN devrait aligner la double condition « l'activité a été gérée + voie juridique claire » pour éviter le packaging inversé.
+
+## livrables spécifiques
+
+<CardGrid cols={2}>
+  <Card title="Formalisation du règlement" icon="coins">**Livraison** : Tableau de mappage des règles comptables et des conditions de déclenchement du PoB, interface de litige et d'arbitrage, rapports de rapprochement et d'audit. **Indicateurs** : Cycle de règlement, taux de litiges, taux de créances douteuses/reprises, cohérence du rapprochement multi-entités.</Card>
+  <Card title="Portant identité et autorisation" icon="id-card">**Livraison** : modèle unifié d'identité, de rôle, de réputation ou de jalonnement de nœud (si adopté) et d'autorisations système ; processus de déconnexion et d’héritage. **Indicateurs** : Taux de traçabilité des modifications d'autorisation, nombre d'utilisations frauduleuses et d'incidents de comptes partagés.</Card>
+  <Card title="grand livre de valeur à long terme" icon="trending-up">**Livraison** : vues des contributions et des résultats qui peuvent être interrogés sur plusieurs trimestres (utilisés pour les incitations, le partage ou la référence de gouvernance, la forme spécifique est déterminée par la gouvernance). **Indicateurs** : Cohérence des recalculs du livre de comptes, taux de réussite des échantillonnages d'audit externe.</Card>
+  <Card title="Sélectif en chaîne" icon="link-2">**Livraison** : liste des actifs en chaîne (qu'est-ce qui est en chaîne, pourquoi est en chaîne, qui vérifie), hypothèses de pont ou de garde, commutateurs de mise à niveau et de pause. **Indicateurs** : différence entre les événements en chaîne et la réconciliation PoB hors chaîne, temps de récupération après accident.</Card>
+</CardGrid>
+
+## Mesures de réussite (exemple)
+
+- Tout règlement peut être retracé jusqu'à la chaîne complète de : **enregistrement PoB → version de la règle → identité du participant**.
+- Il existe un chemin de rétrogradation documenté en cas de défaillance des composants en chaîne (pause de la frappe, retour au règlement hors chaîne, etc.).
+- Pour les audits par échantillonnage proposés par les régulateurs ou les grands partenaires, l'exportation de la matière peut être réalisée dans les délais convenus.
+
+## Principaux risques à ce stade
+
+<CardGrid cols={2}>
+  <Card title="Conformité et juridiction" icon="scale">Mauvaise évaluation des attributs de jeton/de sécurité. **Divers** : Les avis juridiques déterminent les limites des produits, et non l'inverse.</Card>
+  <Card title="Contrats intelligents et sécurité" icon="lock-open">La couche d’actifs attire les surfaces d’attaque. **Atténuation** : audit, bug bounties, limites et multi-signatures ; aucune clé utilisateur n'est séquestrée sauf si cela est nécessaire.</Card>
+  <Card title="Oracles et dépendances hors chaîne" icon="link">Le statut en chaîne n'est pas cohérent avec PoB. **Libération lente** : vérification multi-sources, règlement différé, période de contestation.</Card>
+  <Card title="contrecoup narratif" icon="megaphone">Le marché ne parle que de chaînes et non de business. **Version** : Les KPI externes donnent toujours la priorité au rendement du réseau et à la qualité des règlements.</Card>
+</CardGrid>
+
+## Pourquoi doit-il être placé après
+
+<Callout type="warning">Si les phases 1 et 2 sont ignorées, il n’y aura pas d’entrée stable dans la couche de règlement et la couche d’actifs deviendra facilement un « certificat coquille ». Ceci est à l’opposé de la trajectoire non durable d’un grand nombre de projets sans flux de trésorerie en 2017-2018 après l’émission de jetons ; cela est également cohérent avec la voie suivie par les principaux protocoles actuels pour « établir d'abord des pratiques de volume et de gouvernance, puis étendre l'utilité des jetons ».</Callout>
+
+<Statement>La troisième phase marque l'évolution du WCN d'un « réseau commercial à haute confiance » à un « système à long terme auditable, distribuable et éventuellement ancré en chaîne » – à condition que les chiffres des deux premières phases puissent résister à des inspections aléatoires.</Statement>

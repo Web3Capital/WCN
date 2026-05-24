@@ -1,0 +1,61 @@
+---
+title: 5.6 Camada de Verificação e Liquidação
+description: >-
+  A camada final da arquitetura: Proof Desk, PoB, Atribuição e Liquidação, dando
+  a todas as colaborações um endpoint confiável.
+chapter: 5
+order: 6
+---
+
+<Hero badge="5.6 · Camada de Verificação e Liquidação" lead="As primeiras quatro camadas tratam de recursos, capital, execução e distribuição. A quinta camada resolve as questões mais críticas: como são confirmados os resultados, como é calculada a atribuição e como é liquidado o valor. Sem esta camada, não há diferença essencial entre o WCN e uma versão avançada do CRM. A camada de verificação e liquidação é a razão da existência de todo o sistema.">
+# L5 · Camada de verificação e liquidação – transformar “o que foi feito” em “o que foi comprovado”.
+</Hero>
+
+<MetaGrid>
+  <Meta label="posição hierárquica" value="L5 – Exportação de valor da arquitetura de cinco camadas" />
+  <Meta label="componentes principais" value="Balcão de provas → PoB → Atribuição → Liquidação" />
+  <Meta label="Benchmarking TradFi" value="Auditoria + Câmara de Compensação + Atribuição de Desempenho" />
+</MetaGrid>
+
+## A questão central respondida neste nível: Como o sistema pode acreditar nos resultados?
+
+Não importa quão poderosas sejam as primeiras quatro camadas, sem L5 o sistema não consegue distinguir entre “realmente feito” e “pretendido como feito”. A camada de verificação e liquidação transforma narrativas subjetivas em cadeias de evidências auditáveis.
+
+<Statement>A essência do L5: Atualizar “o resultado aconteceu” para “o resultado foi comprovado, atribuído e liquidado”.</Statement>
+
+---
+
+## Quatro componentes principais
+
+<CardGrid cols={2}>
+  <Card title="Balcão de Provas (coleta de evidências)" icon="paperclip">Após a conclusão do negócio, o proprietário do negócio envia a evidência do resultado ao Proof Desk: contrato assinado, registro de pagamento, resultados, hash na rede, ata de reunião e confirmação por e-mail. O tipo e a quantidade de evidências dependem do tipo de negócio – um acordo de financiamento requer acordo + confirmação de pagamento, e um acordo de serviço requer SOW + aceitação de entrega.</Card>
+  <Card title="Fila do revisor" icon="search">Revisores independentes verificam as evidências quanto a: integridade do material, verificação de autenticidade, plausibilidade do cronograma, sinalização de risco. Regras principais: O revisor não pode ser um participante do negócio (evitação de juros) e os resultados da revisão exigem múltiplas assinaturas para confirmação.</Card>
+  <Card title="Evento PoB (prova de negócios)" icon="circle-check">Depois de passar na revisão, os resultados do negócio serão inseridos no razão do sistema como Evento PoB. Os registros PoB são imutáveis ​​e contêm participantes completos, resumos de evidências, atribuições de atribuição e carimbos de data/hora.</Card>
+  <Card title="Execução de liquidação (liquidação de ciclo)" icon="scale">Os PoBs são agregados e processados ​​em Execuções de Liquidação periódicas. O sistema aloca valor a todos os contribuidores – nós, provedores de serviços e agentes com base em índices de atribuição.</Card>
+</CardGrid>
+
+---
+
+## Comparação com o sistema de verificação TradFi
+
+<CardGrid cols={2}>
+  <Card title="TradFi: maduro, mas centralizado" icon="landmark">As quatro grandes empresas de contabilidade (Deloitte/PwC/EY/KPMG) fornecem auditorias, a DTCC/Euroclear fornece compensações e a Bloomberg/MSCI fornece atribuição de desempenho. O sistema é maduro, mas altamente centralizado, com limites elevados e custos elevados.</Card>
+  <Card title="WCN: Em rede + programável" icon="globe">O Proof Desk substitui a coleta manual de auditoria, o PoB substitui os relatórios de auditoria em papel, a atribuição inteligente substitui os cálculos manuais de desempenho e a liquidação on-chain substitui a compensação centralizada. Mais aberto, mais rastreável e com menor custo.</Card>
+</CardGrid>
+
+> **Principal diferença**: a verificação da TradFi é **auditoria pós-ação** (revisada após a divulgação do relatório anual), enquanto a verificação da WCN é **incorporação em tempo real** - cada negócio entrará imediatamente no processo de coleta e revisão de evidências quando for concluído, e não há problema de "reposição de final de ano".
+
+---
+
+## O que acontece se a camada de validação estiver faltando
+
+<CardGrid cols={2}>
+  <Card title="subjetividade dos resultados" icon="ban">O participante alegou que “eu facilitei este acordo”, mas não houve provas que o apoiassem. O sistema degenera em afirmações verbais e atribuições relacionais.</Card>
+  <Card title="controvérsia de atribuição" icon="ban">Várias partes participam de um acordo e é impossível determinar quem contribuiu com quanto. A maioria dos projetos Web3 opta por evitar esse problema (deuce ou não resolver), prejudicando a participação no longo prazo.</Card>
+  <Card title="Credibilidade não acumula" icon="ban">Sem resultados verificados, a pontuação de reputação de um nó não pode ser estabelecida. O sistema não consegue diferenciar entre nós de alto valor e nós de baixo valor.</Card>
+  <Card title="Valor não acumula" icon="ban">Os resultados da colaboração são pontuais – são desmembrados assim que são concluídos e não há registo sistemático. A rede não pode aprender e acumular com a cooperação anterior.</Card>
+</CardGrid>
+
+<Callout type="tip">
+A camada de verificação e liquidação não é um "remendo de última etapa", mas a principal razão para a existência de toda a arquitetura WCN - ela dá a toda colaboração um ponto final confiável, dá a todas as contribuições um valor quantificável e transforma a rede de "cooperação única" em um "sistema de acumulação contínua".
+</Callout>

@@ -1,0 +1,93 @@
+---
+title: 4.2 Processo do nó até a liquidação
+description: >-
+  Fluxo de trabalho completo: Entrada de recursos → Sala de negociações →
+  Execução de tarefas → Proof Desk → PoB → Liquidação, incluindo cronograma e
+  tratamento de exceções.
+chapter: 4
+order: 2
+---
+
+<Hero badge="4.2 · Processo completo" lead="Esta página não apenas lista os módulos, mas também conecta os módulos de acordo com sua lógica operacional real - desde o primeiro segundo quando os recursos entram no sistema até a última etapa quando o valor é liquidado. Cada estágio tem um cronograma esperado, resultados principais e mecanismos de tratamento de exceções.">
+# Desde a entrada do nó até a conclusão da liquidação, cada etapa do WCN possui proprietário, status e saída.
+</Hero>
+
+<MetaGrid>
+  <Meta label="estágio do processo" value="Três etapas: Entrada de recursos → Promoção de execução → Verificação e liquidação" />
+  <Meta label="Ciclo típico" value="Ciclo fechado simples de 1 a 2 semanas, negócio complexo de 4 a 8 semanas" />
+  <Meta label="Referência de benchmarking" value="Gerenciamento de pipeline PE/VC" />
+</MetaGrid>
+
+---
+
+## O primeiro parágrafo: Os recursos entram no sistema (Dia 0-2)
+
+O ponto de partida da operação do sistema não é um formulário ou página, mas sim recursos valiosos que são trazidos para a rede por um nó responsável.
+
+<CardGrid cols={2}>
+  <Card title="Nó do projeto" icon="package">Envie informações do projeto: estágio do produto, necessidades de financiamento, situação do token, região alvo e equipe principal. Os dados entram no Project Intake e são inseridos de maneira estruturada.</Card>
+  <Card title="nó capital" icon="coins">Preferências de investimento registradas: estágio (semente/A/B), faixa (DeFi/AI/RWA/Infra), faixa de valor nominal, preferência regional. As preferências são inseridas no Perfil Capital para correspondência posterior.</Card>
+  <Card title="nó de serviço" icon="wrench">Insira as capacidades de execução: assuntos jurídicos, auditoria, segurança, branding, desenvolvimento, pesquisa, etc. A capacidade entra no Registro de Serviços e pode ser chamada por Deal.</Card>
+  <Card title="Nó regional" icon="globe">Entre na rede local: cobertura de país/cidade, relações industriais, consciência regulatória, recursos para eventos. Suporte local para negócios transfronteiriços.</Card>
+</CardGrid>
+
+> **Comparação com TradFi**: Equivale ao estágio de entrada do CRM do PE/VC (Pipeline Intake do Pitchbook/DealCloud). A diferença é que a WCN estabeleceu uma estrutura de colaboração multipartidária desde o primeiro passo, em vez de uma gestão interna unilateral.
+
+---
+
+## O segundo parágrafo: Avanço de negócios e tarefas (Dia 2-14+)
+
+Depois que os recursos entram no sistema, eles devem passar de “informações” para “fluxo de trabalho”.
+
+<CardGrid cols={2}>
+  <Card title="Criação de Sala de Negociação" icon="handshake">O sistema cria uma Sala de negociações para combinar oportunidades: identificando o proprietário da negociação, as partes, a lista de materiais e os marcos. Este não é um bate-papo em grupo – todos têm funções e responsabilidades claras.</Card>
+  <Card title="Envio de Tarefas" icon="clipboard-list">Atribua tarefas específicas a nós ou agentes humanos. Cada tarefa tem um proprietário, prazo, requisitos de saída e critérios de aceitação. Não há “explicação vaga”.</Card>
+  <Card title="Avanço de execução" icon="zap">Reuniões, due diligence, compilação de materiais, revisão jurídica, elaboração de contratos, execução de crescimento – todas as ações ocorrem ou são registradas no sistema. Agente auxilia em pesquisas, atas e lembretes.</Card>
+  <Card title="rastreamento de status" icon="chart-bar">Cada negócio e tarefa tem status em tempo real (em andamento/resposta pendente/bloqueado/concluído). O Execution Agent detecta automaticamente paralisações e emite alertas.</Card>
+</CardGrid>
+
+<Callout type="info">
+**Referência de cronograma**: ancoragem de serviço simples (como provedor de serviços de correspondência de requisitos de auditoria) pode ser concluída em 3 a 5 dias. Acordos de financiamento complexos (várias rodadas de reuniões, due diligence, jurídico) normalmente levam de 4 a 8 semanas. A WCN não reduz a complexidade do negócio em si, mas elimina o atrito de coordenação - a pesquisa da TradFi mostra que 30-40% do tempo em um negócio típico é gasto na sincronização e agilização de informações.
+</Callout>
+
+---
+
+## O terceiro parágrafo: verificação e liquidação (3-7 dias após a conclusão do negócio)
+
+Após a formação do resultado, o sistema muda da lógica de execução para a lógica de prova.
+
+<CardGrid cols={2}>
+  <Card title="Embalagem de evidências" icon="paperclip">O Proprietário do Negócio envia a evidência do resultado para o Pacote de Evidências: contrato/acordo, registro de pagamento, resultados, hash na rede, ata de reunião, confirmação por e-mail, etc. O tipo e a quantidade de evidência dependem do tipo de Negócio.</Card>
+  <Card title="Fila de revisão" icon="search">O pacote de evidências entra na Fila do Revisor. O revisor verifica: integridade do material, autenticidade, racionalidade do cronograma e marcadores de risco. Os revisores e os participantes do negócio não podem se sobrepor (evitar interesses).</Card>
+  <Card title="Atribuição de atribuição" icon="target">Após passar na revisão, o sistema atribui atribuições aos participantes: quem recomendou (%), quem promoveu (%), quem executou (%) e quem revisou (%). A atribuição é baseada numa cadeia de evidências e não numa negociação subjetiva.</Card>
+  <Card title="Geração e liquidação de PoB" icon="scale">Após a confirmação da atribuição, os resultados do negócio entram no livro-razão do PoB e tornam-se entrada de liquidação. O PoB é processado na Execução de Liquidação periódica e os participantes recebem a correspondente distribuição de valores.</Card>
+</CardGrid>
+
+---
+
+## Tratamento de exceções: quando o processo está travado
+
+Os negócios reais nem sempre correm bem. A WCN projetou um mecanismo de tratamento para cada exceção:
+
+<CardGrid cols={2}>
+  <Card title="Negócio paralisado" icon="pause">Se um negócio não tiver atualização de status por mais de um número definido de dias, o agente de execução notificará automaticamente o proprietário do negócio. Os negócios que não respondem continuamente serão marcados como paralisados ​​para liberar a energia dos nós relevantes.</Card>
+  <Card title="Tempo limite da tarefa" icon="clock">Caso a tarefa ultrapasse o prazo e não seja concluída, o sistema atualiza automaticamente a notificação. O proprietário da tarefa precisa fornecer os motivos (atraso/bloqueio/cancelamento). As tarefas que não respondem afetam as pontuações de reputação do nó.</Card>
+  <Card title="Evidência insuficiente" icon="mail">Quando o revisor determina que a evidência está incompleta, o pacote de evidências é devolvido com uma lista de itens faltantes. O Proprietário da Oferta tem reposição por tempo limitado. O acordo não preenchido devolvido três vezes entrará no canal de disputa.</Card>
+  <Card title="controvérsia de atribuição" icon="triangle-alert">Quando múltiplas partes tiverem objeções à relação de atribuição, elas entrarão no processo de arbitragem: o comitê de revisão independente tomará a decisão final com base na cadeia de evidências. Os resultados da decisão são registrados no sistema e formam um precedente de atribuição.</Card>
+</CardGrid>
+
+<Callout type="warning">
+O tratamento de exceções não é um recurso auxiliar, mas é fundamental para a confiabilidade do sistema. Um sistema que não consegue lidar com falhas e disputas não será confiável nos negócios reais. A WCN foi projetada com caminhos excepcionais como cidadãos de primeira classe.
+</Callout>
+
+---
+
+## Fluxograma completo
+
+<Callout type="info">
+**Entrada de recursos** (Dia 0-2)→ **Criação de Sala de Negociação + correspondência** (Dia 2-3)→ **Alocação e execução de tarefas** (Dia 3-14+)→ **Formação de resultados** (Dia N)→ **Evidências enviadas ao Proof Desk** (Dia N+1)→ **Auditoria e atribuição** (Dia N+3-5)→ **Geração de PoB** (Dia N+5)→ **Liquidação do ciclo** (Liquidação) Executar)
+</Callout>
+
+<Callout type="tip">
+O processo de três etapas constitui uma cadeia de valor completa: entrada de recursos → avanço do fluxo de trabalho → verificação e liquidação de resultados. Cada seção tem entradas claras, proprietário, expectativas de tempo e tratamento de exceções. Esta não é uma estrutura teórica – é um sistema operacional que pode ser projetado e auditado.
+</Callout>

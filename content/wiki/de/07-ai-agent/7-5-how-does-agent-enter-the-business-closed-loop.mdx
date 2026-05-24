@@ -1,0 +1,67 @@
+---
+title: 7.5 Wie tritt der Agent in den geschlossenen Geschäftskreislauf ein?
+description: >-
+  Aufgabenbindung, Übernahme, Beweiskette und PoB: Erzeugte Mengen in
+  abrechnungsfähige Ergebnisse umwandeln; Gegenbeispiel und
+  Positivbeispiel-Workflow.
+chapter: 7
+order: 5
+---
+
+<Hero badge="7.5 · Agent und geschlossener Kreislauf" lead="Der LangChain-Agent, der die Demo durchläuft, beweist nur, dass er „generieren kann“. Der geschlossene WCN-Kreislauf erfordert den Nachweis, dass „die Ergebnisse gefördert werden“. Daher muss Folgendes aufgezeichnet werden: Welche Ausgabe hängt an welcher Aufgabe, wer hat sie übernommen, welche Zustandsänderungen wurden nach der Übernahme ausgelöst und ob die endgültigen Beweise den Beweis bestanden haben. Ohne diesen Link ist es nur ein weiteres Chatfenster.">
+# Annahme und Beweis sind die Tore des Wertes; Generation ist es nicht.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Was diese Seite macht" value="Abschlussbedingungen + Workflow-Beispiele + Schnittstelle zu PoB" />
+  <Meta label="Kernthemen" value="Ausgabe → Annahme → Ergebnis → Nachweis → PoB" />
+  <Meta label="Lese-Highlights" value="Aufgabenbindung, menschliche Ereignisse, Rückverfolgbarkeit" />
+</MetaGrid>
+
+## Der Hauptweg in den geschlossenen Kreislauf
+
+<Callout type="info">
+Aufgabenversand (einschließlich Typ und Akzeptanzkriterien) → Agent wird im Rahmen der Autorisierung ausgeführt → Strukturierte Ausgabe wird gespeichert → Knoteneigentümer übernimmt/ablehnt/überarbeitet → Zustandsmaschine treibt Geschäft oder Aufgabe voran → Übermittlung von Ergebnisnachweisen → Proof-Desk-Überprüfung → PoB-Datensatz generieren → Abrechnungs- und Reputationsebene eingeben
+</Callout>
+
+<Statement>Der Wert des Agenten ist ein identifizierbarer **Ergebnistreiber**: Das System kann zwischen „10 Seiten wurden generiert“ und „3 davon wurden übernommen und führten zur Abhaltung von Besprechungen/zu geänderten Bedingungen/zu erfüllten Zahlungsbedingungen“ unterscheiden.</Statement>
+
+## Notwendige Bedingungen für die Agentenausgabe, um in Proof einzutreten
+
+<CardGrid cols={2}>
+  <Card title="Aufgaben-ID-Bindung" icon="link">Jeder Maschinenausgabe ist eine „task_id“ (oder ein gleichwertiges Handle) zugeordnet. „Geisterergebnisse“, die in privaten Chats oder Offline-Dokumenten herumwandern, sind verboten.</Card>
+  <Card title="Eingabe- und Versionsspuren" icon="clipboard-list">Modellname, Version, Temperatur oder gleichwertige Parameter, Abruffragment-ID, Schlüsselanhang-Hash; um die Reproduktion und Beweiserhebung im Streitfall zu erleichtern.</Card>
+  <Card title="Rekord bei der Adoption von Menschen" icon="circle-check">Explizite Ereignisse: „adopted_by“, „timestamp“, optionale Änderungsdifferenz; Anders als Copilots implizites „Benutzer wegkopiert“ muss es strukturiert sein.</Card>
+  <Card title="Ergebniskorrelation" icon="refresh-cw">Es kann auf Geschäfte, Meilensteine ​​oder On-Chain-/Off-Chain-Geschäftsereignisse (z. B. Vertragseinreichung, Börsenankündigungen) zurückgeführt werden; andernfalls kann keine Zuordnungsabrechnung erfolgen.</Card>
+</CardGrid>
+
+<Callout type="warning">
+Wenn eine der Bedingungen fehlt → wird sie als „vom Werkzeug generiert“ klassifiziert und darf nicht in PoB enthalten sein; Aus dem gleichen Grund wie „E-Mails ohne Transaktionsnummern und Arbeitspapiere“ in TradFi können nicht in das Konto aufgenommen werden.
+</Callout>
+
+## Drei konkrete Workflow-Beispiele
+
+<Steps>
+  <Step title="Iteration des Finanzierungsmaterials">Aufgabe: „Serie A Material v3 Risikokapitel“. Research Agent ruft Offenlegungen zu konkurrierenden Produktrisiken ab → gibt Entwürfe mit Referenzen aus → Löschung und Übernahme von Knoten → lädt überarbeiteten PDF-Hash hoch → Proof assoziiert „endgültigen Entwurf für Investorentreffen“ → zeichnet PoB auf, nachdem das Treffen geschlossen ist.</Step>
+  <Step title="Kapitalabgleich">Deal Agent gibt die 5 am höchsten bewerteten Artikel und die passenden Gründe aus → der Knoten übernimmt nur 2 davon und erstellt eine Einführungsaufgabe → Nachfolgende E-Mails werden von Menschen gesendet; PoB erfasst nur die angenommenen Empfehlungen und die anschließend überprüften Ergebnisse und erfasst nicht das nicht übernommene Ranking.</Step>
+  <Step title="Überwachung nach der Investition">Der Liquiditätsagent meldet einen abnormalen Absatz → Der Ausführungsagent generiert einen internen Slack-/Aufgabenkopieentwurf → Die für die Risikokontrolle zuständige Person übernimmt einen und erstellt eine „Follow-up-Custody-Bank“-Aufgabe → Die Quittung wird in das Beweispaket eingetragen → Der Nachweis wird übergeben und dann an den PoB weitergeleitet.</Step>
+</Steps>
+
+## Gegenbeispiel: Scheint sehr beschäftigt zu sein, kein geschlossener Regelkreis
+
+- Die unbegrenzte Erkundung im AutoGPT-Stil erzeugt eine große Anzahl von Notizen, keine Aufgabe, keinen Eigentümer → **Rauschen**.
+– Copilot generiert hübsche E-Mails, die jedoch nicht von der WCN-Aufgabe gesendet werden, kein Adoption-Tag → **Nicht zuordenbar**.
+– Der Agent schlug vor, zur Zeitleiste zu gehen, und der Knoten leitete es mündlich an die Projektpartei weiter, aber das System war zustandslos → **Überprüfung nicht möglich**.
+
+## Was entscheidet dieser Schritt?
+
+<CardGrid cols={2}>
+  <Card title="Ist KI nur ein Werkzeug?" icon="bot">Erst nach Eintritt in den geschlossenen Regelkreis wird es zur offiziellen Ausführungsschicht. Ansonsten unterscheidet es sich nicht von anderen LLM-Verpackungen.</Card>
+  <Card title="Ob der Agent abgerechnet werden kann" icon="coins">Ohne eine Proof-Kette gibt es keinen PoB; Anreize und Gewinnbeteiligung sind nicht ausreichend.</Card>
+  <Card title="Ist der Agent überschaubar?" icon="shield">Akzeptanzrate, Fehlerakzeptanz-Rollback und Modell-A/B-Effekte können alle gemessen werden, bevor bestimmte Agentenkonfigurationen aktualisiert oder ausgesetzt werden können.</Card>
+  <Card title="WCN-Differenzierung" icon="zap">Es ist nicht „mit GPT/Claude/Gemini verbunden“, aber es ist das erste Mal in einem Unternehmensnetzwerk mit mehreren Knoten, dass die Maschinenausgabe mit einer einheitlichen Beweis- und Abrechnungssemantik verbunden ist.</Card>
+</CardGrid>
+
+<Callout type="tip">
+Vorschläge für Akzeptanzkriterien: **Können Sie Protokolle verwenden, um während eines Streits innerhalb von 30 Minuten klar zu erklären** – wer den Agenten gebeten hat, was zu tun, was angenommen wurde und was das endgültige Geschäftsergebnis ist. Wenn dies möglich ist, ist das Closed-Loop-Design grundsätzlich qualifiziert.
+</Callout>

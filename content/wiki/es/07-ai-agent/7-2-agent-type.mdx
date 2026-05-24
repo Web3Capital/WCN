@@ -1,0 +1,59 @@
+---
+title: 7.2 Tipo de agente
+description: >-
+  Los cinco tipos de Agentes asignan diferentes permisos de herramientas,
+  granularidad de registros y calibres de liquidación; están alineados con los
+  roles en el marco de orquestación, pero están vinculados a la gobernanza.
+chapter: 7
+order: 2
+---
+
+<Hero badge="7.2 · Tipo de agente" lead="Los marcos de múltiples agentes como CrewAI utilizan “roles” para organizar indicaciones y herramientas; WCN actualiza roles a objetos de gobernanza: cada tipo de Agente corresponde a diferentes visibilidad de datos, acciones ejecutables y plantillas de atribución de PoB. Sin clasificación, los permisos y la liquidación se confundirán.">
+# Cinco tipos = cinco identidades de misión, no cinco máscaras de chat.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Que hace esta pagina" value="Definición de tipo × Permiso × Registro × Calibre PoB" />
+  <Meta label="temas centrales" value="Investigación / Negociación / Crecimiento / Ejecución / Liquidez" />
+  <Meta label="Lecturas destacadas" value="¿Quién puede ver qué, qué herramientas se pueden ajustar, qué marcas se pueden dejar?" />
+</MetaGrid>
+
+## Cinco agentes típicos
+
+<CardGrid cols={2}>
+  <Card title="Agente de investigación" icon="search">Recuperación de información, resumen de múltiples fuentes, tabla estructurada de empresas/pistas comparables y llenado de listas de diligencia debida. **Ejemplos de herramientas**: Documento de intranet RAG, API de datos de terceros permitida, que prohíbe la conexión directa a cualquier rastreo de páginas web (anti-inyección). **Nota del LLM**: Las referencias a hechos deben tener anclajes de fuente; Los valores están marcados como "para ser verificados" de forma predeterminada.</Card>
+  <Card title="Agente de trato" icon="handshake">Candidatos coincidentes con proyectos de capital, borradores de propuestas a nivel de avance, recomendaciones sobre el estado de la etapa del acuerdo. **Prohibido**: Emitir términos vinculantes o compromisos exclusivos en nombre de nodos sin autorización. **Comparación de Copilot**: Copilot optimiza los manuscritos de una sola persona; La salida del Agente de acuerdos debe tener el ID del acuerdo y un resumen de la lógica de recomendación para su revisión.</Card>
+  <Card title="Agente de crecimiento" icon="trending-up">Copia de varias versiones, viñetas del embudo, resumen de atribución posterior a la campaña (vinculado a la tarea de Crecimiento). **Riesgo**: Debe pasar por la puerta de publicación manual antes de publicar en el mundo exterior; evite combinarlo con palabras rápidas como "compromiso de ganancias".</Card>
+  <Card title="Agente de ejecución" icon="settings">Actas de reuniones, desglose de tareas pendientes, borrador de recordatorio y lista de seguimiento de recibos. **Parámetro**: Lo más cercano a la automatización empresarial (Zapier/Make) + LLM, pero cada sugerencia debe estar vinculada a notas de reuniones y marcas de tiempo.</Card>
+  <Card title="Agente de Liquidez" icon="droplet">Resumen de monitoreo de liquidez y salud del mercado, estado de la lista de verificación, descripción de alarma de umbral anormal. **TradFi Lenovo**: similar a la "capa de lenguaje natural" de cierto tipo de panel de riesgo en Aladdin, el poder de toma de decisiones aún recae en la mesa/nodo de operaciones.</Card>
+</CardGrid>
+
+## ¿Por qué no se pueden mezclar en un “superagente”?
+
+Los agentes de propósito general estilo LangChain suelen compartir el mismo conjunto de herramientas; en escenarios institucionales, se violará el **principio de privilegio mínimo**. Después de la clasificación, el sistema puede hacer:
+
+<CardGrid cols={2}>
+  <Card title="¿Quién puede ver qué?" icon="eye">La investigación puede leer una amplia gama de materiales; La liquidez sólo puede leer los precios de mercado y los contratos acordados; Deal no lee campos confidenciales de niveles salariales en toda la base de datos de forma predeterminada.</Card>
+  <Card title="¿Quién puede hacer qué?" icon="wrench">La ejecución puede escribir tareas y comentarios; El crecimiento sólo puede escribir áreas de borrador de marketing; ningún tipo de Agente puede transferir dinero o firmar contratos por defecto.</Card>
+  <Card title="¿Quién debería llevar qué registro?" icon="clipboard-list">La investigación registra la consulta de búsqueda y el ID del fragmento; El acuerdo registra las características y versiones recomendadas; La liquidez registra la definición del indicador y el tiempo de los datos.</Card>
+  <Card title="Cómo y quién ingresa a PoB" icon="circle-check">Las plantillas de atribución están divididas por tipo: por ejemplo, "Párrafos de investigación adoptados" y "Materiales de crecimiento adoptados" tienen campos de prueba diferentes para evitar disputas de resolución.</Card>
+</CardGrid>
+
+## Relación de mapeo con orquestación multiagente
+
+El *agente/nodo* en CrewAI/LangGraph se puede comparar con los tipos de WCN, pero WCN corrige tres cosas adicionales: **(1)** La lista blanca de herramientas permitidas para cada tipo; **(2)** La máquina de estados con la ventaja de aprobación humana; **(3)** La salida está vinculada a `task_id`, evento de adopción de nodo. Sin (3), no importa cuán hermoso sea el arreglo, es solo un experimento interno.
+
+<Callout type="warning">
+No clasificado → Ampliación de permisos → Los registros no se pueden defender → No se puede fijar el precio de PoB. El tipo es un requisito previo para la gobernanza y la comercialización, no una decoración de documentos.
+</Callout>
+
+## Ejemplo breve: mismo evento, múltiples tipos de colaboración
+
+<Steps>
+  <Step title="Investigación">Extraiga noticias sobre financiación pública + memorando interno para generar "Puntos de conflicto y lista de preguntas".</Step>
+  <Step title="Trato">Genere un borrador de la "Próxima ronda de puntos de comunicación" basado en la lista, con motivos coincidentes (sin envío automático por correo electrónico).</Step>
+  <Step title="Ejecución">Escriba la conclusión de la reunión como un elemento de acción con el propietario/vencido y adjúntelo a la Tarea.</Step>
+  <Step title="Crecimiento (opcional)">Genere una copia de actualización neutral externa a partir de los hechos adoptados y haga clic manualmente para publicarla.</Step>
+</Steps>
+
+<Statement>El objetivo de los tipos es responder a nivel arquitectónico: si algo sale mal, ¿es un problema con el modelo, las herramientas, la configuración o la adopción humana? Se puede descomponer antes de poder gestionarlo.</Statement>

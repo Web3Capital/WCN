@@ -1,0 +1,56 @@
+---
+title: 6.9 Cycle de vie du nœud
+description: >-
+  Machine d'état complète depuis la candidature, la révision, en ligne jusqu'à
+  la révision, le renouvellement, le déclassement et la sortie.
+chapter: 6
+order: 9
+---
+
+<Hero badge="6.9 · Cycle de vie du nœud" lead="Les licences financières et les relations avec les clients institutionnels nécessitent un examen annuel et un examen déclenché ; il en va de même pour les sièges de nœuds. La liste blanche statique amènera les nœuds zombies à occuper des itinéraires et des marques, diluant ainsi les avantages marginaux des nœuds de haute qualité – le cycle de vie est la vanne de régulation de la courbe de qualité.">
+# Les sièges sont définis par une vérification continue et non par une admission unique.
+</Hero>
+
+<MetaGrid>
+  <Meta label="objectifs de conception" value="Empêcher le gonflage du siège ; rendre les contributions, les violations et les renouvellements lisibles dans la même machine à états" />
+  <Meta label="Analogie avec TradFi" value="Semblable à l’inspection annuelle des courtiers, à l’actualisation régulière du KYC pour les principaux clients et au cycle de formation à la conformité des analystes" />
+  <Meta label="Utilisation des données" value="Contrôle des risques, incitations et divulgation externe du service de journal des changements de statut (anonymat agrégé)" />
+</MetaGrid>
+
+## Machine à états de nœud
+
+<CardGrid cols={3}>
+  <Card title="Appliqué" description="Soumettre les qualifications, les recommandations, les plans d'affaires et la couverture proposée ; procéder à un examen préliminaire des opérations et des documents de conformité pour vérifier leur exhaustivité et les conflits d'intérêts." icon="file-text" />
+  <Card title="Approuvé" description="Les qualifications sont réussies mais la signature de l'accord, l'activation de l'autorisation et la formation ne sont pas terminées ; ceci est courant lors des vérifications d’antécédents ou des files d’attente légales." icon="circle-check" />
+  <Card title="Actif" description="Autorisations complètes de routage et de soumission PoB ; participation aux statistiques KPI et aux pools d’incitations." icon="zap" />
+  <Card title="Probation" description="Exemples de conditions de déclenchement : le nombre d'introductions est inférieur au minimum pendant deux trimestres consécutifs, les plaintes des clients sont fondées et les soupçons de fraude PoB sont exceptionnels." icon="triangle-alert" />
+  <Card title="Suspendu" description="Autorité temporairement gelée : enquête sur des violations, en attendant des documents supplémentaires ou une coopération judiciaire ; ne participera pas à la distribution pendant cette période." icon="lock" />
+  <Card title="Renouvelé / Révoqué" description="Si le renouvellement est réussi, la période d'autorisation sera rafraîchie ; si elle est révoquée, elle entrera en période de refroidissement et la marque sera retirée des rayons. Les dossiers clés seront conservés conformément à la loi ou à l’accord." icon="refresh-cw" />
+</CardGrid>
+
+---
+
+## chemin du cycle de vie
+
+<Callout type="warning">
+Application → Diligence raisonnable et accord → Activation de l'autorisation → Opération active → Examen trimestriel/annuel → Renouvellement, mise à niveau, rétrogradation ou sortie ; temporary review can be inserted for major events.
+</Callout>
+
+<CardGrid cols={2}>
+  <Card title="Étape d'admission" description="Évaluer l'authenticité des ressources, la réputation historique et le chevauchement avec les sous-graphiques existants ; demander des tâches pilotes si nécessaire." icon="search" />
+  <Card title="Scène en ligne" description="Formation complète aux règles, tests de notation de confidentialité et intégration des outils système ; signer les limites des compétences orales externes." icon="clipboard-list" />
+  <Card title="phase de fonctionnement" description="Suivre le pipeline, la boucle fermée, la qualité du PoB et les commentaires des clients par KPI ; poids de routage basés sur les données." icon="zap" />
+  <Card title="Étape de renouvellement" description="Comparez les contributions et les décisions d’enregistrement des violations : renouvellement, réduction des autorisations, période d’observation ou suppression." icon="star" />
+</CardGrid>
+
+<Statement>Les nœuds ne sont pas des actifs permanents de type NFT, mais des contrats de type service liés à la performance et à la conformité ; une conception appropriée permet au réseau de maintenir une qualité marginale sans dégradation pendant la période d’expansion.</Statement>
+
+---
+
+## Justification du système pour un cycle de vie strict
+
+L'expansion statique entraînera trois types de problèmes : **Les routes sont occupées par des nœuds à faible production**, **Les coûts de traitement des litiges PoB augmentent** et **les nouveaux nœuds sont dissuadés en raison de l'occupation de l'espace par d'anciens nœuds** (sélection défavorable). Le renouvellement dynamique implique une « location de siège » en tant que contribution continue, ce qui est cohérent avec la logique de la revue annuelle du livre du banquier de couverture dans TradFi.
+
+<Callout type="info">
+Il est recommandé d'exposer un minimum de transparence au niveau du produit : par exemple, les taux de rétention des nœuds agrégés par piste et les changements dans la durée moyenne en boucle fermée, afin que les acteurs du marché puissent comprendre si le réseau s'épaissit ou s'amincit - sans révéler les secrets commerciaux des nœuds individuels.
+</Callout>

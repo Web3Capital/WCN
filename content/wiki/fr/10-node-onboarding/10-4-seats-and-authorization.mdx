@@ -1,0 +1,46 @@
+---
+title: 10.4 Sièges et autorisation
+chapter: 10
+order: 4
+description: "Seat définit « qui vous êtes »\_; l'autorisation définit « ce que vous pouvez atteindre » - les deux sont mappés un par un aux KPI et aux obligations de preuve, similaire à la matrice d'autorité des produits d'échange RBAC +."
+---
+
+<Hero badge="10.4 · Sièges et autorisation" lead="Sans ACL claires, les réseaux multi-agences dégénéreront en groupes WeChat. WCN divise le siège et les droits : le premier est le titre du poste et l'étendue des responsabilités de l'organisation dans le réseau, et le second est une combinaison booléenne spécifique qui est lisible, inscriptible et réglable dans le système. La logique est proche du rôle SSO d'entreprise + table d'autorisation de sous-compte d'échange.">
+# Le siège est la position et l'autorisation est la limite ; plus le règlement est proche, plus l'autorisation est étroite et plus l'audit est strict.
+</Hero>
+
+<MetaGrid>
+  <Meta label="questions fondamentales" value="Comment formaliser la position des nœuds dans le réseau ?" />
+  <Meta label="axe du siège" value="Fonction/Région/Piste/Tâche" />
+  <Meta label="axe d'autorisation" value="Accès / Participation / Opérations / Éligibilité à la facturation" />
+</MetaGrid>
+
+## Quatre types de sièges (empilables)
+
+<CardGrid cols={2}>
+  <Card title="Sièges fonctionnels" icon="settings">Identités de responsabilité principale telles que le capital, le projet, le service, la distribution, la région et l'agent. Déterminez le modèle de flux de travail par défaut et la catégorie de KPI (par exemple, le côté capital est le temps de réponse + le taux de conversion des investissements, le côté service est le taux de livraison à temps + le taux de réussite de la réinspection).</Card>
+  <Card title="sièges régionaux" icon="globe">Couverture du pays/ville/fuseau horaire ; souvent accompagné d'une **exclusivité ou d'un quota** (par exemple, seulement N nœuds maîtres dans la même juridiction) pour éviter l'accaparement des commandes internes et la dilution de la réputation.</Card>
+  <Card title="Sièges d'industrie" icon="tag">Des tags tels que l'IA, le RWA, les paiements, l'infrastructure ; piloter la pondération des correspondances L1–L2 et l’éligibilité des campagnes co-marquées.</Card>
+  <Card title="siège de travail" icon="target">Lier un ID de transaction, un ID de tâche ou un code d'activité spécifique ; les autorisations sont limitées dans le temps et recyclées ou déclassées une fois la tâche terminée - à l'instar du contrôle d'accès des consultants basé sur un projet.</Card>
+</CardGrid>
+
+---
+
+## Quatre types d'autorisation (symétriques aux responsabilités)
+
+<CardGrid cols={2}>
+  <Card title="Accès (Lecture)" icon="eye">Visible Deal Room, version du document, portée du tableau indicateur. Il peut être décomposé au niveau du domaine selon le « principe du besoin de savoir » (stratégie PDF filigranée pour le benchmarking des datarooms des banques d'investissement).</Card>
+  <Card title="S'engager" icon="door-open">Vous pouvez soumissionner, commenter, réclamer des tâches et rejoindre la séquence de réunion. Les déclarations de conflit doivent généralement être préfixées.</Card>
+  <Card title="Droit d’exploitation (Loi)" icon="wrench">Actions en chaîne ou au niveau de l'API : créer des informations d'identification, déclencher des allocations, appeler des lots d'agents. Un **double examen** ou un verrouillage temporel est souvent requis.</Card>
+  <Card title="Qualification au règlement (règlement)" icon="coins">Conditions d'entrée dans le chemin d'attribution du PoB et d'allocation de valeur : dossier de preuves complet, signature de l'examinateur et aucun ticket de litige ouvert. Si elles ne sont pas respectées, les **autorisations peuvent être gelées** tant que l'identité existe toujours.</Card>
+</CardGrid>
+
+<Callout type="info">**Seat** répond : « Quel type de responsabilité institutionnelle représentez-vous ? » ; **Autorisation** répond : "Qui pouvez-vous déplacer ce tour ?" La mise à niveau des sièges n'équivaut pas automatiquement à une autorisation d'extension : un examen de conformité et de sécurité est requis.</Callout>
+
+---
+
+## Pourquoi le système s’appuie-t-il sur cette couche ?
+
+Sans sièges ni autorisation, la carte de collaboration ne peut pas être automatisée : les algorithmes de correspondance, les règles de contrôle des risques et les journaux d'audit perdent tous leurs sujets. WCN est passé de « qui sait qui » à « qui a fait quoi, à quel objet, à quel moment et sous quelle autorisation » - la même exigence de granularité que les journaux d'ordres d'échange et les pistes d'audit des utilisateurs finaux.
+
+<Statement>Siège + autorisation + chaîne de preuves est la plus petite structure pouvant être mise à l'échelle au niveau institutionnel ; s'il en manque un, des faveurs et des promesses verbales seront rendues.</Statement>

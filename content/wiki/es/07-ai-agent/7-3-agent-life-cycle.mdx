@@ -1,0 +1,68 @@
+---
+title: 7.3 Ciclo de vida del agente
+description: >-
+  Registrar, autorizar, ejecutar, monitorear, actualizar, suspender, salir;
+  alinear la lista de preguntas frecuentes sobre gobernanza de modelos,
+  auditoría y diligencia debida de terceros.
+chapter: 7
+order: 3
+---
+
+<Hero badge="7.3 · Ciclo de vida" lead="Los agentes necesitan un ciclo de vida como las cuentas de los empleados y las versiones del modelo: quién puede crearlo, quién puede autorizarlo, cómo monitorearlo durante la operación, cómo pausarlo cuando ocurre un accidente y cómo procesar los datos después de su eliminación. Sin una máquina de estado, no existe una capa de ejecución confiable y es imposible explicarle al auditor “qué se estaba ejecutando en el sistema en ese momento”.">
+# Los agentes deben ser identificables, restringibles, actualizables y revocables.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Que hace esta pagina" value="Máquina de estado + acción de gobernanza + respuesta de auditoría" />
+  <Meta label="temas centrales" value="Enlace completo de Registrado a Jubilado" />
+  <Meta label="Lecturas destacadas" value="Límites de autorización, activadores de suspensión, control de actualizaciones" />
+</MetaGrid>
+
+## estado crítico
+
+<CardGrid cols={3}>
+  <Card title="Registrado" icon="file-text">Registrado en el catálogo (nombre, tipo, modelo predeterminado, nodo propietario, descripción de uso). Aún no se han recibido los datos del negocio, lo que equivale a "se ha creado la cuenta pero no se han activado los permisos".</Card>
+  <Card title="Autorizado" icon="key">Complete la revisión de permisos: dominio de datos, lista blanca de herramientas, límite de llamadas diarias y si se permite escribir en sistemas externos. Corresponde a la vinculación de roles en IAM empresarial.</Card>
+  <Card title="Activo" icon="play">Ejecute tareas dentro del alcance de la autorización y escriba registros estructurados **continuamente** (resumen de entrada, hash de salida, llamadas a herramientas, resultados de aprobación).</Card>
+  <Card title="En pausa / Suspendido" icon="pause">Ejemplos de condiciones desencadenantes: intentos anormales no autorizados, fallas consecutivas en el muestreo de calidad de salida, incidentes de seguridad y prohibiciones de cumplimiento. La pausa debería cortar las herramientas y las devoluciones de llamadas externas con un solo clic.</Card>
+  <Card title="Actualizado" icon="arrow-up">Cambios de versión del modelo, avisos, herramientas o límites; Se debe registrar el número de orden de cambio, el aprobador, la hora efectiva y el paquete de reversión. Compare MLOps con gestión de cambios (como ITIL).</Card>
+  <Card title="Jubilado" icon="flag">Si el negocio está fuera de línea o no cumple con los estándares, será eliminado; se conservará el período de retención del registro de solo lectura y los campos confidenciales utilizados para la capacitación se eliminarán o se anonimizarán (según la política).</Card>
+</CardGrid>
+
+## trayectoria del ciclo de vida
+
+<Callout type="info">
+Registro → Evaluación y autorización de riesgos → En línea (activo) → Monitoreo continuo e inspección aleatoria → Suspensión impulsada por eventos → Actualización de cambios (con aprobación) → Estrategia de retiro y retención
+</Callout>
+
+<Steps>
+  <Step title="acceso">Aclarar escenarios comerciales, clasificación de datos, si se deben procesar términos de PII/confidencialidad; prohibir "entrar primero y encontrar una solución después".</Step>
+  <Step title="Autorizar">Permisos mínimos: dividir el alcance de la API por tipo de agente; regla de dos personas para operaciones sensibles o Human in the Loop (HITL).</Step>
+  <Step title="correr">SLA: etiquetas de quejas de los clientes por latencia, tasa de error y alucinaciones; Indicadores similares a herramientas de observabilidad como LangSmith, pero los resultados deben ingresarse en el sistema de tareas WCN.</Step>
+  <Step title="Revisar">Verificaciones aleatorias periódicas: comparación de múltiples versiones de modelos con la misma entrada, muestras de indicaciones del equipo rojo y si las llamadas a herramientas están fuera de los límites.</Step>
+  <Step title="abandonar">Los Agentes Retirados ya no deben aparecer en la lista de despacho; La prueba todavía puede hacer referencia a la salida histórica, pero marcada con la versión del modelo.</Step>
+</Steps>
+
+<Statement>Objetivo del diseño del ciclo de vida: **responder en cualquier momento**: qué agente se está ejecutando, qué modelo se utiliza, a qué se puede acceder y quién aprobó el último cambio.</Statement>
+
+## Marco de gobernanza y gestión de riesgos (condensado)
+
+| Dimensiones | Puntos clave |
+| --- | --- |
+| Propiedad | Cada Agente tiene un nodo propietario o responsable de la plataforma; si hay un incidente en ejecución, comuníquese primero con el propietario |
+| Cambiar | Los cambios de producción pasan por la ventana de cambios y se revierten; cambio de modelo importante puede requerir escala de grises paralela |
+| Datos | La capacitación/retención de registros y la transmisión transfronteriza cumplen con la ubicación y el contrato del nodo |
+| Seguridad | Custodia de claves y credenciales de herramientas; prohibir a los agentes mantener persistentemente las contraseñas de usuario en texto plano |
+| Auditoría | Período de retención de registros ≥ requisitos de seguimiento de disputas comerciales; apoyar la exportación a la diligencia debida de terceros |
+
+<Callout type="warning">
+La falta de capacidad para suspender y retirarse tácitamente permite a los "agentes zombis" mantener permisos vencidos durante mucho tiempo, una fuente común de violaciones de datos y sanciones por cumplimiento.
+</Callout>
+
+## La diferencia fundamental con el "bucle normalmente abierto" estilo AutoGPT
+
+El bucle autónomo tiene como valor predeterminado **sin punto final claro**; El ciclo de vida de WCN vincula cada ejecución con **caducidad de tareas y autorizaciones**. La tarea finaliza o la autorización expira → Las llamadas de los agentes deben rechazarse o ingresarse como de solo lectura en lugar de continuar "pensando" en segundo plano.
+
+<Callout type="tip">
+Una frase al explicarle a un auditor o LP: **Nuestros Agentes son como trabajos por lotes controlados, no como trabajadores automatizados incansables. **
+</Callout>

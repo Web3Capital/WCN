@@ -1,0 +1,66 @@
+---
+title: 8.1 Was ist PoB?
+description: >-
+  PoB: Nachweis- und Abrechnungsmechanismus, der auf überprüfbare
+  Geschäftsergebnisse abzielt; Unterschied zur Offenlegung der PoW/PoS/PoA- und
+  TradFi-Leistung.
+chapter: 8
+order: 1
+---
+
+<Hero badge="8.1 · PoB-Definition" lead="PoB (Proof of Business) überprüft den Endzustand der Geschäftszustandsmaschine: Vertragswirksamkeit, Mittelbereitstellung, Serviceakzeptanz und Auflistung – nicht Hash-Puzzles, Pfandsalden oder maßgebliche Knotensignaturen. Es trennt die Frage der „Sicherheit in der Kette“ von der Frage der „Authentizität der Ergebnisse außerhalb der Kette“: Ersteres stellt sicher, dass das Hauptbuch konsistent ist, und letzteres stellt sicher, dass die im Hauptbuch erfassten Objekte belohnungswürdig sind.">
+# PoB ist der Zertifizierungsmechanismus des WCN für „echte Geschäftsergebnisse“ und auch ein glaubwürdiger Input für die langfristige Wertverteilung.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Was diese Seite macht" value="Definieren Sie PoB und platzieren Sie es in einem Koordinatensystem mit Mainstream-Konsens und TradFi-Metriken" />
+  <Meta label="Kernthemen" value="Ergebnisobjekt, Beweismittel, Zuschreibung, Abrechnungsprämisse" />
+  <Meta label="Lese-Highlights" value="Vergleichen Sie mit PoW/PoS/PoA; Vergleichen Sie mit Punkten/Airdrops; Position der Systemebene" />
+</MetaGrid>
+
+## PoW, PoS, PoA und PoB: unterschiedliche Verifizierungsobjekte
+
+| Mechanismus | Typische Verifizierungsobjekte | Optimiertes Verhalten | Zusammenhang mit „Geschäftsergebnissen“ |
+|------|----------------|--------------|--------|
+| Kriegsgefangener | Calculate workload (nonce) | Block generation, anti-tampering | Do not answer "whether this deal is completed" |
+| PoS | Versprechen und Delegationsgewicht | Wirtschaftliche Sicherheit, Beteiligungsanreize | Kapitalsperre ≠ Lieferung abgeschlossen |
+| PoA | Zugelassene Verifiziereridentität | Geringe Latenz, Federation Governance | Trust Default Party, Non-Outcome Market |
+| **PoB** | **Überprüfbarer geschlossener Kreislauf und Beweispaket** | **Ergebnisse erleichtern und beweisen** | **Geschäftsendstatus direkt ausrichten** |
+
+PoW/PoS löst, wie Distributed Ledger im Rahmen des Gegnermodells einen Konsens erzielen können; PoB löst, „was es wert ist, vom Netzwerk in der Wertschicht aufgezeichnet zu werden“. Beide können nebeneinander existieren: Off-Chain- oder On-Chain-PoB-Datensätze können mit On-Chain-Hashes verankert werden, aber **Konsenssicherheit ≠ Geschäftsrealität** – ohne unabhängige Überprüfung der Ergebnisse werden Token-Anreize einfach zu den am einfachsten manipulierbaren Proxy-Metriken tendieren.
+
+<Statement>PoB fragt nicht, „wer am schnellsten rechnet oder am meisten setzt“, sondern „wer die Etablierung von Geschäftsergebnissen fördert, die von Dritten überprüft werden können“.</Statement>
+
+---
+
+## Parallelen und Unterschiede zu TradFi-Leistungskennzahlen
+
+- **GIPS (Global Investment Performance Standards)** betont die Vergleichbarkeit von Portfoliorenditen, vollständigen Rechnungsperioden, Nettoperformance nach Anpassungen für Kosten und Cashflow – der Kern ist **überprüfbar und neu berechenbar**. PoB basiert auf dem gleichen Geist: **Ohne eine Beweiskette und konsistentes Kaliber kann Leistung nicht deklariert werden**.
+- **Brinson Attribution** unterteilt Überschussrenditen in Allokation (strategische Vermögensgewichtung) und Auswahl (Auswahl auf Wertpapier-/Projektebene). Die Zuordnung von WCN (siehe 8.5) ist in ihrer Struktur ähnlich: „Wer treibt Schlüsselknoten an“ und „Wer beteiligt sich nur an Peripheriegeräten“ muss innerhalb derselben geschlossenen Schleife aufgeteilt werden, um eine Duplizierung der Gesamtergebnisse auf mehreren Visitenkarten zu vermeiden.
+- **Unterschied**: TradFi ist hauptsächlich auf regulierte Institutionen und verwaltete Daten ausgerichtet; PoB orientiert sich an offenen Netzwerken und legt mehr Wert auf **Anti-Duplikat-Ansprüche, Zeitreihen, Abhilfe- und Streitbeilegungsverfahren** (siehe 8.4).
+
+---
+
+## Warum gängige Web3-Incentives den „wahren Wert“ nicht messen können
+
+- **Airdrop**: verteilt gemäß Adress-/Interaktions-Snapshot, Belohnungen sind **skriptfähiges Verhalten** und haben keine stabile Zuordnung zum kommerziellen geschlossenen Kreislauf; Arbitrage zwischen Hexen und Studios ist ein endogenes Problem.
+- **Punkte und Aufgabenpunkte**: Optimieren Sie **beobachtbare Aktionen** (Einchecken, Weiterleiten, Ausfüllen von Formularen), die leicht von GMV, Lieferung und Annahme getrennt werden können.
+- **Reine Verpfändungseinnahmen**: Bei der Vergütung handelt es sich um **Kapitalopportunitätskosten und einen Beitrag zur Netzwerksicherheit**, nicht um „das, was Sie für Kunden getan haben“.
+- **TVL / Transaktionsvolumen**: Überwiegend **Agentenindikatoren**, die durch Anreize (Waschvolumen, revolvierende Kredite, kurzfristige Subventionen) verzerrt sein können.
+
+PoB erhöht den Abrechnungsschwellenwert auf **Ergebnis + Beweise + Zuordnung**, sodass der oben genannte Mechanismus die Buchhaltungsfunktion von PoB allein nicht ersetzen kann.
+
+---
+
+## PoB-Position im WCN-Stack
+
+<CardGrid cols={2}>
+  <Card title="Ergebnisschwelle" icon="door-open">Ergebnisse, die PoB nicht bestanden haben, bleiben auf der Ebene der kollaborativen Erzählung und gehen nicht in den vom System erkannten langfristigen Wert ein.</Card>
+  <Card title="Attributionsportal" icon="puzzle">Nachdem die Beweise überprüft wurden, wird die strukturierte Aufteilung von Führung/Zusammenarbeit/Annahme eingeleitet.</Card>
+  <Card title="Siedlungsprämisse" icon="coins">Die Verteilung von Token und langfristigem Eigenkapital sollte durch das PoB-Ledger eingeschränkt werden, um zu vermeiden, dass „diejenigen profitieren, die Geschichten erzählen können“.</Card>
+  <Card title="Netzwerkspeicher" icon="brain">Archivierte PoB-Ereignisse bilden eine abfragbare Reputations- und Fallbibliothek und reduzieren so die Kosten für wiederholte Due-Diligence-Prüfungen.</Card>
+</CardGrid>
+
+<Callout type="tip">
+Ohne PoB wird „es ist erledigt“ immer verbal bleiben; Bei PoB muss dieselbe Aussage von einem einreichbaren, überprüfbaren und archivierbaren Beweispaket begleitet sein, bevor sie zu einer Systemfakten hochgestuft werden kann.
+</Callout>

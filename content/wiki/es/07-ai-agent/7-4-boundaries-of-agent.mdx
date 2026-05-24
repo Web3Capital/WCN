@@ -1,0 +1,67 @@
+---
+title: 7.4 Límites del Agente
+description: >-
+  Alfabetización, aprobación, financiación y líneas rojas legales; la matriz de
+  riesgo de ilusión y extralimitación; División del trabajo hombre-máquina y
+  diseño frenable.
+chapter: 7
+order: 4
+---
+
+<Hero badge="7.4 · Límites de los agentes" lead="Cuanto más fuerte es la capacidad, más límites estrictos se necesitan: qué resultados sólo pueden redactarse, qué acciones deben ser HITL y qué datos nunca abandonarán el dominio. El límite no es restringir la innovación, sino convertir LLM de una “caja negra irresponsable” a un “componente defendible”; a diferencia de Copilot, que solo recomienda y el usuario es totalmente responsable de ello, WCN debe dividir explícitamente las responsabilidades en la capa de red.">
+# Sólo los Agentes controlados pueden ingresar al sistema de liquidación y reputación.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Que hace esta pagina" value="Lance permitido/Lance prohibido/Riesgo y medidas de control" />
+  <Meta label="temas centrales" value="La persona conserva el compromiso final y los derechos de financiación." />
+  <Meta label="Lecturas destacadas" value="Legal, financiación, PoB, compromisos externos, registros" />
+</MetaGrid>
+
+## Qué puede hacer el Agente (conjunto permitido)
+
+<CardGrid cols={2}>
+  <Card title="" icon="search">Resumen, matriz de comparación, análisis preliminar de debida diligencia, cita con viñetas con la fuente; adecuado para GPT-4 / Claude artículo largo + RAG. La etiqueta predeterminada de salida es "no verificada legalmente".</Card>
+  <Card title="Proceso y Acta" icon="file-text">Borrador de actas de reuniones, elementos de acción, plantillas de correo electrónico de seguimiento; Escenarios principales de la clase de ejecución. Los errores en la línea de tiempo y en la atribución de oradores deben corregirse manualmente.</Card>
+  <Card title="Crecimiento y seguimiento" icon="chart-bar">Descripciones narrativas de variaciones de redacción, aspectos destacados del canal y anomalías de los indicadores; alertas en lenguaje natural después de cotizaciones de solo lectura similares a Liquidity.</Card>
+  <Card title="Automatización de bajo riesgo" icon="settings">Complete formularios, etiquete y sincronice campos de estado dentro de permisos explícitos; similar a RPA, pero con LLM analizando entradas no estructuradas.</Card>
+</CardGrid>
+
+## Lo que el Agente no puede hacer (conjunto prohibido)
+
+<CardGrid cols={3}>
+  <Card title="No sustituye a la firma de un contrato." icon="ban">Las firmas electrónicas, las condiciones vinculantes y las conclusiones exclusivas/de juego requieren procesos humanos y legales.</Card>
+  <Card title="No puedo manejar fondos solo" icon="ban">Transferencias, asignaciones, autorizaciones en cadena, instrucciones de depósito en garantía; incluso las herramientas de conexión de billeteras requieren múltiples aprobaciones y límites humanos.</Card>
+  <Card title="No se pueden emitir opiniones legales/impositivas/de auditoría" icon="ban">Se pueden buscar resúmenes de regulaciones y no se permiten conclusiones finales como "legal para usted".</Card>
+  <Card title="No se puede finalizar PoB" icon="ban">La mesa de pruebas y las reglas de gobernanza determinan la adopción; Los agentes pueden ser examinados y clasificados previamente, pero no pueden "pasar por la autocertificación".</Card>
+  <Card title="No hagas compromisos externos más allá de tu autoridad." icon="ban">Ingresos, estatus regulatorio, tiempo en la firma, relaciones de respaldo: se prohíbe generar y enviar automáticamente declaraciones a nivel de firma de abogados.</Card>
+  <Card title="No se pueden evitar el registro y la adquisición" icon="ban">El camino crítico debe ser interrumpible y rodable; Está prohibida la invocación silenciosa de herramientas no registradas.</Card>
+</CardGrid>
+
+## Matriz de riesgos (simplificada)
+
+| Riesgo | Rendimiento | Ideas de control |
+| --- | --- | --- |
+| Ilusión | Casos fabricados, leyes equivocadas, nombres de empresas equivocados | Cotización obligatoria; salida "desconocida" si no está seguro; verificación de reglas de campo clave |
+| Inyección inmediata | Páginas web/PDF maliciosos que provocan filtraciones o acceso no autorizado | Aislamiento de herramientas; zona de pruebas de contenido no confiable; acciones salientes HITL |
+| Fuga de datos | La formación o los registros quitan confidencialidad | Clasificación de datos; desensibilización logarítmica; limpieza de claves después de jubilado |
+| Autonomía excesiva | Bucles y tarifas infinitos estilo AutoGPT | Presupuesto a nivel de tarea y límite de pasos; ninguna tarea significa no correr |
+| Responsabilidades ambiguas | No sé quién lo aprobó si algo salió mal | Registro de adopción + cadena de aprobación + modelo/número de versión del mensaje |
+
+<Callout type="warning">
+Sin límites, la IA no es una capa de ejecución más sólida, sino una palanca que amplifica los errores, especialmente en los procesos de redacción publicitaria y de financiación de alto riesgo.
+</Callout>
+
+## Demarcación de responsabilidades con Microsoft Copilot/Universal Assistant
+
+Los términos y condiciones generales de Copilot estipulan: **Se recomienda que el usuario sea responsable de la verificación**. El lado de la red WCN también necesita ofrecer **atribución de múltiples partes**: por lo tanto, el límite del Agente debe escribirse en políticas de tipo y contratos de tareas, en lugar de depender únicamente de la autodisciplina del usuario final.
+
+<Statement>Lo que WCN necesita es un agente que pueda ser explicado, responsable y que pueda ingresar a PoB; "el modelo lo dice" no puede considerarse como si el nodo lo dijera.</Statement>
+
+## Revelación de TradFi: la automatización se detiene antes de la cadena de toma de decisiones
+
+Los sistemas tipo COIN manejan grandes cantidades de análisis de documentos y **las decisiones crediticias aún están sujetas a la política bancaria y a la revisión humana**; Aladdin enfatiza que los calibres de riesgo son consistentes y **los administradores de carteras aún tienen responsabilidades de inversión**. WCN se alinea con el mismo principio: **El agente comprime la fricción y no reemplaza la autoridad de firma. **
+
+<Callout type="tip">
+Una frase para la aceptación del producto: **Si elimina el Agente, el proceso comercial sigue siendo legal y se puede ejecutar, pero será más lento**: el límite es aproximadamente correcto. Si el proceso de eliminación del Agente no puede cerrar el ciclo, significa que el vínculo humano se ha erosionado excesivamente.
+</Callout>

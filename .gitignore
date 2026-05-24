@@ -22,5 +22,5 @@ coverage/
 **/~$*
 **/lu*.tmp
 
-# Translation script cache (derived from content/wiki/zh/ via scripts/translate-wiki.ts)
-scripts/.translate-wiki-cache.json
+# Translation script caches (per source→target pair) — derived from content/wiki/
+scripts/.translate-wiki-cache*.json

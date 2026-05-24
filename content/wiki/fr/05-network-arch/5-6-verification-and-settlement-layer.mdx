@@ -1,0 +1,59 @@
+---
+title: 5.6 Couche de vérification et de règlement
+description: "La couche finale de l'architecture\_: Proof Desk, PoB, Attribution et Settlement, donnant à toutes les collaborations un point de terminaison fiable."
+chapter: 5
+order: 6
+---
+
+<Hero badge="5.6 · Couche de vérification et de règlement" lead="Les quatre premiers niveaux concernent les ressources, le capital, l'exécution et la distribution. La cinquième couche résout les problèmes les plus critiques : comment les résultats sont confirmés, comment l'attribution est calculée et comment la valeur est réglée. Sans cette couche, il n'y a pas de différence essentielle entre WCN et une version avancée de CRM. La couche de vérification et de règlement est la raison de l’existence de l’ensemble du système.">
+# L5 · Couche de vérification et de règlement - transformer « ce qui a été fait » en « ce qui a été prouvé ».
+</Hero>
+
+<MetaGrid>
+  <Meta label="position hiérarchique" value="L5 - Exportation de valeur d'une architecture à cinq couches" />
+  <Meta label="composants de base" value="Proof Desk → PoB → Attribution → Règlement" />
+  <Meta label="Analyse comparative TradFi" value="Audit + Centre d'échange + Attribution des performances" />
+</MetaGrid>
+
+## La question centrale répond à ce niveau : comment le système peut-il croire aux résultats ?
+
+Quelle que soit la puissance des quatre premières couches, sans L5, le système ne peut pas faire la distinction entre « vraiment fait » et « prétendument fait ». La couche de vérification et de règlement transforme les récits subjectifs en chaînes de preuves vérifiables.
+
+<Statement>L'essence de L5 : mettre à niveau « le résultat est arrivé » vers « le résultat a été prouvé, attribué et réglé ».</Statement>
+
+---
+
+## Quatre composants essentiels
+
+<CardGrid cols={2}>
+  <Card title="Bureau des preuves (collecte de preuves)" icon="paperclip">Une fois la transaction terminée, le propriétaire de la transaction soumet les preuves du résultat au Proof Desk : accord signé, historique de paiement, livrables, hachage en chaîne, procès-verbal de la réunion et confirmation par e-mail. Le type et le montant des preuves dépendent du type de transaction : une transaction de financement nécessite un accord + une confirmation de paiement, et une transaction de service nécessite un SOW + une acceptation de livraison.</Card>
+  <Card title="File d'attente des réviseurs" icon="search">Des évaluateurs indépendants vérifient les preuves concernant : l’intégrité matérielle, la vérification de l’authenticité, la plausibilité du calendrier, le signalement des risques. Règles clés : l'évaluateur ne peut pas être un participant à la transaction (évitement des intérêts) et les résultats de l'examen nécessitent plusieurs signatures pour confirmation.</Card>
+  <Card title="Événement PoB (preuve d'activité)" icon="circle-check">Après avoir passé l'examen, les résultats commerciaux seront inscrits dans le grand livre du système en tant qu'événement PoB. Les enregistrements PoB sont immuables et contiennent des participants complets, des résumés de preuves, des attributions d'attribution et des horodatages.</Card>
+  <Card title="Exécution de décompte (décompte de cycle)" icon="scale">Les PoB sont regroupés et traités lors d'exécutions de règlement périodiques. Le système attribue de la valeur à tous les contributeurs - nœuds, fournisseurs de services et agents en fonction de ratios d'attribution.</Card>
+</CardGrid>
+
+---
+
+## Comparaison avec le système de vérification TradFi
+
+<CardGrid cols={2}>
+  <Card title="TradFi : mature mais centralisé" icon="landmark">Les quatre grands cabinets comptables (Deloitte/PwC/EY/KPMG) assurent les audits, DTCC/Euroclear assurent les compensations et Bloomberg/MSCI assurent l'attribution des performances. Le système est mature mais hautement centralisé, avec un seuil élevé et un coût élevé.</Card>
+  <Card title="WCN : en réseau + programmable" icon="globe">Proof Desk remplace la collecte d'audit manuelle, PoB remplace les rapports d'audit papier, l'attribution intelligente remplace les calculs de performance manuels et le règlement en chaîne remplace la compensation centralisée. Plus ouvert, plus traçable et moins coûteux.</Card>
+</CardGrid>
+
+> **Différence clé** : la vérification de TradFi est un **audit post-action** (examiné après la publication du rapport annuel), tandis que la vérification de WCN est une **intégration en temps réel** - chaque transaction entrera immédiatement dans le processus de collecte et d'examen des preuves lorsqu'elle sera terminée, et il n'y aura pas de problème de « réapprovisionnement de fin d'année ».
+
+---
+
+## Que se passe-t-il si la couche de validation est manquante
+
+<CardGrid cols={2}>
+  <Card title="subjectivité des résultats" icon="ban">Le participant a affirmé que « j'avais facilité cet accord », mais il n'y avait aucune preuve à l'appui. Le système dégénère en revendications verbales et en assignations relationnelles.</Card>
+  <Card title="controverse sur l'attribution" icon="ban">Plusieurs parties participent à une transaction et il est impossible de déterminer qui a contribué et combien. La plupart des projets Web3 choisissent d'éviter ce problème (deux ou pas réglé), ce qui nuit à la participation à long terme.</Card>
+  <Card title="La crédibilité ne s'accumule pas" icon="ban">Sans résultats vérifiés, le score de réputation d'un nœud ne peut pas être établi. Le système ne peut pas faire la différence entre les nœuds de grande valeur et les nœuds de faible valeur.</Card>
+  <Card title="La valeur ne s'accumule pas" icon="ban">Les résultats de la collaboration sont ponctuels : ils sont fragmentés dès qu'ils sont réalisés et il n'y a pas d'enregistrement systématique. Le réseau ne peut pas apprendre et accumuler des coopérations passées.</Card>
+</CardGrid>
+
+<Callout type="tip">
+La couche de vérification et de règlement n'est pas un « patch de dernière étape », mais la raison essentielle de l'existence de l'ensemble de l'architecture WCN : elle donne à toute collaboration un point final crédible, donne à toutes les contributions une valeur quantifiable et transforme le réseau d'une « coopération ponctuelle » en un « système d'accumulation continue ».
+</Callout>

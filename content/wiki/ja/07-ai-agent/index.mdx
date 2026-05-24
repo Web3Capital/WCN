@@ -1,0 +1,28 @@
+---
+title: 章の概要
+description: '制御され監査可能なエージェント実行層: 一般的なエージェント フレームワーク、ライフ サイクル、境界、ビジネス クローズド ループとの違い。'
+chapter: 7
+order: 0
+---
+
+<Hero badge="第7章・AIエージェントシステム" lead="WCN のエージェントは AutoGPT スタイルの自律エージェントではなく、人間主導のワークフローに組み込まれた制御された実行層です。タスク命令、権限ドメイン、フルリンク ログ、および決済インターフェイスがあります。この章では、業界での位置づけ、分業形態、ライフサイクル管理、PoB参入条件について解説します。">
+# エージェントは正式なタスク システムの実行層であり、マーケティング用語でいう「完全に自動化された従業員」ではありません。
+</Hero>
+
+<MetaGrid>
+  <Meta label="核となるテーマ" value="制御対象エージェント、タイプと権限、ライフサイクル、境界、クローズドループ、PoB" />
+  <Meta label="読書スタイル" value="まずは業界枠組みとの違いを明確にし、タイプ→ライフサイクル→バウンダリー→クローズドループの順に読み進めていきます。" />
+  <Meta label="適用対象" value="AI エンジニアリング、製品、ノード運用、コンプライアンス、リスク管理" />
+</MetaGrid>
+
+<CardGrid cols={2}>
+  <Card title="7.1 エージェントが重要な理由" description="CrewAI / LangChain Agent / Copilot / AutoGPT との相対的な位置。 LLM の機能と制限。 TradFi の先例と WCN の正式な実行層。" href="/wiki/ai-agent/7-1-why-agent-is-important" icon="key" />
+  <Card title="7.2 エージェントの種類" description="調査/取引/成長/約定/流動性 5種類の役割と権限、ログ、決済を正確にマッピング。" href="/wiki/ai-agent/7-2-agent-type" icon="puzzle" />
+  <Card title="7.3 エージェントのライフサイクル" description="登録、認可、操作、レビュー、アップグレード、一時停止、終了;ベンチマークモデルのガバナンスと第三者監査の要件。" href="/wiki/ai-agent/7-3-agent-life-cycle" icon="refresh-cw" />
+  <Card title="7.4 エージェントの境界" description="リテラシー、承認、資金調達、法的なレッドライン。幻覚、データ侵害、過度の約束に対するリスクフレームワーク。" href="/wiki/ai-agent/7-4-boundaries-of-agent" icon="shield" />
+  <Card title="7.5 エージェントはどのようにしてビジネスの閉ループに入るのですか?" description="タスクのディスパッチから人への採用、Proof、PoBまでの具体的なワークフローと受け入れ条件。" href="/wiki/ai-agent/7-5-how-does-agent-enter-the-business-closed-loop" icon="zap" />
+</CardGrid>
+
+<Callout type="tip">
+業界でよくある誤解は、「エージェント」が「自らインターネットを閲覧し、注文し、署名するロボット」と同一視されているということです。 WCN はその逆を行います。エージェントは承認された、再生可能でブレーキ可能なアクションのみを実行し、最終的にはコミットメントと資金はノードと人々のガバナンス チェーンに残ります。
+</Callout>

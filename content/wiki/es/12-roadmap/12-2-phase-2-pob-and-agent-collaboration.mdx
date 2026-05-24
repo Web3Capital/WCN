@@ -1,0 +1,59 @@
+---
+title: '12.2 Fase 2: PoB y colaboración del agente'
+chapter: 12
+order: 2
+description: >-
+  La evaluación comparativa de Uniswap v2/v3 y Ethereum toma Rollup como etapa
+  central: el estándar se solidifica y se mejora la componibilidad; PoB se puede
+  orquestar y el Agente se puede auditar y revertir.
+---
+
+<Hero badge="12.2 · PoB y colaboración de agentes" lead="La primera etapa demuestra que “la red puede funcionar”; Esta etapa demuestra que “la red puede funcionar a gran escala”: PoB se convierte en un libro de confianza componible y el Agente se convierte en una capa de ejecución restringida en lugar de una automatización de caja negra.">
+# Desde el empalme manual hasta la operación del sistema: estándares, registros, permisos y métodos replicables se alinean en la misma etapa.
+</Hero>
+
+<MetaGrid>
+  <Meta label="objetivos centrales" value="Estandarización de PoB + Gobernanza de ingeniería de agentes" />
+  <Meta label="criterio de éxito" value="SLA de colaboración hombre-máquina, control de versiones de PoB y responsabilidad por excepciones" />
+  <Meta label="aun no lo hago" value="Asignar todo el valor a la cadena; permitir que el Agente haga compromisos de alto riesgo de forma independiente" />
+</MetaGrid>
+
+## Referencia de la industria
+
+- **Uniswap v2→v3**: desde un fondo general hasta niveles centralizados de liquidez y tarifas, es una evolución dual de "refinamiento de reglas + eficiencia de capital"; La Fase 2 de WCN corresponde al versionado de campos PoB, niveles de auditoría, incentivos y reglas de atribución.
+- **Ruta Ethereum L2**: ejecución y liquidación de capas, y la red principal garantiza la finalidad; WCN coloca capas de "toma de decisiones humanas/ejecución del Agente/registros PoB", y el Agente no reemplaza los límites de cumplimiento y revisión final.
+- **Mercado Web2 maduro**: Uber/Airbnb completan la capa intermedia de confianza y seguridad antes de escalar; La fase 2 completa la automatización auditable en lugar de simplemente agregar la cantidad de funciones.
+
+## entregables específicos
+
+<CardGrid cols={2}>
+  <Card title="Estabilización PoB" icon="circle-check">**Entrega**: versión del esquema PoB, registro de cambios, revisión del SLA, proceso de objeción y reconsideración; Biblioteca de plantillas PoB por tipo de trato. **Indicadores**: coherencia de la estructura de PoB entre meses, días de revisión de trabajos pendientes, tendencia de la tasa de disputas de atribución.</Card>
+  <Card title="Formalización de agentes" icon="bot">**Entrega**: matriz de permisos de roles, lista blanca de herramientas, política de retención de registros de sesiones/tareas, condiciones de activación de intervención humana. **Indicadores**: Tasa de adopción de resultados del agente, número de intercepciones no autorizadas, número de reversiones y parches (agente de estabilidad).</Card>
+  <Card title="Productización de la metodología de nodos." icon="ruler">**Entrega**: El libro de jugadas (lista de verificación, plantillas, materiales de capacitación) de nodos de alto valor ingresa al sistema. **Indicadores**: el tiempo que tarda un nuevo nodo en alcanzar la "calificación de primer orden", la tasa de uso del libro de jugadas y la comparación de resultados.</Card>
+  <Card title="densidad de circuito cerrado" icon="refresh-cw">**Entrega**: la cantidad de ofertas que se pueden avanzar en paralelo en la misma red dentro de una unidad de tiempo y reglas de conflicto de recursos. **Indicadores**: rendimiento de la transacción por persona/nodo, tasa de estancamiento de etapa (qué tarjeta tiene más).</Card>
+</CardGrid>
+
+## Métricas de éxito (ejemplo)
+
+- PoB **v1.x** Durante el período de congelación, los cambios importantes solo se publicarán a través de números de versión/gobierno, y habrá una guía de migración.
+- Los incidentes relacionados con agentes (referencias incorrectas, fugas de datos, operaciones no autorizadas) tienen parches de reglas y post mortem que se pueden restaurar.
+- **Replicable**: la nueva región o nueva vertical logra métricas de embudo (según lo definen las operaciones) comparables a la línea de base dentro de los 90 días según un manual preestablecido.
+
+## Señales para entrar a la tercera etapa (resumen)
+
+Los objetos de liquidación (quién paga a quién, en qué se basa el PoB, cómo se resuelven las disputas) pueden alinearse en el papel y en el sistema; el modelo de identidad y autoridad es suficiente para soportar la contabilidad y la auditoría sin depender de tablas temporales. Consulte [12.4](/wiki/roadmap/12-4-Milestones and Phase Switching Signals) para obtener más detalles.
+
+## Principales riesgos en esta etapa
+
+<CardGrid cols={2}>
+  <Card title="Desajuste de confianza automatizado" icon="triangle-alert">El agente acelera la propagación de errores. **Lanzamiento**: automatización jerárquica, modo sombra, inspección aleatoria y equipo rojo.</Card>
+  <Card title="Sobreingeniería de PoB" icon="library">Unas normas demasiado detalladas ralentizan los negocios. ** Lanzamiento **: Tome el "conjunto mínimo auditable" como resultado final y los campos restantes son graduales.</Card>
+  <Card title="Las organizaciones dependen de nodos héroe" icon="user">El escalamiento todavía depende de unas pocas personas. **Versión**: La documentación obligatoria y los mecanismos de transferencia se incluyen en los KPI.</Card>
+  <Card title="Capitalizar por adelantado" icon="banknote">NFT/Token está fuera de contacto con el ritmo de los negocios. **Versión**: La capa de activos solo iniciará proyectos después de que se alcance el umbral 12.4.</Card>
+</CardGrid>
+
+## Por qué esta fase debe venir después de la Fase 1
+
+<Callout type="warning">Sin muestras estables de acuerdos y pruebas, los estándares PoB se convertirán en un castillo en el aire; Sin procesos manuales claros, Agent sólo amplificará el caos. Esto es lo mismo que Rollup se convierte en un requisito rígido después de que las tarifas L1 y la congestión "realmente ocurren": la complejidad debe ser impulsada por la carga real.</Callout>
+
+<Statement>Al final de la segunda fase, debería poder demostrar al mundo exterior cómo la colaboración entre humanos y máquinas puede producir de manera estable resultados más verificables bajo el mismo conjunto de reglas, y que cualquier incidente que ocurra puede responsabilizarse y repararse.</Statement>

@@ -1,0 +1,64 @@
+---
+title: "7.5 Comment l'agent entre-t-il dans la boucle fermée de l'entreprise\_?"
+description: "Liaison des tâches, adoption, chaîne de preuves et PoB\_: transformer les quantités générées en résultats stables\_; contre-exemple et exemple de flux de travail positif."
+chapter: 7
+order: 5
+---
+
+<Hero badge="7.5 · Agent et boucle fermée" lead="L'agent LangChain exécuté dans la démo prouve seulement qu'il « peut générer » ; La boucle fermée du WCN nécessite de prouver « la promotion des résultats ». Par conséquent, il est nécessaire d'enregistrer : quelle sortie est liée à quelle tâche, qui l'a adopté, quels changements d'état ont été déclenchés après l'adoption et si la preuve finale a réussi la preuve. Sans ce lien, ce n'est qu'une autre fenêtre de discussion.">
+# L'adoption et la preuve sont les portes de la valeur ; la génération ne l’est pas.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Ce que fait cette page" value="Conditions de clôture + exemples de workflow + interface avec PoB" />
+  <Meta label="thèmes centraux" value="Sortie → Adoption → Résultat → Preuve → PoB" />
+  <Meta label="Points forts de la lecture" value="liaison de tâches, événements humains, traçabilité" />
+</MetaGrid>
+
+## Le chemin principal vers la boucle fermée
+
+<Callout type="info">
+Répartition des tâches (y compris le type et les critères d'acceptation) → L'agent s'exécute dans les limites de l'autorisation → La sortie structurée est stockée → Le propriétaire du nœud adopte/rejete/révise → La machine d'état avance la transaction ou la tâche → Soumission des preuves des résultats → Examen du bureau d'épreuves → Générer un enregistrement PoB → Entrer dans la couche de règlement et de réputation
+</Callout>
+
+<Statement>La valeur de l'Agent est un **moteur de résultat** identifiable : le système peut distinguer entre "10 pages ont été générées" et "3 d'entre elles ont été adoptées et ont donné lieu à la tenue de réunions/modalités modifiées/conditions de paiement remplies".</Statement>
+
+## Conditions nécessaires pour que la sortie de l'Agent entre en Preuve
+
+<CardGrid cols={2}>
+  <Card title="Liaison d'ID de tâche" icon="link">Chaque sortie de la machine est associée à un « task_id » (ou un handle équivalent) ; Les « résultats fantômes » errant dans les discussions privées ou les documents hors ligne sont interdits.</Card>
+  <Card title="Traces d'entrée et de version" icon="clipboard-list">Nom du modèle, version, température ou paramètres équivalents, ID du fragment de récupération, hachage de la clé attachée ; pour faciliter la reproduction et la collecte de preuves en cas de litiges.</Card>
+  <Card title="dossier d'adoption humaine" icon="circle-check">Événements explicites : `adopted_by`, `timestamp`, différence de modification facultative ; différent du "utilisateur copié" implicite de Copilot, il doit être structuré.</Card>
+  <Card title="Corrélation des résultats" icon="refresh-cw">Il peut être retracé jusqu'à des transactions, des jalons ou des événements commerciaux en chaîne/hors chaîne (tels que le dépôt de contrats, les annonces boursières) ; sinon, le règlement de l’attribution ne pourra pas être effectué.</Card>
+</CardGrid>
+
+<Callout type="warning">
+Si l'une des conditions est manquante → elle sera classée comme « générée par l'outil » et ne sera pas incluse dans le PoB ; pour la même raison que les « e-mails sans numéros de transaction ni documents de travail » dans TradFi ne peuvent pas être inclus dans le compte.
+</Callout>
+
+## Trois exemples concrets de workflow
+
+<Steps>
+  <Step title="Itération matérielle de financement">Tâche : "Chapitre sur les risques matériels de la série A v3". L'agent de recherche extrait les informations sur les risques des produits concurrents → produit des brouillons avec des références → suppression et adoption de nœuds → télécharge le hachage PDF révisé → associe la preuve « projet final pour la réunion des investisseurs » → enregistre le PoB après la clôture de la réunion.</Step>
+  <Step title="correspondance du capital">Deal Agent affiche les 5 éléments les mieux classés et les raisons correspondantes → le nœud n'en adopte que 2 et crée une tâche d'introduction → les e-mails suivants sont envoyés par des humains ; PoB enregistre uniquement les recommandations adoptées et les résultats vérifiés ultérieurs, et n'enregistre pas le classement non adopté.</Step>
+  <Step title="Suivi post-investissement">L'agent de liquidité signale un paragraphe anormal → L'agent d'exécution génère un brouillon de copie interne de Slack/tâche → La personne en charge du contrôle des risques en adopte un et crée une tâche « Banque de dépôt de suivi » → Le récépissé est inscrit dans le dossier de preuve → La preuve est transmise puis transmise au PoB.</Step>
+</Steps>
+
+## Contre-exemple : semble très occupé, aucune boucle fermée
+
+- L'exploration illimitée de style AutoGPT produit un grand nombre de notes, aucune tâche, aucun propriétaire → **bruit**.
+- Copilot génère de jolis emails mais non envoyés depuis la tâche WCN, pas de tag d'adoption → **Non attribuable**.
+- L'agent a suggéré d'accéder à la chronologie et le nœud l'a transmis verbalement à la partie du projet, mais le système était apatride → **impossible de vérifier**.
+
+## Que décide cette étape ?
+
+<CardGrid cols={2}>
+  <Card title="L'IA n'est-elle qu'un outil ?" icon="bot">Il ne devient la couche d'exécution officielle qu'après être entré dans la boucle fermée ; sinon, ce n’est pas différent de n’importe quel emballage LLM.</Card>
+  <Card title="Si l'agent peut être réglé" icon="coins">Sans chaîne de preuve, il n’y a pas de PoB ; les incitations et le partage des bénéfices manquent de références.</Card>
+  <Card title="L'agent est-il gérable ?" icon="shield">Le taux d'adoption, l'annulation de l'adoption des erreurs et les effets du modèle A/B peuvent tous être mesurés avant que des configurations d'agent spécifiques puissent être mises à niveau ou suspendues.</Card>
+  <Card title="Différenciation WCN" icon="zap">Ce n'est pas « connecté à GPT/Claude/Gemini », mais c'est la première fois dans un réseau d'entreprise multi-nœuds que la sortie de la machine est connectée à des preuves unifiées et à une sémantique de règlement.</Card>
+</CardGrid>
+
+<Callout type="tip">
+Suggestions de critères d'acceptation : **Pouvez-vous utiliser des journaux pour expliquer clairement en 30 minutes lors d'un litige** - qui a demandé à l'agent de faire quoi, ce qui a été adopté et quel est le résultat commercial final. Si cela peut être réalisé, la conception en boucle fermée est fondamentalement qualifiée.
+</Callout>

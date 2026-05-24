@@ -1,0 +1,77 @@
+---
+title: 7.1 Por que o Agente é importante
+description: >-
+  As diferenças entre a pilha de agentes relativamente comum e o Copilot;
+  Capacidades LLM e limitações de negócios; Precedente TradFi e camada de
+  execução controlada do WCN.
+chapter: 7
+order: 1
+---
+
+<Hero badge="7.1 · O significado de Agente" lead="Quando o tempo de alto valor do nó é ocupado por pesquisas repetitivas, minutos, acompanhamento e triagem preliminar, a capacidade da rede atinge seu pico. O agente deve extrair essas ações da experiência pessoal em capacidades de sistema auditáveis ​​e reutilizáveis ​​- e ao mesmo tempo deixar claro: não é um AutoGPT autônomo, mas um assistente de execução onde “as pessoas definem metas e linhas vermelhas, e o sistema registra o processo e os resultados”.">
+# O agente amplifica a execução e a padronização sem transferir a responsabilidade final.
+</Hero>
+
+<MetaGrid>
+  <Meta label="O que esta página faz" value="Coordenadas da indústria + realidade LLM + escolhas de design WCN" />
+  <Meta label="temas principais" value="Automação controlada versus agentes autônomos" />
+  <Meta label="Lendo destaques" value="Comparação de estrutura, limites do modelo, benchmarking TradFi, valor de circuito fechado" />
+</MetaGrid>
+
+## Quais são as diferenças em relação às estruturas comuns do AI Agent?
+
+| Formulário | Representante Típico | Pontos fortes | Diferença do WCN |
+| --- | --- | --- | --- |
+| Orquestração multifuncional | CrewAI, parte do fluxo de trabalho LangGraph | Divisão de funções, cadeia de tarefas legível | Raramente liquidação unificada de Prova/PoB/entre nós; WCN requer a saída do ID da tarefa vinculada e da cadeia de adoção |
+| Agente de conjunto de ferramentas | Agentes LangChain, Agente LlamaIndex | Acesso flexível a API, RAG e chamadas de função | Padrão "Ajuste se puder"; WCN exige ferramentas de lista branca, domínios de permissão, logs obrigatórios e portas manuais |
+| Copiloto de escritório | Copiloto da Microsoft, Notion AI | Redação, resumo e reescrita de documentos | Contexto de colaboração de inquilino único; difícil de fazer acordo multipartidário Atribuição e auditoria consistente dentro/fora da cadeia |
+| Agente autônomo orientado por objetivos | AutoGPT, experimentos do tipo BabyAGI | Subobjetivos de autodecomposição, execução cíclica | Altos custos imprevisíveis, alto risco de ultrapassar a autoridade e alucinação; conflito fundamental com conformidade institucional |
+
+<Statement>O Agente da WCN está mais próximo de um “serviço de execução com SLA”: escopos de entrada, conjuntos de ferramentas, versões de modelos e pontos de aprovação podem ser configurados e revogados, em vez de um ciclo aberto “até que a meta seja concluída”.</Statement>
+
+## Capacidades atuais e limitações rígidas do LLM em tarefas de negócios
+
+**Série GPT-4 (incluindo modelos de raciocínio da série O)**: Forte contexto longo e conformidade com instruções, adequado para extração estruturada, comparação de vários documentos e geração de rascunhos; ainda é possível fabricar referências e confundir entidades semelhantes e não está disponível para dados privados em tempo real sem RAG. **Claude**: A leitura longa do texto e a recusa cuidadosa em responder conduzem à tendência de conformidade do primeiro rascunho, mas a verificação humana ainda é necessária para valores numéricos e referências cruzadas de termos. **Gêmeos**: a integração multimodal com o ecossistema do Google é benéfica para a assistência por e-mail/agenda; a consistência terminológica entre idiomas e campos precisa ser restringida por glossários e modelos.
+
+As limitações comuns para negócios institucionais incluem: **prazos de treinamento e desvio de conhecimento** (dados pós-investimento e atualizações regulatórias exigem fontes externas autorizadas); **saída probabilística** (duas conclusões do mesmo prompt podem ser ligeiramente diferentes e as tabelas principais exigem regras determinísticas ou aprovação manual); **injeção imediata e vazamento de dados** (o risco aumenta quando o agente lê páginas da web externas ou os usuários colam conteúdo); **custo e atraso** (o fluxo completo de negócios usando o modelo maior não é sustentável e precisa ser direcionado para modelos pequenos + inspeções aleatórias).
+
+<Callout type="warning">
+Confundir a apresentação tranquila do LLM com “fatos verificados” é o principal motivo do fracasso das implantações. O lado WCN deve usar como padrão: Saída do agente = material a ser revisado, a menos que entre na cadeia de adoção e na Prova.
+</Callout>
+
+## “Automação controlada” já existe no TradFi
+
+Estes sistemas não são trabalhadores autônomos na ficção científica, mas uma mistura de regras + modelos + revisão manual, consistente com a filosofia da WCN:
+
+- **JPMorgan COIN (Contract Intelligence)**: use aprendizado de máquina para analisar termos legais e documentos de empréstimos comerciais, compactando milhares de horas jurídicas em processos mensuráveis; o foco está nas trilhas de auditoria e no processamento manual de exceções, em vez de apenas as máquinas tomarem decisões de crédito.
+- **Goldman Sachs**: Investimento contínuo em processamento de linguagem natural e ferramentas de assistência interna em materiais públicos para resumos de pesquisas, recuperação de conformidade e eficiência do desenvolvedor; o ponto em comum são os limites de dados da intranet e a estratificação de permissões.
+- **BlackRock Aladdin**: O núcleo da plataforma de risco e análise é o contrato de dados, indicadores consistentes e governança em nível institucional; se a IA estiver conectada, ela deverá obedecer ao mesmo conjunto de permissões e gerenciamento de versões - correspondente às permissões digitadas pelo Agente e ao ciclo de vida no WCN.
+
+<Callout type="tip">
+A lição da TradFi é: **Os benefícios da automação vêm da padronização de processos, não do brilho do modelo. ** A WCN primeiro anota claramente as tarefas, evidências e adoção para que o Agente possa ter um ROI estável.
+</Callout>
+
+## O que exatamente o Agente resolve no WCN?
+
+<CardGrid cols={2}>
+  <Card title="Melhorar a eficiência" icon="zap">Primeiro rascunho do pacote de pesquisa, atas de reuniões e divisão de tarefas, lembretes de acompanhamento, classificação de candidatos correspondentes - reduza o tempo de relógio dos nós de "saber" para "avançar".</Card>
+  <Card title="padronização" icon="ruler">O modelo de saída está alinhado com os campos do Proof Desk, reduzindo o retrabalho de revisão causado por "todo mundo escreve da mesma maneira".</Card>
+  <Card title="auditável" icon="file-text">A versão do modelo, o hash do prompt, o ID do fragmento de recuperação e os registros de chamada da ferramenta formam uma cadeia de defesa para facilitar a revisão interna e a explicação externa.</Card>
+  <Card title="Expansível" icon="globe">O mesmo conjunto de configurações controladas do Agente pode ser reutilizado em diversas regiões e diversos nós. A diferença está nas permissões e nos domínios de dados, e não no boca a boca.</Card>
+</CardGrid>
+
+## Exemplo concreto de fluxo de trabalho (versão simplificada)
+
+<Steps>
+  <Step title="Triagem inicial do lado da arrecadação de fundos">O Agente de Pesquisa gera uma tabela “linha vermelha/linha amarela/a ser verificada” fazendo upload de materiais de informações públicas + nós de acordo com o checklist; o Agente de negócios não entra em contato automaticamente com a parte do projeto, mas apenas o envia ao proprietário do nó designado para revisão e, em seguida, cria uma tarefa com um clique.</Step>
+  <Step title="Reunião regular pós-investimento">O Agente de Execução gera itens de ação e proprietários com base no modelo de gravação/minutos; os nós são modificados e gravados no sistema de tarefas; parágrafos não adotados não são contados como candidatos PoB.</Step>
+  <Step title="evento de liquidez">O Agente de Liquidez monitora os limites dos indicadores acordados e gera uma “minuta de extrato”; se a comunicação externa ainda é enviada manualmente pelo nó.</Step>
+</Steps>
+
+## Por que o Agente deve ser colocado na camada de rede “agora”
+
+As capacidades do modelo cobriram um grande número de ações de processos de colarinho branco, mas o que falta à indústria é uma camada de suporte que seja verificável, atribuível e solucionável. Se o WCN fizer apenas um shell de Chat, seu valor se sobrepõe a qualquer assistente SaaS; se o Agente estiver conectado a tarefas, logs, Proof e PoB, será formada uma diferenciação: **O sistema consegue distinguir se a mesma saída é adotada e se promove um loop fechado. **
+
+<Callout type="info">
+Resumo: A razão importante para o Agent não é perseguir pontos críticos de IA, mas **escalar a execução dentro dos limites de conformidade** e transformar a execução de hábitos pessoais invisíveis em ativos governáveis ​​e mensuráveis ​​pela rede.
+</Callout>

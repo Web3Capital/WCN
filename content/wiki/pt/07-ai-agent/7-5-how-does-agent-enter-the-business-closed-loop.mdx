@@ -1,0 +1,67 @@
+---
+title: 7.5 Como o Agente entra no ciclo fechado de negócios?
+description: >-
+  Vinculação de tarefas, adoção, cadeia de evidências e PoB: transformar
+  quantidades geradas em resultados liquidáveis; fluxo de trabalho de
+  contra-exemplo e exemplo positivo.
+chapter: 7
+order: 5
+---
+
+<Hero badge="7.5 · Agente e malha fechada" lead="O Agente LangChain em execução na demonstração apenas prova que “pode gerar”; O ciclo fechado da WCN exige comprovação da “promoção dos resultados”. Portanto, é necessário registrar: qual resultado está pendente em qual tarefa, quem o adotou, quais mudanças de estado foram acionadas após a adoção e se a evidência final passou na Prova. Sem este link, é apenas mais uma janela de chat.">
+# Adoção e prova são as portas do valor; geração não é.
+</Hero>
+
+<MetaGrid>
+  <Meta label="O que esta página faz" value="Condições de fechamento + exemplos de fluxo de trabalho + interface com PoB" />
+  <Meta label="temas principais" value="Saída → Adoção → Resultado → Prova → PoB" />
+  <Meta label="Lendo destaques" value="vinculação de tarefas, eventos humanos, rastreabilidade" />
+</MetaGrid>
+
+## O caminho principal para o circuito fechado
+
+<Callout type="info">
+Despacho de tarefa (incluindo tipo e critérios de aceitação) → O agente executa dentro da autorização → A saída estruturada é armazenada → O proprietário do nó adota/rejeita/revê → A máquina de estado avança o negócio ou tarefa → Envio de evidência de resultado → Revisão do Proof Desk → Gerar registro PoB → Entrar na camada de liquidação e reputação
+</Callout>
+
+<Statement>O valor do Agente é um **gerador de resultado** identificável: o sistema pode distinguir entre "10 páginas foram geradas" e "3 delas foram adotadas e levaram à realização de reuniões/termos modificados/condições de pagamento atendidas".</Statement>
+
+## Condições necessárias para a saída do Agente entrar na Prova
+
+<CardGrid cols={2}>
+  <Card title="Vinculação de ID de tarefa" icon="link">Cada saída da máquina está associada a um `task_id` (ou identificador equivalente); "resultados fantasmas" vagando em bate-papos privados ou documentos off-line são proibidos.</Card>
+  <Card title="Rastreamentos de entrada e versão" icon="clipboard-list">Nome do modelo, versão, temperatura ou parâmetros equivalentes, ID do fragmento de recuperação, hash de anexo de chave; para facilitar a reprodução e a recolha de provas em caso de litígio.</Card>
+  <Card title="registro de adoção humana" icon="circle-check">Eventos explícitos: `adopted_by`, `timestamp`, diferença de modificação opcional; diferente do "usuário copiado" implícito do Copilot, ele deve ser estruturado.</Card>
+  <Card title="Correlação de resultados" icon="refresh-cw">Pode ser rastreado até negócios, marcos ou eventos de negócios dentro/fora da rede (como arquivamento de contratos, anúncios na bolsa de valores); caso contrário, a liquidação da atribuição não poderá ser feita.</Card>
+</CardGrid>
+
+<Callout type="warning">
+Se alguma das condições estiver faltando → será classificado como “gerado por ferramenta” e não será incluído no PoB; pelo mesmo motivo que “e-mails sem números de transação e documentos de trabalho” no TradFi não podem ser incluídos na conta.
+</Callout>
+
+## Três exemplos concretos de fluxo de trabalho
+
+<Steps>
+  <Step title="Iteração de material de financiamento">Tarefa: "Capítulo de risco do material v3 da Série A". O agente de pesquisa extrai divulgações de risco de produtos concorrentes → gera rascunhos com referências → exclusão e adoção de nós → carrega hash de PDF revisado → A prova associa "versão final para reunião de investidores" → registra PoB após o encerramento da reunião.</Step>
+  <Step title="correspondência de capital">O Deal Agent gera os 5 itens mais bem classificados e os motivos correspondentes → o nó adota apenas 2 deles e cria uma tarefa de introdução → os e-mails subsequentes são enviados por humanos; O PoB apenas regista as recomendações adotadas e os subsequentes resultados verificados, não registando a classificação não adotada.</Step>
+  <Step title="Monitoramento pós-investimento">Agente de Liquidez reporta parágrafo anormal → Agente de Execução gera minuta de cópia interna do Slack/tarefa → O responsável pelo controle de risco adota uma e cria uma Tarefa “Banco Custódio de Acompanhamento” → O recibo é inserido no pacote de evidências → A prova é passada e depois encaminhada ao PoB.</Step>
+</Steps>
+
+## Contra-exemplo: Parece muito ocupado, zero circuito fechado
+
+- A exploração ilimitada no estilo AutoGPT produz um grande número de notas, nenhuma tarefa, nenhum proprietário → **ruído**.
+- O Copilot gera e-mails bonitos, mas não são enviados pela tarefa WCN, sem etiqueta de adoção → **Não atribuível**.
+- O agente sugeriu ir para a linha do tempo e o nó o encaminhou verbalmente para a parte do projeto, mas o sistema estava sem estado → **incapaz de verificar**.
+
+## O que esta etapa decide?
+
+<CardGrid cols={2}>
+  <Card title="A IA é apenas uma ferramenta?" icon="bot">Torna-se a camada de execução oficial somente após entrar no circuito fechado; caso contrário, não será diferente de qualquer embalagem LLM.</Card>
+  <Card title="Se o Agente pode ser liquidado" icon="coins">Sem uma cadeia de prova, não há PoB; incentivos e participação nos lucros carecem de credenciais.</Card>
+  <Card title="O Agente é gerenciável?" icon="shield">A taxa de adoção, a reversão de adoção de erros e os efeitos do modelo A/B podem ser medidos antes que configurações específicas do agente possam ser atualizadas ou suspensas.</Card>
+  <Card title="Diferenciação WCN" icon="zap">Não está “conectado a GPT/Claude/Gemini”, mas é a primeira vez em uma rede de negócios de vários nós que a saída da máquina está conectada a evidências unificadas e semântica de liquidação.</Card>
+</CardGrid>
+
+<Callout type="tip">
+Sugestões de critérios de aceitação: **Você pode usar logs para explicar claramente em 30 minutos durante uma disputa** - quem pediu ao Agente o quê, o que foi adotado e qual é o resultado final do negócio. Se isso puder ser feito, o projeto de malha fechada estará basicamente qualificado.
+</Callout>

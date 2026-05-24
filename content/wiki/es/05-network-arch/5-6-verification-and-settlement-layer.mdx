@@ -1,0 +1,61 @@
+---
+title: 5.6 Capa de Verificación y Liquidación
+description: >-
+  La capa final de la arquitectura: Proof Desk, PoB, Attribution y Settlement,
+  brindando a todas las colaboraciones un punto final confiable.
+chapter: 5
+order: 6
+---
+
+<Hero badge="5.6 · Capa de Verificación y Liquidación" lead="Las primeras cuatro capas abordan recursos, capital, ejecución y distribución. La quinta capa resuelve las cuestiones más críticas: cómo se confirman los resultados, cómo se calcula la atribución y cómo se liquida el valor. Sin esta capa, no existe una diferencia esencial entre WCN y una versión avanzada de CRM. La capa de verificación y liquidación es la razón de la existencia de todo el sistema.">
+# L5 · Capa de verificación y liquidación - convertir "lo hecho" en "lo probado".
+</Hero>
+
+<MetaGrid>
+  <Meta label="posición jerárquica" value="L5 - Exportación de valor de la arquitectura de cinco capas." />
+  <Meta label="componentes centrales" value="Mesa de pruebas → PoB → Atribución → Liquidación" />
+  <Meta label="Evaluación comparativa de TradeFi" value="Auditoría + Cámara de Compensación + Atribución de Desempeño" />
+</MetaGrid>
+
+## La pregunta central respondida en este nivel: ¿Cómo puede el sistema creer en los resultados?
+
+No importa cuán poderosas sean las primeras cuatro capas, sin L5, el sistema no puede distinguir entre "realmente hecho" y "que se dice que está hecho". La capa de verificación y liquidación convierte las narrativas subjetivas en cadenas de evidencia auditables.
+
+<Statement>La esencia de L5: actualizar "el resultado ocurrió" a "el resultado fue probado, atribuido y resuelto".</Statement>
+
+---
+
+## Cuatro componentes centrales
+
+<CardGrid cols={2}>
+  <Card title="Mostrador de pruebas (recolección de pruebas)" icon="paperclip">Una vez que se completa el trato, el propietario del trato envía la evidencia del resultado al mostrador de pruebas: acuerdo firmado, registro de pago, entregables, hash en cadena, actas de la reunión y confirmación por correo electrónico. El tipo y la cantidad de evidencia dependen del tipo de acuerdo: un acuerdo de financiamiento requiere acuerdo + confirmación de pago, y un acuerdo de servicio requiere SOW + aceptación de entrega.</Card>
+  <Card title="Cola de revisores" icon="search">Revisores independientes verifican la evidencia para: integridad del material, verificación de autenticidad, plausibilidad del cronograma y señalización de riesgos. Reglas clave: el revisor no puede participar en la transacción (evitación de intereses) y los resultados de la revisión requieren varias firmas para su confirmación.</Card>
+  <Card title="Evento PoB (prueba de negocio)" icon="circle-check">Después de pasar la revisión, los resultados comerciales se ingresarán en el libro mayor del sistema como evento PoB. Los registros PoB son inmutables y contienen participantes completos, resúmenes de evidencia, asignaciones de atribución y marcas de tiempo.</Card>
+  <Card title="Ejecución de liquidación (liquidación cíclica)" icon="scale">Los PoB se agregan y procesan en ejecuciones de liquidación periódicas. El sistema asigna valor a todos los contribuyentes: nodos, proveedores de servicios y agentes en función de los índices de atribución.</Card>
+</CardGrid>
+
+---
+
+## Comparación con el sistema de verificación TradFi
+
+<CardGrid cols={2}>
+  <Card title="TradFi: maduro pero centralizado" icon="landmark">Las cuatro grandes firmas contables (Deloitte/PwC/EY/KPMG) realizan auditorías, DTCC/Euroclear proporcionan compensaciones y Bloomberg/MSCI proporcionan atribución de desempeño. El sistema es maduro pero altamente centralizado, tiene un umbral alto y un costo elevado.</Card>
+  <Card title="WCN: en red + programable" icon="globe">Proof Desk reemplaza la recopilación de auditorías manual, PoB reemplaza los informes de auditoría en papel, la atribución inteligente reemplaza los cálculos de rendimiento manuales y la liquidación en cadena reemplaza la compensación centralizada. Más abierto, más rastreable y de menor costo.</Card>
+</CardGrid>
+
+> **Diferencia clave**: la verificación de TradFi es una **auditoría posterior a la acción** (revisada después de que se publica el informe anual), mientras que la verificación de WCN es **incrustación en tiempo real**: cada acuerdo ingresará inmediatamente al proceso de recopilación y revisión de evidencia cuando se complete, y no hay ningún problema de "reposición de fin de año".
+
+---
+
+## ¿Qué sucede si falta la capa de validación?
+
+<CardGrid cols={2}>
+  <Card title="subjetividad de los resultados" icon="ban">El participante afirmó que "yo facilité este trato", pero no había pruebas que lo respaldaran. El sistema degenera en reclamaciones verbales y asignaciones relacionales.</Card>
+  <Card title="controversia de atribución" icon="ban">En un acuerdo participan varias partes y es imposible determinar quién contribuyó y cuánto. La mayoría de los proyectos Web3 optan por evitar este problema (diablo o no resolver), perjudicando la participación a largo plazo.</Card>
+  <Card title="La credibilidad no se acumula" icon="ban">Sin resultados verificados, no se puede establecer la puntuación de reputación de un nodo. El sistema no puede diferenciar entre nodos de alto valor y nodos de bajo valor.</Card>
+  <Card title="El valor no se acumula." icon="ban">Los resultados de la colaboración son únicos: se dividen tan pronto como se realizan y no existe un registro sistemático. La red no puede aprender ni acumular de la cooperación pasada.</Card>
+</CardGrid>
+
+<Callout type="tip">
+La capa de verificación y liquidación no es un "parche de último paso", sino la razón central de la existencia de toda la arquitectura WCN: brinda a toda colaboración un punto final creíble, otorga a todas las contribuciones un valor cuantificable y transforma la red de "cooperación única" a un "sistema de acumulación continua".
+</Callout>

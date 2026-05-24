@@ -1,0 +1,59 @@
+---
+title: "12.1 Phase 1\_: MVP réseau"
+chapter: 12
+order: 1
+description: "Benchmark Uniswap v1\_: hypothèse de produit unique et claire\_; Accès au nœud de livraison, boucle fermée minimale de transaction, traces de preuve, flux de trésorerie précoce mesurable et prototype PoB."
+---
+
+<Hero badge="12.1 · MVP réseau" lead="Cette étape compare Uniswap v1 et la première « percée en un seul point » d’Ethereum : elle ne construit pas une infrastructure de chaîne complète, mais vérifie uniquement si « l’accord structuré + le réseau de nœuds + les résultats vérifiables » peuvent continuer à se produire.">
+# Le livrable est le réseau d'entreprise minimum acceptable, et non le schéma d'architecture final du livre blanc.
+</Hero>
+
+<MetaGrid>
+  <Meta label="objectifs fondamentaux" value="Réseau vérifiable minimal (nœud + accord + preuve + revenu)" />
+  <Meta label="critère de réussite" value="La boucle fermée est reproductible, la preuve peut être vérifiée de manière aléatoire et l'économie unitaire dispose d'échantillons." />
+  <Meta label="Ne pas le faire délibérément" value="Contrats de règlement complexes, statut en chaîne à grande échelle et Token comme récit principal" />
+</MetaGrid>
+
+## Référence de l'industrie
+
+- **Uniswap v1** : uniquement la formule AMM unique ETH/ERC20, utilise le volume des transactions et la liquidité pour prouver l'hypothèse du produit, puis itère la v2/v3 et la gouvernance ; La phase 1 du WCN est la même, utilisez d'abord « transactions et traces » pour prouver la valeur du réseau.
+- **Ethereum Phase 0→1** : consensus et base de sécurité d'abord, puis partitionnement ; WCN met d'abord « la chaîne et les actifs » derrière, ce qui équivaut à stabiliser en premier le « consensus commercial » (qui participe, ce qui compte comme terminé).
+- **Couche d'application Solana d'abord** : au début de l'écosystème, des applications spécifiques détermineront les exigences de performances ; Dans la phase 1 de WCN, le comportement des transactions et des nœuds déterminera les besoins en matière de produits et de contrôle des risques, plutôt que la conception de la chaîne qui entraînera l'activité à l'envers.
+
+## Livrables spécifiques (peuvent être écrits dans des documents d'étape)
+
+<CardGrid cols={2}>
+  <Card title="Admission et hiérarchisation des nœuds" icon="users">**Livraison** : critères d'entrée, balises de rôle (projet/capital/service/distribution/région, etc.), règles de violation et de sortie documentées. **Mesures** : nombre de nœuds actifs, taux de participation par rôle, taux de participation répétée (activités non ponctuelles).</Card>
+  <Card title="Processus minimal de la salle des marchés" icon="handshake">**Livraison** : le chemin le plus court depuis l'entrée de l'opportunité jusqu'à l'avancement de l'étape (telle que la diligence raisonnable/les conditions/la livraison) ; un seul type de transaction « chemin d'or » parcouru. **Indicateurs** : nombre d'offres entrant dans la phase de promotion, taux de conversion de l'étape, cycle moyen (par type d'offre).</Card>
+  <Card title="Bureau d'épreuves et portail d'audit" icon="clipboard-list">**Livraison** : normes de champs de résultats et de preuves, file d'attente de révision, première version des règles d'attribution. **Indicateurs** : taux de soumission des preuves, rapidité d'examen, taux de contestation/rejet (indicateur proxy de qualité).</Card>
+  <Card title="début de trésorerie" icon="coins">**Livraison** : la facturation et le rapprochement des frais de siège, des frais de service et des frais liés aux transactions peuvent être exécutés. **Indicateurs** : prototype de MRR/revenus récurrents trimestriels, répartition des prix unitaires client, cycle d'encaissement des paiements ; au moins un type de revenus est non nul et peut être revu d’année en année.</Card>
+</CardGrid>
+
+## Indicateurs de réussite (seuils recommandés fixés par gouvernance/opérations)
+
+| Dimensions | Exemples de métriques | Descriptif |
+|------|----------|------|
+| Réseau | Les nœuds multi-rôles sont actifs en permanence | Enregistrement d'impulsions hors _campaign |
+| Boucle fermée | Taille de l'échantillon de transaction de bout en bout | Des transactions similaires peuvent être conclues à plusieurs reprises |
+| Qualité | Taux d'exhaustivité des preuves et taux de réussite des examens | Évitez de « seulement du récit sans preuve » |
+| Affaires | L'économie unitaire est positive ou la voie est claire | Prototype de benchmarking CAC/LTV SaaS/market place |
+
+## Signaux pour entrer dans la deuxième phase (résumé)
+
+Le PoB est passé de « mémorisable » à « compréhensible par des tiers » : les règles sont documentées, la taille de l'échantillon est suffisante pour les statistiques de type d'erreur et le processus manuel avant l'accès de l'agent a été stabilisé. Voir [12.4](/wiki/roadmap/12-4-Milestones and Phase Switching Signaux) pour plus de détails.
+
+## Principaux risques à ce stade
+
+<CardGrid cols={2}>
+  <Card title="risque de demande" icon="triangle-alert">Offre ou qualité insuffisante → Réseau inactif. **Slow Release** : concentrez-vous sur une seule pénétration verticale ou de type Deal unique.</Card>
+  <Card title="La norme est trop divergente" icon="trending-down">Trop de personnalisation par commande → Les preuves ne peuvent pas être comparées. **Version** : appliquez l'ensemble de champs minimum et la phase de création de modèles.</Card>
+  <Card title="remontage prématuré" icon="link-2">Le récit technique réduit l’itération du produit. **Version** : la chaîne n'est qu'une option future et ne fait pas partie des OKR de base de la phase 1.</Card>
+  <Card title="Conformité et réputation" icon="shield">Les frontières de la promotion financière sont floues. **Version** : limites des rôles, clauses de non-responsabilité et conditions préalables à l'évaluation.</Card>
+</CardGrid>
+
+## Pourquoi c'est mieux qu'« une étape »
+
+<Callout type="warning">"Mainnet + Token + Full-featured Platform" est lancé au cours du même trimestre, ce qui se traduit généralement par : une sécurité accrue, une conformité incontrôlable et une incapacité à déterminer si la panne provient du produit ou de l'infrastructure. La phase 1 compresse les échecs en dimensions diagnosticables (nœud ? Deal ? Preuve ? Facturation ?), ce qui est cohérent avec le protocole préconisé par Vitalik pour réduire les coûts de coordination par étapes et par Uniswap pour absorber la complexité par l'itération des versions.</Callout>
+
+<Statement>À la fin de la première phase, le monde extérieur devrait être en mesure de répondre à trois questions : qui faisait partie du réseau, qu'est-ce qui a été fait et qu'est-ce qui a été payé, avec des preuves des réponses.</Statement>

@@ -1,0 +1,53 @@
+---
+title: 10.5 Nó NFT
+chapter: 10
+order: 5
+description: >-
+  Nó NFT: Credenciais de assento programáveis; Comparação com credenciais
+  verificáveis ​​ENS, SBT, W3C - um modelo de confiança híbrido de identidade
+  composta na cadeia + protocolo fora da cadeia e ACL.
+---
+
+<Hero badge="10.5 · Nó NFT" lead="O uso principal do Node NFT é o transporte programável de identidades e permissões: a carteira contém “a entrada do sistema para um determinado tipo de assento sob uma determinada versão de regras” – não um certificado de direito a dividendos, nem um PFP aberto. A ideia do design baseia-se em cartões de controle de acesso profissionais (físicos) e asserções de atributos SAML/OIDC (TI tradicional), mas usa objetos na cadeia para obter verificação combinável entre aplicações.">
+# Primeiro, há assentos pós-evento e circuitos fechados, e depois há certificados na rede; se a ordem for invertida, ela se tornará uma emissão de shell vazia.
+</Hero>
+
+<MetaGrid>
+  <Meta label="definição" value="Objeto on-chain de identidade + permissões + ponteiro de histórico (opcional)" />
+  <Meta label="não-alvo" value="Arrecadações que prometem renda fixa, são abertas à especulação e desvinculadas da entrega" />
+  <Meta label="pilha de confiança" value="Certificado de retenção on-chain + protocolo off-chain + status em tempo real da ACL do lado do sistema" />
+</MetaGrid>
+
+## Comparação com três tipos comuns de tecnologias de identidade
+
+| Solução | Pontos fortes | Limitações | Escolhas de nó NFT |
+| --- | --- | --- | --- |
+| **ENS** | Legível por humanos, amplamente integrado | Não expressa nativamente permissões complexas e relacionamentos organizacionais | Pode ser justaposto com ENS: ENS refere-se a pessoas/marcas, Node NFT refere-se a **assentos institucionais** |
+| **SBT (Token de Ligação de Alma)** | Ênfase na intransferibilidade e vinculação à reputação | Os cenários de atualização, migração de assentos e congelamento de conformidade são inflexíveis | WCN pode usar certificados com **transferibilidade determinada pela política** (mapeamento bloqueável e retrátil) |
+| **Credenciais verificáveis ​​do W3C** | Modelo padrão de privacidade, divulgação seletiva | Fraca composição na cadeia e exibição nativa da carteira | As declarações principais podem ser escritas duas vezes: VC é usado para divulgação de conformidade, NFT é usado para **controle de acesso rápido dentro do protocolo** |
+
+<CardGrid cols={2}>
+  <Card title="portador de identidade" icon="id-card">A cadeia prova que “um determinado endereço está vinculado a um determinado assunto de nó e geração de assento”; as permissões de atualização geralmente são passadas pela versão de metadados ou pela raiz do estado da cadeia lateral, em vez de alterar frequentemente as carteiras.</Card>
+  <Card title="Portador de permissão" icon="key">Como uma condição **necessária, mas não suficiente** para chamar API, inserir funções de contrato ou desbloquear roteamento de front-end; no final, a ACL do servidor e o sinalizador de conformidade prevalecerão - semelhante ao Token de hardware + sessão do servidor.</Card>
+  <Card title="Porta-discos (evolução)" icon="chart-bar">A pontuação de reputação, o nível e os indicadores históricos de hash da tarefa podem ser montados; a evidência completa ainda está principalmente no armazenamento de objetos fora da cadeia + Proof Desk para evitar problemas de privacidade e gás da rede principal.</Card>
+  <Card title="Programabilidade" icon="link-2">Contratos de suporte e incentivo, listas brancas de marketing conjuntas, acoplamento de SDK entre parceiros; as restrições devem ser feitas na camada de contrato inteligente** O Node NFT não pode ser expresso como títulos ou certificados de depósito**.</Card>
+</CardGrid>
+
+---
+
+## O que o Node NFT explicitamente não é
+
+<CardGrid cols={2}>
+  <Card title="Não é um produto financeiro" icon="ban">Não há promessas de capital, rendimento fixo ou participação automática nos lucros ligadas à dimensão da gestão - claramente separadas dos limites legais dos fundos/depósitos licenciados.</Card>
+  <Card title="Não é um avatar puro" icon="ban">A camada visual é dispensável; o valor vem do relacionamento vinculativo com contas WCN, obrigações contratuais e KPIs.</Card>
+  <Card title="Elenco não licenciado" icon="ban">O poder de transmissão está no lado da governança/operação da rede; abrir a casa da moeda destruirá a escassez de assentos e a premissa de controle de risco.</Card>
+  <Card title="Não é uma chave mestra em uma corrente" icon="ban">Quando a chave privada é perdida, o sujeito rescinde o contrato ou a conformidade é acionada, isso deve ser tratado por meio de métodos de operação e manutenção, como congelamento de mapeamento, rotação de endereços e invalidação de chaves geracionais.</Card>
+</CardGrid>
+
+---
+
+## Princípios de implementação
+
+<Callout type="warning">**Rede de negócios primeiro**: primeiro tenha padrões reais de negócios, tarefas, revisores e evidências e, em seguida, expanda o escopo de transporte de NFT. Caso contrário, haverá o mesmo risco de “vender primeiro os cartões de membro e depois renovar o clube” – a reputação e a supervisão estarão sob pressão.</Callout>
+
+<Statement>No estágio atual, o Node NFT deve ser entendido como um **cartão digital para redes profissionais**: verificável na cadeia, responsável fora da cadeia, e o sistema pode ser recuperado com um clique - em vez de um alvo especulativo na cadeia.</Statement>

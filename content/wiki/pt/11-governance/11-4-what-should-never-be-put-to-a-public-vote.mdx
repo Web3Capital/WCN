@@ -1,0 +1,54 @@
+---
+title: 11.4 O que nunca deve ser colocado em votação pública
+chapter: 11
+order: 4
+description: >-
+  Limites rígidos, como segurança, conformidade, litígio, sanções, chaves e
+  marcas: benchmarking de manipulação de governança na cadeia e questões de
+  referendo de não acionistas da TradFi.
+---
+
+<Hero badge="11.4 · Assuntos sem direito a voto" lead="A WCN exclui permanentemente as seguintes áreas da votação pública: não contra a participação, mas em reconhecimento de que certas decisões, uma vez sequestradas pelo peso económico ou pelas emoções de curto prazo, destruirão directamente a existência e a legitimidade. A lista de limites acompanha as responsabilidades executivas e constitui a própria capacidade de governança.">
+# Um dos sinais de uma governação madura são questões e razões claramente definidas que nunca poderão ser submetidas à votação pública.
+</Hero>
+
+<MetaGrid>
+  <Meta label="Resposta principal" value="Quais questões nunca serão decididas por referendo de nó ou token?" />
+  <Meta label="material didático negativo" value="A falha de emergência do DAO, decisão de empréstimo rápido do Beanstalk, sequestro de cofre composto" />
+  <Meta label="lógica subjacente" value="Deveres fiduciários, innegociabilidade regulatória, continuidade operacional" />
+</MetaGrid>
+
+## Coisas que nunca devem ser votadas (nível de lista)
+
+Os seguintes assuntos são de responsabilidade exclusiva da equipe fundadora, do conselho de administração, dos executivos autorizados, dos responsáveis ​​pela conformidade ou dos responsáveis ​​pela segurança no âmbito da lei e do estatuto; a votação comunitária não pode ser usada para anular, suspender ou substituir obrigações legais.
+
+<CardGrid cols={2}>
+  <Card title="Segurança e resposta a incidentes" icon="shield">O contrato inteligente atualiza o gerenciamento de chaves, o tratamento de invasões, o congelamento/circuito e a cooperação técnica com auditoria e aplicação da lei. O DAO declarou: **A votação lenta na cadeia não corresponde à velocidade da perda de ativos**; tais decisões devem ter um manual predefinido e uma cadeia de responsabilidades.</Card>
+  <Card title="KYC/AML/Sanções" icon="lock-keyhole">Integração de clientes, due diligence contínua, relatórios de atividades suspeitas, triagem de listas e restrições de conta. Bancos de referência e empresas de valores mobiliários: **O combate à lavagem de dinheiro e o cumprimento de sanções não podem ser isentos por votação “comunitária”**, caso contrário constituirá responsabilidade regulatória e criminal.</Card>
+  <Card title="Comunicações regulatórias e de fiscalização" icon="scale">Respostas a inquéritos regulamentares, cooperação em investigações, pedidos de licença e estratégias de retirada. Comparação do contexto SEC/FINRA: **A posição jurídica externa** deve ser unificada pelas funções jurídicas e de conformidade autorizadas e não pode ser decidida por referendo sobre "cooperar".</Card>
+  <Card title="Grandes litígios e arbitragem" icon="scroll">Estratégia de Acusação, Acordo, Jurisdição e Provas. Os acionistas de empresas cotadas não podem votar diariamente para decidir os termos de liquidação de casos individuais; da mesma forma, a votação em cadeia pode ser facilmente manipulada e a confidencialidade comprometida.</Card>
+  <Card title="Estrutura de entidade e licenciamento" icon="building">Estrutura da holding, relocalização do local de registo, âmbito das entidades licenciadas, divulgação das transações relacionadas. Ele se enquadra no escopo de **Diretor/Administrador** e divulgações regulatórias, e um referendo não pode substituir obrigações fiduciárias.</Card>
+  <Card title="Marca principal e principais compromissos externos" icon="mic">Implicações nos lucros, declarações regulatórias e alegações de marketing que são inconsistentes com os fatos. A abertura excessiva levará a **riscos incontroláveis ​​nas leis de valores mobiliários e nas leis de publicidade**; padrões unificados são emitidos pela camada responsável.</Card>
+  <Card title="Principais ações de financiamento e custódia" icon="coins">Transferências de grande quantidade de tesouraria, mudanças na estratégia de pontes entre cadeias e mudanças de custódia. Beanstalk prova: **Direitos de voto temporariamente centralizados = Cofre roubável**; requer assinatura múltipla, bloqueio de tempo, separação homem-máquina e nenhuma votação pública.</Card>
+  <Card title="Dados pessoais e transferências transfronteiriças" icon="globe">DPA, subprocessadores, residência de dados e políticas de exclusão. A **base de legalidade** para o processamento de dados sob jurisdições como o GDPR não pode ser substituída pelo voto de um não controlador de dados.</Card>
+</CardGrid>
+
+## Por que a votação aberta deve falhar nestes domínios
+
+<Callout type="warning">**Emoções e interesses de curto prazo**: Numa crise, os participantes podem votar contra ações que sejam "desfavoráveis ​​a si próprios, mas legalmente necessárias" (como congelamento, cooperação com investigações). **Manipulação**: Empréstimos instantâneos, suborno de votos e sequestro confiado foram comprovados na rede. **Responsabilidade legal**: Os reguladores estão perseguindo **controladores e executivos**, e não a "vontade da comunidade".</Callout>
+
+## Alinhamento com TradFi (Conceito)
+
+- **Matérias reservadas ao Conselho de Administração**: As áreas que careçam de aprovação dos administradores nos termos do contrato de sociedade não serão submetidas à assembleia geral de acionistas.
+- **Canal separado para Diretores de Conformidade**: Em entidades regulamentadas, certas obrigações de reporte vão diretamente para o conselho de administração e supervisão, e **votos por linha de negócios não podem ser vetados**.
+- **Regras de Crise Cambial**: A suspensão de negociações e a eliminação de flutuações anormais são geralmente implementadas imediatamente pela administração autorizada pelas regras, **pós-divulgação e revisão**, em vez de referendos anteriores.
+
+## Pontos de implementação
+
+<Steps>
+  <Step title="Redação na Carta e Divulgação ao Público">As áreas restritas devem ser legíveis no contrato do usuário, nas instruções de governança e nos materiais do nó para evitar "linhas vermelhas verbais".</Step>
+  <Step title="O enganche é proibido do lado técnico">Contratos inteligentes ou permissões de back-end não devem ser configurados para “cobrir áreas restritas com uma única proposta”.</Step>
+  <Step title="Vinculado com 11.5">Quando os requisitos de conformidade em múltiplas jurisdições mudam, as áreas restritas apenas aumentarão em vez de diminuir até que a carta seja formalmente revista e os procedimentos legais sejam aprovados ao nível responsável.</Step>
+</Steps>
+
+<Statement>Saber o que **não** votar é tão importante quanto saber o que **pode** votar; o primeiro impede que a rede autolegitime o comportamento ilegal sob pressão, e o último apoia o valor da participação a longo prazo.</Statement>
