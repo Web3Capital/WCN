@@ -24,3 +24,7 @@ coverage/
 
 # Translation script caches (per source→target pair) — derived from content/wiki/
 scripts/.translate-wiki-cache*.json
+
+# Internal business binder (KYC/AML, co-investment, brand, soft-launch playbooks).
+# NEVER commit — these are sensitive and must not be pushed to a public remote.
+/WCN/
