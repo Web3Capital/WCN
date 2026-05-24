@@ -5,6 +5,7 @@ import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { getOwnedNodeIds, memberEvidenceWhere } from "@/lib/member-data-scope";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { PageHeader } from "@/app/[locale]/dashboard/_components/page-header";
 import { ProofDeskConsole } from "./ui";
 import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
@@ -54,9 +55,11 @@ export default async function ProofDeskPage() {
   return (
     <div className="dashboard-page section">
       <div className="container-wide">
-        <span className="eyebrow"><T>Verification</T></span>
-        <h1><T>Evidence & Review</T></h1>
-        <p className="muted"><T>Submit evidence, track review progress, and manage the reviewer queue.</T></p>
+        <PageHeader
+          eyebrow={<T>Verification</T>}
+          title={<T>Evidence & Review</T>}
+          subtitle={<T>Submit evidence, track review progress, and manage the reviewer queue.</T>}
+        />
         <ProofDeskConsole
           evidences={JSON.parse(JSON.stringify(evidences))}
           reviewQueue={JSON.parse(JSON.stringify(reviewQueue))}

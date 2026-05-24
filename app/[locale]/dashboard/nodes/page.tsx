@@ -7,6 +7,7 @@ import { redactNodeForMember } from "@/lib/member-redact";
 import { isAdminRole, canAccessNodeReviewQueue } from "@/lib/permissions";
 import { Link } from "@/i18n/routing";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { PageHeader } from "@/app/[locale]/dashboard/_components/page-header";
 import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
@@ -70,11 +71,11 @@ export default async function NodesPage() {
   return (
     <div className="dashboard-page section">
       <div className="container-wide">
-        <span className="eyebrow"><T>Network</T></span>
-        <h1><T>Node registry</T></h1>
-        <p className="muted">
-          <T>Create, review, and manage network nodes, lifecycle, and operations.</T>
-        </p>
+        <PageHeader
+          eyebrow={<T>Network</T>}
+          title={<T>Node registry</T>}
+          subtitle={<T>Create, review, and manage network nodes, lifecycle, and operations.</T>}
+        />
         {canAccessNodeReviewQueue(session.user.role) ? (
           <p className="muted text-sm mt-8">
             <Link href="/dashboard/nodes/review-queue" className="font-medium" style={{ color: "var(--accent)" }}>

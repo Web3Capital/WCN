@@ -5,6 +5,7 @@ import { getPrisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/permissions";
 import { DealsConsole } from "./ui";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { PageHeader } from "@/app/[locale]/dashboard/_components/page-header";
 import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
@@ -78,11 +79,11 @@ export default async function DealsPage() {
   return (
     <div className="dashboard-page section">
       <div className="container-wide">
-        <span className="eyebrow"><T>Network</T></span>
-        <h1><T>Deal Room</T></h1>
-        <p className="muted" style={{ maxWidth: 600 }}>
-          <T>Each deal is an auditable business event — not a chat thread.</T>
-        </p>
+        <PageHeader
+          eyebrow={<T>Network</T>}
+          title={<T>Deal Room</T>}
+          subtitle={<T>Each deal is an auditable business event — not a chat thread.</T>}
+        />
         <div style={{ marginTop: 24 }}>
           <DealsConsole
             initialDeals={JSON.parse(JSON.stringify(deals))}

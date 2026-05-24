@@ -6,6 +6,7 @@ import { getPrisma } from "@/lib/prisma";
 import { canAccessNodeReviewQueue } from "@/lib/permissions";
 import { NodeReviewQueueConsole } from "./ui";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { PageHeader } from "@/app/[locale]/dashboard/_components/page-header";
 import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
@@ -56,13 +57,11 @@ export default async function NodeReviewQueuePage() {
   return (
     <div className="dashboard-page section">
       <div className="container-wide">
-        <span className="eyebrow"><T>Network</T></span>
-        <h1>
-          <T>Node review queue</T>
-        </h1>
-        <p className="muted">
-          <T>Nodes in submitted, under review, or need more information — PRD Node Review entry.</T>
-        </p>
+        <PageHeader
+          eyebrow={<T>Network</T>}
+          title={<T>Node review queue</T>}
+          subtitle={<T>Nodes in submitted, under review, or need more information — PRD Node Review entry.</T>}
+        />
         <p className="muted text-sm mt-8">
           <Link href="/dashboard/nodes" className="font-medium" style={{ color: "var(--accent)" }}>
             <T>Back to node registry</T>

@@ -7,6 +7,7 @@ import { getOwnedNodeIds, memberTasksWhere, memberProjectsWhere } from "@/lib/me
 import { redactTaskForMember, redactNodeForMember } from "@/lib/member-redact";
 import { isAdminRole } from "@/lib/permissions";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { PageHeader } from "@/app/[locale]/dashboard/_components/page-header";
 import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
@@ -57,11 +58,11 @@ export default async function TasksPage() {
   return (
     <div className="dashboard-page section">
       <div className="container-wide">
-        <span className="eyebrow"><T>Work</T></span>
-        <h1><T>Task Management</T></h1>
-        <p className="muted" style={{ maxWidth: 600 }}>
-          <T>Structure work into tasks, assign nodes, and track progress across the network.</T>
-        </p>
+        <PageHeader
+          eyebrow={<T>Work</T>}
+          title={<T>Task Management</T>}
+          subtitle={<T>Structure work into tasks, assign nodes, and track progress across the network.</T>}
+        />
         <div style={{ marginTop: 24 }}>
           <TasksConsole
             initial={JSON.parse(JSON.stringify(safeTasks))}

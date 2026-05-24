@@ -1,15 +1,18 @@
-"use client";
-
 import type { ReactNode } from "react";
 import { Link } from "@/i18n/routing";
 
 interface PageHeaderProps {
-  title: string;
-  subtitle?: string;
+  /** Renders as `<h1>`. Accepts any ReactNode so callers can pass plain
+   *  strings, `t("key")` results, or legacy `<T>...</T>` wrappers. */
+  title: ReactNode;
+  /** Secondary muted line under the title. */
+  subtitle?: ReactNode;
   backHref?: string;
-  backLabel?: string;
+  backLabel?: ReactNode;
+  /** Renders to the right of the title row (CTA buttons, filters, etc.). */
   actions?: ReactNode;
-  eyebrow?: string;
+  /** Small uppercase kicker rendered above the title (section name). */
+  eyebrow?: ReactNode;
 }
 
 export function PageHeader({ title, subtitle, backHref, backLabel, actions, eyebrow }: PageHeaderProps) {

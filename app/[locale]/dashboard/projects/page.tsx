@@ -7,6 +7,7 @@ import { getOwnedNodeIds, memberProjectsWhere } from "@/lib/member-data-scope";
 import { redactProjectForMember, redactNodeForMember } from "@/lib/member-redact";
 import { isAdminRole } from "@/lib/permissions";
 import { T } from "@/app/[locale]/dashboard/_components/translated-text";
+import { PageHeader } from "@/app/[locale]/dashboard/_components/page-header";
 import { dashboardMeta } from "@/app/[locale]/dashboard/_lib/metadata";
 
 export const dynamic = "force-dynamic";
@@ -56,11 +57,11 @@ export default async function ProjectsPage() {
   return (
     <div className="dashboard-page section">
       <div className="container-wide">
-        <span className="eyebrow"><T>Network</T></span>
-        <h1><T>Project Pool</T></h1>
-        <p className="muted" style={{ maxWidth: 600 }}>
-          <T>Intake, review, and manage projects across the network pipeline.</T>
-        </p>
+        <PageHeader
+          eyebrow={<T>Network</T>}
+          title={<T>Project Pool</T>}
+          subtitle={<T>Intake, review, and manage projects across the network pipeline.</T>}
+        />
         <div style={{ marginTop: 24 }}>
           <ProjectsConsole
             initial={JSON.parse(JSON.stringify(safeProjects))}
