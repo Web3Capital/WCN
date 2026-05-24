@@ -7,7 +7,8 @@ import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
 import { getOwnedNodeIds } from "@/lib/member-data-scope";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
@@ -42,7 +43,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return apiOk(agent);
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 

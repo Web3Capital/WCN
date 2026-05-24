@@ -8,22 +8,34 @@ import { WCNGlyph } from "@/components/brand/wcn-glyph";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({
-  params: { locale },
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ locale: string }>;
+  }
+): Promise<Metadata> {
+  const params = await props.params;
+
+  const {
+    locale
+  } = params;
+
   const t = await getTranslations({ locale, namespace: "auth" });
   return { title: t("loginTitle") };
 }
 
-export default async function LoginPage({
-  params: { locale },
-  searchParams,
-}: {
-  params: { locale: string };
-  searchParams: { callbackUrl?: string; error?: string };
-}) {
+export default async function LoginPage(
+  props: {
+    params: Promise<{ locale: string }>;
+    searchParams: Promise<{ callbackUrl?: string; error?: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+
+  const {
+    locale
+  } = params;
+
   const session = await getServerSession(authOptions);
   const blocked = searchParams.error === "blocked";
   if (session?.user && !blocked) {

@@ -13,7 +13,8 @@ import type { NodeStatus } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { withApiContext } from "@/lib/logger";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
@@ -50,7 +51,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return apiOk(node);
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("update", "node");
   if (!auth.ok) return apiUnauthorized();
 

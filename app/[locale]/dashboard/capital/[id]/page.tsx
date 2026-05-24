@@ -10,7 +10,8 @@ export const dynamic = "force-dynamic";
 
 
 export const metadata = dashboardMeta("Capital Details", "View capital details");
-export default async function CapitalDetailPage({ params }: { params: { id: string } }) {
+export default async function CapitalDetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
 

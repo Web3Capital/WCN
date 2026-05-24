@@ -3,7 +3,8 @@ import { getPrisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/admin";
 import { apiOk, apiCreated, apiUnauthorized, apiValidationError } from "@/lib/core/api-response";
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("manage", "agent");
   if (!auth.ok) return apiUnauthorized();
 

@@ -11,7 +11,8 @@ import { Events } from "@/lib/core/event-types";
 import { getOwnedNodeIds, memberTasksWhere } from "@/lib/member-data-scope";
 import type { TaskStatus } from "@prisma/client";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
@@ -44,7 +45,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return apiOk(task);
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("update", "task");
   if (!auth.ok) return apiUnauthorized();
 

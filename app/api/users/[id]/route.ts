@@ -8,7 +8,8 @@ import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
 import type { Role } from "@prisma/client";
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("update", "user");
   if (!auth.ok) return apiUnauthorized();
 

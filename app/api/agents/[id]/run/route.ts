@@ -11,7 +11,8 @@ import {
   runGrowthAgent,
 } from "@/lib/modules/agents/executor";
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 

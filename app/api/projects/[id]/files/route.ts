@@ -7,7 +7,8 @@ import { validateUpload } from "@/lib/modules/storage/constraints";
 import { apiOk, apiUnauthorized, apiNotFound, apiValidationError } from "@/lib/core/api-response";
 import { generatePresignedUpload, buildStorageKey } from "@/lib/modules/storage/service";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
@@ -25,7 +26,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return apiOk({ files });
 }
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("create", "file");
   if (!auth.ok) return apiUnauthorized();
 

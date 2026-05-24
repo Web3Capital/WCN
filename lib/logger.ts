@@ -1,5 +1,5 @@
 import pino from "pino";
-import { getRequestId } from "@/lib/core/request-id";
+import { generateRequestId } from "@/lib/core/request-id";
 
 const level =
   (process.env.LOG_LEVEL as pino.Level | undefined) ??
@@ -12,12 +12,15 @@ export const logger = pino({
 });
 
 /**
- * Child logger for HTTP APIs: binds `requestId` (from middleware / generator) and `route`.
+ * Child logger for HTTP APIs: binds `requestId` and `route`.
+ * Uses a freshly-generated requestId rather than awaiting `headers()` so callers
+ * can stay sync. Routes that need to correlate with middleware's x-request-id
+ * should await `getRequestId()` and pass it explicitly via `fields`.
  */
 export function withApiContext(route: string, fields?: Record<string, unknown>) {
   return logger.child({
     route,
-    requestId: getRequestId(),
+    requestId: generateRequestId(),
     ...fields,
   });
 }

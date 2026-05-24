@@ -21,13 +21,22 @@ export const metadata: Metadata = {
 // redirect-to-login stubs (which was timing the CI e2e job out at 180s).
 export const dynamic = "force-dynamic";
 
-export default async function DashboardLayout({
-  children,
-  params: { locale },
-}: {
-  children: React.ReactNode;
-  params: { locale: string };
-}) {
+export default async function DashboardLayout(
+  props: {
+    children: React.ReactNode;
+    params: Promise<{ locale: string }>;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    locale
+  } = params;
+
+  const {
+    children
+  } = props;
+
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     redirect({ href: "/login", locale });

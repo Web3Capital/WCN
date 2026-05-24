@@ -10,7 +10,8 @@ import type { AgentOutputReviewedEvent } from "@/lib/core/event-types";
 
 const ALLOWED_STATUSES = new Set(["APPROVED", "MODIFIED", "REJECTED"]);
 
-export async function PATCH(req: Request, { params }: { params: { runId: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ runId: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
@@ -68,7 +69,8 @@ export async function PATCH(req: Request, { params }: { params: { runId: string 
   return apiOk(updated);
 }
 
-export async function GET(_req: Request, { params }: { params: { runId: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ runId: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 

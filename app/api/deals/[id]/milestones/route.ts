@@ -22,7 +22,8 @@ async function verifyDealAccess(prisma: any, dealId: string, auth: any): Promise
   return !!hasAccess;
 }
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("update", "deal");
   if (!auth.ok) return apiUnauthorized();
 
@@ -44,7 +45,8 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   return apiCreated(milestone);
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("update", "deal");
   if (!auth.ok) return apiUnauthorized();
 

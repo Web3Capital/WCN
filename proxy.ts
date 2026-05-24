@@ -78,7 +78,7 @@ function rateLimitResponse(result: { limit: number; remaining: number; reset: nu
   );
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const requestId = request.headers.get("x-request-id") || `req_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;

@@ -40,7 +40,8 @@ export function generateStaticParams({ params }: { params: { locale: string } })
   return getAllDocs(params.locale).map((doc) => ({ slug: doc.slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string[]; locale: string } }): Metadata {
+export async function generateMetadata(props: { params: Promise<{ slug: string[]; locale: string }> }): Promise<Metadata> {
+  const params = await props.params;
   const decoded = params.slug.map((s) => decodeURIComponent(s));
   const doc = getDocBySlug(decoded, params.locale);
   if (!doc) return {};
@@ -78,7 +79,8 @@ const LEGACY_MAP: Record<string, string> = {
   governance: "governance",
 };
 
-export default async function WikiPage({ params }: { params: { slug: string[]; locale: string } }) {
+export default async function WikiPage(props: { params: Promise<{ slug: string[]; locale: string }> }) {
+  const params = await props.params;
   const decoded = params.slug.map((s) => decodeURIComponent(s));
   let doc = getDocBySlug(decoded, params.locale);
 

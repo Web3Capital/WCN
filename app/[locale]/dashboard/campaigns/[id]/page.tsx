@@ -10,7 +10,8 @@ export const dynamic = "force-dynamic";
 
 
 export const metadata = dashboardMeta("Campaign Details", "View campaign details");
-export default async function CampaignDetailPage({ params }: { params: { id: string } }) {
+export default async function CampaignDetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
   if (!isAdminRole(session.user.role)) redirect("/dashboard");

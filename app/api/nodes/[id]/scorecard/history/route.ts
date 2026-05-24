@@ -5,7 +5,8 @@ import { isAdminRole } from "@/lib/permissions";
 import { apiOk, apiUnauthorized, apiForbidden, apiNotFound } from "@/lib/core/api-response";
 import { getScorecardHistory } from "@/lib/modules/nodes/scorecard";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 

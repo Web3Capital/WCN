@@ -12,7 +12,8 @@ import { canTransitionPoB } from "@/lib/state-machines/evidence-pob";
 import { apiOk, apiUnauthorized, apiNotFound, apiValidationError, apiConflict } from "@/lib/core/api-response";
 import type { PoBEventStatus } from "@prisma/client";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
@@ -46,7 +47,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return apiOk(record);
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("update", "pob");
   if (!auth.ok) return apiUnauthorized();
 

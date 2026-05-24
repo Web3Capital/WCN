@@ -33,7 +33,7 @@ export function AutoTranslateProvider({
 }) {
   const [map, setMap] = useState<TranslationMap>(initial ?? {});
   const pending = useRef<Set<string>>(new Set());
-  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isEn = locale === "en";
 
   const flush = useCallback(() => {
@@ -68,7 +68,7 @@ export function AutoTranslateProvider({
 
       if (!pending.current.has(text)) {
         pending.current.add(text);
-        clearTimeout(timer.current);
+        if (timer.current) clearTimeout(timer.current);
         timer.current = setTimeout(flush, 50);
       }
 
@@ -78,7 +78,9 @@ export function AutoTranslateProvider({
   );
 
   useEffect(() => {
-    return () => clearTimeout(timer.current);
+    return () => {
+      if (timer.current) clearTimeout(timer.current);
+    };
   }, []);
 
   const value = { t, locale };

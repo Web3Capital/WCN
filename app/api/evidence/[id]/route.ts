@@ -10,7 +10,8 @@ import { Events } from "@/lib/core/event-types";
 import { getOwnedNodeIds, memberEvidenceWhere } from "@/lib/member-data-scope";
 import type { EvidenceReviewStatus } from "@prisma/client";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
@@ -41,7 +42,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return apiOk(evidence);
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("update", "evidence");
   if (!auth.ok) return apiUnauthorized();
 

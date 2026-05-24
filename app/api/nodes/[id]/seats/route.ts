@@ -5,7 +5,8 @@ import { AuditAction, writeAudit } from "@/lib/audit";
 import { isAdminRole } from "@/lib/permissions";
 import { apiOk, apiCreated, apiUnauthorized, apiForbidden } from "@/lib/core/api-response";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
@@ -25,7 +26,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return apiOk(seats);
 }
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("manage", "node");
   if (!auth.ok) return apiUnauthorized();
 

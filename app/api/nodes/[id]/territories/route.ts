@@ -15,7 +15,8 @@ import {
   getNodeTerritories,
 } from "@/lib/modules/nodes/territory";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
@@ -34,10 +35,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return apiOk(territories);
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("manage", "node");
   if (!auth.ok) return apiUnauthorized();
 

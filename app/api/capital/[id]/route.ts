@@ -8,7 +8,8 @@ import { parseBody, updateCapitalSchema } from "@/lib/core/validation";
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
@@ -32,7 +33,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return apiOk(profile);
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("update", "capital");
   if (!auth.ok) return apiUnauthorized();
 

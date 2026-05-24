@@ -10,7 +10,8 @@ export const dynamic = "force-dynamic";
 
 
 export const metadata = dashboardMeta("Application Details", "View application details");
-export default async function ApplicationDetailPage({ params }: { params: { id: string } }) {
+export default async function ApplicationDetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
 

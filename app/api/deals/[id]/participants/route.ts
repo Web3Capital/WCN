@@ -8,7 +8,8 @@ import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
 import { getOwnedNodeIds } from "@/lib/member-data-scope";
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("update", "deal");
   if (!auth.ok) return apiUnauthorized();
 

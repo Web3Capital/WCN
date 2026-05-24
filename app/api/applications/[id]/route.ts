@@ -14,7 +14,8 @@ function statusToDecision(s: string) {
   return "NEEDS_CHANGES" as const;
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (session?.user?.role !== "ADMIN") return apiUnauthorized();
 

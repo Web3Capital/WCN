@@ -11,7 +11,8 @@ export const dynamic = "force-dynamic";
 
 
 export const metadata = dashboardMeta("PoB Details", "View PoB record details");
-export default async function PobDetailPage({ params }: { params: { id: string } }) {
+export default async function PobDetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
 

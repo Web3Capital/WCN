@@ -241,7 +241,7 @@ export const route = {
     cfg: PublicCfg<I, O, P>,
   ): Handler {
     return async (req, nextCtx) => {
-      const requestId = getRequestId();
+      const requestId = await getRequestId();
       const params = (await resolveParams(nextCtx.params)) as P;
 
       const rl = await applyRateLimit(cfg.rateLimit, rateLimitKey(req, null));
@@ -265,7 +265,7 @@ export const route = {
     cfg: SessionCfg<I, O, P>,
   ): Handler {
     return async (req, nextCtx) => {
-      const requestId = getRequestId();
+      const requestId = await getRequestId();
       const params = (await resolveParams(nextCtx.params)) as P;
       const session = await getServerSession(authOptions);
       if (!session?.user || isBlocked(session)) return apiUnauthorized();
@@ -297,7 +297,7 @@ export const route = {
     cfg: PermissionCfg<I, O, P>,
   ): Handler {
     return async (req, nextCtx) => {
-      const requestId = getRequestId();
+      const requestId = await getRequestId();
       const params = (await resolveParams(nextCtx.params)) as P;
       const session = await getServerSession(authOptions);
       if (!session?.user || isBlocked(session)) return apiUnauthorized();
@@ -343,7 +343,7 @@ export const route = {
     const headerName = cfg.tokenHeader ?? "x-service-token";
     const envName = cfg.tokenEnv ?? "SERVICE_TOKEN";
     return async (req, nextCtx) => {
-      const requestId = getRequestId();
+      const requestId = await getRequestId();
       const params = (await resolveParams(nextCtx.params)) as P;
       const expected = process.env[envName];
       const presented = req.headers.get(headerName);

@@ -13,10 +13,8 @@ import {
 } from "@/lib/modules/nodes/territory";
 import { getPrisma } from "@/lib/prisma";
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: { territoryId: string } }
-) {
+export async function PATCH(req: Request, props: { params: Promise<{ territoryId: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("manage", "node");
   if (!auth.ok) return apiUnauthorized();
 
@@ -54,10 +52,8 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { territoryId: string } }
-) {
+export async function DELETE(req: Request, props: { params: Promise<{ territoryId: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("manage", "node");
   if (!auth.ok) return apiUnauthorized();
 

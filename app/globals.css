@@ -8054,7 +8054,14 @@ html[data-theme="system"] .voltage-callout {
   --ledger-settle: #4D9670;  /* was #0F9D58 — desaturated 45% */
   --ledger-settle-bg: color-mix(in oklab, #4D9670 8%, transparent);
 }
-html[data-theme="dark"],
+html[data-theme="dark"] {
+  --ledger-node:   #9295E0;
+  --ledger-node-bg: color-mix(in oklab, #9295E0 12%, transparent);
+  --ledger-deal:   #D6A661;
+  --ledger-deal-bg: color-mix(in oklab, #D6A661 12%, transparent);
+  --ledger-settle: #6BB48C;
+  --ledger-settle-bg: color-mix(in oklab, #6BB48C 12%, transparent);
+}
 @media (prefers-color-scheme: dark) {
   html[data-theme="system"] {
     --ledger-node:   #9295E0;

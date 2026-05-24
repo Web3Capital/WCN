@@ -15,7 +15,8 @@ async function assertAgentAccess(prisma: ReturnType<typeof getPrisma>, agentId: 
   return !!scoped;
 }
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
@@ -32,7 +33,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return apiOk(logs);
 }
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 

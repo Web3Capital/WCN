@@ -12,7 +12,8 @@ import { Events } from "@/lib/core/event-types";
 import { ProjectMachine, TransitionError } from "@/lib/core/state-machine";
 import type { ProjectStatus } from "@prisma/client";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
@@ -35,7 +36,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return apiOk(isAdmin ? project : redactProjectForMember(project, auth.session.user?.id ?? ""));
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("update", "project");
   if (!auth.ok) return apiUnauthorized();
 
@@ -103,7 +105,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   return apiOk(project);
 }
 
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   // Matrix gives `delete` on project only to FOUNDER/ADMIN/SYSTEM, so this
   // is implicitly admin-only without an extra isAdmin guard.
   const auth = await requirePermission("delete", "project");

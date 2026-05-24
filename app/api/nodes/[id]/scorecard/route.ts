@@ -6,7 +6,8 @@ import { AuditAction, writeAudit } from "@/lib/audit";
 import { apiOk, apiUnauthorized, apiForbidden, apiValidationError, apiNotFound, apiCreated } from "@/lib/core/api-response";
 import { upsertScorecard, getLatestScorecard, getScorecardHistory } from "@/lib/modules/nodes/scorecard";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
@@ -33,7 +34,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return apiOk({ latest, history });
 }
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("manage", "node");
   if (!auth.ok) return apiUnauthorized();
 

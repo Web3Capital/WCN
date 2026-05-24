@@ -28,9 +28,11 @@ async function withRouteParams(req: NextRequest, context: RouteCtx) {
 }
 
 export async function GET(req: NextRequest, context: RouteCtx) {
+  // @next-codemod-ignore — withRouteParams() already awaits context.params.
   return handler(req, await withRouteParams(req, context));
 }
 
 export async function POST(req: NextRequest, context: RouteCtx) {
+  // @next-codemod-ignore — withRouteParams() already awaits context.params.
   return handler(req, await withRouteParams(req, context));
 }

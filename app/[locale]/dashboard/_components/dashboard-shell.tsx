@@ -203,11 +203,11 @@ function GlobalSearch() {
   const [results, setResults] = useState<{ type: string; id: string; label: string; href: string; badge?: string }[]>([]);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const search = useCallback((value: string) => {
     setQ(value);
-    clearTimeout(timer.current);
+    if (timer.current) clearTimeout(timer.current);
     if (value.trim().length < 2) { setResults([]); return; }
     timer.current = setTimeout(async () => {
       try {

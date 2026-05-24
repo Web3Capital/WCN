@@ -6,7 +6,8 @@ import { apiOk, apiUnauthorized, apiNotFound, apiConflict } from "@/lib/core/api
 import { calculateSettlementForCycle } from "@/lib/modules/settlement/calculator";
 import { canTransitionSettlement } from "@/lib/state-machines/settlement";
 
-export async function POST(_req: Request, { params }: { params: { id: string } }) {
+export async function POST(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("update", "settlement");
   if (!auth.ok) return apiUnauthorized();
 

@@ -11,20 +11,32 @@ import { WCNGlyph } from "@/components/brand/wcn-glyph";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({
-  params: { locale },
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ locale: string }>;
+  }
+): Promise<Metadata> {
+  const params = await props.params;
+
+  const {
+    locale
+  } = params;
+
   const t = await getTranslations({ locale, namespace: "auth" });
   return { title: t("signupTitle") };
 }
 
-export default async function SignupPage({
-  params: { locale },
-}: {
-  params: { locale: string };
-}) {
+export default async function SignupPage(
+  props: {
+    params: Promise<{ locale: string }>;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    locale
+  } = params;
+
   const session = await getServerSession(authOptions);
   if (session?.user) {
     redirect({ href: "/dashboard", locale });

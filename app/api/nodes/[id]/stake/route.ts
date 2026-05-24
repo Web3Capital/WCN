@@ -7,7 +7,8 @@ import { apiOk, apiCreated, apiUnauthorized, apiForbidden, apiValidationError } 
 
 const ALLOWED_ACTIONS = new Set(["DEPOSIT", "WITHDRAW", "FREEZE", "UNFREEZE", "SLASH"]);
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireSignedIn();
   if (!auth.ok) return apiUnauthorized();
 
@@ -27,7 +28,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   return apiOk(entries);
 }
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requirePermission("manage", "node");
   if (!auth.ok) return apiUnauthorized();
 

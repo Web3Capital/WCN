@@ -21,11 +21,17 @@ const STEPS = [
   { num: 4, titleKey: "step4Title" as const, descKey: "step4Desc" as const },
 ] as const;
 
-export async function generateMetadata({
-  params: { locale },
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ locale: string }>;
+  }
+): Promise<Metadata> {
+  const params = await props.params;
+
+  const {
+    locale
+  } = params;
+
   const t = await getTranslations({ locale, namespace: "apply" });
   return {
     title: t("metaTitle"),

@@ -10,9 +10,9 @@ import crypto from "crypto";
 
 const REQUEST_ID_HEADER = "x-request-id";
 
-export function getRequestId(): string {
+export async function getRequestId(): Promise<string> {
   try {
-    const headersList = headers();
+    const headersList = await headers();
     const existing = headersList.get(REQUEST_ID_HEADER);
     if (existing) return existing;
   } catch {
