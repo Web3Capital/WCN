@@ -1,42 +1,42 @@
 {
-  "generatedAt": "2026-05-09T09:02:03.255Z",
+  "generatedAt": "2026-05-24T03:28:15.016Z",
   "referenceLocale": "en",
-  "referenceKeyCount": 878,
+  "referenceKeyCount": 928,
   "ceilings": {
     "ar": {
-      "missingKeys": 156,
+      "missingKeys": 0,
       "extraKeys": 0
     },
     "de": {
-      "missingKeys": 156,
+      "missingKeys": 0,
       "extraKeys": 0
     },
     "es": {
-      "missingKeys": 156,
+      "missingKeys": 0,
       "extraKeys": 0
     },
     "fr": {
-      "missingKeys": 156,
+      "missingKeys": 0,
       "extraKeys": 0
     },
     "ja": {
-      "missingKeys": 156,
+      "missingKeys": 0,
       "extraKeys": 0
     },
     "ko": {
-      "missingKeys": 156,
+      "missingKeys": 0,
       "extraKeys": 0
     },
     "pt": {
-      "missingKeys": 156,
+      "missingKeys": 0,
       "extraKeys": 0
     },
     "ru": {
-      "missingKeys": 156,
+      "missingKeys": 0,
       "extraKeys": 0
     },
     "zh": {
-      "missingKeys": 156,
+      "missingKeys": 0,
       "extraKeys": 0
     }
   }
