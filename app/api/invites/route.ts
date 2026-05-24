@@ -1,69 +1,70 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requirePermission } from "@/lib/admin";
+import type { Role } from "@prisma/client";
 import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiUnauthorized, apiConflict, zodToApiError } from "@/lib/core/api-response";
-import { parseBody, createInviteSchema } from "@/lib/core/validation";
+import { HttpError, route } from "@/lib/core/api/route";
+import { createInviteSchema } from "@/lib/core/validation";
 import { createHash, randomBytes } from "crypto";
+import { z } from "zod";
 
 function hashToken(raw: string): string {
   return createHash("sha256").update(raw).digest("hex");
 }
 
-export async function GET() {
-  const auth = await requirePermission("read", "invite");
-  if (!auth.ok) return apiUnauthorized();
+export const GET = route.permission({
+  input: z.object({}),
+  rateLimit: "auth",
+  permission: { action: "read", resource: "invite" },
+  handler: async () => {
+    const prisma = getPrisma();
+    const invites = await prisma.invite.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 200,
+      include: { createdBy: { select: { name: true, email: true } } },
+    });
 
-  const prisma = getPrisma();
-  const invites = await prisma.invite.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 200,
-    include: { createdBy: { select: { name: true, email: true } } },
-  });
+    return invites;
+  },
+});
 
-  return apiOk(invites);
-}
+export const POST = route.permission({
+  input: createInviteSchema,
+  rateLimit: "write",
+  permission: { action: "create", resource: "invite" },
+  handler: async ({ input, session }) => {
+    const prisma = getPrisma();
+    const { email, role, expiresInDays, workspaceId } = input;
 
-export async function POST(req: Request) {
-  const auth = await requirePermission("create", "invite");
-  if (!auth.ok) return apiUnauthorized();
+    const existing = await prisma.invite.findFirst({
+      where: { email, activatedAt: null, revokedAt: null, expiresAt: { gt: new Date() } },
+    });
+    if (existing) throw new HttpError(409, "CONFLICT", "Active invite already exists for this email.");
 
-  const body = await req.json().catch(() => ({}));
-  const parsed = parseBody(createInviteSchema, body);
-  if (!parsed.ok) return zodToApiError(parsed.error);
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + expiresInDays);
 
-  const prisma = getPrisma();
-  const { email, role, expiresInDays, workspaceId } = parsed.data;
+    const rawToken = randomBytes(32).toString("hex");
+    const tokenHash = hashToken(rawToken);
 
-  const existing = await prisma.invite.findFirst({
-    where: { email, activatedAt: null, revokedAt: null, expiresAt: { gt: new Date() } },
-  });
-  if (existing) return apiConflict("Active invite already exists for this email.");
+    const invite = await prisma.invite.create({
+      data: {
+        email,
+        tokenHash,
+        role: role as Role,
+        expiresAt,
+        createdById: session.user.id,
+        workspaceId: workspaceId ?? null,
+      },
+    });
 
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + expiresInDays);
+    await writeAudit({
+      actorUserId: session.user.id,
+      action: AuditAction.INVITE_SEND,
+      targetType: "INVITE",
+      targetId: invite.id,
+      metadata: { email, role, expiresAt: expiresAt.toISOString() },
+    });
 
-  const rawToken = randomBytes(32).toString("hex");
-  const tokenHash = hashToken(rawToken);
-
-  const invite = await prisma.invite.create({
-    data: {
-      email,
-      tokenHash,
-      role: role as any,
-      expiresAt,
-      createdById: auth.session.user!.id,
-      workspaceId: workspaceId ?? null,
-    },
-  });
-
-  await writeAudit({
-    actorUserId: auth.session.user!.id,
-    action: AuditAction.INVITE_SEND,
-    targetType: "INVITE",
-    targetId: invite.id,
-    metadata: { email, role, expiresAt: expiresAt.toISOString() },
-  });
-
-  return apiOk({ ...invite, token: rawToken });
-}
+    return { ...invite, token: rawToken };
+  },
+});
