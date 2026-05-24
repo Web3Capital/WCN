@@ -1,87 +1,93 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requirePermission } from "@/lib/admin";
+import type { ApprovalActionType, ApprovalStatus, Prisma } from "@prisma/client";
 import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiCreated, apiUnauthorized, zodToApiError } from "@/lib/core/api-response";
-import { parseBody, createApprovalSchema } from "@/lib/core/validation";
+import { route } from "@/lib/core/api/route";
+import { createApprovalSchema } from "@/lib/core/validation";
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
+import { z } from "zod";
 
-export async function GET(req: Request) {
-  const auth = await requirePermission("read", "approval");
-  if (!auth.ok) return apiUnauthorized();
+const approvalQuerySchema = z.object({
+  aggregate: z.string().optional(),
+  status: z.string().optional(),
+  workspaceId: z.string().optional(),
+});
 
-  const prisma = getPrisma();
-  const url = new URL(req.url);
-  const aggregate = url.searchParams.get("aggregate") === "1";
-  const status = url.searchParams.get("status");
-  const workspaceId = url.searchParams.get("workspaceId");
+export const GET = route.permission({
+  input: approvalQuerySchema,
+  rateLimit: "auth",
+  permission: { action: "read", resource: "approval" },
+  handler: async ({ input }) => {
+    const prisma = getPrisma();
+    const aggregate = input.aggregate === "1";
+    const { status, workspaceId } = input;
 
-  if (aggregate) {
-    const where = workspaceId ? { workspaceId } : {};
-    const rows = await prisma.approvalAction.groupBy({
-      by: ["status"],
-      where,
-      _count: true,
-    });
-    const counts: Record<string, number> = {};
-    for (const row of rows) {
-      counts[row.status] = row._count;
+    if (aggregate) {
+      const where: Prisma.ApprovalActionWhereInput = workspaceId ? { workspaceId } : {};
+      const rows = await prisma.approvalAction.groupBy({
+        by: ["status"],
+        where,
+        _count: true,
+      });
+      const counts: Record<string, number> = {};
+      for (const row of rows) {
+        counts[row.status] = row._count;
+      }
+      return counts;
     }
-    return apiOk(counts);
-  }
 
-  const where: Record<string, unknown> = {};
-  if (status) where.status = status;
-  if (workspaceId) where.workspaceId = workspaceId;
+    const where: Prisma.ApprovalActionWhereInput = {};
+    if (status) where.status = status as ApprovalStatus;
+    if (workspaceId) where.workspaceId = workspaceId;
 
-  const approvals = await prisma.approvalAction.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
-    take: 200,
-  });
+    const approvals = await prisma.approvalAction.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      take: 200,
+    });
 
-  return apiOk(approvals);
-}
+    return approvals;
+  },
+});
 
-export async function POST(req: Request) {
-  const auth = await requirePermission("create", "approval");
-  if (!auth.ok) return apiUnauthorized();
+export const POST = route.permission({
+  input: createApprovalSchema,
+  rateLimit: "write",
+  permission: { action: "create", resource: "approval" },
+  successStatus: 201,
+  handler: async ({ input, session }) => {
+    const prisma = getPrisma();
+    const { workspaceId, entityType, entityId, actionType, reason } = input;
 
-  const body = await req.json().catch(() => ({}));
-  const parsed = parseBody(createApprovalSchema, body);
-  if (!parsed.ok) return zodToApiError(parsed.error);
+    const approval = await prisma.approvalAction.create({
+      data: {
+        workspaceId,
+        entityType,
+        entityId,
+        actionType: actionType as ApprovalActionType,
+        requestedById: session.user.id,
+        reason: reason ?? null,
+      },
+    });
 
-  const prisma = getPrisma();
-  const { workspaceId, entityType, entityId, actionType, reason } = parsed.data;
-
-  const approval = await prisma.approvalAction.create({
-    data: {
+    await writeAudit({
+      actorUserId: session.user.id,
+      action: AuditAction.APPROVAL_REQUEST,
+      targetType: "APPROVAL",
+      targetId: approval.id,
       workspaceId,
+      metadata: { entityType, entityId, actionType },
+    });
+
+    await eventBus.emit(Events.APPROVAL_REQUESTED, {
+      approvalId: approval.id,
+      action: actionType,
       entityType,
       entityId,
-      actionType: actionType as any,
-      requestedById: auth.session.user!.id,
-      reason: reason ?? null,
-    },
-  });
+      requestedBy: session.user.id,
+    }, { actorId: session.user.id });
 
-  await writeAudit({
-    actorUserId: auth.session.user!.id,
-    action: AuditAction.APPROVAL_REQUEST,
-    targetType: "APPROVAL",
-    targetId: approval.id,
-    workspaceId,
-    metadata: { entityType, entityId, actionType },
-  });
-
-  await eventBus.emit(Events.APPROVAL_REQUESTED, {
-    approvalId: approval.id,
-    action: actionType,
-    entityType,
-    entityId,
-    requestedBy: auth.session.user!.id,
-  }, { actorId: auth.session.user?.id });
-
-  return apiCreated(approval);
-}
+    return approval;
+  },
+});

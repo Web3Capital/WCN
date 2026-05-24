@@ -1,72 +1,74 @@
 import "@/lib/core/init";
 import { getPrisma } from "@/lib/prisma";
-import { requirePermission } from "@/lib/admin";
+import type { FreezeLevel, Prisma } from "@prisma/client";
 import { AuditAction, writeAudit } from "@/lib/audit";
-import { apiOk, apiUnauthorized, apiNotFound, zodToApiError } from "@/lib/core/api-response";
-import { parseBody, updateRiskFlagSchema } from "@/lib/core/validation";
+import { HttpError, route } from "@/lib/core/api/route";
+import { updateRiskFlagSchema } from "@/lib/core/validation";
 import { eventBus } from "@/lib/core/event-bus";
 import { Events } from "@/lib/core/event-types";
+import { z } from "zod";
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const auth = await requirePermission("update", "risk");
-  if (!auth.ok) return apiUnauthorized();
+const updateRiskFlagInputSchema = z.object(updateRiskFlagSchema.shape);
 
-  const body = await req.json().catch(() => ({}));
-  const parsed = parseBody(updateRiskFlagSchema, body);
-  if (!parsed.ok) return zodToApiError(parsed.error);
+export const PATCH = route.permission<z.infer<typeof updateRiskFlagInputSchema>, unknown, { id: string }>({
+  input: updateRiskFlagInputSchema,
+  rateLimit: "write",
+  permission: { action: "update", resource: "risk" },
+  handler: async ({ input, params, session }) => {
+    const { id } = params;
+    const prisma = getPrisma();
+    const existing = await prisma.riskFlag.findUnique({ where: { id } });
+    if (!existing) throw new HttpError(404, "NOT_FOUND", "RiskFlag not found.");
 
-  const prisma = getPrisma();
-  const existing = await prisma.riskFlag.findUnique({ where: { id } });
-  if (!existing) return apiNotFound("RiskFlag");
+    const data: Prisma.RiskFlagUpdateInput = {};
+    if (input.resolution !== undefined) data.resolution = input.resolution;
+    if (input.resolve === true) {
+      data.resolvedAt = new Date();
+      data.resolution = input.resolution ?? "Resolved";
+    }
+    if (input.severity !== undefined) data.severity = input.severity;
 
-  const data: Record<string, unknown> = {};
-  if (parsed.data.resolution !== undefined) data.resolution = parsed.data.resolution;
-  if (parsed.data.resolve === true) {
-    data.resolvedAt = new Date();
-    data.resolution = parsed.data.resolution ?? "Resolved";
-  }
-  if (parsed.data.severity !== undefined) data.severity = parsed.data.severity;
+    const flag = await prisma.riskFlag.update({ where: { id }, data });
 
-  const flag = await prisma.riskFlag.update({ where: { id }, data });
+    if (input.freeze === true) {
+      const freezeLevel = (input.freezeLevel ?? "SOFT") as FreezeLevel;
+      await prisma.entityFreeze.create({
+        data: {
+          workspaceId: existing.workspaceId ?? "",
+          entityType: existing.entityType,
+          entityId: existing.entityId,
+          freezeLevel,
+          reason: `Risk flag #${id}: ${existing.reason}`,
+          frozenById: session.user.id,
+        },
+      });
 
-  if (parsed.data.freeze === true) {
-    await prisma.entityFreeze.create({
-      data: {
-        workspaceId: existing.workspaceId ?? "",
+      await writeAudit({
+        actorUserId: session.user.id ?? null,
+        action: AuditAction.ENTITY_FREEZE,
+        targetType: existing.entityType,
+        targetId: existing.entityId,
+        metadata: { riskFlagId: id, freezeLevel },
+      });
+
+      await eventBus.emit(Events.ENTITY_FROZEN, {
         entityType: existing.entityType,
         entityId: existing.entityId,
-        freezeLevel: parsed.data.freezeLevel ?? "SOFT",
+        frozenBy: session.user.id,
         reason: `Risk flag #${id}: ${existing.reason}`,
-        frozenById: auth.session.user!.id,
-      },
-    });
+      }, { actorId: session.user.id });
+    }
 
-    await writeAudit({
-      actorUserId: auth.session.user?.id ?? null,
-      action: AuditAction.ENTITY_FREEZE,
-      targetType: existing.entityType,
-      targetId: existing.entityId,
-      metadata: { riskFlagId: id, freezeLevel: parsed.data.freezeLevel ?? "SOFT" },
-    });
+    if (data.resolvedAt) {
+      await writeAudit({
+        actorUserId: session.user.id ?? null,
+        action: AuditAction.RISK_FLAG_RESOLVE,
+        targetType: existing.entityType,
+        targetId: existing.entityId,
+        metadata: { riskFlagId: id, resolution: data.resolution },
+      });
+    }
 
-    await eventBus.emit(Events.ENTITY_FROZEN, {
-      entityType: existing.entityType,
-      entityId: existing.entityId,
-      frozenBy: auth.session.user!.id,
-      reason: `Risk flag #${id}: ${existing.reason}`,
-    }, { actorId: auth.session.user?.id });
-  }
-
-  if (data.resolvedAt) {
-    await writeAudit({
-      actorUserId: auth.session.user?.id ?? null,
-      action: AuditAction.RISK_FLAG_RESOLVE,
-      targetType: existing.entityType,
-      targetId: existing.entityId,
-      metadata: { riskFlagId: id, resolution: data.resolution },
-    });
-  }
-
-  return apiOk(flag);
-}
+    return flag;
+  },
+});
