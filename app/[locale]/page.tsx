@@ -66,18 +66,13 @@ export default async function HomePage() {
       <section className="hero hero-orb" data-anim-host>
         <div className="container">
           <div className="hero-center">
-            <span className="eyebrow eyebrow-plain">
-              <span
-                className="status-dot"
-                style={{
-                  background: "var(--ledger-node)",
-                  width: 6,
-                  height: 6,
-                }}
-                aria-hidden
-              />
-              {t("eyebrow")}
-            </span>
+            <div className="wcn-masthead" aria-hidden>
+              <span className="wcn-masthead-mark">№ 00</span>
+              <span className="wcn-masthead-rule" />
+              <span className="wcn-masthead-section">Prologue</span>
+              <span className="wcn-masthead-rule" />
+              <span className="wcn-masthead-meta">Volume · MMXXVI</span>
+            </div>
             <h1>
               {t.rich("headline", {
                 em: (chunks) => <em>{chunks}</em>,

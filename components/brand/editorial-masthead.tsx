@@ -13,6 +13,9 @@ import type { ReactNode } from "react";
 
 type Props = {
   issueNumber: string;
+  /** Section label rendered between the two rules in the masthead bar. Aligns
+   *  with the canonical /nodes pattern: `№ XX · SECTION · VOLUME · MMXXVI`. */
+  section: string;
   issueDate: string;
   kicker: string;
   title: ReactNode;
@@ -25,14 +28,16 @@ type Props = {
   ledeDropcap?: boolean;
 };
 
-export function EditorialMasthead({ issueNumber, issueDate, kicker, title, lede, ledeDropcap }: Props) {
+export function EditorialMasthead({ issueNumber, section, issueDate, kicker, title, lede, ledeDropcap }: Props) {
   return (
     <header className="editorial-masthead" data-anim-host>
       <div className="container">
-        <div className="editorial-masthead-bar">
-          <span className="editorial-masthead-issue">{issueNumber}</span>
-          <span className="editorial-masthead-rule" aria-hidden />
-          <span className="editorial-masthead-date">{issueDate}</span>
+        <div className="wcn-masthead editorial-masthead-bar" aria-hidden>
+          <span className="wcn-masthead-mark editorial-masthead-issue">{issueNumber}</span>
+          <span className="wcn-masthead-rule editorial-masthead-rule" />
+          <span className="wcn-masthead-section editorial-masthead-date">{section}</span>
+          <span className="wcn-masthead-rule editorial-masthead-rule" />
+          <span className="wcn-masthead-meta editorial-masthead-date">{issueDate}</span>
         </div>
         <p className="editorial-masthead-kicker">{kicker}</p>
         <h1 className="editorial-masthead-title">{title}</h1>

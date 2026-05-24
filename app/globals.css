@@ -10186,7 +10186,10 @@ html[data-theme="dark"] {
    Masthead bar · Dropcap lede · Tier numerals · Editorial lifecycle · Gov entries
    ═══════════════════════════════════════════════════════════════════════ */
 
-/* — Hero masthead bar — */
+/* — Hero masthead bar (used across /nodes, /pob, /how-it-works, /apply, /, /about) —
+   `wcn-masthead-*` is the canonical, page-neutral set; `nodes-masthead-*` is the
+   original name kept as an alias for back-compat with existing page markup. */
+.wcn-masthead,
 .nodes-masthead {
   display: flex;
   align-items: center;
@@ -10197,6 +10200,9 @@ html[data-theme="dark"] {
   padding-block: 8px;
   border-block: 1px solid color-mix(in oklab, var(--line) 80%, transparent);
 }
+.wcn-masthead-mark,
+.wcn-masthead-section,
+.wcn-masthead-meta,
 .nodes-masthead-mark,
 .nodes-masthead-section,
 .nodes-masthead-meta {
@@ -10207,15 +10213,19 @@ html[data-theme="dark"] {
   color: color-mix(in oklab, var(--text) 70%, var(--muted));
   white-space: nowrap;
 }
+.wcn-masthead-mark,
 .nodes-masthead-mark {
   font-weight: 800;
   color: var(--accent);
 }
+.wcn-masthead-section,
 .nodes-masthead-section { font-weight: 600; }
+.wcn-masthead-meta,
 .nodes-masthead-meta {
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
+.wcn-masthead-rule,
 .nodes-masthead-rule {
   flex: 1;
   min-width: 24px;

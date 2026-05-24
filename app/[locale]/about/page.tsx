@@ -107,8 +107,9 @@ export default async function AboutPage() {
 
       {/* ═══ MASTHEAD — feature article opening ═══════════════ */}
       <EditorialMasthead
-        issueNumber={t("issueNumber")}
-        issueDate={t("issueDate")}
+        issueNumber="№ 02"
+        section="About"
+        issueDate="Volume · MMXXVI"
         kicker={t("mastheadKicker")}
         title={t.rich("headline", {
           linebreak: () => <br />,
