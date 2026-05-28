@@ -5,7 +5,10 @@ import {
   renderOgImage,
 } from "@/lib/og-image-template";
 
-export const runtime = "edge";
+// Node.js runtime via Fluid Compute — Edge had a 1MB function size limit
+// that next-intl + next/og + lucide-react together exceeded for some routes.
+// Per Vercel guidance, Node.js + Fluid Compute is the recommended default.
+export const runtime = "nodejs";
 export const size = ogSize;
 export const contentType = ogContentType;
 export const alt = "Web3 Capital Network — The Business Network for Web3 and AI";
