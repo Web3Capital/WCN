@@ -5,8 +5,7 @@ import {
   renderOgImage,
 } from "@/lib/og-image-template";
 
-// See /[locale]/opengraph-image.tsx for the Edge → Node.js runtime rationale.
-export const runtime = "nodejs";
+export const runtime = "edge";
 export const size = ogSize;
 export const contentType = ogContentType;
 export const alt = "About — Web3 Capital Network";
