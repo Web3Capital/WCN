@@ -5,6 +5,7 @@ import { rateLimit, rateLimitAuth, rateLimitAdmin } from "./lib/rate-limit";
 import createIntlMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 import { locales } from "./i18n/config";
+import { buildStrictCspHeader, generateCspNonce } from "./lib/csp";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
@@ -143,6 +144,17 @@ export async function proxy(request: NextRequest) {
   const intlResponse = intlMiddleware(request);
   intlResponse.headers.set("x-request-id", requestId);
   intlResponse.headers.set("x-url", request.url);
+
+  // Phase 4 / ADR-MR-005: per-request CSP nonce. Shipped as Report-Only so
+  // production keeps using the enforcing CSP from next.config.mjs while we
+  // observe whether the strict policy would have blocked anything. After a
+  // clean week, swap: drop next.config CSP, promote Report-Only to enforcing.
+  const nonce = generateCspNonce();
+  intlResponse.headers.set("x-nonce", nonce);
+  intlResponse.headers.set(
+    "Content-Security-Policy-Report-Only",
+    buildStrictCspHeader(nonce),
+  );
 
   // If next-intl issued a redirect (e.g. bare /about -> /en/about), return it
   if (intlResponse.status >= 300 && intlResponse.status < 400) {

@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
+
+// Phase 2 / ADR-MR-001: static marketing page, revalidate daily.
+export const dynamic = "force-static";
+export const revalidate = 86400;
+
 import {
   ArrowRight,
   BadgeCheck,
@@ -14,6 +19,8 @@ import {
 import { Link } from "@/i18n/routing";
 import { VoltageCallout } from "@/components/brand/voltage-callout";
 import { AnimationBudget } from "@/components/brand/animation-budget";
+import { PageMasthead } from "@/components/marketing/page-masthead";
+import { SectionHead } from "@/components/marketing/section-head";
 
 export async function generateMetadata(
   props: {
@@ -52,6 +59,8 @@ const LAYER_ACCENTS: ("accent" | "purple" | "amber" | "green" | "muted")[] = [
 
 export default async function HowItWorksPage() {
   const t = await getTranslations("howItWorks");
+  const tCommon = await getTranslations("common");
+  const tNav = await getTranslations("nav");
 
   const loopSteps = [1, 2, 3, 4, 5, 6].map((n, i) => ({
     title: t(`loopStep${n}Title`),
@@ -74,13 +83,11 @@ export default async function HowItWorksPage() {
       {/* ═══ HERO — editorial masthead bar + centered headline ═══ */}
       <section className="section hero hero-orb hiw-hero" data-anim-host>
         <div className="container">
-          <div className="hiw-issue-bar" aria-hidden>
-            <span className="hiw-issue-num">№ 03</span>
-            <span className="hiw-issue-rule" />
-            <span className="hiw-issue-section">{t("eyebrow")}</span>
-            <span className="hiw-issue-rule" />
-            <span className="hiw-issue-meta">Volume · MMXXVI</span>
-          </div>
+          <PageMasthead
+            issueNumber="№ 03"
+            section={t("eyebrow")}
+            volumeIssue={tCommon("editorial.volumeIssue")}
+          />
           <div className="section-head hiw-hero-intro">
             <h1 className="hiw-hero-title">
               {t.rich("headline", { em: (chunks) => <em>{chunks}</em> })}
@@ -110,7 +117,7 @@ export default async function HowItWorksPage() {
         <div className="container">
           <div className="hiw-intro-grid">
             <div className="hiw-intro-prose">
-              <span className="hiw-intro-kicker">Editor’s note</span>
+              <span className="hiw-intro-kicker">{tCommon("editorial.editorsNote")}</span>
               <p className="hiw-intro-lede hiw-intro-lede--dropcap">{t("subLede")}</p>
             </div>
             <aside className="hiw-glance-panel glass" aria-label={t("glanceAriaLabel")}>
@@ -135,12 +142,13 @@ export default async function HowItWorksPage() {
       {/* ═══ № 01 — Operating loop — editorial sequence ════════ */}
       <section className="section section-alt hiw-loop-section">
         <div className="container">
-          <div className="section-head hiw-section-head section-head-numbered">
-            <span className="section-number">№ 01</span>
-            <span className="eyebrow hiw-eyebrow">{t("operatingLoopEyebrow")}</span>
-            <h2 className="hiw-section-h2 hiw-loop-h2">{t("operatingLoopTitle")}</h2>
-            <p className="muted hero-lede hiw-section-lede">{t("operatingLoopDesc")}</p>
-          </div>
+          <SectionHead
+            number="№ 01"
+            eyebrow={t("operatingLoopEyebrow")}
+            title={t("operatingLoopTitle")}
+            lede={t("operatingLoopDesc")}
+            titleClassName="hiw-loop-h2"
+          />
           <ol className="hiw-editorial-loop card-grid-animated">
             {loopSteps.map((step, i) => (
               <li key={`loop-${i}`} className="hiw-editorial-step">
@@ -163,12 +171,13 @@ export default async function HowItWorksPage() {
       {/* ═══ № 02 — Five-layer architecture — editorial specimen ══ */}
       <section className="section hiw-layers-section">
         <div className="container">
-          <div className="section-head hiw-section-head section-head-numbered">
-            <span className="section-number">№ 02</span>
-            <span className="eyebrow hiw-eyebrow">{t("archEyebrow")}</span>
-            <h2 className="hiw-section-h2 hiw-loop-h2">{t("archTitle")}</h2>
-            <p className="muted hero-lede hiw-section-lede">{t("archDesc")}</p>
-          </div>
+          <SectionHead
+            number="№ 02"
+            eyebrow={t("archEyebrow")}
+            title={t("archTitle")}
+            lede={t("archDesc")}
+            titleClassName="hiw-loop-h2"
+          />
           <ol className="hiw-arch-stack card-grid-animated">
             {layers.map((layer) => (
               <li
@@ -225,14 +234,16 @@ export default async function HowItWorksPage() {
         </div>
       </section>
 
+      {/* Phase 5 funnel: surface the operators (nodes) and the proof layer
+          (PoB) — those are the right next clicks after seeing the loop. */}
       <VoltageCallout
         eyebrow={t("ctaEyebrow")}
         title={t("ctaTitle")}
         desc={t("ctaDesc")}
-        primaryLabel={t("applyAsNodeButton")}
-        primaryHref="/apply"
-        secondaryLabel={t("openWiki")}
-        secondaryHref="/wiki"
+        primaryLabel={tNav("nodeNetwork")}
+        primaryHref="/nodes"
+        secondaryLabel={tNav("pob")}
+        secondaryHref="/pob"
       />
     </main>
   );

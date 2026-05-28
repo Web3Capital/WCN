@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
+
+// Phase 2 / ADR-MR-001: static marketing page, revalidate daily.
+export const dynamic = "force-static";
+export const revalidate = 86400;
+
 import {
   Archive,
   Ban,
@@ -14,6 +19,9 @@ import {
   XCircle,
 } from "lucide-react";
 import { VoltageCallout } from "@/components/brand/voltage-callout";
+import { PageMasthead } from "@/components/marketing/page-masthead";
+import { DualSlab } from "@/components/marketing/dual-slab";
+import { SectionHead } from "@/components/marketing/section-head";
 
 export async function generateMetadata(
   props: {
@@ -115,13 +123,11 @@ export default async function PobPage() {
       {/* ═══ HERO — editorial masthead bar + centered Fraunces title ═══ */}
       <section className="section hero hero-orb pob-hero">
         <div className="container pob-hero-container">
-          <div className="pob-masthead" aria-hidden>
-            <span className="pob-masthead-mark">№ 05</span>
-            <span className="pob-masthead-rule" />
-            <span className="pob-masthead-section">{t("eyebrow")}</span>
-            <span className="pob-masthead-rule" />
-            <span className="pob-masthead-meta">Volume · MMXXVI</span>
-          </div>
+          <PageMasthead
+            issueNumber="№ 05"
+            section={t("eyebrow")}
+            volumeIssue={tCommon("editorial.volumeIssue")}
+          />
           <div className="section-head pob-hero-intro">
             <h1 className="pob-hero-title">
               {t.rich("headline", { em: (chunks) => <em>{chunks}</em> })}
@@ -135,7 +141,7 @@ export default async function PobPage() {
 
           <div className="pob-hero-grid card-grid-animated">
             <div className="pob-hero-copy">
-              <span className="pob-editor-kicker">Editor’s note</span>
+              <span className="pob-editor-kicker">{tCommon("editorial.editorsNote")}</span>
               <p className="pob-hero-sub pob-hero-sub--dropcap">{t("subLede")}</p>
               <div className="pob-hero-ctas">
                 <Link href="/wiki" className="button-secondary pob-hero-link">
@@ -175,66 +181,38 @@ export default async function PobPage() {
       {/* ═══ № 01 — Boundaries: rewarded / not rewarded ════════════ */}
       <section className="section section-alt pob-boundaries">
         <div className="container">
-          <div className="section-head pob-section-head section-head-numbered">
-            <span className="section-number">№ 01</span>
-            <span className="eyebrow pob-eyebrow">{t("boundariesEyebrow")}</span>
-            <h2 className="pob-section-h2">{t("boundariesTitle")}</h2>
-            <p className="muted hero-lede pob-section-lede">
-              {t.rich("boundariesDesc", {
-                strong: (chunks) => <strong className="pob-strong">{chunks}</strong>,
-              })}
-            </p>
-          </div>
-          <div className="grid-2 pob-bound-grid card-grid-animated">
-            <article className="card pob-bound-card pob-bound-card--yes">
-              <div className="pob-bound-head">
-                <span className="pob-bound-sigil" aria-hidden>+</span>
-                <div className="pob-bound-titlewrap">
-                  <span className="pob-bound-kicker">Rewarded</span>
-                  <h3 className="pob-bound-title">{t("whatIsRewarded")}</h3>
-                </div>
-                <CheckCircle2 className="pob-bound-icon-svg" size={20} strokeWidth={1.75} aria-hidden />
-              </div>
-              <ol className="pob-bound-list">
-                {rewarded.map((line, i) => (
-                  <li key={line} className="pob-bound-row">
-                    <span className="pob-bound-num" aria-hidden>{String(i + 1).padStart(2, "0")}</span>
-                    <span className="pob-bound-text">{line}</span>
-                  </li>
-                ))}
-              </ol>
-            </article>
-            <article className="card pob-bound-card pob-bound-card--no">
-              <div className="pob-bound-head">
-                <span className="pob-bound-sigil pob-bound-sigil--muted" aria-hidden>−</span>
-                <div className="pob-bound-titlewrap">
-                  <span className="pob-bound-kicker pob-bound-kicker--muted">Not rewarded</span>
-                  <h3 className="pob-bound-title">{t("whatIsNotRewarded")}</h3>
-                </div>
-                <Ban className="pob-bound-icon-svg pob-bound-icon-svg--muted" size={20} strokeWidth={1.75} aria-hidden />
-              </div>
-              <ol className="pob-bound-list">
-                {notRewarded.map((line, i) => (
-                  <li key={line} className="pob-bound-row">
-                    <span className="pob-bound-num pob-bound-num--muted" aria-hidden>{String(i + 1).padStart(2, "0")}</span>
-                    <span className="pob-bound-text">{line}</span>
-                  </li>
-                ))}
-              </ol>
-            </article>
-          </div>
+          <SectionHead
+            number="№ 01"
+            eyebrow={t("boundariesEyebrow")}
+            title={t("boundariesTitle")}
+            lede={t.rich("boundariesDesc", {
+              strong: (chunks) => <strong className="pob-strong">{chunks}</strong>,
+            })}
+          />
+          <DualSlab
+            affirm={{
+              kicker: tCommon("editorial.rewarded"),
+              title: t("whatIsRewarded"),
+              items: rewarded,
+            }}
+            deny={{
+              kicker: tCommon("editorial.notRewarded"),
+              title: t("whatIsNotRewarded"),
+              items: notRewarded,
+            }}
+          />
         </div>
       </section>
 
       {/* ═══ № 02 — Verification flow as editorial row sequence ══════ */}
       <section className="section pob-verify">
         <div className="container">
-          <div className="section-head pob-section-head section-head-numbered">
-            <span className="section-number">№ 02</span>
-            <span className="eyebrow pob-eyebrow">{t("verificationEyebrow")}</span>
-            <h2 className="pob-section-h2">{t("verificationTitle")}</h2>
-            <p className="muted hero-lede pob-section-lede">{t("verificationDesc")}</p>
-          </div>
+          <SectionHead
+            number="№ 02"
+            eyebrow={t("verificationEyebrow")}
+            title={t("verificationTitle")}
+            lede={t("verificationDesc")}
+          />
           <ol className="pob-verify-editorial card-grid-animated">
             {verificationSteps.map((step, i) => (
               <li key={step.title} className="pob-verify-row">
@@ -260,8 +238,8 @@ export default async function PobPage() {
           <div className="pob-proof-feature card-grid-animated">
             <div className="pob-proof-head">
               <span className="section-number pob-proof-section-number">№ 03</span>
-              <span className="eyebrow pob-eyebrow pob-proof-eyebrow">{t("proofDeskEyebrow")}</span>
-              <h2 className="pob-section-h2 pob-proof-title">{t("proofDeskTitle")}</h2>
+              <span className="eyebrow pob-proof-eyebrow">{t("proofDeskEyebrow")}</span>
+              <h2 className="pob-proof-title">{t("proofDeskTitle")}</h2>
               <p className="pob-proof-lede">{t("proofDeskDesc")}</p>
             </div>
             <ol className="pob-proof-roles">
@@ -301,12 +279,12 @@ export default async function PobPage() {
       {/* ═══ № 04 — Scoring formula as editorial specimen ═══════════ */}
       <section className="section pob-scoring">
         <div className="container">
-          <div className="section-head pob-section-head section-head-numbered">
-            <span className="section-number">№ 04</span>
-            <span className="eyebrow pob-eyebrow">{t("scoringEyebrow")}</span>
-            <h2 className="pob-section-h2">{t("scoringTitle")}</h2>
-            <p className="muted hero-lede pob-section-lede">{t("scoringDesc")}</p>
-          </div>
+          <SectionHead
+            number="№ 04"
+            eyebrow={t("scoringEyebrow")}
+            title={t("scoringTitle")}
+            lede={t("scoringDesc")}
+          />
           <div className="pob-formula-feature card-grid-animated">
             <p className="pob-formula-label">{t("composition")}</p>
             <div className="pob-formula-specbar" aria-label={t("formulaSpecAria")}>
@@ -343,7 +321,7 @@ export default async function PobPage() {
               <div className="pob-attrib-kicker">
                 <span className="pob-attrib-kicker-num">№ 05·a</span>
                 <span className="pob-attrib-kicker-rule" aria-hidden />
-                <span className="pob-attrib-kicker-label">Attribution</span>
+                <span className="pob-attrib-kicker-label">{tCommon("editorial.attribution")}</span>
               </div>
               <div className="pob-attrib-head">
                 <Split size={22} strokeWidth={1.75} className="pob-attrib-icon-svg" aria-hidden />
@@ -355,7 +333,7 @@ export default async function PobPage() {
               <div className="pob-attrib-kicker">
                 <span className="pob-attrib-kicker-num pob-attrib-kicker-num--muted">№ 05·b</span>
                 <span className="pob-attrib-kicker-rule" aria-hidden />
-                <span className="pob-attrib-kicker-label">Boundary</span>
+                <span className="pob-attrib-kicker-label">{tCommon("editorial.boundary")}</span>
               </div>
               <div className="pob-attrib-head">
                 <XCircle size={22} strokeWidth={1.75} className="pob-attrib-icon-svg pob-attrib-icon-svg--muted" aria-hidden />

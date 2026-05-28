@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { routing } from "@/i18n/routing";
 import { locales, localeMetadata, type Locale } from "@/i18n/config";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { Providers } from "@/components/providers";
+import { ThemeScript } from "@/components/theme-script";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import { fontSans, fontSerif, fontMono } from "@/app/fonts";
@@ -105,10 +106,23 @@ export default async function LocaleLayout(
 
   const messages = await getMessages();
   const meta = localeMetadata[locale as Locale];
-  const cookieStore = await cookies();
-  const theme = cookieStore.get("wcn_theme")?.value;
-  const dataTheme = theme === "light" || theme === "dark" ? theme : "system";
 
+  // ThemeScript (rendered in <head>) sets data-theme synchronously from the
+  // wcn_theme cookie on the client before first paint. The SSR default below
+  // is "system" so the page is statically renderable — see ADR-MR-002 in
+  // docs/marketing-redesign.md.
+  //
+  // Phase 4: read the per-request CSP nonce set by proxy.ts. Inline scripts
+  // emit `nonce={nonce}` so the Report-Only strict CSP passes; missing-nonce
+  // on a static asset path is tolerable (proxy.ts only runs on page routes).
+  const reqHeaders = await headers();
+  const nonce = reqHeaders.get("x-nonce") ?? undefined;
+
+  // Phase 4: JSON-LD description goes through the metadata namespace so each
+  // locale's search snippet is in the local language. `inLanguage` becomes a
+  // single value (the current locale) — schema.org expects a string here, not
+  // a list of all supported languages.
+  const tMeta = await getTranslations({ locale, namespace: "metadata" });
   const base = siteUrl.replace(/\/$/, "");
   const jsonLd = {
     "@context": "https://schema.org",
@@ -119,7 +133,7 @@ export default async function LocaleLayout(
         name: "Web3 Capital Network",
         url: base,
         logo: { "@type": "ImageObject", url: `${base}/icon.png` },
-        description: "The business network for Web3 and AI — connecting capital, projects, and services with verified proof and fair settlement.",
+        description: tMeta("ogDescription"),
       },
       {
         "@type": "WebSite",
@@ -127,10 +141,10 @@ export default async function LocaleLayout(
         name: "Web3 Capital Network",
         url: base,
         publisher: { "@id": `${base}/#organization` },
-        inLanguage: locales,
+        inLanguage: locale,
         potentialAction: {
           "@type": "SearchAction",
-          target: { "@type": "EntryPoint", urlTemplate: `${base}/en/wiki?q={search_term_string}` },
+          target: { "@type": "EntryPoint", urlTemplate: `${base}/${locale}/wiki?q={search_term_string}` },
           "query-input": "required name=search_term_string",
         },
       },
@@ -141,12 +155,14 @@ export default async function LocaleLayout(
     <html
       lang={locale}
       dir={meta?.dir ?? "ltr"}
-      data-theme={dataTheme}
+      data-theme="system"
       className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable}`}
     >
       <head>
+        <ThemeScript nonce={nonce} />
         <script
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
