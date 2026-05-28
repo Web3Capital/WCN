@@ -22,14 +22,23 @@ const nextConfig = {
           { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
           {
+            // Enforcing CSP. Phase 4 / ADR-MR-005: stays at 'unsafe-inline'
+            // for now while proxy.ts ships a parallel Content-Security-Policy-
+            // Report-Only header with a strict nonce-based policy. After
+            // observing 0 violations in production, swap this header to the
+            // nonce-based variant and drop 'unsafe-inline'.
+            //
+            // Domains added this PR (Phase 4):
+            //   - https://va.vercel-scripts.com   (Vercel Analytics SDK)
+            //   - https://vitals.vercel-insights.com (Speed Insights beacon)
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              `script-src 'self' 'unsafe-inline' ${process.env.NODE_ENV === "development" ? "'unsafe-eval'" : ""} https://vercel.live https://*.vercel-scripts.com`.trim(),
+              `script-src 'self' 'unsafe-inline' ${process.env.NODE_ENV === "development" ? "'unsafe-eval'" : ""} https://vercel.live https://va.vercel-scripts.com https://*.vercel-scripts.com`.trim(),
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https://*.vercel.app https://*.githubusercontent.com https://*.googleusercontent.com",
               "font-src 'self' data:",
-              "connect-src 'self' https://*.vercel.app https://*.upstash.io https://api.twilio.com https://*.sentry.io wss://*.vercel.app",
+              "connect-src 'self' https://*.vercel.app https://*.upstash.io https://api.twilio.com https://*.sentry.io https://vitals.vercel-insights.com wss://*.vercel.app",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",

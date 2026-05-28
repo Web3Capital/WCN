@@ -25,14 +25,23 @@ type Props = {
   layers: Layer[];
   /** Optional caption shown above the diagram describing the example request */
   flowExample?: string;
+  /**
+   * Localized label rendered before {flowExample}. Must come from the caller
+   * (typically `tCommon("editorial.exampleRequest")`). If not provided, the
+   * label is omitted — we never fall back to a hard-coded English string.
+   * See docs/marketing-redesign.md Phase 1.
+   */
+  exampleRequestLabel?: string;
 };
 
-export function ArchitectureLayers({ layers, flowExample }: Props) {
+export function ArchitectureLayers({ layers, flowExample, exampleRequestLabel }: Props) {
   return (
     <div className="architecture-layers" data-anim-host>
       {flowExample ? (
         <p className="architecture-flow-example">
-          <span className="architecture-flow-example-label">Example request</span>
+          {exampleRequestLabel ? (
+            <span className="architecture-flow-example-label">{exampleRequestLabel}</span>
+          ) : null}
           <span className="architecture-flow-example-text">{flowExample}</span>
         </p>
       ) : null}
