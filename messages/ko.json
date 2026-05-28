@@ -42,7 +42,6 @@
   },
   "home": {
     "eyebrow": "Web3·AI를 위한 글로벌 기관 오케스트레이터",
-    "mastheadSection": "서론",
     "headline": "Capital meets <em>proof</em>.",
     "lede": "WCN is the protocol that replaces spreadsheets and goodwill with evidence — from registry to settlement.",
     "applyAsNode": "노드로 지원",
@@ -253,7 +252,6 @@
     "archLayer4Sub": "Every state transition is a typed event. Replayable. Auditable.",
     "archLayer5": "Storage",
     "archLayer5Sub": "Postgres of record. Outbox to event store. Cold archive.",
-    "archFlowExample": "노드 소유자가 비즈니스 증명을 제출한다 — 모든 레이어에 흔적이 남는다.",
     "genesisEyebrow": "From the founding documents",
     "genesisQuote": "We are not building a marketplace. We are building the connective tissue between proof and capital — so the people who do the work capture the value.",
     "genesisAttribution": "WCN white paper — Section I.0",
@@ -982,20 +980,7 @@
     "howItWorks": "작동 방식",
     "openWiki": "Wiki 열기",
     "learnMore": "더 알아보기",
-    "skipToContent": "본문으로 건너뛰기",
-    "editorial": {
-      "editorsNote": "편집자 노트",
-      "affirmative": "긍정",
-      "negative": "부정",
-      "rewarded": "보상 대상",
-      "notRewarded": "보상 제외",
-      "designedFor": "대상",
-      "operatingLoop": "운영 루프",
-      "attribution": "귀속",
-      "boundary": "경계",
-      "volumeIssue": "Volume · MMXXVI",
-      "exampleRequest": "예시 요청"
-    }
+    "skipToContent": "본문으로 건너뛰기"
   },
   "wiki": {
     "title": "Wiki",

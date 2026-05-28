@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
-import { getLocale, getTranslations } from "next-intl/server";
-
-// Phase 2 / ADR-MR-001: static marketing page, revalidate daily.
-export const dynamic = "force-static";
-export const revalidate = 86400;
-
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
-import { getWikiHref } from "@/lib/wiki-link";
 import type { ReactNode } from "react";
 import {
   BadgeCheck,
   BookOpen,
   Bot,
+  CheckCircle2,
   Globe,
   Network,
   Scale,
   Sparkles,
+  XCircle,
 } from "lucide-react";
 import { VoltageCallout } from "@/components/brand/voltage-callout";
 import { EditorialMasthead } from "@/components/brand/editorial-masthead";
@@ -24,8 +20,6 @@ import { WhyNowTimeline } from "@/components/brand/why-now-timeline";
 import { ArchitectureLayers } from "@/components/brand/architecture-layers";
 import { GenesisPullQuote } from "@/components/brand/genesis-pull-quote";
 import { AnimationBudget } from "@/components/brand/animation-budget";
-import { SectionHead } from "@/components/marketing/section-head";
-import { DualSlab } from "@/components/marketing/dual-slab";
 
 export async function generateMetadata(
   props: {
@@ -45,8 +39,6 @@ export async function generateMetadata(
 export default async function AboutPage() {
   const t = await getTranslations("about");
   const tNav = await getTranslations("nav");
-  const tCommon = await getTranslations("common");
-  const locale = await getLocale();
 
   const pillars: { title: string; body: string; icon: ReactNode }[] = [
     { title: t("pillarNodeTitle"), body: t("pillarNodeBody"), icon: <Globe size={20} strokeWidth={1.5} aria-hidden /> },
@@ -116,8 +108,8 @@ export default async function AboutPage() {
       {/* ═══ MASTHEAD — feature article opening ═══════════════ */}
       <EditorialMasthead
         issueNumber="№ 02"
-        section={tNav("about")}
-        issueDate={tCommon("editorial.volumeIssue")}
+        section="About"
+        issueDate="Volume · MMXXVI"
         kicker={t("mastheadKicker")}
         title={t.rich("headline", {
           linebreak: () => <br />,
@@ -136,11 +128,11 @@ export default async function AboutPage() {
             <div className="about-intro-prose">
               <p className="about-intro-prose-body">{t("subLede")}</p>
               <div className="about-intro-actions">
-                <Link href={getWikiHref(locale, "project-intro", 1)} className="button-secondary">
+                <Link href="/wiki/project-intro/1-1-wcn-是什么" className="button-secondary">
                   <BookOpen size={17} aria-hidden />
                   {t("wikiWhatIs")}
                 </Link>
-                <Link href={getWikiHref(locale, "project-intro", 2)} className="button-secondary">
+                <Link href="/wiki/project-intro/1-2-wcn-不是什么" className="button-secondary">
                   {t("wikiWhatIsNot")}
                 </Link>
                 <Link href="/how-it-works" className="button-secondary">
@@ -174,39 +166,54 @@ export default async function AboutPage() {
       {/* ═══ № 01 · What WCN is / isn't ═══════════════════════ */}
       <section className="section section-alt about-clarity">
         <div className="container">
-          <SectionHead
-            number="№ 01"
-            eyebrow={t("definitionEyebrow")}
-            title={t("definitionTitle")}
-            lede={t("definitionDesc")}
-          />
-          <DualSlab
-            variant="feature"
-            affirm={{
-              title: t("whatWcnIs"),
-              lede: t("whatWcnIsLede"),
-              items: whatIsBullets,
-              watermark: "01",
-            }}
-            deny={{
-              title: t("whatWcnIsNot"),
-              lede: t("whatWcnIsNotLede"),
-              items: whatIsNotBullets,
-              watermark: "02",
-            }}
-          />
+          <div className="section-head about-section-head section-head-numbered">
+            <span className="section-number">№ 01</span>
+            <span className="eyebrow about-eyebrow">{t("definitionEyebrow")}</span>
+            <h2 className="about-section-h2">{t("definitionTitle")}</h2>
+            <p className="muted hero-lede about-section-lede">{t("definitionDesc")}</p>
+          </div>
+          <div className="about-split-board grid-2 card-grid-animated">
+            <div className="about-split-slab about-split-slab--yes">
+              <span className="about-split-watermark" aria-hidden>01</span>
+              <div className="card about-dual-card about-dual-yes">
+                <div className="about-dual-icon" aria-hidden>
+                  <CheckCircle2 size={24} strokeWidth={2} />
+                </div>
+                <h3>{t("whatWcnIs")}</h3>
+                <p className="muted about-dual-lede">{t("whatWcnIsLede")}</p>
+                <ul className="about-list">
+                  {whatIsBullets.map((line) => <li key={line}>{line}</li>)}
+                </ul>
+              </div>
+            </div>
+            <div className="about-split-slab about-split-slab--no">
+              <span className="about-split-watermark" aria-hidden>02</span>
+              <div className="card about-dual-card about-dual-no">
+                <div className="about-dual-icon about-dual-icon-muted" aria-hidden>
+                  <XCircle size={24} strokeWidth={2} />
+                </div>
+                <h3>{t("whatWcnIsNot")}</h3>
+                <p className="muted about-dual-lede">{t("whatWcnIsNotLede")}</p>
+                <ul className="about-list">
+                  {whatIsNotBullets.map((line) => <li key={line}>{line}</li>)}
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* ═══ № 02 · Why Now timeline ═══════════════════════════ */}
       <section className="section about-why-now">
         <div className="container">
-          <SectionHead
-            number="№ 02"
-            eyebrow={t("timelineEyebrow")}
-            title={t.rich("timelineTitle", { em: (chunks) => <em>{chunks}</em> })}
-            lede={t("timelineDesc")}
-          />
+          <div className="section-head about-section-head section-head-numbered">
+            <span className="section-number">№ 02</span>
+            <span className="eyebrow about-eyebrow">{t("timelineEyebrow")}</span>
+            <h2 className="about-section-h2">
+              {t.rich("timelineTitle", { em: (chunks) => <em>{chunks}</em> })}
+            </h2>
+            <p className="muted hero-lede about-section-lede">{t("timelineDesc")}</p>
+          </div>
           <WhyNowTimeline entries={timeline} />
         </div>
       </section>
@@ -214,12 +221,14 @@ export default async function AboutPage() {
       {/* ═══ № 03 · Formal Definition (signature centerpiece) ═══ */}
       <section className="section section-alt about-formal" data-anim-host>
         <div className="container">
-          <SectionHead
-            number="№ 03"
-            eyebrow={t("formalEyebrow")}
-            title={t.rich("formalTitle", { em: (chunks) => <em>{chunks}</em> })}
-            lede={t("formalLede")}
-          />
+          <div className="section-head about-section-head section-head-numbered">
+            <span className="section-number">№ 03</span>
+            <span className="eyebrow about-eyebrow">{t("formalEyebrow")}</span>
+            <h2 className="about-section-h2">
+              {t.rich("formalTitle", { em: (chunks) => <em>{chunks}</em> })}
+            </h2>
+            <p className="muted hero-lede about-section-lede">{t("formalLede")}</p>
+          </div>
           <FormalDefinition
             label={t("formalLabel")}
             eq={t("formalEq")}
@@ -232,12 +241,12 @@ export default async function AboutPage() {
       {/* ═══ № 04 · Structural pillars ═════════════════════════ */}
       <section className="section about-structure">
         <div className="container">
-          <SectionHead
-            number="№ 04"
-            eyebrow={t("diffEyebrow")}
-            title={t("diffTitle")}
-            lede={t("diffDesc")}
-          />
+          <div className="section-head about-section-head section-head-numbered">
+            <span className="section-number">№ 04</span>
+            <span className="eyebrow about-eyebrow">{t("diffEyebrow")}</span>
+            <h2 className="about-section-h2">{t("diffTitle")}</h2>
+            <p className="muted hero-lede about-section-lede">{t("diffDesc")}</p>
+          </div>
           <div className="about-struct-grid card-grid-animated">
             {structuralPillars.map((item) => (
               <div key={item.title} className="about-struct-card">
@@ -277,16 +286,15 @@ export default async function AboutPage() {
       {/* ═══ № 06 · Architecture layers (NEW signature) ═══════ */}
       <section className="section about-architecture">
         <div className="container">
-          <SectionHead
-            number="№ 06"
-            eyebrow={t("archEyebrow")}
-            title={t("archTitle")}
-            lede={t("archDesc")}
-          />
+          <div className="section-head about-section-head section-head-numbered">
+            <span className="section-number">№ 06</span>
+            <span className="eyebrow about-eyebrow">{t("archEyebrow")}</span>
+            <h2 className="about-section-h2">{t("archTitle")}</h2>
+            <p className="muted hero-lede about-section-lede">{t("archDesc")}</p>
+          </div>
           <ArchitectureLayers
             layers={layers}
-            flowExample={t("archFlowExample")}
-            exampleRequestLabel={tCommon("editorial.exampleRequest")}
+            flowExample='A node owner submitting a Proof of Business — every layer leaves a trace.'
           />
         </div>
       </section>
@@ -300,13 +308,12 @@ export default async function AboutPage() {
       />
 
       {/* ═══ Voltage callout — payoff (no number) ═══════════════ */}
-      {/* Phase 5 funnel: from /about, move readers into the mechanics. */}
       <VoltageCallout
         eyebrow={t("ctaEyebrow")}
         title={t("ctaTitle")}
         desc={t("ctaDesc")}
-        primaryLabel={tNav("howItWorks")}
-        primaryHref="/how-it-works"
+        primaryLabel={tNav("applyAsNode")}
+        primaryHref="/apply"
         secondaryLabel={t("openWiki")}
         secondaryHref="/wiki"
       />

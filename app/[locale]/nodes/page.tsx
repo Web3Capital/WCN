@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
-
-// Phase 2 / ADR-MR-001: static marketing page, revalidate daily.
-export const dynamic = "force-static";
-export const revalidate = 86400;
-
 import {
   ArrowRight,
   ClipboardCheck,
@@ -18,9 +13,6 @@ import {
   XCircle,
 } from "lucide-react";
 import { VoltageCallout } from "@/components/brand/voltage-callout";
-import { PageMasthead } from "@/components/marketing/page-masthead";
-import { DualSlab } from "@/components/marketing/dual-slab";
-import { SectionHead } from "@/components/marketing/section-head";
 
 export async function generateMetadata(
   props: {
@@ -43,7 +35,6 @@ export async function generateMetadata(
 export default async function NodesPage() {
   const t = await getTranslations("nodes");
   const tCommon = await getTranslations("common");
-  const tNav = await getTranslations("nav");
 
   const nodeLayers = [
     {
@@ -153,11 +144,13 @@ export default async function NodesPage() {
     <main className="nodes-page">
       <section className="section hero hero-orb">
         <div className="container">
-          <PageMasthead
-            issueNumber="№ 04"
-            section={t("eyebrow")}
-            volumeIssue={tCommon("editorial.volumeIssue")}
-          />
+          <div className="nodes-masthead" aria-hidden>
+            <span className="nodes-masthead-mark">№ 04</span>
+            <span className="nodes-masthead-rule" />
+            <span className="nodes-masthead-section">{t("eyebrow")}</span>
+            <span className="nodes-masthead-rule" />
+            <span className="nodes-masthead-meta">Volume · MMXXVI</span>
+          </div>
           <div className="section-head">
             <h1 className="nodes-hero-title">{t.rich("headline", { em: (chunks) => <em>{chunks}</em> })}</h1>
             <p className="muted hero-lede nodes-hero-lede">
@@ -169,7 +162,7 @@ export default async function NodesPage() {
 
           <div className="nodes-hero-grid card-grid-animated">
             <div className="nodes-hero-copy">
-              <span className="nodes-editor-kicker">{tCommon("editorial.editorsNote")}</span>
+              <span className="nodes-editor-kicker">Editor’s note</span>
               <p className="nodes-hero-sublede nodes-hero-sublede--dropcap">{t("subLede")}</p>
               <div className="nodes-hero-ctas">
                 <Link href="/apply" className="button">
@@ -208,36 +201,60 @@ export default async function NodesPage() {
 
       <section className="section section-alt">
         <div className="container">
-          <SectionHead
-            number="№ 01"
-            eyebrow={t("clarityEyebrow")}
-            title={t("clarityTitle")}
-            titleClassName="nodes-section-h2"
-          />
-          <DualSlab
-            affirm={{
-              kicker: tCommon("editorial.affirmative"),
-              title: t("nodesAre"),
-              items: areBullets,
-            }}
-            deny={{
-              kicker: tCommon("editorial.negative"),
-              title: t("nodesAreNot"),
-              items: notBullets,
-            }}
-          />
+          <div className="section-head section-head-numbered">
+            <span className="section-number">№ 01</span>
+            <span className="eyebrow">{t("clarityEyebrow")}</span>
+            <h2 className="nodes-section-h2">{t("clarityTitle")}</h2>
+          </div>
+          <div className="grid-2 nodes-dual-grid card-grid-animated">
+            <article className="card nodes-dual-card nodes-dual-yes">
+              <div className="nodes-dual-head">
+                <span className="nodes-dual-sigil" aria-hidden>+</span>
+                <div className="nodes-dual-titlewrap">
+                  <span className="nodes-dual-kicker">Affirmative</span>
+                  <h3 className="nodes-dual-title">{t("nodesAre")}</h3>
+                </div>
+                <ShieldCheck className="nodes-dual-icon-svg" size={20} strokeWidth={1.75} aria-hidden />
+              </div>
+              <ol className="nodes-dual-list">
+                {areBullets.map((item, i) => (
+                  <li key={item} className="nodes-dual-row">
+                    <span className="nodes-dual-num" aria-hidden>{String(i + 1).padStart(2, "0")}</span>
+                    <span className="nodes-dual-text">{item}</span>
+                  </li>
+                ))}
+              </ol>
+            </article>
+            <article className="card nodes-dual-card nodes-dual-no">
+              <div className="nodes-dual-head">
+                <span className="nodes-dual-sigil nodes-dual-sigil--muted" aria-hidden>−</span>
+                <div className="nodes-dual-titlewrap">
+                  <span className="nodes-dual-kicker nodes-dual-kicker--muted">Negative</span>
+                  <h3 className="nodes-dual-title">{t("nodesAreNot")}</h3>
+                </div>
+                <XCircle className="nodes-dual-icon-svg nodes-dual-icon-svg--muted" size={20} strokeWidth={1.75} aria-hidden />
+              </div>
+              <ol className="nodes-dual-list">
+                {notBullets.map((item, i) => (
+                  <li key={item} className="nodes-dual-row">
+                    <span className="nodes-dual-num nodes-dual-num--muted" aria-hidden>{String(i + 1).padStart(2, "0")}</span>
+                    <span className="nodes-dual-text">{item}</span>
+                  </li>
+                ))}
+              </ol>
+            </article>
+          </div>
         </div>
       </section>
 
       <section className="section">
         <div className="container">
-          <SectionHead
-            number="№ 02"
-            eyebrow={t("hierarchyEyebrow")}
-            title={t("hierarchyTitle")}
-            lede={t("hierarchyDesc")}
-            titleClassName="nodes-section-h2"
-          />
+          <div className="section-head section-head-numbered">
+            <span className="section-number">№ 02</span>
+            <span className="eyebrow">{t("hierarchyEyebrow")}</span>
+            <h2 className="nodes-section-h2">{t("hierarchyTitle")}</h2>
+            <p className="muted hero-lede">{t("hierarchyDesc")}</p>
+          </div>
           <div className="nodes-tier-bento card-grid-animated">
             {nodeLayers.map((layer, i) => (
               <article
@@ -259,13 +276,12 @@ export default async function NodesPage() {
 
       <section className="section section-alt">
         <div className="container">
-          <SectionHead
-            number="№ 03"
-            eyebrow={t("lifecycleEyebrow")}
-            title={t("lifecycleTitle")}
-            lede={t("lifecycleDesc")}
-            titleClassName="nodes-section-h2"
-          />
+          <div className="section-head section-head-numbered">
+            <span className="section-number">№ 03</span>
+            <span className="eyebrow">{t("lifecycleEyebrow")}</span>
+            <h2 className="nodes-section-h2">{t("lifecycleTitle")}</h2>
+            <p className="muted hero-lede">{t("lifecycleDesc")}</p>
+          </div>
           <ol className="nodes-lifecycle-editorial card-grid-animated">
             {lifecycle.map((step, i) => (
               <li key={step.title} className="nodes-life-row">
@@ -287,12 +303,11 @@ export default async function NodesPage() {
 
       <section className="section">
         <div className="container">
-          <SectionHead
-            number="№ 04"
-            eyebrow={t("governanceEyebrow")}
-            title={t("governanceTitle")}
-            titleClassName="nodes-section-h2"
-          />
+          <div className="section-head section-head-numbered">
+            <span className="section-number">№ 04</span>
+            <span className="eyebrow">{t("governanceEyebrow")}</span>
+            <h2 className="nodes-section-h2">{t("governanceTitle")}</h2>
+          </div>
           <div className="grid-3 nodes-gov-grid card-grid-animated">
             {governanceRows.map((row) => (
               <article key={row.label} className={`card nodes-gov-card nodes-gov-card--${row.tone}`}>
@@ -308,16 +323,14 @@ export default async function NodesPage() {
         </div>
       </section>
 
-      {/* Phase 5 funnel: /nodes is where readers get the operator pitch;
-          push them to apply, with a side door into the proof layer. */}
       <VoltageCallout
         eyebrow={t("ctaEyebrow")}
         title={t("ctaTitle")}
         desc={t("ctaDesc")}
         primaryLabel={tCommon("applyAsNode")}
         primaryHref="/apply"
-        secondaryLabel={tNav("pob")}
-        secondaryHref="/pob"
+        secondaryLabel={t("openWiki")}
+        secondaryHref="/wiki"
       />
     </main>
   );

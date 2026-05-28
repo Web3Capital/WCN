@@ -42,7 +42,6 @@
   },
   "home": {
     "eyebrow": "محرّك تنسيق مؤسسي عالمي لـ Web3 وAI",
-    "mastheadSection": "مقدمة",
     "headline": "Capital meets <em>proof</em>.",
     "lede": "WCN is the protocol that replaces spreadsheets and goodwill with evidence — from registry to settlement.",
     "applyAsNode": "التقدّم كعقدة",
@@ -253,7 +252,6 @@
     "archLayer4Sub": "Every state transition is a typed event. Replayable. Auditable.",
     "archLayer5": "Storage",
     "archLayer5Sub": "Postgres of record. Outbox to event store. Cold archive.",
-    "archFlowExample": "يقدّم مالك العقدة إثبات أعمال — كل طبقة تترك أثرًا.",
     "genesisEyebrow": "From the founding documents",
     "genesisQuote": "We are not building a marketplace. We are building the connective tissue between proof and capital — so the people who do the work capture the value.",
     "genesisAttribution": "WCN white paper — Section I.0",
@@ -982,20 +980,7 @@
     "howItWorks": "كيف يعمل",
     "openWiki": "فتح الـ Wiki",
     "learnMore": "اعرف المزيد",
-    "skipToContent": "تخطّي إلى المحتوى",
-    "editorial": {
-      "editorsNote": "ملاحظة المحرر",
-      "affirmative": "إيجابي",
-      "negative": "سلبي",
-      "rewarded": "مُكافأ",
-      "notRewarded": "غير مُكافأ",
-      "designedFor": "مصمم لـ",
-      "operatingLoop": "حلقة التشغيل",
-      "attribution": "النسب",
-      "boundary": "حد",
-      "volumeIssue": "Volume · MMXXVI",
-      "exampleRequest": "طلب نموذجي"
-    }
+    "skipToContent": "تخطّي إلى المحتوى"
   },
   "wiki": {
     "title": "Wiki",

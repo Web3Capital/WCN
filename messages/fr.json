@@ -42,7 +42,6 @@
   },
   "home": {
     "eyebrow": "Orchestrateur institutionnel mondial pour Web3 et l’IA",
-    "mastheadSection": "Prologue",
     "headline": "Capital meets <em>proof</em>.",
     "lede": "WCN is the protocol that replaces spreadsheets and goodwill with evidence — from registry to settlement.",
     "applyAsNode": "Postuler comme nœud",
@@ -253,7 +252,6 @@
     "archLayer4Sub": "Every state transition is a typed event. Replayable. Auditable.",
     "archLayer5": "Storage",
     "archLayer5Sub": "Postgres of record. Outbox to event store. Cold archive.",
-    "archFlowExample": "Un propriétaire de nœud soumet une Preuve de Business — chaque couche laisse une trace.",
     "genesisEyebrow": "From the founding documents",
     "genesisQuote": "We are not building a marketplace. We are building the connective tissue between proof and capital — so the people who do the work capture the value.",
     "genesisAttribution": "WCN white paper — Section I.0",
@@ -982,20 +980,7 @@
     "howItWorks": "Comment ça marche",
     "openWiki": "Ouvrir le wiki",
     "learnMore": "En savoir plus",
-    "skipToContent": "Aller au contenu",
-    "editorial": {
-      "editorsNote": "Note de l'éditeur",
-      "affirmative": "Affirmatif",
-      "negative": "Négatif",
-      "rewarded": "Récompensé",
-      "notRewarded": "Non récompensé",
-      "designedFor": "Conçu pour",
-      "operatingLoop": "Boucle opérationnelle",
-      "attribution": "Attribution",
-      "boundary": "Limite",
-      "volumeIssue": "Volume · MMXXVI",
-      "exampleRequest": "Exemple de requête"
-    }
+    "skipToContent": "Aller au contenu"
   },
   "wiki": {
     "title": "Wiki",

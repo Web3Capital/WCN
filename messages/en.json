@@ -42,7 +42,6 @@
   },
   "home": {
     "eyebrow": "The Business Network for Web3 and AI",
-    "mastheadSection": "Prologue",
     "headline": "Capital meets <em>proof</em>.",
     "lede": "WCN is the protocol that replaces spreadsheets and goodwill with evidence — from registry to settlement.",
     "applyAsNode": "Apply as a Node",
@@ -253,7 +252,6 @@
     "archLayer4Sub": "Every state transition is a typed event. Replayable. Auditable.",
     "archLayer5": "Storage",
     "archLayer5Sub": "Postgres of record. Outbox to event store. Cold archive.",
-    "archFlowExample": "A node owner submitting a Proof of Business — every layer leaves a trace.",
     "genesisEyebrow": "From the founding documents",
     "genesisQuote": "We are not building a marketplace. We are building the connective tissue between proof and capital — so the people who do the work capture the value.",
     "genesisAttribution": "WCN white paper — Section I.0",
@@ -982,20 +980,7 @@
     "howItWorks": "How it works",
     "openWiki": "Open wiki",
     "learnMore": "Learn more",
-    "skipToContent": "Skip to content",
-    "editorial": {
-      "editorsNote": "Editor's note",
-      "affirmative": "Affirmative",
-      "negative": "Negative",
-      "rewarded": "Rewarded",
-      "notRewarded": "Not rewarded",
-      "designedFor": "Designed for",
-      "operatingLoop": "Operating Loop",
-      "attribution": "Attribution",
-      "boundary": "Boundary",
-      "volumeIssue": "Volume · MMXXVI",
-      "exampleRequest": "Example request"
-    }
+    "skipToContent": "Skip to content"
   },
   "wiki": {
     "title": "Wiki",

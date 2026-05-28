@@ -1,16 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
-
-// Phase 2 / ADR-MR-001: page shell is static; ApplyForm (client component)
-// handles interactivity and form submission to the API route at runtime.
-export const dynamic = "force-static";
-export const revalidate = 86400;
-
 import { Landmark, Box, Wrench, Globe, Megaphone, Factory } from "lucide-react";
 import { ApplyForm } from "./ui";
 import { VoltageCallout } from "@/components/brand/voltage-callout";
-import { PageMasthead } from "@/components/marketing/page-masthead";
 
 const NODE_TYPES: { icon: ReactNode; titleKey: string; descKey: string }[] = [
   { icon: <Landmark size={18} strokeWidth={1.4} />, titleKey: "capitalTitle", descKey: "capitalDesc" },
@@ -48,19 +41,18 @@ export async function generateMetadata(
 
 export default async function ApplyPage() {
   const t = await getTranslations("apply");
-  const tCommon = await getTranslations("common");
 
   return (
     <main className="apply-page apply-page-sovereign">
       <div className="container">
         <header className="apply-hero apply-hero-sovereign">
-          {/* ADR-MR-003: /apply does not carry a volume number — it sits
-              outside the editorial sequence (/, /about, /how-it-works,
-              /nodes, /pob carry № 01–05). */}
-          <PageMasthead
-            section={t("eyebrow")}
-            volumeIssue={tCommon("editorial.volumeIssue")}
-          />
+          <div className="apply-masthead" aria-hidden>
+            <span className="apply-masthead-mark">№ 06</span>
+            <span className="apply-masthead-rule" />
+            <span className="apply-masthead-section">{t("eyebrow")}</span>
+            <span className="apply-masthead-rule" />
+            <span className="apply-masthead-meta">Volume · MMXXVI</span>
+          </div>
           <h1>{t.rich("headline", { em: (chunks) => <em>{chunks}</em> })}</h1>
           <p className="apply-hero-desc apply-hero-desc--dropcap">{t("heroDesc")}</p>
         </header>

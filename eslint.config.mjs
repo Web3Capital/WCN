@@ -77,52 +77,6 @@ const config = [
       "@typescript-eslint/no-explicit-any": "warn",
     },
   },
-  {
-    // Marketing pages must be fully internationalized — see docs/marketing-redesign.md.
-    // ADR-MR-005: ESLint AST rule is cheaper than runtime checks at preventing
-    // English string regressions in JSX. Scope is intentionally narrow to the
-    // marketing surface; dashboard i18n debt is tracked separately.
-    //
-    // The regex matches a capitalized word followed by a lowercase word in JSX
-    // text (e.g. "Editor's note", "Designed for", "Operating Loop"). Single
-    // words like "Affirmative" are not caught here — they should already be
-    // fixed by Phase 1. The rule primarily prevents NEW English strings from
-    // sneaking back in.
-    //
-    // Phase 1 completed 2026-05-27 with 0 violations; promoted from warn to
-    // error to prevent regression. New marketing English strings will now
-    // fail CI rather than just warn.
-    name: "wcn/marketing-i18n-guard",
-    // `[locale]` is a Next.js dynamic-segment dir. micromatch (used by ESLint
-    // flat config) parses bare `[locale]` as a character class, so we use the
-    // single-segment wildcard `*` to match the locale dir name. `*` does not
-    // cross `/`, so `app/*/page.tsx` matches `app/[locale]/page.tsx` and
-    // nothing nested deeper.
-    files: [
-      "app/*/page.tsx",
-      "app/*/about/**/*.tsx",
-      "app/*/how-it-works/**/*.tsx",
-      "app/*/nodes/**/*.tsx",
-      "app/*/pob/**/*.tsx",
-      "app/*/apply/**/*.tsx",
-      "components/brand/**/*.tsx",
-      "components/marketing/**/*.tsx",
-    ],
-    rules: {
-      "no-restricted-syntax": [
-        "error",
-        {
-          // Matches capital-led token + space + letter token.
-          // - `\\S*` covers ASCII apostrophes AND Unicode curly quotes (Editor's vs Editor's)
-          // - second token allows both casings, catches "Operating Loop" and "Not rewarded"
-          // - "Volume · MMXXVI" survives because `·` breaks the \\S* run
-          selector: "JSXText[value=/[A-Z]\\S* [A-Za-z]+/]",
-          message:
-            "JSX 文本含英文短语,必须走 t('...')。品牌名 (WCN / PoB / Volume · MMXXVI) 等约定例外请加 // eslint-disable-next-line no-restricted-syntax。详见 docs/marketing-redesign.md ADR-MR-005。",
-        },
-      ],
-    },
-  },
 ];
 
 export default config;

@@ -42,7 +42,6 @@
   },
   "home": {
     "eyebrow": "Orquestrador Institucional Global para Web3 e AI",
-    "mastheadSection": "Prólogo",
     "headline": "Capital meets <em>proof</em>.",
     "lede": "WCN is the protocol that replaces spreadsheets and goodwill with evidence — from registry to settlement.",
     "applyAsNode": "Candidate-se como nó",
@@ -253,7 +252,6 @@
     "archLayer4Sub": "Every state transition is a typed event. Replayable. Auditable.",
     "archLayer5": "Storage",
     "archLayer5Sub": "Postgres of record. Outbox to event store. Cold archive.",
-    "archFlowExample": "Um proprietário de nó envia uma Prova de Negócio — cada camada deixa um rastro.",
     "genesisEyebrow": "From the founding documents",
     "genesisQuote": "We are not building a marketplace. We are building the connective tissue between proof and capital — so the people who do the work capture the value.",
     "genesisAttribution": "WCN white paper — Section I.0",
@@ -982,20 +980,7 @@
     "howItWorks": "Como funciona",
     "openWiki": "Abrir wiki",
     "learnMore": "Saiba mais",
-    "skipToContent": "Pular para o conteúdo",
-    "editorial": {
-      "editorsNote": "Nota do editor",
-      "affirmative": "Afirmativo",
-      "negative": "Negativo",
-      "rewarded": "Recompensado",
-      "notRewarded": "Não recompensado",
-      "designedFor": "Concebido para",
-      "operatingLoop": "Ciclo operacional",
-      "attribution": "Atribuição",
-      "boundary": "Limite",
-      "volumeIssue": "Volume · MMXXVI",
-      "exampleRequest": "Pedido de exemplo"
-    }
+    "skipToContent": "Pular para o conteúdo"
   },
   "wiki": {
     "title": "Wiki",

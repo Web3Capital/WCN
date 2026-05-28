@@ -42,7 +42,6 @@
   },
   "home": {
     "eyebrow": "Web3とAIのためのグローバル機関向けオーケストレーター",
-    "mastheadSection": "プロローグ",
     "headline": "Capital meets <em>proof</em>.",
     "lede": "WCN is the protocol that replaces spreadsheets and goodwill with evidence — from registry to settlement.",
     "applyAsNode": "ノードとして申請",
@@ -253,7 +252,6 @@
     "archLayer4Sub": "Every state transition is a typed event. Replayable. Auditable.",
     "archLayer5": "Storage",
     "archLayer5Sub": "Postgres of record. Outbox to event store. Cold archive.",
-    "archFlowExample": "ノード所有者がビジネス証明を提出する — どの層にも痕跡が残る。",
     "genesisEyebrow": "From the founding documents",
     "genesisQuote": "We are not building a marketplace. We are building the connective tissue between proof and capital — so the people who do the work capture the value.",
     "genesisAttribution": "WCN white paper — Section I.0",
@@ -982,20 +980,7 @@
     "howItWorks": "仕組み",
     "openWiki": "Wikiを開く",
     "learnMore": "詳しく見る",
-    "skipToContent": "本文へスキップ",
-    "editorial": {
-      "editorsNote": "編者注",
-      "affirmative": "肯定",
-      "negative": "否定",
-      "rewarded": "報酬対象",
-      "notRewarded": "報酬対象外",
-      "designedFor": "対象",
-      "operatingLoop": "オペレーティングループ",
-      "attribution": "帰属",
-      "boundary": "境界",
-      "volumeIssue": "Volume · MMXXVI",
-      "exampleRequest": "リクエスト例"
-    }
+    "skipToContent": "本文へスキップ"
   },
   "wiki": {
     "title": "Wiki",

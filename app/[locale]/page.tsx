@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
 import { Network, ShieldCheck, Scale, Workflow, FileCheck } from "lucide-react";
-
-// Phase 2 / ADR-MR-001: marketing page is statically generated for all 10
-// locales (see generateStaticParams in [locale]/layout.tsx) and revalidated
-// once per day. See docs/marketing-redesign.md.
-export const dynamic = "force-static";
-export const revalidate = 86400;
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { WCNGlyph } from "@/components/brand/wcn-glyph";
@@ -14,8 +8,6 @@ import { LedgersInMotion } from "@/components/brand/ledgers-in-motion";
 import { ManifestoBlock } from "@/components/brand/manifesto-block";
 import { VoltageCallout } from "@/components/brand/voltage-callout";
 import { AnimationBudget } from "@/components/brand/animation-budget";
-import { PageMasthead } from "@/components/marketing/page-masthead";
-import { SectionHead } from "@/components/marketing/section-head";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -33,8 +25,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function HomePage() {
   const t = await getTranslations("home");
-  const tCommon = await getTranslations("common");
-  const tNav = await getTranslations("nav");
 
   const steps: Array<{ icon: React.ReactNode; label: string; desc: string; tone: "node" | "deal" | "voltage" | "settle" }> = [
     { tone: "node",     icon: <Network     size={18} strokeWidth={1.5} />, label: t("stepNodeLabel"),       desc: t("stepNodeDesc") },
@@ -76,11 +66,13 @@ export default async function HomePage() {
       <section className="hero hero-orb" data-anim-host>
         <div className="container">
           <div className="hero-center">
-            <PageMasthead
-              issueNumber="№ 01"
-              section={t("mastheadSection")}
-              volumeIssue={tCommon("editorial.volumeIssue")}
-            />
+            <div className="wcn-masthead" aria-hidden>
+              <span className="wcn-masthead-mark">№ 00</span>
+              <span className="wcn-masthead-rule" />
+              <span className="wcn-masthead-section">Prologue</span>
+              <span className="wcn-masthead-rule" />
+              <span className="wcn-masthead-meta">Volume · MMXXVI</span>
+            </div>
             <h1>
               {t.rich("headline", {
                 em: (chunks) => <em>{chunks}</em>,
@@ -151,12 +143,12 @@ export default async function HomePage() {
       {/* ═══ № 01 · Three Ledgers in Motion (signature) ═════ */}
       <section className="section section-ledgers-in-motion" data-anim-host>
         <div className="container">
-          <SectionHead
-            number={t("sectionNum01")}
-            eyebrow={t("ledgersInMotionEyebrow")}
-            title={t("ledgersInMotionTitle")}
-            lede={t("ledgersInMotionDesc")}
-          />
+          <div className="section-head section-head-numbered">
+            <span className="section-number">{t("sectionNum01")}</span>
+            <span className="eyebrow eyebrow-plain">{t("ledgersInMotionEyebrow")}</span>
+            <h2 className="u-mt-3">{t("ledgersInMotionTitle")}</h2>
+            <p>{t("ledgersInMotionDesc")}</p>
+          </div>
           <LedgersInMotion caption={t("ledgersInMotionCaption")} />
         </div>
       </section>
@@ -164,12 +156,12 @@ export default async function HomePage() {
       {/* ═══ № 02 · Three principles ═══════════════════════ */}
       <section className="section section-alt">
         <div className="container">
-          <SectionHead
-            number={t("sectionNum02")}
-            eyebrow={tCommon("editorial.designedFor")}
-            title={t("designedTitle")}
-            lede={t("designedDesc")}
-          />
+          <div className="section-head section-head-numbered">
+            <span className="section-number">{t("sectionNum02")}</span>
+            <span className="eyebrow">Designed for</span>
+            <h2 className="u-mt-3">{t("designedTitle")}</h2>
+            <p>{t("designedDesc")}</p>
+          </div>
 
           <div className="grid-3 card-grid-animated">
             <article className="card step-card">
@@ -203,12 +195,12 @@ export default async function HomePage() {
       {/* ═══ № 04 · The five-step loop ═════════════════════ */}
       <section className="section section-loop">
         <div className="container">
-          <SectionHead
-            number={t("sectionNum04")}
-            eyebrow={tCommon("editorial.operatingLoop")}
-            title={t("loopTitle")}
-            lede={t("loopDesc")}
-          />
+          <div className="section-head section-head-numbered">
+            <span className="section-number">{t("sectionNum04")}</span>
+            <span className="eyebrow">Operating Loop</span>
+            <h2 className="u-mt-3">{t("loopTitle")}</h2>
+            <p>{t("loopDesc")}</p>
+          </div>
           <div className="flow flow-centered loop-flow u-mt-6">
             {steps.map((step, index) => (
               <div key={step.label} style={{ display: "contents" }}>
@@ -238,16 +230,14 @@ export default async function HomePage() {
       </section>
 
       {/* ═══ Voltage callout — pre-footer payoff (progressive CTA) ═══ */}
-      {/* Phase 5: progressive funnel. From /, push readers to learn how the
-          system works rather than asking them to apply on first contact. */}
       <VoltageCallout
         eyebrow={t("ctaBandEyebrow")}
         title={t("ctaBandTitle")}
         desc={t("ctaBandDesc")}
-        primaryLabel={tNav("howItWorks")}
-        primaryHref="/how-it-works"
-        secondaryLabel={tNav("about")}
-        secondaryHref="/about"
+        primaryLabel={t("voltageBegin")}
+        primaryHref="/apply"
+        secondaryLabel={t("voltageReadProtocol")}
+        secondaryHref="/wiki"
       />
     </main>
   );

@@ -11,19 +11,14 @@
 import { Link } from "@/i18n/routing";
 import { WCNGlyph } from "./wcn-glyph";
 
-// Phase 5: callout supports the full marketing funnel surface, including /pob.
-// Each marketing page picks its own "next step" pair rather than every page
-// pointing at /apply — see docs/marketing-redesign.md Phase 5.
-type MarketingHref = "/apply" | "/wiki" | "/nodes" | "/how-it-works" | "/about" | "/pob";
-
 type Props = {
   eyebrow: string;
   title: string;
   desc: string;
   primaryLabel: string;
-  primaryHref: MarketingHref;
+  primaryHref: "/apply" | "/wiki" | "/nodes" | "/how-it-works" | "/about";
   secondaryLabel: string;
-  secondaryHref: MarketingHref;
+  secondaryHref: "/apply" | "/wiki" | "/nodes" | "/how-it-works" | "/about";
 };
 
 export function VoltageCallout({

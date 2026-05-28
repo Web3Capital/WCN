@@ -42,7 +42,6 @@
   },
   "home": {
     "eyebrow": "Web3 与 AI 的商业网络",
-    "mastheadSection": "序章",
     "headline": "资本，遇见<em>证据</em>。",
     "lede": "WCN 是用证据替代电子表格与默契的协议——从注册到结算，全程可审计。",
     "applyAsNode": "申请成为节点",
@@ -253,7 +252,6 @@
     "archLayer4Sub": "每一次状态转移都是有类型的事件。可重放，可审计。",
     "archLayer5": "存储层",
     "archLayer5Sub": "权威 Postgres。出库表到事件存储。冷归档。",
-    "archFlowExample": "节点拥有者提交一份商业证明 —— 每一层都留下痕迹。",
     "genesisEyebrow": "出自创始文档",
     "genesisQuote": "我们不是在建一个市场。我们是在建证据与资本之间的连接组织——让真正做事的人捕获价值。",
     "genesisAttribution": "WCN 白皮书 — 第 I.0 节",
@@ -982,20 +980,7 @@
     "howItWorks": "运作方式",
     "openWiki": "打开百科",
     "learnMore": "了解更多",
-    "skipToContent": "跳到内容",
-    "editorial": {
-      "editorsNote": "编者按",
-      "affirmative": "肯定",
-      "negative": "否定",
-      "rewarded": "予以奖励",
-      "notRewarded": "不予奖励",
-      "designedFor": "面向",
-      "operatingLoop": "运行循环",
-      "attribution": "归因",
-      "boundary": "边界",
-      "volumeIssue": "Volume · MMXXVI",
-      "exampleRequest": "示例请求"
-    }
+    "skipToContent": "跳到内容"
   },
   "wiki": {
     "title": "Wiki",
