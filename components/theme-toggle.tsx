@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Monitor, Moon, Sun } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { WcnIcon } from "@/components/brand/icons";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -44,7 +44,7 @@ export function ThemeToggle() {
     window.location.reload();
   }
 
-  const Icon = theme === "dark" ? Moon : theme === "light" ? Sun : Monitor;
+  const iconName = theme === "dark" ? "moon" : theme === "light" ? "sun" : "monitor";
   const triggerLabel = theme === "dark" ? t("switchToLight") : t("switchToDark");
 
   return (
@@ -56,24 +56,25 @@ export function ThemeToggle() {
           aria-label={triggerLabel}
           suppressHydrationWarning
         >
-          {mounted ? <Icon className="h-4 w-4" /> : <Monitor className="h-4 w-4" />}
+          {mounted ? <WcnIcon name={iconName} size={16} /> : <WcnIcon name="monitor" size={16} />}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-32">
-        {(Object.keys(THEME_LABELS) as Theme[]).map((mode) => {
-          const ModeIcon = mode === "dark" ? Moon : mode === "light" ? Sun : Monitor;
-          return (
-            <DropdownMenuItem
-              key={mode}
-              onSelect={() => pick(mode)}
-              data-active={theme === mode || undefined}
-              className="data-[active]:bg-accent data-[active]:font-medium"
-            >
-              <ModeIcon className="me-2 h-4 w-4" />
-              {THEME_LABELS[mode]}
-            </DropdownMenuItem>
-          );
-        })}
+        {(Object.keys(THEME_LABELS) as Theme[]).map((mode) => (
+          <DropdownMenuItem
+            key={mode}
+            onSelect={() => pick(mode)}
+            data-active={theme === mode || undefined}
+            className="data-[active]:bg-accent data-[active]:font-medium"
+          >
+            <WcnIcon
+              name={mode === "dark" ? "moon" : mode === "light" ? "sun" : "monitor"}
+              size={16}
+              className="me-2"
+            />
+            {THEME_LABELS[mode]}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

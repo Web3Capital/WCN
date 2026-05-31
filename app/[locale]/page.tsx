@@ -79,6 +79,7 @@ export default async function HomePage() {
             <div className="cta-row cta-centered u-mt-6 u-cta-row-centered">
               <Link href="/apply" className="button button-lg">
                 {t("applyAsNode")}
+                <span className="button-arrow" aria-hidden>→</span>
               </Link>
               <Link href="/wiki" className="button-secondary button-lg">
                 {t("readWiki")}

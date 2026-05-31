@@ -2,7 +2,7 @@
 
 import { usePathname as useNextPathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { WcnIcon } from "@/components/brand/icons";
 import { signOut, useSession } from "next-auth/react";
 import { isAdminRole } from "@/lib/permissions";
 import { useTranslations } from "next-intl";
@@ -140,7 +140,7 @@ export function Nav() {
           aria-controls={navId}
           onClick={() => setMobileOpen((v) => !v)}
         >
-          {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+          {mobileOpen ? <WcnIcon name="close" size={18} /> : <WcnIcon name="menu" size={18} />}
         </button>
         <nav id={navId} className="nav-links" data-open={mobileOpen ? "true" : "false"}>
           {primaryLinks.map((link) => (
@@ -167,7 +167,7 @@ export function Nav() {
               onClick={() => toggleMega("network")}
             >
               {t("network")}
-              <ChevronDown size={16} className="nav-dropdown-chevron" aria-hidden />
+              <WcnIcon name="chevron" size={16} className="nav-dropdown-chevron" />
             </button>
             <div
               id={networkPanelId}
@@ -201,7 +201,7 @@ export function Nav() {
               onClick={() => toggleMega("resources")}
             >
               {t("resources")}
-              <ChevronDown size={16} className="nav-dropdown-chevron" aria-hidden />
+              <WcnIcon name="chevron" size={16} className="nav-dropdown-chevron" />
             </button>
             <div
               id={resourcesPanelId}
@@ -234,7 +234,7 @@ export function Nav() {
                 onClick={() => setLangOpen((v) => !v)}
               >
                 <span className="lang-current">{localeMetadata[currentLocale].nativeName}</span>
-                <ChevronDown size={14} className="lang-chevron" aria-hidden />
+                <WcnIcon name="chevron" size={14} className="lang-chevron" />
               </button>
               <div className="lang-dropdown" hidden={!langOpen}>
                 {locales.map((loc) => (
@@ -267,7 +267,7 @@ export function Nav() {
                 onClick={openAccount}
               >
                 <UserAvatar name={displayName} />
-                <ChevronDown size={16} className="nav-account-chevron" aria-hidden data-open={accountOpen ? "true" : "false"} />
+                <WcnIcon name="chevron" size={16} className="nav-account-chevron" />
               </button>
               <div
                 id={accountPanelId}

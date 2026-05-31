@@ -788,7 +788,7 @@ html[data-theme="dark"] .wcn-mark { filter: invert(1); }
   opacity: 0.65;
   transition: transform var(--dur-2) var(--ease-out);
 }
-.nav-account-chevron[data-open="true"] {
+.nav-account-trigger[aria-expanded="true"] .nav-account-chevron {
   transform: rotate(180deg);
 }
 .account-menu-panel {
@@ -1055,7 +1055,7 @@ html[data-theme="dark"] .wcn-mark { filter: invert(1); }
 
 /* ── Hero: editorial cathedral ─────────────────────────── */
 .hero {
-  padding: var(--space-9) 0 var(--space-7);
+  padding: var(--space-10) 0 var(--space-8);
   position: relative;
   isolation: isolate;
 }
@@ -1064,6 +1064,30 @@ html[data-theme="dark"] .wcn-mark { filter: invert(1); }
   width: min(880px, 100%);
   margin: 0 auto;
 }
+/* Hero · craft — a quiet staggered entrance composes the cover (CLS-safe:
+   transform + opacity only). reduced-motion shows everything at once. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-center > h1,
+  .hero-center > .hero-lede,
+  .hero-center > .cta-row,
+  .hero-center > .hero-meta-spine {
+    animation: heroRise 0.75s var(--ease-out) both;
+  }
+  .hero-center > .hero-lede { animation-delay: 0.09s; }
+  .hero-center > .cta-row { animation-delay: 0.18s; }
+  .hero-center > .hero-meta-spine { animation-delay: 0.27s; }
+}
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+/* CTA · the primary action carries an arrow that leans forward on hover. */
+.button-arrow {
+  display: inline-block;
+  margin-inline-start: 0.45em;
+  transition: transform var(--dur-2) var(--ease-out);
+}
+.button:hover .button-arrow { transform: translateX(3px); }
 /* Mist — one fixed cloud field behind the page, eased toward the cursor.
    Bronze/ink only; above the paper bg, below content; reduced-motion safe. */
 .mist-bg {
@@ -8263,9 +8287,23 @@ html[data-theme="dark"] .spotlight-header-mark { background: var(--paper-50); co
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-5);
+  position: relative;
+}
+/* The single logic chain — one neutral hairline threading the three cards
+   (they read as beads on one wire). Shows in the gaps; ends fade out. */
+.innovations-chain::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--space-6) + 6px);
+  left: 5%;
+  right: 5%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line-strong) 12%, var(--line-strong) 88%, transparent);
+  z-index: 0;
 }
 .innovation {
   position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -8340,6 +8378,7 @@ html[data-theme="dark"] .spotlight-header-mark { background: var(--paper-50); co
 }
 @media (max-width: 760px) {
   .innovations-chain { grid-template-columns: 1fr; gap: var(--space-4); }
+  .innovations-chain::before { display: none; }
 }
 
 /* ── Voltage callout — pre-footer CTA band ────────────── */
@@ -12816,3 +12855,33 @@ html[data-theme="dark"] {
   }
 }
 
+
+
+/* ════════════════════════════════════════════════════════════════════
+   v4 fix · Home "How value flows" loop reads as ONE continuous line on
+   desktop (the 3+2 wrap broke the Node→Deal→Task→Proof→Settlement
+   sequence) + mono ledger numerals 01–05 (Proof's numeral picks up the
+   bronze authority, matching its icon). Scoped to .section-loop; mobile
+   (≤880px) keeps the existing wrap. CSS-only — markup untouched.
+   ════════════════════════════════════════════════════════════════════ */
+@media (min-width: 881px) {
+  .section-loop .loop-flow { flex-wrap: nowrap; align-items: stretch; }
+  .section-loop .loop-flow .step { flex: 1 1 0; min-width: 0; }
+  .section-loop .loop-flow .arrow { flex: 0 0 auto; align-self: center; }
+}
+.section-loop .loop-flow { counter-reset: wcnloop; }
+.section-loop .loop-flow .step { counter-increment: wcnloop; }
+.section-loop .loop-flow .step::before {
+  content: counter(wcnloop, decimal-leading-zero);
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--type-xs);
+  line-height: 1;
+  letter-spacing: var(--tracking-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted-2);
+  pointer-events: none;
+}
+.section-loop .loop-flow .step-tone-proof::before { color: var(--authority); }
