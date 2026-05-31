@@ -33,7 +33,33 @@ export async function generateMetadata(
   } = params;
 
   const t = await getTranslations({ locale, namespace: "about" });
-  return { title: t("title"), description: t("metaDesc") };
+  const tMeta = await getTranslations({ locale, namespace: "metadata" });
+  const title = t("title");
+  const description = t("metaDesc");
+  // og/twitter titles use the site template ("%s — WCN") so social cards read
+  // "About — WCN" rather than inheriting the generic homepage og:title.
+  const ogTitle = (tMeta.raw("titleTemplate") as string).replace("%s", title);
+
+  return {
+    title,
+    description,
+    openGraph: {
+      type: "website",
+      siteName: "Web3 Capital Network",
+      title: ogTitle,
+      description,
+      // Re-declare the locale OG image: a page-level openGraph object replaces
+      // the inherited one, so without this the file-based opengraph-image.tsx
+      // would be dropped from this page's social card.
+      images: [`/${locale}/opengraph-image`],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description,
+      images: [`/${locale}/opengraph-image`],
+    },
+  };
 }
 
 export default async function AboutPage() {
@@ -118,7 +144,6 @@ export default async function AboutPage() {
         lede={t.rich("lede", {
           strong: (chunks) => <strong>{chunks}</strong>,
         })}
-        ledeDropcap
       />
 
       {/* ═══ Three pillars dropcap intro (no number — prologue) ═══ */}

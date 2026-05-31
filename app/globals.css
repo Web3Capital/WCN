@@ -8347,6 +8347,7 @@ html[data-theme="dark"] {
   text-transform: uppercase;
   color: var(--voltage-500);
   margin: 0 0 var(--space-4);
+  text-align: center;
 }
 .editorial-masthead-title {
   font-family: var(--font-serif);
@@ -8355,8 +8356,10 @@ html[data-theme="dark"] {
   line-height: 0.98;
   letter-spacing: -0.038em;
   color: var(--text);
-  margin: 0 0 var(--space-6);
-  max-width: 16ch;
+  margin: 0 auto var(--space-6);
+  max-width: 18ch;
+  text-align: center;
+  text-wrap: balance;
   font-variation-settings: "opsz" 144, "SOFT" 60;
 }
 .editorial-masthead-title em {
@@ -8375,7 +8378,9 @@ html[data-theme="dark"] {
   letter-spacing: -0.012em;
   color: var(--text-2);
   max-width: 56ch;
-  margin: 0;
+  margin: 0 auto;
+  text-align: center;
+  text-wrap: pretty;
   font-variation-settings: "opsz" 144;
 }
 .editorial-masthead-lede strong {
@@ -8388,7 +8393,7 @@ html[data-theme="dark"] {
   width: 60px;
   height: 1px;
   background: var(--text);
-  margin-top: var(--space-7);
+  margin: var(--space-7) auto 0;
   opacity: 0.4;
 }
 
@@ -8404,12 +8409,17 @@ html[data-theme="dark"] {
 }
 .about-intro-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-7);
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
   align-items: start;
+  max-width: 820px;
+  margin-inline: auto;
 }
 .about-intro-prose {
   position: relative;
+  text-align: center;
+  max-width: 640px;
+  margin-inline: auto;
 }
 /* Body prose for the intro spread (no dropcap — that lives in the masthead lede now) */
 .about-intro-prose-body {
@@ -8425,6 +8435,7 @@ html[data-theme="dark"] {
 .about-intro-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--space-2);
   margin-top: var(--space-5);
 }
@@ -8433,43 +8444,44 @@ html[data-theme="dark"] {
    Magazine-style: ruled top + bottom, marginalia mono header, big Fraunces
    numbers in italic, hairline dividers between items. No shadow, no fill. */
 .about-pillars-panel-v2 {
-  position: sticky;
-  top: var(--space-6);
-  padding: var(--space-5) 0;
+  position: static;
+  padding: var(--space-6) 0 0;
   background: transparent;
   border: 0;
-  border-block: var(--hairline) solid var(--line);
+  border-top: var(--hairline) solid var(--line);
   border-radius: 0;
   box-shadow: none;
 }
 .about-pillars-head-v2 {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted-2);
-  padding: 0 0 var(--space-3);
-  margin-bottom: var(--space-2);
+  padding: var(--space-5) 0 0;
+  margin-bottom: var(--space-5);
   border-bottom: 0;
 }
 .about-pillars-list-v2 {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
 }
 .about-pillar-item-v2 {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: var(--space-3);
-  align-items: baseline;
-  padding: var(--space-4) 0;
-  border-top: var(--hairline) solid var(--line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-2);
+  padding: 0;
+  border-top: 0;
 }
 .about-pillar-item-v2:first-child {
   border-top: 0;
@@ -8488,6 +8500,7 @@ html[data-theme="dark"] {
 .about-pillar-text {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 4px;
 }
 .about-pillar-title-v2 {
@@ -8511,7 +8524,8 @@ html[data-theme="dark"] {
 .about-pillar-icon-v2 { display: none; }
 
 @media (max-width: 880px) {
-  .about-intro-grid { grid-template-columns: 1fr; gap: var(--space-5); }
+  .about-intro-grid { grid-template-columns: 1fr; gap: var(--space-6); }
+  .about-pillars-list-v2 { grid-template-columns: 1fr; gap: var(--space-5); }
   .about-pillars-panel-v2 { position: static; }
 }
 
@@ -8872,14 +8886,17 @@ html[data-theme="dark"] {
 }
 .about-measure-inner-v2 {
   display: grid;
-  grid-template-columns: 0.7fr 1fr;
-  gap: var(--space-7);
-  align-items: start;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+  justify-items: center;
 }
 .about-measure-head {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: var(--space-2);
+  max-width: 640px;
 }
 .about-measure-title-v2 {
   font-family: var(--font-serif);
@@ -8902,6 +8919,8 @@ html[data-theme="dark"] {
   padding: 0;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 560px;
 }
 .about-measure-step-v2 {
   display: grid;
