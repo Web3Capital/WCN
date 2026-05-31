@@ -17,6 +17,8 @@ const PUBLIC_PAGE_PATHS = new Set([
   "/apply",
   "/about",
   "/how-it-works",
+  "/why-now",
+  "/economics",
   "/nodes",
   "/pob",
   "/style-guide",

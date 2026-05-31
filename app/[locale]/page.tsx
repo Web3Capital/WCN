@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Network, ShieldCheck, Scale, Workflow, FileCheck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { WcnIcon } from "@/components/brand/icons";
 import { Link } from "@/i18n/routing";
-import { WCNGlyph } from "@/components/brand/wcn-glyph";
+import { MistBackground } from "@/components/brand/mist-background";
 import { LedgerSpine } from "@/components/brand/ledger-spine";
-import { LedgersInMotion } from "@/components/brand/ledgers-in-motion";
+import { ThreeLedgerMotif } from "@/components/brand/three-ledger";
 import { ManifestoBlock } from "@/components/brand/manifesto-block";
 import { VoltageCallout } from "@/components/brand/voltage-callout";
 import { AnimationBudget } from "@/components/brand/animation-budget";
+import { ThreeInnovations } from "@/components/brand/three-innovations";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -26,12 +27,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function HomePage() {
   const t = await getTranslations("home");
 
-  const steps: Array<{ icon: React.ReactNode; label: string; desc: string; tone: "node" | "deal" | "voltage" | "settle" }> = [
-    { tone: "node",     icon: <Network     size={18} strokeWidth={1.5} />, label: t("stepNodeLabel"),       desc: t("stepNodeDesc") },
-    { tone: "deal",     icon: <Workflow    size={18} strokeWidth={1.5} />, label: t("stepDealLabel"),       desc: t("stepDealDesc") },
-    { tone: "voltage",  icon: <FileCheck   size={18} strokeWidth={1.5} />, label: t("stepTaskLabel"),       desc: t("stepTaskDesc") },
-    { tone: "deal",     icon: <ShieldCheck size={18} strokeWidth={1.5} />, label: t("stepProofLabel"),      desc: t("stepProofDesc") },
-    { tone: "settle",   icon: <Scale       size={18} strokeWidth={1.5} />, label: t("stepSettlementLabel"), desc: t("stepSettlementDesc") },
+  // Home loop is monochrome (ledger tri-colour is dashboard-only); only the
+  // Proof step carries bronze — the verification anchor — via tone "proof".
+  const steps: Array<{ icon: React.ReactNode; label: string; desc: string; tone: "node" | "deal" | "voltage" | "settle" | "proof" }> = [
+    { tone: "node",     icon: <WcnIcon name="node" />,   label: t("stepNodeLabel"),       desc: t("stepNodeDesc") },
+    { tone: "deal",     icon: <WcnIcon name="deal" />,   label: t("stepDealLabel"),       desc: t("stepDealDesc") },
+    { tone: "voltage",  icon: <WcnIcon name="task" />,   label: t("stepTaskLabel"),       desc: t("stepTaskDesc") },
+    { tone: "proof",    icon: <WcnIcon name="proof" />,  label: t("stepProofLabel"),      desc: t("stepProofDesc") },
+    { tone: "settle",   icon: <WcnIcon name="settle" />, label: t("stepSettlementLabel"), desc: t("stepSettlementDesc") },
   ];
 
   // Sample telemetry — clearly labeled as illustrative, not real volumes.
@@ -60,19 +63,13 @@ export default async function HomePage() {
 
   return (
     <main>
+      <MistBackground />
       <AnimationBudget />
 
       {/* ═══ HERO — distilled to 5 layers ═════════════════════ */}
       <section className="hero hero-orb" data-anim-host>
         <div className="container">
           <div className="hero-center">
-            <div className="wcn-masthead" aria-hidden>
-              <span className="wcn-masthead-mark">№ 00</span>
-              <span className="wcn-masthead-rule" />
-              <span className="wcn-masthead-section">Prologue</span>
-              <span className="wcn-masthead-rule" />
-              <span className="wcn-masthead-meta">Volume · MMXXVI</span>
-            </div>
             <h1>
               {t.rich("headline", {
                 em: (chunks) => <em>{chunks}</em>,
@@ -96,7 +93,6 @@ export default async function HomePage() {
                 }}
               />
             </div>
-            <div className="hero-meta-version">v4.0 · audit-first</div>
           </div>
         </div>
       </section>
@@ -105,7 +101,6 @@ export default async function HomePage() {
       <section className="section-architecture-grade">
         <div className="container">
           <div className="architecture-grade-inner">
-            <span className="architecture-grade-label">{t("architectureGroupTitle")}</span>
             {architectureBadges.map((b) => (
               <span
                 key={b.label}
@@ -140,53 +135,50 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ═══ № 01 · Three Ledgers in Motion (signature) ═════ */}
-      <section className="section section-ledgers-in-motion" data-anim-host>
+      {/* ═══ № 01 · Three Core Innovations (white paper §01) ═══ */}
+      <section className="section">
         <div className="container">
-          <div className="section-head section-head-numbered">
-            <span className="section-number">{t("sectionNum01")}</span>
-            <span className="eyebrow eyebrow-plain">{t("ledgersInMotionEyebrow")}</span>
-            <h2 className="u-mt-3">{t("ledgersInMotionTitle")}</h2>
-            <p>{t("ledgersInMotionDesc")}</p>
+          <div className="section-head">
+            <h2>{t("innovationsTitle")}</h2>
+            <p>{t("innovationsDesc")}</p>
           </div>
-          <LedgersInMotion caption={t("ledgersInMotionCaption")} />
+          <ThreeInnovations
+            items={[
+              { index: t("innovation1Index"), title: t("innovation1Title"), body: t("innovation1Body"), tag: t("innovation1Tag") },
+              { index: t("innovation2Index"), title: t("innovation2Title"), body: t("innovation2Body"), tag: t("innovation2Tag") },
+              {
+                index: t("innovation3Index"),
+                title: t("innovation3Title"),
+                body: t("innovation3Body"),
+                tag: t("innovation3Tag"),
+                authority: true,
+                verifiedLabel: t("innovation3Verified"),
+              },
+            ]}
+            caption={t("innovationsCaption")}
+          />
         </div>
       </section>
 
-      {/* ═══ № 02 · Three principles ═══════════════════════ */}
-      <section className="section section-alt">
+      {/* ═══ № 02 · Three Ledgers in Motion (signature) ═════ */}
+      <section className="section section-ledgers-in-motion" data-anim-host>
         <div className="container">
-          <div className="section-head section-head-numbered">
-            <span className="section-number">{t("sectionNum02")}</span>
-            <span className="eyebrow">Designed for</span>
-            <h2 className="u-mt-3">{t("designedTitle")}</h2>
-            <p>{t("designedDesc")}</p>
+          <div className="section-head">
+            <h2>{t("ledgersInMotionTitle")}</h2>
+            <p>{t("ledgersInMotionDesc")}</p>
           </div>
-
-          <div className="grid-3 card-grid-animated">
-            <article className="card step-card">
-              <span className="step-card-number">01</span>
-              <h3>{t("clearPrimitives")}</h3>
-              <p>{t("clearPrimitivesDesc")}</p>
-            </article>
-            <article className="card step-card">
-              <span className="step-card-number">02</span>
-              <h3>{t("verifiableWork")}</h3>
-              <p>{t("verifiableWorkDesc")}</p>
-            </article>
-            <article className="card step-card">
-              <span className="step-card-number">03</span>
-              <h3>{t("alignedIncentives")}</h3>
-              <p>{t("alignedIncentivesDesc")}</p>
-            </article>
-          </div>
+          <figure className="ledger-figure">
+            <ThreeLedgerMotif
+              labels={["PROJECT", "CAPITAL", "PROOF"]}
+              animated
+              caption={t("ledgersInMotionCaption")}
+            />
+          </figure>
         </div>
       </section>
 
       {/* ═══ № 03 · Manifesto — editorial pull ═════════════════ */}
       <ManifestoBlock
-        sectionNumber={t("sectionNum03")}
-        eyebrow={t("manifestoEyebrow")}
         lead={t("manifestoLead")}
         body={t("manifestoBody")}
         signature={t("manifestoSign")}
@@ -195,10 +187,8 @@ export default async function HomePage() {
       {/* ═══ № 04 · The five-step loop ═════════════════════ */}
       <section className="section section-loop">
         <div className="container">
-          <div className="section-head section-head-numbered">
-            <span className="section-number">{t("sectionNum04")}</span>
-            <span className="eyebrow">Operating Loop</span>
-            <h2 className="u-mt-3">{t("loopTitle")}</h2>
+          <div className="section-head">
+            <h2>{t("loopTitle")}</h2>
             <p>{t("loopDesc")}</p>
           </div>
           <div className="flow flow-centered loop-flow u-mt-6">
@@ -231,7 +221,6 @@ export default async function HomePage() {
 
       {/* ═══ Voltage callout — pre-footer payoff (progressive CTA) ═══ */}
       <VoltageCallout
-        eyebrow={t("ctaBandEyebrow")}
         title={t("ctaBandTitle")}
         desc={t("ctaBandDesc")}
         primaryLabel={t("voltageBegin")}

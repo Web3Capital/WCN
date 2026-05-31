@@ -8,10 +8,8 @@
  * Lead word uses --text (not voltage) so it doesn't compete with CTA color.
  */
 
-import { WCNGlyph } from "./wcn-glyph";
-
 type Props = {
-  eyebrow: string;
+  eyebrow?: string;
   lead: string;
   body: string;
   signature: string;
@@ -23,11 +21,8 @@ export function ManifestoBlock({ eyebrow, lead, body, signature, sectionNumber }
     <section className="section section-manifesto">
       <div className="container">
         <div className="manifesto">
-          <div className="manifesto-mark" aria-hidden>
-            <WCNGlyph size={20} variant="ledger" />
-          </div>
           {sectionNumber ? <span className="section-number manifesto-section-number">{sectionNumber}</span> : null}
-          <span className="eyebrow eyebrow-plain manifesto-eyebrow">{eyebrow}</span>
+          {eyebrow ? <span className="eyebrow eyebrow-plain manifesto-eyebrow">{eyebrow}</span> : null}
           <p className="manifesto-prose">
             <span className="manifesto-lead">{lead}</span>
             <span className="manifesto-body"> {body}</span>

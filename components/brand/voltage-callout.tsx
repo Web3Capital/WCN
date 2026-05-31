@@ -9,10 +9,9 @@
  */
 
 import { Link } from "@/i18n/routing";
-import { WCNGlyph } from "./wcn-glyph";
 
 type Props = {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   desc: string;
   primaryLabel: string;
@@ -34,10 +33,7 @@ export function VoltageCallout({
     <section className="voltage-callout">
       <div className="container">
         <div className="voltage-callout-inner">
-          <span className="voltage-callout-glyph" aria-hidden>
-            <WCNGlyph size={28} variant="ledger" />
-          </span>
-          <span className="eyebrow eyebrow-plain voltage-callout-eyebrow">{eyebrow}</span>
+          {eyebrow ? <span className="eyebrow eyebrow-plain voltage-callout-eyebrow">{eyebrow}</span> : null}
           <h2 className="voltage-callout-title">{title}</h2>
           <p className="voltage-callout-desc">{desc}</p>
           <div className="cta-row cta-centered voltage-callout-actions">
