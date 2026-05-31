@@ -37,6 +37,7 @@ import { authOptions } from "@/lib/auth";
 import { can, type Action, type Resource } from "@/lib/permissions";
 import {
   rateLimit,
+  rateLimitPublic,
   rateLimitAuth,
   rateLimitAdmin,
   type RateLimitResult,
@@ -156,7 +157,7 @@ function rateLimitKey(req: Request, session: Session | null): string {
   return `ip:${ip}`;
 }
 
-async function applyRateLimit(profile: RateLimitProfile, key: string): Promise<RateLimitResult> {
+async function applyRateLimit(profile: RateLimitProfile, key: string, failOpen = false): Promise<RateLimitResult> {
   switch (profile) {
     case "internal":
       return { success: true, limit: 0, remaining: 0, reset: 0 };
@@ -167,7 +168,9 @@ async function applyRateLimit(profile: RateLimitProfile, key: string): Promise<R
     case "write":
     case "public":
     default:
-      return rateLimit(`${profile}:${key}`);
+      // Public (unauthenticated) callers fail OPEN so an Upstash outage cannot
+      // take down a public funnel; authenticated callers stay fail-closed.
+      return failOpen ? rateLimitPublic(`${profile}:${key}`) : rateLimit(`${profile}:${key}`);
   }
 }
 
@@ -244,7 +247,7 @@ export const route = {
       const requestId = await getRequestId();
       const params = (await resolveParams(nextCtx.params)) as P;
 
-      const rl = await applyRateLimit(cfg.rateLimit, rateLimitKey(req, null));
+      const rl = await applyRateLimit(cfg.rateLimit, rateLimitKey(req, null), true);
       if (!rl.success) return rateLimitedResponse(rl, requestId);
 
       const inputResult = await readInput(req, cfg.input);

@@ -98,6 +98,16 @@ export async function rateLimit(identifier: string): Promise<RateLimitResult> {
   return check(getApiLimiter(), identifier, true);
 }
 
+/**
+ * Fail-OPEN variant of the API limiter for PUBLIC, unauthenticated endpoints
+ * (e.g. the node application form). If Upstash is unconfigured or unreachable
+ * this degrades to "allow" instead of 429-ing every visitor — a blocked public
+ * funnel is worse than the absence of rate limiting during an outage.
+ */
+export async function rateLimitPublic(identifier: string): Promise<RateLimitResult> {
+  return check(getApiLimiter(), identifier, false);
+}
+
 export async function rateLimitAuth(identifier: string): Promise<RateLimitResult> {
   return check(getAuthLimiter(), identifier, true);
 }

@@ -6,6 +6,8 @@ const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === "tr
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Don't advertise the framework (drops the leaky `X-Powered-By: Next.js` header).
+  poweredByHeader: false,
   eslint: { ignoreDuringBuilds: true },
   experimental: {
     optimizePackageImports: ["lucide-react", "recharts", "date-fns"],

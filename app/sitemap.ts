@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllDocs } from "@/lib/docs";
 import { locales, defaultLocale } from "@/i18n/config";
+import { getSiteUrl } from "@/lib/site-url";
 
 const MARKETING_PAGES: { path: string; priority: number; freq: "daily" | "weekly" | "monthly" }[] = [
   { path: "/", priority: 1.0, freq: "weekly" },
@@ -13,11 +14,7 @@ const MARKETING_PAGES: { path: string; priority: number; freq: "daily" | "weekly
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    process.env.NEXTAUTH_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
-  const base = siteUrl.replace(/\/$/, "");
+  const base = getSiteUrl();
   const now = new Date().toISOString();
 
   const entries: MetadataRoute.Sitemap = [];

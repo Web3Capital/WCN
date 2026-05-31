@@ -13,6 +13,18 @@ export async function GET(req: Request) {
   const secret = url.searchParams.get("secret");
   const isDetailed = secret && process.env.HEALTH_SECRET && secret === process.env.HEALTH_SECRET;
 
+  // Liveness: the basic, unauthenticated probe answers "is this process up and
+  // serving?" — it must NOT touch the database, Redis, or outbox. Probing those
+  // here made the public endpoint return 503 on any transient DB hiccup and
+  // exhaust Postgres connections under concurrency. Dependency (readiness)
+  // checks are secret-gated below.
+  if (!isDetailed) {
+    return NextResponse.json(
+      { status: "alive", timestamp: new Date().toISOString() },
+      { status: 200 },
+    );
+  }
+
   const checks: Record<string, { status: string; latencyMs?: number; error?: string }> = {};
 
   // Database check
@@ -74,13 +86,6 @@ export async function GET(req: Request) {
   const allOk = Object.values(checks).every(
     (c) => c.status === "ok" || c.status === "not_configured"
   );
-
-  if (!isDetailed) {
-    return NextResponse.json(
-      { status: allOk ? "healthy" : "degraded", timestamp: new Date().toISOString() },
-      { status: allOk ? 200 : 503 },
-    );
-  }
 
   return NextResponse.json(
     {

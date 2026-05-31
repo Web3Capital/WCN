@@ -11,11 +11,9 @@ import { Providers } from "@/components/providers";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import { fontSans, fontSerif, fontMono } from "@/app/fonts";
+import { getSiteUrl } from "@/lib/site-url";
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  process.env.NEXTAUTH_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+const siteUrl = getSiteUrl();
 
 const OG_LOCALE_MAP: Record<string, string> = {
   en: "en_US", zh: "zh_CN", ja: "ja_JP", ko: "ko_KR",
