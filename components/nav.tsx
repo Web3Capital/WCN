@@ -58,7 +58,11 @@ export function Nav() {
   ];
 
   const resourceLinks = [
+    { href: "/why-now" as const, label: t("whyNow") },
     { href: "/how-it-works" as const, label: t("howItWorks") },
+    { href: "/economics" as const, label: t("economics") },
+    { href: "/governance" as const, label: t("governance") },
+    { href: "/roadmap" as const, label: t("roadmap") },
     { href: "/wiki" as const, label: t("wiki") },
   ];
 
