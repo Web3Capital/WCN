@@ -195,6 +195,33 @@ What → Credentials → Texture → Substance → Motif → Belief → Mechanis
 
 **一句话诊断**:首页已是这份设计哲学的合规第一执行样本;唯一未结清为 nav 控件图标(L6,分期)与一条有意的云雾氛围豁免(L7)。
 
+## 10. 首页字体规范（定稿 · VS-02）
+
+**一句话**:**Serif for soul · Sans for system · Mono for evidence。** 三族,三职责,不重叠。
+
+| 角色 | 字族 | 字重 | 字号 | 用在哪 |
+|---|---|---|---|---|
+| Display 封面 | EB Garamond | **400** | clamp(40→68) | hero h1 |
+| Pull-quote 引文 | EB Garamond | **400** | clamp(24→32) | manifesto · footer 名句 |
+| Call 号召 | EB Garamond | **400** | clamp(32→40) | CTA 标题 |
+| H2 章节标题 | **Inter** | **700** | clamp(26→28) | `.section-head h2` |
+| H3 卡片标题 | **Inter** | **700** | 22 | `.innovation-title` |
+| Lede 引言 | Inter | 400 | clamp(17→21) | `.hero-lede` |
+| Body 正文 | Inter | 400 | 13–17 | 描述 / 卡片正文 |
+| Label 名签 | Inter | 600 | 13 | `.step-name` |
+| Wordmark | Inter | **800** | 16(字距 −0.06em) | `WCN` |
+| Data 数据 | JetBrains Mono | 400–600 | 10–12 | 编号 / 标签 / ticker / caption |
+
+**铁律**:
+1. **衬线只给四个「voice」时刻**:hero 封面 · manifesto 引文 · CTA 号召 · 页脚名句;字重一律 **400**(已统一,清除全部 350)。
+2. **一切结构标题(H2/H3)与正文用 Inter**——H2/H3 = 700,正文 = 400。卡片标题不再用衬线(原混用已修)。
+3. **一切数据/编号/标签/ID 用 JetBrains Mono**(「数据必 mono」)。
+4. **中文/阿语永不斜体**;斜体仅 EN `.i-en` 串(如 manifesto 的「*Trust*」)。`em{italic}` 全局禁。
+5. 行高:封面 1.05 · 标题 1.16 · 引文 1.35 · 正文 1.55–1.6 · caption 1.5。正文测量 ≤68ch/36 字。
+6. 字距:display −0.04em · 标题 tight −0.022em · eyebrow +0.16em · mono 0.01em。
+
+> 取证(实测):hero/manifesto/CTA/footer = EB Garamond **400**;section h2 + 卡片标题 = Inter **700**;编号/标签 = JetBrains Mono;wordmark = Inter **800**。
+
 ---
 
 Anno MMXXVI · WCN Foundation · 与 VS v4 / VB v1 / WS v1 同源
