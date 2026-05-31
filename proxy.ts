@@ -19,6 +19,7 @@ const PUBLIC_PAGE_PATHS = new Set([
   "/how-it-works",
   "/nodes",
   "/pob",
+  "/style-guide",
 ]);
 
 function stripLocalePrefix(pathname: string): string {
