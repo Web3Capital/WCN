@@ -1,4 +1,4 @@
-import { Inter, Fraunces, JetBrains_Mono } from "next/font/google";
+import { Inter, EB_Garamond, JetBrains_Mono } from "next/font/google";
 
 export const fontSans = Inter({
   subsets: ["latin", "latin-ext"],
@@ -19,14 +19,17 @@ export const fontSans = Inter({
   ],
 });
 
-export const fontSerif = Fraunces({
+// v4.0 Sovereign Proof Ledger — display serif is EB Garamond (EN) backed by
+// Source Han Serif SC for CJK. Italic is loaded for EN-only editorial emphasis
+// (CN never renders italic; see the :lang() rules in globals.css).
+export const fontSerif = EB_Garamond({
   subsets: ["latin", "latin-ext"],
   variable: "--font-serif",
   display: "swap",
-  axes: ["SOFT", "opsz"],
+  style: ["normal", "italic"],
   fallback: [
-    "Tiempos Headline",
-    "Iowan Old Style",
+    "Source Han Serif SC",
+    "Songti SC",
     "Georgia",
     "Times New Roman",
     "serif",

@@ -1,59 +1,66 @@
 ---
-title: '12.2 Phase 2: PoB and Agent collaboration'
+title: '12.2 Phase 2 · Systematization'
 chapter: 12
 order: 2
 description: >-
-  Benchmarking Uniswap v2/v3 and Ethereum takes Rollup as the central stage: the
-  standard is solidified and the composability is enhanced; PoB can be
-  orchestrated, and the Agent can be audited and rolled back.
+  M12–M24. Roll out Country, City, and Track partners and standardize how the
+  network operates. The phase exits at 200+ nodes and a documented Token
+  decision.
 ---
 
-<Hero badge="12.2 · PoB and Agent collaboration" lead="The first stage proves that “the network can run”; this stage proves that “the network can run on a large scale” - PoB becomes a composable trust ledger, and the Agent becomes a constrained execution layer rather than a black box automation.">
-# From manual splicing to system operation: standards, logs, permissions and replicable methods are aligned at the same stage.
+<Hero badge="12.2 · Systematization" lead="Phase 2 runs from M12 to M24. The Web3 Capital Network (WCN) widens the node base through Country, City, and Track partners, and turns the working network of Phase 1 into a repeatable system.">
+# Phase 1 proves the network runs. Phase 2 proves it runs as a system across regions and tracks.
 </Hero>
 
 <MetaGrid>
-  <Meta label="core goals" value="PoB standardization + Agent engineering governance" />
-  <Meta label="success criterion" value="Human-machine collaboration SLA, PoB versioning, and accountability for exceptions" />
-  <Meta label="Still not doing it" value="Allocate all value to the chain; let Agent independently make high-risk commitments" />
+  <Meta label="Window" value="M12–M24" />
+  <Meta label="Focus" value="Country, City, and Track rollout, plus standardized operations" />
+  <Meta label="Exit criteria" value="200+ nodes and a documented Token decision" />
 </MetaGrid>
 
-## Industry reference
+## What Phase 2 builds
 
-- **Uniswap v2→v3**: From a general pool to centralized liquidity and fee tiers, it is a dual evolution of "rule refinement + capital efficiency"; WCN Phase 2 corresponds to the versioning of PoB fields, audit levels, incentives and attribution rules.
-- **Ethereum L2 route**: Layer execution and settlement, and the main network ensures finality; WCN layers "human decision-making/Agent execution/PoB records", and Agent does not replace compliance and final review boundaries.
-- **Mature Web2 Market**: Uber/Airbnb complete the middle layer of trust and security before scaling; Phase 2 completes auditable automation rather than simply adding the number of functions.
-
-## specific deliverables
+Phase 2 scales the node base and standardizes the work. It adds regional and track-level partners, stabilizes the PoB process across them, and reaches a documented decision on whether to introduce a Token in Phase 3.
 
 <CardGrid cols={2}>
-  <Card title="PoB stabilization" icon="circle-check">**Delivery**: PoB schema version, change log, review SLA, objection and reconsideration process; PoB template library by Deal type. **Indicators**: Cross-month PoB structure consistency, review backlog days, attribution dispute rate trend.</Card>
-  <Card title="Agent formalization" icon="bot">**Delivery**: Role permission matrix, tool whitelist, session/task log retention policy, human-in-the-loop trigger conditions. **Indicators**: Agent output adoption rate, number of unauthorized interceptions, number of rollbacks and patches (stability agent).</Card>
-  <Card title="Node methodology productization" icon="ruler">**Delivery**: The playbook (checklist, templates, training materials) of high-value nodes enters the system. **Indicators**: The time it takes for a new node to reach "first order qualification", playbook usage rate and output comparison.</Card>
-  <Card title="closed loop density" icon="refresh-cw">**Delivery**: The number of Deals that can be advanced in parallel on the same network within unit time, and resource conflict rules. **Indicators**: Deal throughput per person/node, stage stagnation rate (which card has the most).</Card>
+  <Card title="Country Partner" icon="globe">The exclusive coordination representative for a country. One country, one partner — exclusive coordination rights that hold the territory once granted.</Card>
+  <Card title="City Partner" icon="map-pin">Local coordination within a city. City Partners run on-the-ground deal flow and execution under the Country Partner's coordination.</Card>
+  <Card title="Track Partner" icon="route">The global representative for a track the partner has worked in depth. Track Partners route deals and standards within their vertical.</Card>
+  <Card title="Service and Standard Nodes" icon="wrench">Twelve categories of professional Service Provider nodes, plus open-application Standard Nodes. Both widen execution capacity beyond the founding cohort.</Card>
 </CardGrid>
 
-## Success Metrics (Example)
+## Standardizing the network
 
-- PoB **v1.x** During the freezing period, breaking changes will only be released through governance/version numbers, and there will be a migration guide.
-- Agent-related incidents (wrong referrals, data leaks, unauthorized operations) have postmortem and rule patches that can be restored.
-- **Replicable**: New region or new vertical achieves funnel metrics (as defined by operations) comparable to baseline within 90 days under a preset playbook.
+Adding nodes is not enough. Phase 2 makes the PoB process consistent so that outcomes from different regions and tracks remain comparable and auditable.
 
-## Signals for entering the third stage (summary)
+<Steps>
+  <Step title="PoB process held stable">The fields, review path, and attribution rules for a PoB record stay consistent across nodes, so outcomes compare across regions and tracks.</Step>
+  <Step title="Node methodology made repeatable">The playbook that the strongest Phase 1 nodes used enters the system, so a new node can reach its first verified outcome on a documented path.</Step>
+  <Step title="Token decision documented">WCN records a decision on whether to introduce a Token in Phase 3. The basis is network scale and the compliance path, not market timing.</Step>
+</Steps>
 
-Settlement objects (who pays to whom, which PoB is based on, how disputes are resolved) can be aligned on paper and in the system; the identity and authority model is sufficient to support accounting and auditing without relying on temporary tables. See [12.4](/wiki/roadmap/12-4-Milestones and Phase Switching Signals) for details.
+## Exit criteria
 
-## Main risks at this stage
+Phase 2 exits when both conditions hold.
+
+| Criterion | Threshold | Why it matters |
+|------|----------|------|
+| Nodes | 200+ registered and active | Confirms the network scaled beyond the founding cohort |
+| Token decision | Documented and reasoned | Confirms a deliberate choice, not a reaction to the market |
+
+<Callout type="info">The Token decision is a gate, not a commitment to issue. WCN's funding sustainability does not depend on a Token. A Token is an optional Phase 3 coordination and governance tool, considered only after cross-jurisdiction compliance conditions hold.</Callout>
+
+## What Phase 2 does not do
 
 <CardGrid cols={2}>
-  <Card title="Automated trust mismatch" icon="triangle-alert">Agent speeds up error propagation. **Release**: hierarchical automation, shadow mode, random inspection and red teaming.</Card>
-  <Card title="PoB over-engineering" icon="library">Too detailed standards slow down business. **Release**: Take the "minimum auditable set" as the bottom line, and the remaining fields are gradual.</Card>
-  <Card title="Organizations rely on hero nodes" icon="user">Scaling still relies on a few people. **Release**: Mandatory documentation and handover mechanisms are included in KPIs.</Card>
-  <Card title="Capitalize in advance" icon="banknote">NFT/Token is out of touch with the rhythm of business. **Release**: The asset layer will only initiate projects after the 12.4 threshold is met.</Card>
+  <Card title="No Token issuance yet" icon="ban">Phase 2 may decide on a Token, but issuance belongs to Phase 3, after the compliance work. The decision records intent and rationale, not a launch.</Card>
+  <Card title="No US Person access" icon="shield">The network stays closed to US Persons through Phase 2, including US citizens, US residents, and US entities under Reg D.</Card>
 </CardGrid>
 
-## Why this phase must come after Phase 1
+## Why Phase 2 follows Phase 1
 
-<Callout type="warning">Without stable Deal and Proof samples, PoB standards will become a castle in the air; without clear manual processes, Agent will only amplify chaos. This is the same as Rollup becoming a rigid requirement after L1 fees and congestion "actually occur" - the complexity should be driven by the real load.</Callout>
+Without stable PoB records from Phase 1, a standardized process would have no proven baseline to standardize. Scaling an unproven loop multiplies inconsistency rather than capacity.
 
-<Statement>At the end of the second phase, it should be able to demonstrate to the outside world how human-machine collaboration can stably produce more verifiable results under the same set of rules, and that any incidents that occur can be held accountable and patched.</Statement>
+<Callout type="warning">Standardization needs a working loop to standardize. Phase 2 widens a process that Phase 1 already proved, so growth compounds verified outcomes instead of spreading noise.</Callout>
+
+<Statement>By the end of Phase 2, WCN operates as a repeatable system across regions and tracks, with a documented decision on whether a Token will follow.</Statement>

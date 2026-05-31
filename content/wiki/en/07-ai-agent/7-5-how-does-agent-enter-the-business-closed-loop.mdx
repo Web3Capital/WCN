@@ -1,66 +1,66 @@
 ---
-title: 7.5 How does Agent enter the business closed loop?
+title: 7.5 How the Agent enters the business loop
 description: >-
-  Task binding, adoption, evidence chain and PoB: turning generated quantities
-  into settleable results; counterexample and positive example workflow.
+  Task binding, human adoption, the evidence chain, and PoB — the path that
+  turns Agent output into a settleable result, with worked examples.
 chapter: 7
 order: 5
 ---
 
-<Hero badge="7.5 · Agent and closed loop" lead="LangChain Agent running through the demo only proves “can generate”; WCN closed loop requires proving “promoting the results”. Therefore, it is necessary to record: which output is hung on which task, who adopted it, what state changes were triggered after adoption, and whether the final evidence passed Proof. Without this link, it's just another chat window.">
-# Adoption and proof are the gates of value; generation is not.
+<Hero badge="7.5 · Into the business loop" lead="An Agent that runs a demo only proves that it can generate. The WCN loop requires proof that it advanced a result. So the system records which output is bound to which task, who adopted it, what changed after adoption, and whether the final evidence passed Proof. Without that chain, it is one more chat window.">
+# Adoption and proof are the gate of value. Generation is not.
 </Hero>
 
 <MetaGrid>
-  <Meta label="What this page does" value="Closing conditions + workflow examples + interface with PoB" />
-  <Meta label="core themes" value="Output → Adoption → Result → Proof → PoB" />
-  <Meta label="Reading highlights" value="task binding, human events, traceability" />
+  <Meta label="What this page does" value="Defines the closing conditions, the workflow, and the link to PoB" />
+  <Meta label="Core path" value="Output, then adoption, then result, then Proof, then PoB" />
+  <Meta label="You will learn" value="Task binding, the human adoption event, and traceability" />
 </MetaGrid>
 
-## The main path into the closed loop
+## The main path into the loop
 
 <Callout type="info">
-Task dispatch (including type and acceptance criteria) → Agent executes within authorization → Structured output is stored → Node owner adopts/rejects/revises → State machine advances deal or task → Result evidence submission → Proof Desk review → Generate PoB record → Enter settlement and reputation layer
+A task is dispatched with its type and acceptance criteria. The Agent executes within its authorization. The structured output is stored. The node owner adopts, rejects, or revises it. The state machine advances the deal or task. The result evidence is submitted. The Proof Ledger reviews it. A PoB record is generated. The entry reaches settlement and the record.
 </Callout>
 
-<Statement>The value of the Agent is an identifiable **result driver**: the system can distinguish between "10 pages were generated" and "3 of them were adopted and led to meetings being held/terms modified/payment conditions met".</Statement>
+<Statement>The Agent's value is as a traceable driver of results. The system separates "ten pages were generated" from "three were adopted and led to a meeting held, a term changed, or a payment condition met".</Statement>
 
-## Necessary conditions for Agent output to enter Proof
+## What Agent output needs to reach Proof
 
 <CardGrid cols={2}>
-  <Card title="Task ID binding" icon="link">Each machine output is associated with a `task_id` (or equivalent handle); "ghost results" wandering in private chats or offline documents are prohibited.</Card>
-  <Card title="Input and version traces" icon="clipboard-list">Model name, version, temperature or equivalent parameters, retrieval fragment ID, key attachment hash; to facilitate reproduction and evidence collection in case of disputes.</Card>
-  <Card title="human adoption record" icon="circle-check">Explicit events: `adopted_by`, `timestamp`, optional modification diff; different from Copilot's implicit "user copied away", it must be structured.</Card>
-  <Card title="Result correlation" icon="refresh-cw">It can be traced back to deals, milestones, or on-chain/off-chain business events (such as contract filing, stock exchange announcements); otherwise, attribution settlement cannot be done.</Card>
+  <Card title="Bound to a task" icon="link">Each output is tied to a task handle. Loose results drifting in private chats or offline documents are not eligible.</Card>
+  <Card title="Input and version recorded" icon="clipboard-list">The model name and version, the parameters, the retrieved fragment, and the key attachment hash — enough to reproduce the output and to collect evidence in a dispute.</Card>
+  <Card title="Human adoption recorded" icon="circle-check">An explicit event: who adopted it, when, and any revision. Unlike an implicit copy-and-paste, this is structured and kept.</Card>
+  <Card title="Linked to a result" icon="refresh-cw">Traceable to a deal, a milestone, or a business event. Without that link, attribution and settlement cannot be done.</Card>
 </CardGrid>
 
 <Callout type="warning">
-If any of the conditions are missing → it will be classified as "tool generated" and shall not be included in PoB; the same reason as "emails without transaction numbers and working papers" in TradFi cannot be included in the account.
+If any condition is missing, the output is treated as tool-generated and is not counted into PoB. The reason matches the one in accounting: an item without a reference and a working paper cannot enter the books.
 </Callout>
 
-## Three concrete workflow examples
+## Three worked examples
 
 <Steps>
-  <Step title="Financing material iteration">Task: "Series A material v3 risk chapter". Research Agent pulls competing product risk disclosures → outputs drafts with references → node deletion and adoption → uploads revised PDF hash → Proof associates "final draft for investor meeting" → records PoB after the meeting is closed.</Step>
-  <Step title="capital matching">Deal Agent outputs the top 5 ranked items and matching reasons → the node only adopts 2 of them and creates an intro task → subsequent emails are sent by humans; PoB only records the adopted recommendations and subsequent verified results, and does not record the non-adopted ranking.</Step>
-  <Step title="Post-investment monitoring">Liquidity Agent reports an abnormal paragraph → Execution Agent generates an internal Slack/task copy draft → The person in charge of risk control adopts one and creates a "Follow-up Custody Bank" Task → The receipt is entered into the evidence package → Proof is passed and then forwarded to the PoB.</Step>
+  <Step title="Diligence material">Task: the risk section of a Series A package. Project Diligence pulls comparable risk disclosures and drafts the section with sources. The node revises and adopts it, then uploads the revised file hash. Proof links it to the final draft used in the investor meeting, and a PoB record follows once the meeting closes.</Step>
+  <Step title="Evidence review">An evidence package is submitted for a completed task. The PoB Evidence Validator checks it against the required fields and flags two gaps. The node fills the gaps, and only the completed package goes to the Proof Ledger; the Validator's first pass does not pass it on its own.</Step>
+  <Step title="Monitoring follow-up">A monitoring note reports an anomaly. Outreach and Meeting Summary drafts an internal task note. The risk owner adopts one and creates a follow-up task. The receipt enters the evidence package, and the entry moves to PoB once Proof passes.</Step>
 </Steps>
 
-## Counterexample: Seems very busy, zero closed loop
+## The counter-case: busy, with no loop
 
-- AutoGPT-style unbounded exploration produces a large number of notes, no task, no owner → **noise**.
-- Copilot generates pretty emails but not sent from WCN task, no adoption tag → **Non-attributable**.
-- Agent suggested going to the timeline, and the node verbally forwarded it to the project party but the system was stateless → **unable to verify**.
+- An open, unbounded run produces many notes with no task and no owner. That is noise.
+- An Agent drafts a polished email that is not sent from a WCN task and carries no adoption tag. That cannot be attributed.
+- An Agent suggests a step, the node forwards it by word of mouth, and the system holds no state. That cannot be verified.
 
-## What does this step decide?
+## What this step decides
 
 <CardGrid cols={2}>
-  <Card title="Is AI just a tool?" icon="bot">It becomes the official execution layer only after entering the closed loop; otherwise, it is no different from any LLM packaging.</Card>
-  <Card title="Whether the Agent can be settled" icon="coins">Without a Proof chain, there is no PoB; incentives and profit sharing lack credentials.</Card>
-  <Card title="Is the Agent manageable?" icon="shield">Adoption rate, error adoption rollback, and model A/B effects can all be measured before specific Agent configurations can be upgraded or suspended.</Card>
-  <Card title="WCN differentiation" icon="zap">It's not "connected to GPT/Claude/Gemini", but it's the first time in a multi-node business network that machine output is connected to unified evidence and settlement semantics.</Card>
+  <Card title="Tool, or execution layer" icon="bot">Agent work becomes the network's execution layer only after it enters the loop. Before that, it is no different from any model wrapper.</Card>
+  <Card title="Settleable, or not" icon="coins">Without a Proof chain there is no PoB, and incentives and shares have no evidence to rest on.</Card>
+  <Card title="Manageable, or not" icon="shield">Adoption rate, reverted adoptions, and model comparisons can be measured, so an Agent configuration can be upgraded or suspended on evidence.</Card>
+  <Card title="The WCN difference" icon="zap">The point is not that it connects to a model. It is that machine output, across a multi-node business network, reaches one shared language of evidence and settlement.</Card>
 </CardGrid>
 
 <Callout type="tip">
-Suggestions for acceptance criteria: **Can you use logs to explain clearly in 30 minutes during a dispute** - who asked the Agent to do what, what was adopted, and what is the final business result. If it can be done, the closed-loop design is basically qualified.
+A test for acceptance: in a dispute, can the logs explain in half an hour who asked the Agent to do what, what was adopted, and what the final business result was. If they can, the loop is sound.
 </Callout>

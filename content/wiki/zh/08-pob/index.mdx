@@ -1,29 +1,29 @@
 ---
 title: "章节总览"
-description: "PoB 与 PoW/PoS 等共识的差异、TradFi 归因对标、有效证据、验证与反作弊、经济飞轮。"
+description: "PoB 定义真实业务结果、有效闭环的条件、账本拒绝什么、验证链、归因，以及为何重要。"
 chapter: 8
 order: 0
 ---
 
-<Hero badge="第8章 · Proof of Business" lead="PoB 不是算力竞赛、不是资本权重投票、也不是活跃度积分。它把共识锚定在可核验的商业结果上：成交、交付、验收、资金到位——与 PoW 的 nonce、PoS 的 stake、空投的地址列表处于完全不同的价值平面。">
-# PoB 是 WCN 的制度内核：没有可证明的业务结果，就没有系统级承认与结算。
+<Hero badge="第8章 · Proof of Business" lead="Proof of Business（PoB）是对真实、可验证、可追踪业务结果的证明机制。它不记录谁参与过。它记录谁推动了被审核确认的结果。一笔 PoB 通过对账后，在证明账本上生成一个验证节点。">
+# PoB 是 WCN 的结算门槛。没有可证明的结果，就没有系统级承认，也没有结算。
 </Hero>
 
 <MetaGrid>
-  <Meta label="核心主题" value="定义、闭环标准、排除规则、验证链、归因、经济与安全" />
-  <Meta label="阅读方式" value="8.1 机制坐标 → 8.2/8.3 边界 → 8.4 流程 → 8.5 归因 → 8.6 战略意义" />
-  <Meta label="适用对象" value="节点、审核与 Proof Desk、治理、产品与风控" />
+  <Meta label="本章作用" value="定义 PoB、有效闭环、排除项、验证链、归因与意义" />
+  <Meta label="阅读顺序" value="8.1 定义 → 8.2／8.3 边界 → 8.4 验证 → 8.5 归因 → 8.6 意义" />
+  <Meta label="适用对象" value="节点、审核方、治理与风控" />
 </MetaGrid>
 
 <CardGrid cols={2}>
-  <Card title="8.1 PoB 是什么" description="与 PoW/PoS/PoA 及 TradFi 业绩归因对照；PoB 在 WCN 验证—结算栈中的位置。" href="/wiki/pob/8-1-pob-是什么" icon="book-open" />
-  <Card title="8.2 什么算有效闭环" description="结果门槛、证据类型、可编号事件；六类闭环与 PoB 证据包示例。" href="/wiki/pob/8-2-什么算有效闭环" icon="circle-check" />
-  <Card title="8.3 什么不算" description="排除噪音、重复 claim、代理指标；与空投/积分/质押奖励的度量缺陷对照。" href="/wiki/pob/8-3-什么不算" icon="ban" />
-  <Card title="8.4 验证流程" description="从提交到归档的五步链；Proof Desk 与争议处理；审计痕迹。" href="/wiki/pob/8-4-验证流程" icon="search" />
-  <Card title="8.5 归因逻辑" description="主导/协作/采纳；与 Brinson 式配置/选择归因的类比与边界。" href="/wiki/pob/8-5-归因逻辑" icon="puzzle" />
-  <Card title="8.6 为什么 PoB 重要" description="飞轮经济学、反内卷、长期网络记忆；缺失 PoB 时的系统退化路径。" href="/wiki/pob/8-6-为什么pob重要" icon="gem" />
+  <Card title="8.1 PoB 是什么" description="对真实业务结果的证明机制，以及它在系统中的四重含义。" href="/wiki/pob/8-1-pob-是什么" icon="book-open" />
+  <Card title="8.2 什么算有效闭环" description="结果进入价值层之前，闭环必须同时满足的四个条件。" href="/wiki/pob/8-2-什么算有效闭环" icon="circle-check" />
+  <Card title="8.3 什么不算" description="证明账本拒绝的输入：噪声、意向、重复 claim 与未被采纳的产出。" href="/wiki/pob/8-3-什么不算" icon="ban" />
+  <Card title="8.4 验证流程" description="提交、证据、审核、对账，以及已验证、已封存、已结算三种状态。" href="/wiki/pob/8-4-验证流程" icon="search" />
+  <Card title="8.5 归因逻辑" description="一个闭环如何在主导、协作、受益与审核角色之间拆分。" href="/wiki/pob/8-5-归因逻辑" icon="puzzle" />
+  <Card title="8.6 为什么 PoB 重要" description="PoB 定义网络奖励什么、记录什么，以及作为长期记忆沉淀什么。" href="/wiki/pob/8-6-为什么pob重要" icon="gem" />
 </CardGrid>
 
 <Callout type="tip">
-若抽掉 PoB，网络奖励会自然收敛到最易观测、最易刷新的代理变量——TVL、粉丝数、签到、持仓——与真实商业产出脱钩。PoB 把激励重新绑回「做成了什么」而非「看起来多忙」。
+若抽掉 PoB，奖励会漂移到最易观测的代理变量——持仓、粉丝数、签到——与真实产出脱钩。PoB 把承认绑回「做成了什么」，而非「看起来多忙」。
 </Callout>

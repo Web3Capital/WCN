@@ -1,65 +1,71 @@
 ---
 title: 8.1 What is PoB
 description: >-
-  PoB: Proof and accounting mechanism targeting verifiable business results;
-  difference from PoW/PoS/PoA and TradFi performance disclosure.
+  PoB is the proof mechanism for a real, verifiable, traceable business outcome,
+  and the gate every result passes before it enters the value layer.
 chapter: 8
 order: 1
 ---
 
-<Hero badge="8.1 · PoB definition" lead="PoB (Proof of Business) verifies the final state of the business state machine: contract effectiveness, fund delivery, service acceptance, and listing - not hash puzzles, pledge balances, or authoritative node signatures. It separates the issue of “security on the chain” from the issue of “authenticity of off-chain results”: the former ensures that the ledger is consistent, and the latter ensures that the objects recorded in the ledger are worthy of rewards.">
-# PoB is WCN’s certification mechanism for “real business results” and is also a credible input for long-term value distribution.
+<Hero badge="8.1 · PoB definition" lead="Proof of Business (PoB) is the proof mechanism for a real, verifiable, traceable business outcome. Its core is not who took part. It is who advanced a result that review confirmed. Once reconciled, a PoB record produces a Verification Node on the Proof Ledger — an anchor any party can check.">
+# PoB certifies a real business outcome. It is the credible input to long-term value distribution.
 </Hero>
 
 <MetaGrid>
-  <Meta label="What this page does" value="Define PoB and place it in a coordinate system with mainstream consensus and TradFi metrics" />
-  <Meta label="core themes" value="Result object, evidence, attribution, settlement premise" />
-  <Meta label="Reading highlights" value="Compare with PoW/PoS/PoA; Compare with points/airdrops; System layer position" />
+  <Meta label="What this page does" value="Defines PoB and states its four meanings inside the system" />
+  <Meta label="Core themes" value="Outcome, evidence, attribution, settlement gate" />
+  <Meta label="Reading highlights" value="Why PoB is not a score; how it differs from common proxies" />
 </MetaGrid>
 
-## PoW, PoS, PoA and PoB: different verification objects
+## PoB records a result, not participation
 
-| Mechanism | Typical verification objects | Optimized behavior | Relationship with "business results" |
-|------|----------------|--------------|----------------------|
-| PoW | Calculate workload (nonce) | Block generation, anti-tampering | Do not answer "whether this deal is completed" |
-| PoS | Pledge and delegation weight | Economic security, participation incentives | Capital locked ≠ Delivery completed |
-| PoA | Permissioned Verifier Identity | Low Latency, Federation Governance | Trust Default Party, Non-Outcome Market |
-| **PoB** | **Verifiable closed loop and evidence package** | **Facilitate and prove results** | **Directly align business end state** |
+WCN runs on three things: a global node network, a Proof Ledger gated by PoB, and AI agents that enter tasks and leave evidence. PoB sits between work and the ledger. It does not ask who calculated fastest or who staked the most. It asks who advanced a result that an independent reviewer can confirm.
 
-PoW/PoS solves how distributed ledgers can reach consensus under the adversary model; PoB solves "what is worthy of being recorded in the value layer by the network." Both can coexist: off-chain or on-chain PoB records can be anchored to on-chain hashes, but **Consensus Security ≠ Business Reality** - without independent verification of results, token incentives will simply drift to the most easily manipulated proxy metrics.
+A claim of "it is done" stays verbal until evidence backs it. PoB raises the gate to a fixed standard: outcome, evidence, and attribution. Only a result that clears that gate enters the value layer the network recognizes.
 
-<Statement>PoB does not ask "who calculates the fastest or bets the most", but asks "who promotes the establishment of business results that can be reviewed by a third party."</Statement>
+<Statement>PoB does not ask who took part. It asks who advanced a business result that review can confirm.</Statement>
 
 ---
 
-## Parallels and Differences with TradFi Performance Measures
+## The four meanings of PoB in the system
 
-- **GIPS (Global Investment Performance Standards)** emphasizes the comparability of portfolio returns, complete accounting periods, net performance after adjustments for expenses and cash flow - the core is **auditable and recalculable**. PoB draws on the same spirit: **Without a chain of evidence and consistent caliber, performance cannot be declared**.
-- **Brinson Attribution** splits excess returns into allocation (strategic asset weighting) and selection (security/project-level selection). WCN's attribution (see 8.5) is similar in structure: "Who drives key nodes" and "Who only participates in peripherals" must be split within the same closed loop to avoid duplicating the total results on multiple business cards.
-- **Difference**: TradFi is mostly oriented to regulated institutions and managed data; PoB is oriented to open networks and puts more emphasis on **anti-duplicate claims, time series, remediable and dispute procedures** (see 8.4).
-
----
-
-## Why Common Web3 Incentives Can’t Measure “True Value”
-
-- **Airdrop**: distributed according to address/interaction snapshot, rewards are **scriptable behavior**, and have no stable mapping with the commercial closed loop; arbitrage between witches and studios is an endogenous problem.
-- **Points and Task Points**: Optimize **observable actions** (check-in, forwarding, form filling), which are easily disconnected from GMV, delivery, and acceptance.
-- **Pure pledge income**: The compensation is **capital opportunity cost and network security contribution**, not "what you have done for customers".
-- **TVL / Transaction Volume**: Mostly **agent indicators**, which can be distorted by incentives (wash volume, revolving loans, short-term subsidies).
-
-PoB raises the settlement threshold to **result + evidence + attribution**, making the above mechanism unable to replace the accounting function of PoB alone.
-
----
-
-## PoB position in WCN stack
+PoB carries four distinct functions. Each one governs a different stage between a result and its settlement.
 
 <CardGrid cols={2}>
-  <Card title="result threshold" icon="door-open">Results that have not passed PoB stay at the collaborative narrative layer and do not enter the long-term value input recognized by the system.</Card>
-  <Card title="Attribution portal" icon="puzzle">After the evidence is reviewed, the structured split of leadership/collaboration/adoption is initiated.</Card>
-  <Card title="Settlement premise" icon="coins">The distribution of tokens and long-term equity should be constrained by the PoB ledger to avoid "those who can tell stories benefit."</Card>
-  <Card title="network memory" icon="brain">Archived PoB events form a queryable reputation and case library, reducing repeated due diligence costs.</Card>
+  <Card title="Result threshold" icon="door-open">A result is recognized as Verified only after it passes PoB. Until then it stays at the collaboration layer and does not enter the value the system records.</Card>
+  <Card title="Attribution entry" icon="puzzle">Only a result inside PoB can be split among contributors and routed into the Carry waterfall. No PoB, no defensible attribution.</Card>
+  <Card title="Settlement precondition" icon="coins">PoB is the required step before long-term value distribution. No PoB, no settlement. The gate sits ahead of every payout.</Card>
+  <Card title="Network memory" icon="brain">A reconciled closed loop does not vanish. It settles into a reusable system asset — a record later collaboration can cite, lowering the cost of repeated trust.</Card>
+</CardGrid>
+
+---
+
+## Why common Web3 incentives cannot measure real value
+
+Most Web3 reward mechanisms optimize an observable proxy rather than a confirmed outcome. PoB exists because that gap is structural, not accidental.
+
+<CardGrid cols={2}>
+  <Card title="Airdrops" icon="ban">Distributed by address and interaction snapshot. They reward scriptable behavior with no stable link to a business outcome.</Card>
+  <Card title="Points and tasks" icon="ban">Optimize check-ins, reposts, and form fills. These actions detach easily from delivery and acceptance.</Card>
+  <Card title="Pure staking yield" icon="ban">Compensates locked capital and network security, not work done for a customer or a closed deal.</Card>
+  <Card title="Holdings and volume" icon="ban">Proxy figures that incentives can distort through wash activity and short-term subsidy.</Card>
+</CardGrid>
+
+PoB raises the settlement gate to outcome, evidence, and attribution. No single proxy above can stand in for that gate.
+
+---
+
+## PoB inside the WCN stack
+
+PoB is an internal proof mechanism. Its evidence chain stays available for external audit and regulatory review — it can be examined, not self-attested.
+
+<CardGrid cols={2}>
+  <Card title="Result threshold" icon="door-open">A result that has not passed PoB stays narrative. It does not enter the long-term value the system recognizes.</Card>
+  <Card title="Attribution entry" icon="puzzle">Once evidence clears review, the split among lead, collaborating, benefiting, and reviewing roles begins.</Card>
+  <Card title="Settlement precondition" icon="coins">Token and long-term equity distribution are bound to the Proof Ledger, so storytelling alone does not earn a payout.</Card>
+  <Card title="Network memory" icon="brain">Sealed PoB records form a citable reputation and case library, reducing repeated diligence.</Card>
 </CardGrid>
 
 <Callout type="tip">
-Without PoB, "it's done" will always remain verbal; with PoB, the same statement must be accompanied by a submittable, auditable, and archivable evidence package before it can be upgraded to a system fact.
+Without PoB, "it is done" stays a spoken claim. With PoB, the same claim must arrive with a submittable, reviewable evidence package before it becomes a system fact.
 </Callout>

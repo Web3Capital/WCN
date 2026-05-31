@@ -1,33 +1,37 @@
 ---
 title: Chapter Overview
 description: >-
-  Five-layer division of labor structure: Projects and assets → Capital
-  allocation → Execution and services → Distribution and liquidity →
-  Verification and settlement. Each layer has clear responsibilities and
-  upstream and downstream relationships.
+  WCN's five functional layers — project and asset, capital allocation,
+  execution and service, distribution and liquidity, verification and
+  settlement. Each layer has one responsibility, and its output is the next
+  layer's input.
 chapter: 5
 order: 0
 ---
 
-<Hero badge="Chapter 5 · Network Architecture" lead="WCN is not a collection of functions, but a business architecture with clear layers and linkage between top and bottom. The five layers are from demand entrance to value exit. Each layer answers a core question. The output of the previous layer is the input of the next layer. This design is not a theoretical choice, but a structural experience extracted from TradFi’s investment banking division of labor and Internet platform architecture.">
-# The five-layer architecture gives Web3's multi-party collaboration a system skeleton for the first time.
+<Hero badge="Chapter 5 · Network Architecture" lead="WCN is not a collection of features. It is a business architecture with five functional layers, ordered from where demand enters to where value settles. Each layer answers one question, and the output of one layer is the input of the next. The structure follows the division of labor that investment banking and platform engineering already proved.">
+# Five functional layers give Web3 collaboration a structure it can be held to.
 </Hero>
 
 <MetaGrid>
-  <Meta label="architectural patterns" value="Five levels of division of labor, sequential advancement, and convergence of results" />
-  <Meta label="Design source" value="TradFi Investment Bank Division of Labor + Internet Platform Architecture" />
-  <Meta label="Applicable objects" value="Architects, investors, node operators, partners" />
+  <Meta label="What this chapter does" value="Describes the five functional layers and how they connect" />
+  <Meta label="Core structure" value="One responsibility per layer, output passed downstream" />
+  <Meta label="You will learn" value="What each layer answers, who participates, and how the chain closes" />
 </MetaGrid>
 
+## The value-flow stack
+
+The five layers form a sequence, not a set of parallel modules. Demand enters at the first layer and value settles at the last. Each layer hands its output to the next.
+
 <CardGrid cols={2}>
-  <Card title="5.1 Overview of five-layer architecture" icon="building-2" href="/wiki/network-arch/5-1-overview-of-five-layer-architecture">What questions do the five layers answer, how to connect them in series, and comparison with TradFi and Web2 platform architectures.</Card>
-  <Card title="5.2 Project and asset layer" icon="package" href="/wiki/network-arch/5-2-project-and-asset-layer">Requirement entry: what types of projects enter, how to express requirements in a structured way, and the current pain points of Web3 Deal Flow.</Card>
-  <Card title="5.3 Capital allocation layer" icon="coins" href="/wiki/network-arch/5-3-capital-allocation-layer">Capital is not just money, but also judgment and allocation capabilities. Comparison with TradFi GP/LP model, Mandate-based Allocation.</Card>
-  <Card title="5.4 Execution and service layer" icon="wrench" href="/wiki/network-arch/5-4-execution-and-service-layer">The critical bridge from connection to delivery. The current situation of Web3 service fragmentation and how Agent can amplify execution capabilities.</Card>
-  <Card title="5.5 Distribution and Liquidity Layer" icon="radio" href="/wiki/network-arch/5-5-distribution-and-liquidity-layer">How the results hit the market. Systematic collaboration among stock exchanges, market makers, media, and KOL, compared with the traditional IPO process.</Card>
-  <Card title="5.6 Verification and Settlement Layer" icon="circle-check" href="/wiki/network-arch/5-6-verification-and-settlement-layer">The closing layer of the architecture: Proof Desk, PoB, Attribution and Settlement, giving all collaborations a trusted endpoint.</Card>
+  <Card title="5.1 Overview of the five-layer architecture" icon="building-2" href="/wiki/network-arch/5-1-overview-of-five-layer-architecture">What each layer answers, why the count is five, and how the sequence carries demand through to settlement.</Card>
+  <Card title="5.2 Project and asset layer" icon="package" href="/wiki/network-arch/5-2-project-and-asset-layer">The demand entry. What enters the system, how needs are structured, and why fragmented deal flow stalls.</Card>
+  <Card title="5.3 Capital allocation layer" icon="coins" href="/wiki/network-arch/5-3-capital-allocation-layer">Capital as judgment and allocation, not only money. How preferences are registered and demand is matched.</Card>
+  <Card title="5.4 Execution and service layer" icon="wrench" href="/wiki/network-arch/5-4-execution-and-service-layer">The bridge from connection to delivery. How tasks are scoped and how agents amplify execution.</Card>
+  <Card title="5.5 Distribution and liquidity layer" icon="radio" href="/wiki/network-arch/5-5-distribution-and-liquidity-layer">How results reach the market. Coordination across exchanges, market makers, media, and communities.</Card>
+  <Card title="5.6 Verification and settlement layer" icon="circle-check" href="/wiki/network-arch/5-6-verification-and-settlement-layer">The closing layer. Proof of Business reconciles evidence, attributes contribution, and settles value.</Card>
 </CardGrid>
 
 <Callout type="tip">
-The five layers are not parallel modules, but business sequences - projects raise demands → capital receives demands → services promote execution → distribution is sent to the market → value is verified and settled. Once you understand this sequence, you understand the system logic of WCN.
+The five layers run in order: projects raise demand, capital receives it, services advance execution, distribution reaches the market, and the verification layer proves and settles the result. Read the sequence and the logic of WCN follows.
 </Callout>

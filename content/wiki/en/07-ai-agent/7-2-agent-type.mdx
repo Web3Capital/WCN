@@ -1,59 +1,66 @@
 ---
-title: 7.2 Agent type
+title: 7.2 The five MVP Agents
 description: >-
-  The five types of Agents map different tool permissions, log granularity and
-  settlement calibers; they are aligned with roles in the orchestration
-  framework, but are bound to governance.
+  The five MVP Agents WCN ships first, each with its own scope, permissions,
+  output log, and PoB attribution record.
 chapter: 7
 order: 2
 ---
 
-<Hero badge="7.2 · Agent type" lead="Multi-agent frameworks such as CrewAI use “roles” to organize prompts and tools; WCN upgrades roles to governance objects: each type of Agent corresponds to different data visibility, executable actions, and PoB attribution templates. Without classification, permissions and settlement will be confused.">
-# Five types = five mission identities, not five chat skins.
+<Hero badge="7.2 · The five MVP Agents" lead="WCN does not open with a single all-purpose Agent. It ships five MVP Agents, each a structured execution unit with its own position, its own permissions, and its own attribution record. A type is a governance object, not a chat persona: it fixes what an Agent may see, what it may do, and what record it must leave.">
+# Five MVP Agents, each a defined execution unit with its own scope and record.
 </Hero>
 
 <MetaGrid>
-  <Meta label="What this page does" value="Type definition × Permission × Log × PoB caliber" />
-  <Meta label="core themes" value="Research / Deal / Growth / Execution / Liquidity" />
-  <Meta label="Reading highlights" value="Who can see what, what tools can be adjusted, what marks can be left" />
+  <Meta label="What this page does" value="Defines the five MVP Agents and what separates them" />
+  <Meta label="The five" value="Founder Decision Support, Project Diligence, Outreach and Meeting Summary, Node Support, PoB Evidence Validator" />
+  <Meta label="You will learn" value="Each Agent's scope, its permissions, and the record it leaves" />
 </MetaGrid>
 
-## Five typical Agents
+## The five MVP Agents
 
 <CardGrid cols={2}>
-  <Card title="Research Agent" icon="search">Information retrieval, multi-source summary, structured table of comparable companies/tracks, and due diligence list filling. **Tool examples**: Intranet document RAG, permitted third-party data API, prohibiting direct connection to any web page crawling (anti-injection). **LLM Note**: Fact references must have source anchors; values ​​are marked "to be verified" by default.</Card>
-  <Card title="Deal Agent" icon="handshake">Capital-project match candidates, teaser-level pitch drafts, deal stage status recommendations. **Prohibited**: Issuing binding terms or exclusive commitments on behalf of nodes without authorization. **Copilot comparison**: Copilot optimizes single-person manuscripts; Deal Agent output needs to have deal_id and recommendation logic summary for review.</Card>
-  <Card title="Growth Agent" icon="trending-up">Multi-version copy, funnel bullet points, post-campaign attribution summary (tied to the Growth task). **Risk**: Must go through the manual release gate before publishing to the outside world; avoid combining with prompt words such as "profit commitment".</Card>
-  <Card title="Execution Agent" icon="settings">Meeting minutes, to-do breakdown, reminder draft, and receipt tracking list. **Benchmark**: Closest to enterprise automation (Zapier/Make) + LLM, but each suggestion should be linked to meeting notes and timestamps.</Card>
-  <Card title="Liquidity Agent" icon="droplet">Liquidity and market health monitoring summary, checklist status, abnormal threshold alarm description. **TradFi Lenovo**: Similar to the "natural language layer" of a certain type of risk dashboard in Aladdin, the decision-making power still lies with the trading desk/node.</Card>
+  <Card title="Founder Decision Support" icon="brain">A thinking partner for the founder. It structures options, surfaces trade-offs, and drafts reasoning for review. It frames decisions; it does not make them, and its output stays advisory until a person acts on it.</Card>
+  <Card title="Project Diligence" icon="search">A four-dimension first draft of project due diligence. It retrieves from permitted sources, fills the diligence checklist, and marks every claim with a source. Figures default to "to be verified"; it does not contact the project on its own.</Card>
+  <Card title="Outreach and Meeting Summary" icon="mail">Draft outreach email plus meeting transcription and summary. It produces action items, owners, and follow-up drafts against a template. Nothing is sent automatically; the node reviews and sends by hand.</Card>
+  <Card title="Node Support" icon="message-circle">Automated node question-and-answer and FAQ. It answers from approved material and routes anything outside its scope to a person. It does not improvise policy or speak for the node.</Card>
+  <Card title="PoB Evidence Validator" icon="circle-check">A first-pass review of submitted evidence. It checks an evidence package against the required fields and flags gaps for the Proof Ledger. It pre-screens and sorts; it never finalizes a PoB record.</Card>
 </CardGrid>
 
-## Why can’t they be mixed into a “super agent”?
+## Why each Agent is a separate unit
 
-LangChain-style general-purpose Agents often share the same toolset; in institutional scenarios, the **principle of least privilege** will be violated. After classification, the system can do:
+A single all-purpose Agent sharing one toolset breaks the principle of least privilege. Separating the five lets the system fix, for each one, what it may see, what it may do, and what it must record.
 
 <CardGrid cols={2}>
-  <Card title="Who can see what" icon="eye">Research can read a wide range of materials; Liquidity can only read market prices and agreed contracts; Deal does not read sensitive fields of salary levels in the entire database by default.</Card>
-  <Card title="Who can do what" icon="wrench">Execution can write tasks and comments; Growth can only write marketing draft areas; no type of Agent can transfer money or sign contracts by default.</Card>
-  <Card title="Who should keep what log?" icon="clipboard-list">Research records the search query and fragment ID; Deal records the recommended features and versions; Liquidity records the indicator definition and data time.</Card>
-  <Card title="How and who gets into PoB" icon="circle-check">Attribution templates are split by type: for example, "Adopted Research Paragraphs" and "Adopted Growth Materials" have different Proof fields to avoid settlement disputes.</Card>
+  <Card title="What each may see" icon="eye">Project Diligence reads a wide set of materials; Node Support reads approved FAQ content; the PoB Evidence Validator reads only the submitted package and the required fields.</Card>
+  <Card title="What each may do" icon="wrench">Outreach and Meeting Summary drafts notes and emails; Node Support answers within approved material. No Agent may move funds or sign on its own.</Card>
+  <Card title="What each must log" icon="clipboard-list">Project Diligence records its query and the retrieved fragment; Outreach records the source meeting and timestamp; the Validator records which fields it checked and what it flagged.</Card>
+  <Card title="How each reaches PoB" icon="file-text">Attribution templates differ by Agent, so an adopted diligence draft and an adopted outreach note carry different Proof fields and do not collide at settlement.</Card>
 </CardGrid>
 
-## Mapping relationship with multi-agent orchestration
+## The expansion schedule
 
-The *agent / node* in CrewAI / LangGraph can be compared to the types of WCN, but WCN fixes three additional things: **(1)** The tool whitelist allowed for each type; **(2)** The state machine with the human approval edge; **(3)** The output is bound to `task_id`, node adoption event. Without (3), no matter how beautiful the arrangement is, it is just an internal experiment.
+The five MVP Agents are the starting set, not the ceiling. The whitepaper sets a phased path: the cluster grows to ten Agents in Phase 1, twenty-five in Phase 2, and forty mature Agents in Phase 3.
+
+<Statement>Each new Agent enters the same way as the first five: a defined position, a scoped permission set, an output log, and an attribution record. Growth adds units to the cluster; it does not loosen the boundary.</Statement>
+
+## The resident management cluster
+
+Beneath the MVP Agents, WCN's own operation runs on the founder plus eight resident Agents. One acts as conductor, six cover the pillar domains of legal, capital, network, knowledge, brand, and operations, and two are cross-cutting: one maintains the base layer, one handles audit.
+
+Each resident Agent carries one forbidden act and one always-true ledger assertion. The capital Agent never moves funds; the brand Agent never publishes without authorization. The pattern is the same as the MVP Agents: a fixed scope, a fixed limit, and a record that holds.
 
 <Callout type="warning">
-Not classified → Permission expansion → Logs cannot be defended → PoB cannot be priced. Type is a prerequisite for governance and commercialization, not a document decoration.
+Without separation, permissions widen, logs cannot be defended, and a PoB record cannot be priced. The type of an Agent is a precondition for governance and settlement, not a label.
 </Callout>
 
-## Short example: same event, multiple types of collaboration
+## One event, several Agents
 
 <Steps>
-  <Step title="Research">Pull public financing news + internal memo to generate "Conflict Points and Question List".</Step>
-  <Step title="Deal">Output a draft of "Next round of communication points" based on the list, with matching reasons (no automatic emailing).</Step>
-  <Step title="Execution">Write the meeting conclusion as an action item with owner/due and attach it to Task.</Step>
-  <Step title="Growth (optional)">Generate external neutral update copy from the adopted facts, and manually click to publish it.</Step>
+  <Step title="Project Diligence">Reads public financing news and the internal memo, then produces a list of conflict points and open questions.</Step>
+  <Step title="Founder Decision Support">Structures the trade-offs from that list and drafts the reasoning for the next round of discussion, for the founder to review.</Step>
+  <Step title="Outreach and Meeting Summary">Writes the meeting conclusion as action items with owners and due dates, and attaches them to the task.</Step>
+  <Step title="PoB Evidence Validator">Checks the resulting evidence package against the required fields and flags any gap before the Proof Ledger reviews it.</Step>
 </Steps>
 
-<Statement>The goal of types is to answer at the architectural level: if something goes wrong, is it a problem with the model, tools, configuration, or human adoption - it can be broken down before it can be managed.</Statement>
+<Statement>The point of separating the Agents is to answer one question when something goes wrong: was it the model, the tools, the configuration, or the human adoption. A boundary can be drawn only once the work is split.</Statement>

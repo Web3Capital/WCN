@@ -1,59 +1,102 @@
 ---
 title: "5.6 验证与结算层"
-description: "架构的收口层：Proof Desk、PoB、归因和 Settlement，让所有协作有可信终点。"
+description: "架构的收口层：Proof of Business 把证据对账成验证节点、归因贡献、结算价值。"
 chapter: 5
 order: 6
 ---
 
-<Hero badge="5.6 · 验证与结算层" lead="前四层解决了资源、资本、执行和分发。第五层解决最关键的问题：结果如何被确认、归因如何被计算、价值如何被结算。没有这一层，WCN 和一个高级版的 CRM 没有本质区别。验证与结算层，是整个系统存在的理由。">
-# L5 · 验证与结算层——把「做成了什么」变成「被证明了什么」。
+<Hero badge="5.6 · 验证与结算层" lead="前四层处理资源、资本、执行与分发。第五层处理决定这一切是否成立的问题：结果如何被确认、贡献如何被归因、价值如何被结算。没有这一层，WCN 与一个更高级的 CRM 没有实质区别。这一层是架构存在的理由。">
+# L5 · 验证与结算——把做成了什么，变成被证明了什么。
 </Hero>
 
 <MetaGrid>
   <Meta label="层级位置" value="L5 — 五层架构的价值出口" />
-  <Meta label="核心组件" value="Proof Desk → PoB → Attribution → Settlement" />
-  <Meta label="TradFi 对标" value="审计 + 清算所 + 绩效归因" />
+  <Meta label="核心机制" value="证据 → 对账 → 验证节点 → 结算" />
+  <Meta label="它回答的问题" value="结果如何变得可信" />
 </MetaGrid>
 
-## 这一层回答的核心问题：结果如何被系统相信？
+## 这一层回答的问题：结果如何变得可信？
 
-前四层再强大，如果没有 L5，系统就无法区分「真的做成了」和「声称做成了」。验证与结算层把主观叙事升级为可审计的证据链。
+前四层无论多强，没有 L5，系统就分不清做成了与声称做成了。这一层把主观叙事，升级为可审计的证据链。
 
-<Statement>L5 的本质：把「结果发生了」升级成「结果被证明了、被归因了、被结算了」。</Statement>
+<Statement>L5 的工作：把「结果发生了」，变成「结果被验证、被归因、被结算了」。</Statement>
 
 ---
 
-## 四个核心组件
+## 三账本与验证节点
 
-<CardGrid cols={2}>
-  <Card title="Proof Desk（证据收集）" icon="paperclip">Deal 完成后，Deal Owner 把结果证据提交至 Proof Desk：已签协议、打款记录、交付件、链上哈希、会议纪要、邮件确认。证据类型和数量取决于 Deal 类型——融资 Deal 需要协议 + 打款确认，服务 Deal 需要 SOW + 交付验收。</Card>
-  <Card title="Reviewer Queue（审核队列）" icon="search">独立审核人检查证据：材料完整性、真实性验证、时间线合理性、风险标记。关键规则：审核人不能是 Deal 参与方（利益回避），审核结果需要多签确认。</Card>
-  <Card title="PoB Event（业务证明）" icon="circle-check">审核通过后，业务结果作为 PoB Event 进入系统账本。PoB 记录不可篡改，包含完整的参与方、证据摘要、归因分配和时间戳。</Card>
-  <Card title="Settlement Run（周期结算）" icon="scale">PoB 在周期性 Settlement Run 中被汇总处理。系统基于归因比例，把价值分配给所有贡献方——节点、服务商和 Agent。</Card>
+WCN 并列保有三本账本——项目账本、资本账本、证明账本。对账沿着串联三者的中线运行。当一笔业务结果在三本之间对账一致，便生成一个验证节点：可被独立核验的锚点。
+
+<CardGrid cols={3}>
+  <Card title="项目账本" icon="package">提出了什么、界定了什么、执行了什么——工作本身的记录。</Card>
+  <Card title="资本账本" icon="coins">承诺了什么、投入了什么、结算了什么——资金的记录。</Card>
+  <Card title="证明账本" icon="circle-check">结果的可核验、防篡改记录，经对账与另外两本串联。</Card>
 </CardGrid>
 
 ---
 
-## 与 TradFi 验证体系的对比
+## 验证与结算如何运行
 
-<CardGrid cols={2}>
-  <Card title="TradFi：成熟但中心化" icon="landmark">四大会计师事务所（Deloitte / PwC / EY / KPMG）提供审计，DTCC / Euroclear 提供清算，Bloomberg / MSCI 提供绩效归因。体系成熟但高度中心化、高门槛、高成本。</Card>
-  <Card title="WCN：网络化 + 可编程" icon="globe">Proof Desk 替代人工审计收集，PoB 替代纸质审计报告，智能归因替代手动绩效计算，链上 Settlement 替代中心化清算。更开放、更可追踪、更低成本。</Card>
-</CardGrid>
+结果不凭一句声称进入记录。它在证据对账一致、审核人确认之后才进入。
 
-> **关键区别**：TradFi 的验证是**事后审计**（年报出来后才审），WCN 的验证是**实时嵌入**——每个 Deal 完成时就立即进入证据收集和审核流程，不存在「年底补账」的问题。
+<Steps>
+  <Step title="证据提交">Deal Owner 提交结果证据——已签协议、打款记录、交付件、链上哈希、纪要、确认。所需证据取决于 Deal：融资 Deal 需要协议与打款确认，服务 Deal 需要 scope 与验收。</Step>
+  <Step title="独立审核">审核人检查证据的完整性、真实性、时间线是否合理以及风险。审核人不能是 Deal 参与方，结果由多签确认。</Step>
+  <Step title="验证节点">通过审核后，对账在证明账本上生成验证节点。记录不可篡改，含参与方、证据摘要、归因与时间戳。</Step>
+  <Step title="结算">已验证记录被汇总，按既定周期结算。价值按归因分配给贡献方——节点、服务商与 Agent。</Step>
+</Steps>
 
 ---
 
-## 缺少验证层会发生什么
+## 业务闭环何时成立
+
+Proof of Business 记录的是可核验的业务结果，不是参与。一个闭环只在四个条件同时成立时才算数。
 
 <CardGrid cols={2}>
-  <Card title="结果主观化" icon="ban">参与方声称「我促成了这个 Deal」，但没有证据支持。系统退化为口头 claim 和关系型分配。</Card>
-  <Card title="归因争议" icon="ban">多方参与一个 Deal，谁贡献了多少无法判断。大多数 Web3 项目选择回避这个问题（平分或不结算），长期伤害参与积极性。</Card>
-  <Card title="信誉不累积" icon="ban">没有验证过的结果，节点的信誉评分无法建立。系统无法区分高价值节点和低价值节点。</Card>
-  <Card title="价值不沉淀" icon="ban">协作结果是一次性的——做完了就散了，没有系统性记录。网络无法从过去的合作中学习和积累。</Card>
+  <Card title="外部可观测" icon="eye">结果在系统外可见——一次签约、一笔转账、一次上线、一次交付、一个达成的目标。</Card>
+  <Card title="证据可核验" icon="paperclip">合同、回执、链上记录、合作方确认与可复核日志，支撑该结果。</Card>
+  <Card title="责任可追溯" icon="search">推进结果的每一步，都对应到具体的节点或 Agent。</Card>
+  <Card title="过程可复核" icon="repeat">审核人重审过程，得出相同结论。</Card>
+</CardGrid>
+
+---
+
+## 记录的状态
+
+在证明账本上，记录经过既定状态流转。每个都是精确术语，而非随口之词。
+
+<CardGrid cols={3}>
+  <Card title="已验证" icon="circle-check">记录已通过三账本对账。</Card>
+  <Card title="已结算" icon="scale">资本账本上的一笔交易已完成清算。</Card>
+  <Card title="已封存" icon="lock">记录被锁定——不再可改的终态。</Card>
+</CardGrid>
+
+<Callout type="info">
+争议或审计以最终裁定收口：不可上诉的结论。Proof of Business 是内部机制，但其证据链可供外部审计与监管调取复核——可取证，而非自我背书。
+</Callout>
+
+---
+
+## 实时嵌入，而非年末补账
+
+传统验证是事后审计——等周期结束才审。WCN 把验证嵌入当下。
+
+<CardGrid cols={2}>
+  <Card title="传统：事后审计" icon="landmark">成熟可信，但中心化、设门槛，且在周期结束后才审——动作与确认之间留有空档。</Card>
+  <Card title="WCN：实时嵌入" icon="globe">每笔 Deal 完成时即进入证据提交与审核。证据链对外部审计保持开放，不存在年末补账。</Card>
+</CardGrid>
+
+---
+
+## 缺少这一层会怎样
+
+<CardGrid cols={2}>
+  <Card title="结果停在主观" icon="ban">参与方声称促成了某笔 Deal，背后却没有证据。系统退回到言辞与关系。</Card>
+  <Card title="归因起争议" icon="ban">多方参与一笔 Deal，谁贡献了什么无从确立。多数项目回避这个问题，长期挫伤真实贡献。</Card>
+  <Card title="信誉不积累" icon="ban">没有已验证的结果，节点的信誉无从形成。系统分不清高价值节点与低价值节点。</Card>
+  <Card title="价值不沉淀" icon="ban">一次协作结束便散场，不留记录。网络无法从过去的工作中学习与复利。</Card>
 </CardGrid>
 
 <Callout type="tip">
-验证与结算层不是「最后一步补丁」，而是整个 WCN 架构存在的核心理由——它让所有协作都有了可信的终点，让所有贡献都有了可量化的价值，让网络从「一次性合作」变成「持续积累的系统」。
+验证与结算层不是收尾的补丁，而是架构存在的理由。它给每次协作一个可信终点，给每份贡献一个可量化的价值，把网络从一次性合作变成持续积累的系统。
 </Callout>

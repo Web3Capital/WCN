@@ -1,59 +1,56 @@
 ---
-title: "9.4 Agent 收入"
-description: "配置、订阅、执行、支持四层计费；类比 SaaS 用量与 Chainlink / Graph 的工作量结算，而非免费聊天机器人。"
+title: "9.4 价值链中的 Agent"
+description: "Agent 是执行放大器。其产出留下 PoB 证据，进入与人类工作相同的结算路径，并受严格治理约束。"
 chapter: 9
 order: 4
 ---
 
-<Hero badge="9.4 · Agent 收入" lead="Agent 若永远免费，平台只能把它当成本中心。WCN 将 Agent 商业化：配置费、周期订阅 / 用量、按闭环执行计费、运维与审核支持费——结构上等价于企业 SaaS + API 计量，并与 Chainlink 节点为数据服务收费、The Graph 索引者为查询市场工作同一逻辑：「履约与调用可计价」。">
-# 商业价值来自进入任务、产出被采纳的结果，而不是模型参数榜单排名。
+<Hero badge="9.4 · 价值链中的 Agent" lead="Agent 不是营销卖点，而是网络的执行放大器。1,000 个节点、每个可在结构化工作上指挥五个 Agent，其产出能力等价于 5,000 个执行单元。该能力进入与人类工作相同的 PoB 与 Carry 结算路径。">
+# Agent 凭借进入任务、产出被采纳的结果——并记录为证据——赢得自己的位置。
 </Hero>
 
 <MetaGrid>
-  <Meta label="这页作用" value="四类计费、与 Web3 协议类比、与服务 / Deal 的嵌套" />
-  <Meta label="核心主题" value="可计量、可合同化的智能层" />
-  <Meta label="阅读重点" value="独立 SKU vs 服务溢价、单位经济" />
+  <Meta label="这页作用" value="把 Agent 置于价值链之内" />
+  <Meta label="核心主题" value="执行被放大，再被验证" />
+  <Meta label="阅读重点" value="Agent 放大什么、其边界、产出如何结算" />
 </MetaGrid>
 
-## Agent 收入的来源
+## Agent 放大什么
 
-收入来自四个可独立开票或打包的维度：既可对节点 / 项目直收，也可嵌在服务费与 success fee 里作为**自动化溢价**。
+Agent 承担研究、引入、触达、跟进、监控与协调。它们不闲聊；它们进入限定范围的任务，并留下完整记录。通过扩展结构化执行，它们提高一组固定节点可推进的可验证业务量。
+
+<Statement>Agent 的价值来自进入真实结果并被采纳，而非来自模型有多大。</Statement>
+
+## 治理边界
+
+Agent 在严格边界内运作。这些边界正是让其产出进入记录、而非停留于非正式的条件。
 
 <CardGrid cols={2}>
-  <Card title="配置费" icon="settings">为节点或项目部署工作流、工具链、权限模板与合规策略的一次性或项目费；对标实施费（implementation fee）。</Card>
-  <Card title="使用费" icon="chart-bar">按席位、按周期、按调用次数或按 token 额度计费；对齐 Snowflake / OpenAI API 类用量模型，便于预测毛利。</Card>
-  <Card title="执行费" icon="play">Agent 参与指定里程碑任务（尽调清单、对账、材料生成、多轮评审）且交付物被采纳时计费；与结果弱绑定可降低「只跑不算」纠纷。</Card>
-  <Card title="支持费" icon="wrench">监控、调参、红队、人工复核与版本升级；高信任场景下客户愿为 SLA 付 recurring。</Card>
+  <Card title="能力清单" icon="clipboard-list">每个 Agent 有声明的能力边界，固定它可以做什么。</Card>
+  <Card title="任务合约" icon="file-text">每项任务携带限定范围的授权，按任务授予，而非常驻。</Card>
+  <Card title="PoB 证据" icon="circle-check">每个动作留下 PoB 记录，使工作可追溯、可复核。</Card>
+  <Card title="人类背书" icon="hand">Agent 不能签署合约、转移资金或做出对外承诺。须由人类背书。</Card>
 </CardGrid>
 
----
+## Agent 产出如何结算
 
-## Web3 类比：为什么不是「又一个 Chatbot」
+Agent 工作不按单独的表结算。其产出并入交付物，经 PoB 对账，并在与人类贡献相同的 Carry 瀑布内归因。
 
-| 协议 / 模式 | 可比点 | 对 WCN 的启示 |
-| --- | --- | --- |
-| Chainlink 预言机 | 节点为可靠数据交付收费 | Agent 交付的是**可审计工作产物**，应可合同化计费 |
-| The Graph 索引者 | 查询与市场激励对齐工作量 | 高频调用 = 更高基础设施成本 = 应对齐用量费 |
-| Filecoin 存储合约 | 按约履约、按量付费 | 长周期任务可拆里程碑付费，降低单方风险 |
+<Steps>
+  <Step number={1} title="进入限定任务">Agent 依其任务合约，在明确里程碑上行动——尽调、对账或材料生成。</Step>
+  <Step number={2} title="留下证据">该动作产出可复核的记录，支持结果主张。</Step>
+  <Step number={3} title="验证结果">对账成立后生成验证节点，结果成为已验证。</Step>
+  <Step number={4} title="经瀑布归因">已验证的净收益被结算，所贡献的工作在宪章约束的桶下归因。</Step>
+</Steps>
 
-共同点：**链上或链下，客户为持续可用的服务付对价**；不依赖代币二级市场涨价补贴算力。
+## 为什么这对模型重要
 
----
-
-## 为什么 Agent 收入成立
-
-<Statement>Agent 的商业价值不来自「模型有多强」，而来自「是否进入真实闭环并被采纳」。</Statement>
-
-在 WCN 中，Agent 承担正式执行角色：接入 Deal Room、服务工单与合规流时，其产出可留痕、可验收，因而具备**独立 SKU** 条件。免费期可用于教育市场，长期必须有价格锚，否则算力与合规成本无法由网络内化。
-
----
-
-## 与服务收入、成交收入的关系
-
-- **独立售卖**：Agent Desk、组织级订阅、按部门配额——现金流直接、产品边界清晰。
-- **嵌入溢价**：同一笔法务 retainer 或 FA 服务中，含「人机协同交付」的套餐可比纯人工报价更高毛利；success fee 不变时，平台可通过降低交付成本改善 take rate。
-- **飞轮**：成交越多 → 模板化工作流越多 → Agent 复用率上升 → 边际成本下降 → 更有空间做价格竞争或提高平台抽成。
+Agent 降低结构化执行的边际成本，使网络可在成本不成比例上升的情况下推进更多结果。这一收益通过已验证结果捕获，而非通过 Token 补贴。
 
 <Callout type="tip">
-将 Agent 仅定位为「提效工具」会低估其财务属性：在正确计量下，它是**第三类 recurring**（与席位、部分 retainer 并列），也是在熊市中不依赖 Token 补贴的增长杠杆。
+仅把 Agent 视为提效工具会低估其角色。在上述边界内，它是产出已验证结果的执行能力的一部分。它也是一种不依赖 Token 的杠杆。
+</Callout>
+
+<Callout type="warning">
+Agent 从不以自身权限结算。任何 Agent 未经人类背书不得签署、转移或承诺，每个动作均受对账约束。
 </Callout>

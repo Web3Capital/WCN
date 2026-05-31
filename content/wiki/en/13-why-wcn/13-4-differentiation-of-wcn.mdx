@@ -3,48 +3,54 @@ title: 13.4 Differentiation of WCN
 chapter: 13
 order: 4
 description: >-
-  Boundaries and overlaps with Chainlink, The Graph, DAO tools, CRM: What is the
-  business network layer exclusive to WCN.
+  The boundary with oracles, indexes, DAO tools, and CRM — what each solves,
+  what it does not, and the business network layer that belongs to WCN.
 ---
 
-<Hero badge="13.4 · Differentiation" lead="The comparison of competing products must be honest: **Oracles and indexes solve data entry; DAO tools solve governance and treasury; CRM solves pipeline management**. WCN does not regard the above-mentioned products as “low-level versions of itself”, but has a clear boundary - WCN aims at business closed loop, attribution and settlement across capital, projects, services and regions, and can be combined with these stacks when necessary rather than replacing them.">
-# Differentiation comes from category selection: the layer of "who contributed what, how the results are verified, and how the value is distributed."
+<Hero badge="13.4 · Differentiation" lead="The comparison should be honest. Oracles and indexes move data; DAO tools handle governance and treasury; CRM manages a pipeline. WCN does not treat these as lesser versions of itself. WCN targets the business loop, attribution, and settlement across capital, projects, services, and regions — composable with these stacks, not a replacement for them.">
+# Differentiation comes from the category: who contributed what, how the result is verified, and how value is settled.
 </Hero>
 
 <MetaGrid>
-  <Meta label="Core answer" value="How to draw the line between WCN and mainstream Web3/SaaS solutions?" />
-  <Meta label="overlap area" value="Both can involve “data” or “collaboration” - the purpose and trust model are different" />
-  <Meta label="exclusive proposition" value="Node responsibility + Agent execution + PoB proof + settlement isomorphic closed loop" />
+  <Meta label="What this page does" value="Draws the boundary between WCN and adjacent tools" />
+  <Meta label="Core question" value="Where does WCN end and a neighboring stack begin?" />
+  <Meta label="Read it as" value="Four honest comparisons, then the exclusive layer" />
 </MetaGrid>
 
 ## Honest comparison: four representative types
 
-<CardGrid cols={2}>
-  <Card title="Chainlink and other oracles" icon="link-2">**What to solve**: Off-chain data can be trusted on-chain (prices, events, reserve certificates, etc.). **What Not Solved**: Deal facilitation, service delivery, multi-role attribution and business SOPs. **With WCN**: If PoB needs to reference off-chain facts, the oracle can be part of the **evidence stack**; WCN does not engage in the core business of decentralized price feeding.</Card>
-  <Card title="The Graph et al index" icon="contact">**What to solve**: On-chain data query and subgraph organization. **What it doesn’t solve**: Structured collaboration of off-chain contracts, emails, and deliverables. **With WCN**: Index helps **show** on-chain status; WCN focuses on how **off-chain/hybrid processes** are recorded and verified.</Card>
-  <Card title="DAO tools (Snapshot, Safe, governance frontend, etc.)" icon="landmark">**What to solve**: Proposals, voting, multi-signature treasury and community treasury. **What it doesn’t solve**: Business delivery-oriented B2B task flow, service SLA, fundraising consultant-style attribution. ** and WCN**: DAO is biased toward intra-organizational governance; WCN is biased toward cross-organizational business networks and profit sharing.</Card>
-  <Card title="CRM such as Salesforce / HubSpot" icon="chart-bar">**What to solve**: Sales pipeline, customer records, marketing automation. **What it doesn’t solve**: Web3’s unique token economy, on-chain settlement, contribution proof and node profit sharing. **With WCN**: CRM is an integrable layer; WCN provides the semantics of who creates verifiable value in the network, not a replacement for a full-blown CRM.</Card>
-</CardGrid>
-
----
-
-## Structural differences in WCN (refocused)
+Each tool below shares an overlap with WCN — data, or collaboration. The purpose and the trust model differ. WCN composes with each rather than absorbing it.
 
 <CardGrid cols={2}>
-  <Card title="Node = responsible unit" icon="user">It is not only the user ID, but also the **accountable** resource and performance entrance; the reputation is bound to PoB.</Card>
-  <Card title="Agent = execution layer" icon="settings">Enter task flow and approval instead of isolated chat; output needs to be connected with evidence and attribution.</Card>
-  <Card title="PoB = Value Portal" icon="circle-check">**Enter the value layer only when the result is established**; it is decoupled from the activity or the number of posts.</Card>
-  <Card title="Settlement = undertaking layer" icon="coins">Profit sharing is aligned with long-term incentives and a record of contribution, not a narrative.</Card>
+  <Card title="Oracles, such as Chainlink" icon="link-2">Solves: bringing off-chain data onchain — prices, events, reserve attestations. Does not solve: deal facilitation, service delivery, multi-role attribution, or business workflows. With WCN: an oracle can be part of the evidence stack when PoB references an off-chain fact. WCN does not run a price feed.</Card>
+  <Card title="Indexes, such as The Graph" icon="contact">Solves: onchain data query and subgraph organization. Does not solve: structured collaboration over off-chain contracts, messages, and deliverables. With WCN: an index helps surface onchain state. WCN records and verifies the off-chain and hybrid process.</Card>
+  <Card title="DAO tools, such as Snapshot and Safe" icon="landmark">Solves: proposals, voting, and multi-signature treasury. Does not solve: delivery-oriented B2B task flow, service SLAs, or contributor-style attribution. With WCN: DAO tooling leans toward governance inside one organization; WCN leans toward a business network across organizations.</Card>
+  <Card title="CRM, such as Salesforce or HubSpot" icon="chart-bar">Solves: sales pipeline, customer records, and marketing automation. Does not solve: onchain settlement, contribution proof, or node-based sharing. With WCN: CRM is a layer to integrate. WCN supplies the semantics of who created verifiable value in the network.</Card>
 </CardGrid>
 
----
+## The structural difference in WCN
 
-## The place of the moat in differentiation
+WCN places four roles on one logic chain. The difference is the loop, not any single role.
 
-- **Network Effect**: Multiple types of participants (capital, projects, service providers, regional nodes) improve the efficiency of matching and trust transfer. A single CRM instance or a single DAO treasury is difficult to replicate **Cross-organizational map**.
-- **Data**: Once cross-closed-loop attribution and evidence standards become a habit, historical records become the **default basis for review and profit sharing**.
-- **Switching Cost**: Workflow, Agent configuration and PoB reputation are bound to the operational rhythm, and migration is equal to rebuilding the trust ledger.
+<CardGrid cols={2}>
+  <Card title="Node = responsibility unit" icon="user">Not only a user ID, but an accountable entrance for resources and performance. Reputation binds to Proof of Business (PoB).</Card>
+  <Card title="Agent = execution layer" icon="settings">Enters scoped task flow and approval, not isolated chat. Output connects to evidence and attribution.</Card>
+  <Card title="PoB = value entrance" icon="circle-check">A record reaches the value layer only when the result holds. It is decoupled from activity and post count.</Card>
+  <Card title="Settlement = bearing layer" icon="coins">Sharing aligns with a record of contribution and long-term incentives, not a narrative.</Card>
+</CardGrid>
 
-<Callout type="warning">It would be unbelievable to say that WCN “can be replaced by anything”. The correct statement is: ** Deepen the layer of business collaboration and result verification**, and other capabilities are completed through integration and partners.</Callout>
+## Where the advantage sits in differentiation
 
-<Statement>WCN is not a simple overlay of "better DAO" or "Web3 version of Salesforce", but an attempt to define the contribution, execution and settlement layer in the global business network - adjacent and composable with oracles, indexes, governance tools, and CRM, but without overlapping core propositions.</Statement>
+The same accumulation that defends the model marks the boundary. A single CRM instance or a single DAO treasury cannot reproduce a cross-organization map.
+
+<Steps>
+  <Step title="Data">Once cross-loop attribution and evidence standards become habit, the historical record becomes the default basis for review and sharing.</Step>
+  <Step title="Supply-side exclusivity">Trusted nodes and their contribution map are bound to PoB. A competitor cannot copy the loops that already happened.</Step>
+  <Step title="Switching cost">Workflow, Agent configuration, and PoB reputation bind to the operating rhythm. Migration equals rebuilding the ledger.</Step>
+</Steps>
+
+<Callout type="warning">
+It would overstate the case to say WCN replaces everything. The accurate statement is narrower: WCN deepens the layer of business collaboration and result verification, and completes other capabilities through integration and partners.
+</Callout>
+
+<Statement>WCN is not a better DAO or a Web3 version of Salesforce. It defines the contribution, execution, and settlement layer of a business network — adjacent to and composable with oracles, indexes, governance tools, and CRM, without overlapping their core propositions.</Statement>

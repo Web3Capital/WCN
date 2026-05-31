@@ -1,30 +1,38 @@
 ---
 title: "章节总览"
-description: "席位、佣金、Agent 与结算层：对标终端订阅 + 投行抽成 + SaaS，而非发行 Token 叙事。"
+description: "WCN 如何捕获价值并结算：节点权益、净收益上的 Carry 瀑布、服务与协调。该模型不依赖发行 Token 即可生存。"
 chapter: 9
 order: 0
 ---
 
-<Hero badge="第9章 · 商业模式" lead="WCN 的收入结构刻意对齐成熟 B2B：终端级席位费（Bloomberg 约 2.4 万美元 / 席位 / 年量级）、投行式成交佣金、SaaS / 用量计费与结算层费用。Token 不是生存前提。">
-# 商业模型若在 Token 之前不能闭合现金流，网络就仍是叙事；本章用可比公司与 Web3 基础设施类比，把四条收入线与飞轮写清。
+<Hero badge="第9章 · 商业模式" lead="WCN 通过三条来源捕获价值：节点权益销售、对已验证结果的 Carry 结算、服务与协调工作。价值不靠承诺捕获，而在账本上结算。">
+# WCN 先证明能在任何 Token 之前自筹资金，再通过宪章约束的瀑布结算每一笔已验证结果。
 </Hero>
 
 <MetaGrid>
-  <Meta label="核心主题" value="席位、服务 / 成交、Agent、结算层" />
-  <Meta label="阅读方式" value="9.1 总览 → 9.2–9.4 分项 → 9.5 与发行 Token 解耦" />
-  <Meta label="适用对象" value="投资人、财务、节点、产品 / BD" />
+  <Meta label="本章作用" value="界定价值如何捕获与结算" />
+  <Meta label="核心主题" value="节点权益、Carry 瀑布、服务、无 Token 生存" />
+  <Meta label="适用对象" value="节点、资本方、服务方、财务" />
 </MetaGrid>
 
+## 三条价值来源
+
+白皮书将价值捕获定义为三条来源，而非一套 Token 叙事。每条都对应可验证的机制，每条都在账本上结算，而非在情绪上结算。
+
 <CardGrid cols={2}>
-  <Card title="9.1 收入来源" description="围绕节点、Deal、服务和 Agent 形成多层收入结构，在 Token 之前建立现金收入。" href="/wiki/business-model/9-1-收入来源" icon="coins" />
-  <Card title="9.2 节点席位模型" description="席位不是投资产品，而是进入网络的正式位置——带权限、带责任、带长期参与资格。" href="/wiki/business-model/9-2-节点席位模型" icon="armchair" />
-  <Card title="9.3 服务与成交收入" description="服务费和成功费是最直接的商业验证，证明网络在做真实生意。" href="/wiki/business-model/9-3-服务与成交收入" icon="wrench" />
-  <Card title="9.4 Agent 收入" description="把 Agent 从能力层推进到商业层，形成可计价、可配置、可复用的收入。" href="/wiki/business-model/9-4-agent收入" icon="bot" />
-  <Card title="9.5 为什么不依赖发行 Token 生存" description="先业务后 Token，先现金流后长期价值映射——这条路径更慢但更稳。" href="/wiki/business-model/9-5-为什么wcn不依赖发币生存" icon="shield" />
+  <Card title="9.1 价值来源" description="节点权益、Carry 结算与服务构成同一结构。现金流在任何 Token 之前建立。" href="/wiki/business-model/9-1-收入来源" icon="coins" />
+  <Card title="9.2 节点权益模型" description="节点席位是把权益绑定责任的可追责合伙合约，不是投资产品。" href="/wiki/business-model/9-2-节点席位模型" icon="armchair" />
+  <Card title="9.3 服务与协调收入" description="引入、协调与服务交付，通过 Carry 瀑布把执行转为可结算份额。" href="/wiki/business-model/9-3-服务与成交收入" icon="wrench" />
+  <Card title="9.4 价值链中的 Agent" description="Agent 是执行放大器。其产出留下 PoB 证据，进入与人类工作相同的结算路径。" href="/wiki/business-model/9-4-agent收入" icon="bot" />
+  <Card title="9.5 为什么不依赖发行 Token 生存" description="红队中位募资可覆盖五到七年运营。生存不依赖 Token。" href="/wiki/business-model/9-5-为什么wcn不依赖发币生存" icon="shield" />
 </CardGrid>
 
-<Statement>可比锚：终端订阅（Bloomberg Terminal 公开市场常见报价约 2.4 万美元 / 席位 / 年；Pitchbook 等机构数据席年费常达 3 万美元以上）+ 投行 mandate / success fee + 平台抽成 + 链上 / 清结算服务费。</Statement>
+## Carry 瀑布结算净收益
 
-<Callout type="tip">
-四条现金流相互加固：付费席位筛选出可成交节点 → Deal 与服务拉高佣金与 Agent 调用 → 结算与托管需求上升 → 网络数据与协作密度再支撑席位溢价。这与单靠代币流动性补贴获客的项目结构不同。
+Carry 瀑布只对净收益分配。净收益定义为出资方本金返还之后的收益。出资方先返还本金，瀑布再按宪章约束的参数分配余额。
+
+<Statement>Backers（按比例）70%。Sourcing & Coordination（引入与协调）10%。Lead Node Bonus（主导节点奖励）10%。WCN Protocol Treasury（协议金库）5%。Service Provider Pool（服务方池）5%。</Statement>
+
+<Callout type="info">
+网络拿净收益的 30%。WCN 以可核验的 PoB 历史回报数据回应这一对赌，而非以承诺回应。已生成的 PoB 凭证与已结算记录不可事后篡改。
 </Callout>

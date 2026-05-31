@@ -1,56 +1,65 @@
 ---
 title: 8.4 Verification process
 description: >-
-  Incident submission → evidence package → review queue → conclusion → filing
-  and accounting; Proof Desk, supplementary documents, disputes and audit
-  traces.
+  From submission through evidence, review, and Reconciliation to a Verification
+  Node — with the states Verified, Sealed, and Settled, and a Verdict for
+  disputes.
 chapter: 8
 order: 4
 ---
 
-<Hero badge="8.4 · Verification process" lead="What the on-chain consensus confirms is the transaction sequence and state transition; what PoB confirms is “whether this thing happened as claimed in the business world.” The verification process compresses subjective narratives into auditable workflows: completeness of materials, time consistency, self-consistency of attribution, and comparison with exclusion rules (8.3).">
-# Happened ≠ Confirmed. Only after completing the verification chain will the result enter the PoB ledger and become a long-term value input.
+<Hero badge="8.4 · Verification process" lead="Onchain consensus confirms a transaction sequence and a state transition. PoB confirms whether a thing happened in the business world as claimed. The verification process compresses a subjective narrative into a reviewable workflow: material completeness, time consistency, attribution coherence, and a check against the exclusions of 8.3.">
+# Happened is not confirmed. A result enters the Proof Ledger only after Reconciliation, when it becomes a long-term value input.
 </Hero>
 
 <MetaGrid>
-  <Meta label="What this page does" value="Five-Step Link and Proof Desk Functions" />
-  <Meta label="core themes" value="Burden of proof, review, conclusion, non-repudiation filing" />
-  <Meta label="Reading highlights" value="Supplement/rejection/dispute; analogy and difference with PoW block production process" />
+  <Meta label="What this page does" value="Sets out the verification steps, the record states, and the review function" />
+  <Meta label="Core themes" value="Burden of proof, review, Reconciliation, Verdict" />
+  <Meta label="Reading highlights" value="Supplement, rejection, dispute; the states a record can hold" />
 </MetaGrid>
 
-## Five Steps to Verification (Workflow View)
+## The verification steps
+
+Each step carries the burden of proof on the submitting party. Material an independent reviewer cannot examine does not advance.
 
 <Steps>
-  <Step title="① Event submission">Generate a **unique event number** for the final state, and bind Deal, Task, related nodes and statement types (financing/service/growth, etc.). Submission bears the **burden of proof**: any gaps in materials must be filled by the submitting party within the time limit.</Step>
-  <Step title="② Upload evidence package">Submit contracts, on-chain references, bank/escrow paths (compliance desensitization), emails/minutes, acceptance forms, etc. according to the template. **Analog to GIPS**: The data should be sufficient to allow an independent party to use reasonable efforts to review the conclusion, rather than just "trust the applicant".</Step>
-  <Step title="③ Review queue">The auditor checks: **Authenticity** (whether it is consistent with a third party or on the chain), **Integrity** (whether the final state is closed), **Time Sequence** (whether it is backdated), **Attribution Boundary** (whether it conflicts with 8.5), **Exclusion Rules** (whether it falls into 8.3). Can be combined with multi-signature, rotation or sampling audits.</Step>
-  <Step title="④ Conclusion generation">**Passed** / **Supplement** / **Rejected** / **Dispute Escalation**. There should be a frequency and time limit for supplementary documents to prevent endless delays; objection records should be kept for disputes to avoid "passing by silence".</Step>
-  <Step title="⑤ Filing into account">After passing, the PoB event ledger (including conclusion hash, key metadata and version) is written. This record is similar to an audited performance entry: it can serve as an anchor for subsequent settlement, reputation and revalidation.</Step>
+  <Step title="Event submission">Generate a unique event number for the result and bind the Deal, the task, the related nodes, and the closed-loop type. The submitter carries the burden of proof: any gap in material must be filled within the time limit.</Step>
+  <Step title="Evidence package">Submit contracts, onchain references, bank or escrow paths under compliance, correspondence, and acceptance records per the template. The material must let an independent party re-review the conclusion, not merely trust the applicant.</Step>
+  <Step title="Review queue">The reviewer checks authenticity, completeness of the closed loop, time sequence against backdating, the attribution boundary of 8.5, and the exclusions of 8.3. Multi-signature, rotation, or sampling can apply.</Step>
+  <Step title="Reconciliation">The Project, Capital, and Proof ledgers are matched line by line to remove discrepancy. The outcome is one of: passed, supplement required, rejected, or dispute. Supplements carry a frequency and time limit; an objection is recorded so nothing passes by silence. A contested case ends in a Verdict.</Step>
+  <Step title="Verification Node">A passed record writes its conclusion hash, key metadata, and version, producing a Verification Node — the single anchor any party can check. The record is marked Verified. It anchors later settlement, reputation, and re-review.</Step>
 </Steps>
 
 <Callout type="info">
-Compared with PoW: what miners prove is **computing power**; what PoB audit proves is **the consistency of materials and facts**. Comparison with PoA: PoA trusts the **certifier's identity**; PoB still requires **evidence package**, and the reviewer's identity does not replace the material.
+A miner proves computing power. PoB review proves the consistency of material and fact. A reviewer's identity does not replace the evidence package — the material still has to hold.
 </Callout>
 
 ---
 
-## Proof Desk: Verification center, not network disk
+## The states a record can hold
+
+Once a Verification Node exists, the record moves through defined states. Each state is precise, and none is reversible past Sealed.
 
 <CardGrid cols={2}>
-  <Card title="Collect evidence" icon="inbox">Structured field + attachment version; avoid losing files in the chat window and making it unauditable.</Card>
-  <Card title="management review" icon="scale">Queue priority, SLA, double review or random inspection rules can be managed.</Card>
-  <Card title="Leave room for dispute" icon="message-square">The reasons for objections and rulings are left behind to facilitate subsequent review and rule iteration.</Card>
-  <Card title="Output conclusion" icon="flag">Clarify the final state: **Whether to enter PoB**; if it fails, it shall not enter the long-term value distribution semantics.</Card>
+  <Card title="Verified" icon="circle-check">The record passed Reconciliation across the three ledgers. The result is recognized and anchored to a Verification Node.</Card>
+  <Card title="Settled" icon="coins">The Capital ledger completed clearing for the transaction. Distribution against the record is done.</Card>
+  <Card title="Sealed" icon="lock">The record is locked in a final state that can no longer change. It stands as a permanent anchor.</Card>
+  <Card title="Verdict" icon="scale">A dispute or audit reached a conclusion that cannot be appealed. The Verdict closes the contest and binds attribution.</Card>
 </CardGrid>
 
 ---
 
-## The place where anti-cheating lies at the process level
+## Where anti-cheating sits in the process
 
-- **Cross-check**: Are the on-chain time, third-party email domain name, and contract number consistent with public disclosures.
-- **Mutually Exclusive Events**: Only one **Archived** dominant chain is allowed for the same financing round and the same acceptance target, unless split by ruling.
-- **Cooling and Frequency**: Abnormally high frequency, templated materials trigger manual or algorithm-assisted review.
+The process resists distortion through cross-checks and mutual-exclusion rules, not through trust in a name.
+
+<CardGrid cols={2}>
+  <Card title="Cross-check" icon="search">Onchain time, the counterparty email domain, and the contract number are matched against public disclosure.</Card>
+  <Card title="Mutually exclusive events" icon="hash">One financing round or acceptance target allows one Sealed lead chain, unless a Verdict splits it.</Card>
+  <Card title="Cooldown and frequency" icon="clock">Abnormal frequency or templated material triggers manual or algorithm-assisted review.</Card>
+  <Card title="Evidence chain available" icon="shield">The chain stays available for external audit and regulatory review — examinable, not self-attested.</Card>
+</CardGrid>
 
 <Callout type="tip">
-The verification process pushed WCN from "who has the loudest voice" to "who has the toughest materials." Without this step, PoB is no different from off-chain Excel recording credit, and is more susceptible to tampering.
+The verification process moves WCN from "who is loudest" to "whose material holds." Without it, PoB is no better than off-chain bookkeeping, and easier to tamper with.
 </Callout>

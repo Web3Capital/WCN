@@ -26,7 +26,7 @@
 :root {
   /* ── Typography stack ─────────────────────────────────── */
   --font-sans: ui-sans-serif, "Inter Variable", "Inter", system-ui, -apple-system, "SF Pro Text", "Segoe UI", sans-serif;
-  --font-serif: "Fraunces", "Tiempos Headline", "Iowan Old Style", "Georgia", "Times New Roman", serif;
+  --font-serif: "EB Garamond", "Source Han Serif SC", "Songti SC", "Georgia", "Times New Roman", serif;
   --font-mono: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
   --font-numeric: "Inter", ui-sans-serif, system-ui;
 
@@ -346,8 +346,110 @@ html[data-theme="dark"] .footer { background: color-mix(in oklab, var(--ink-1000
   html[data-theme="system"] .footer { background: color-mix(in oklab, var(--ink-1000) 82%, transparent); }
 }
 
+/* ════════════════════════════════════════════════════════════════════
+   WCN Visual System v4.0 — Sovereign Proof Ledger (token overrides)
+   Source of truth: WCN/Design-System/Visual-System/wcn-design-tokens.v4.sovereign.json
+   Placed AFTER the legacy token blocks so they win in the cascade. Legacy
+   --voltage / --blue / --ledger / --signal tokens are kept intact above for
+   the dashboard's data-visualisation; the public site consumes v4 below.
+   ════════════════════════════════════════════════════════════════════ */
+:root {
+  /* v4 primitives */
+  --bronze-700: #5F4E36; --bronze-600: #786349; --bronze-500: #8B7355; --bronze-300: #C2A57E;
+  --crimson: #8B1E1E; --crimson-300: #E07A72; --verdant: #1F4E2D; --verdant-300: #6FBF8E;
+  --sand: #E8DFC9; --code-bg: #F0EEE9; --tel-fg: #B5B7BD; --tel-comment: #8A8D95;
+  --paper-50: #FAFAF8;
+  /* retire electric voltage → the single brand accent is now bronze */
+  --voltage-300: var(--bronze-300); --voltage-500: var(--bronze-600); --voltage-600: var(--bronze-700); --voltage-700: var(--bronze-700);
+  --voltage-50: color-mix(in oklab, var(--bronze-600) 8%, transparent); --voltage-glow: 120, 99, 73;
+  /* v4 semantic — authority (THE bronze) + state surfaces */
+  --authority: var(--bronze-600);
+  --authority-decor: var(--bronze-500);
+  --surface-code: var(--code-bg);
+  --surface-sand: var(--sand);
+  --state-success: var(--verdant);
+  --state-danger: var(--crimson);
+  /* de-blue: general accent collapses to neutral ink. Emphasis comes from
+     structure + serif + scarce bronze authority. Primary CTA is ink. */
+  --accent: var(--ink-1000);
+  --accent-hover: var(--ink-800);
+  --accent-2: var(--ink-700);
+  --accent-soft: var(--ink-50);
+  --link: var(--ink-1000);
+  --signal-info: var(--ink-600);
+  --signal-info-bg: color-mix(in oklab, var(--ink-1000) 6%, transparent);
+  /* primary button — ink on paper */
+  --btn-bg: var(--ink-1000); --btn-bg-hi: var(--ink-800); --btn-fg: var(--paper-50); --btn-border: var(--ink-700);
+  /* focus + glow → neutral / bronze (never electric blue) */
+  --focus: 0 0 0 3px color-mix(in oklab, var(--ink-1000) 20%, transparent);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--bronze-600);
+  --shadow-glow: 0 0 0 1px color-mix(in oklab, var(--bronze-600) 24%, transparent), 0 0 24px color-mix(in oklab, var(--bronze-600) 14%, transparent);
+  /* serif → EB Garamond (self-hosted via next/font on <html>) */
+  --font-serif: "EB Garamond", "Source Han Serif SC", "Songti SC", "Georgia", "Times New Roman", serif;
+}
+html[data-theme="dark"] {
+  --authority: var(--bronze-300);
+  --authority-decor: var(--bronze-500);
+  --surface-code: #1C1E25;
+  --surface-sand: var(--sand);
+  --state-success: var(--verdant-300);
+  --state-danger: var(--crimson-300);
+  /* inverse CTA on dark = light paper with ink text */
+  --accent: #F5F5F2; --accent-hover: #E8E8E4; --accent-2: color-mix(in oklab, #F5F5F2 78%, transparent);
+  --accent-soft: color-mix(in oklab, #F5F5F2 12%, transparent);
+  --link: #E9E3D4;
+  --voltage-300: var(--bronze-300); --voltage-500: var(--bronze-300); --voltage-600: var(--bronze-500); --voltage-700: var(--bronze-700); --voltage-glow: 194, 165, 126;
+  --signal-info: color-mix(in oklab, #F5F5F2 72%, transparent);
+  --btn-bg: #F5F5F2; --btn-bg-hi: #FFFFFF; --btn-fg: var(--ink-1000); --btn-border: color-mix(in oklab, #F5F5F2 58%, transparent);
+  --focus: 0 0 0 3px color-mix(in oklab, var(--bronze-300) 40%, transparent);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--bronze-300);
+  --shadow-glow: 0 0 0 1px color-mix(in oklab, var(--bronze-300) 28%, transparent), 0 0 28px color-mix(in oklab, var(--bronze-300) 16%, transparent);
+}
+@media (prefers-color-scheme: dark) {
+  html[data-theme="system"] {
+    --authority: var(--bronze-300);
+    --authority-decor: var(--bronze-500);
+    --surface-code: #1C1E25;
+    --surface-sand: var(--sand);
+    --state-success: var(--verdant-300);
+    --state-danger: var(--crimson-300);
+    --accent: #F5F5F2; --accent-hover: #E8E8E4; --accent-2: color-mix(in oklab, #F5F5F2 78%, transparent);
+    --accent-soft: color-mix(in oklab, #F5F5F2 12%, transparent);
+    --link: #E9E3D4;
+    --voltage-300: var(--bronze-300); --voltage-500: var(--bronze-300); --voltage-600: var(--bronze-500); --voltage-700: var(--bronze-700); --voltage-glow: 194, 165, 126;
+    --signal-info: color-mix(in oklab, #F5F5F2 72%, transparent);
+    --btn-bg: #F5F5F2; --btn-bg-hi: #FFFFFF; --btn-fg: var(--ink-1000); --btn-border: color-mix(in oklab, #F5F5F2 58%, transparent);
+    --focus: 0 0 0 3px color-mix(in oklab, var(--bronze-300) 40%, transparent);
+    --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--bronze-300);
+    --shadow-glow: 0 0 0 1px color-mix(in oklab, var(--bronze-300) 28%, transparent), 0 0 28px color-mix(in oklab, var(--bronze-300) 16%, transparent);
+  }
+}
+
+/* ── v4: public three-ledger motif → neutrals + bronze Proof (authority) ──
+   Scoped to the marketing brand components so the dashboard keeps its
+   data-visualisation colours (--ledger-* stay indigo/amber/green there). */
+.ledgers-in-motion, .ledger-spine, .ledger-prism {
+  --ledger-node: var(--muted);
+  --ledger-deal: var(--text-2);
+  --ledger-settle: var(--authority);
+  --voltage-500: var(--authority);
+  --voltage-600: var(--bronze-700);
+}
+.section-architecture-grade, .ledger-ticker {
+  --ledger-node: var(--muted);
+  --ledger-deal: var(--muted);
+  --ledger-settle: var(--text-2);
+  --voltage-500: var(--text-2);
+}
+.voltage-callout {
+  --voltage-500: var(--authority);
+  --voltage-600: var(--bronze-700);
+  --accent: var(--authority);
+  --accent-2: var(--bronze-700);
+}
+
 * { box-sizing: border-box; }
-*::selection { background: color-mix(in oklab, var(--voltage-500) 28%, transparent); color: var(--text); }
+*::selection { background: color-mix(in oklab, var(--bronze-500) 30%, transparent); color: var(--text); }
 html { scroll-behavior: smooth; }
 html, body { font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03", "cv04"; }
 body {
@@ -358,8 +460,8 @@ body {
   letter-spacing: var(--tracking-tight);
   color: var(--text);
   background:
-    radial-gradient(1200px circle at 0% -10%, color-mix(in oklab, var(--voltage-500) 5%, transparent), transparent 55%),
-    radial-gradient(900px circle at 100% 0%, color-mix(in oklab, var(--ledger-node) 4%, transparent), transparent 50%),
+    radial-gradient(1200px circle at 0% -10%, color-mix(in oklab, var(--bronze-500) 4%, transparent), transparent 55%),
+    radial-gradient(900px circle at 100% 0%, color-mix(in oklab, var(--ink-1000) 3%, transparent), transparent 50%),
     var(--bg);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
@@ -384,7 +486,12 @@ h5, h6 { font-size: var(--type-sm); letter-spacing: var(--tracking-eyebrow); tex
 
 p { margin: 0 0 var(--space-3); }
 strong, b { font-weight: 600; color: var(--text); }
+/* v4: italic emphasis is for Latin/Cyrillic scripts only — CJK & Arabic never
+   render italic. Use .i-en to force italic on a Latin run inside CJK/AR copy. */
 em, i { font-style: italic; }
+:lang(zh) em, :lang(zh) i, :lang(ja) em, :lang(ja) i,
+:lang(ko) em, :lang(ko) i, :lang(ar) em, :lang(ar) i { font-style: normal; }
+.i-en { font-style: italic; }
 small { font-size: var(--type-sm); color: var(--muted); }
 code, kbd, samp, pre { font-family: var(--font-mono); font-size: 0.92em; letter-spacing: var(--tracking-mono); }
 code { padding: 1px 6px; background: var(--surface-tint); border: var(--hairline) solid var(--line); border-radius: var(--radius-2xs); }
@@ -435,7 +542,7 @@ a { color: inherit; text-decoration: none; transition: color var(--dur-1) var(--
 
 :where(a, button, [role="button"], input, select, textarea):focus-visible {
   outline: none;
-  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.3);
+  box-shadow: var(--focus);
   border-radius: var(--radius-sm);
 }
 :where(button, [role="button"]) {
@@ -850,13 +957,13 @@ html[data-theme="dark"] .brand-mark { background: linear-gradient(135deg, var(--
     color var(--dur-2) var(--ease-out);
 }
 .button {
-  color: #fff;
-  background: linear-gradient(180deg, color-mix(in oklab, var(--voltage-500) 100%, #fff 6%), var(--voltage-500));
-  border-color: color-mix(in oklab, var(--voltage-700) 50%, transparent);
+  color: var(--btn-fg);
+  background: linear-gradient(180deg, var(--btn-bg-hi), var(--btn-bg));
+  border-color: var(--btn-border);
   box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
+    inset 0 1px 0 0 color-mix(in oklab, var(--btn-fg) 16%, transparent),
     0 1px 2px rgba(11, 13, 23, 0.08),
-    0 0 0 1px color-mix(in oklab, var(--voltage-700) 18%, transparent);
+    0 0 0 1px color-mix(in oklab, var(--btn-border) 40%, transparent);
 }
 .button::after {
   content: ""; position: absolute; inset: 0; border-radius: inherit;
@@ -864,11 +971,11 @@ html[data-theme="dark"] .brand-mark { background: linear-gradient(135deg, var(--
   pointer-events: none;
 }
 .button:hover {
-  background: linear-gradient(180deg, color-mix(in oklab, var(--accent-hover) 100%, #fff 6%), var(--accent-hover));
+  background: linear-gradient(180deg, color-mix(in oklab, var(--btn-bg-hi) 92%, var(--btn-fg)), var(--btn-bg-hi));
   transform: translateY(-1px);
   box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
-    0 6px 16px rgba(45, 91, 255, 0.28),
+    inset 0 1px 0 0 color-mix(in oklab, var(--btn-fg) 20%, transparent),
+    0 6px 16px color-mix(in oklab, var(--ink-1000) 18%, transparent),
     0 1px 2px rgba(11, 13, 23, 0.10);
 }
 .button:active { transform: translateY(0) scale(0.985); transition-duration: 80ms; }
@@ -917,7 +1024,7 @@ html[data-theme="dark"] .brand-mark { background: linear-gradient(135deg, var(--
   font-family: var(--font-serif);
   font-variation-settings: "opsz" 144, "SOFT" 60;
 }
-.hero h1 em { font-style: italic; font-variation-settings: "opsz" 144, "SOFT" 100; color: color-mix(in oklab, var(--voltage-500) 90%, var(--text)); }
+.hero h1 em { color: var(--authority); }
 .hero-lede {
   font-family: var(--font-sans);
   font-size: clamp(17px, 1.6vw, 21px);
@@ -3797,9 +3904,9 @@ button.dashboard-nav-link {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(720px circle at 22% 18%, color-mix(in oklab, var(--ledger-node) 16%, transparent), transparent 56%),
-    radial-gradient(640px circle at 82% 24%, color-mix(in oklab, var(--voltage-500) 18%, transparent), transparent 50%),
-    radial-gradient(520px circle at 50% 90%, color-mix(in oklab, var(--ledger-settle) 12%, transparent), transparent 60%);
+    radial-gradient(720px circle at 22% 18%, color-mix(in oklab, var(--bronze-500) 10%, transparent), transparent 56%),
+    radial-gradient(640px circle at 82% 24%, color-mix(in oklab, var(--ink-1000) 7%, transparent), transparent 50%),
+    radial-gradient(520px circle at 50% 90%, color-mix(in oklab, var(--bronze-600) 8%, transparent), transparent 60%);
   filter: blur(36px);
   pointer-events: none;
   z-index: -1;
@@ -6543,7 +6650,7 @@ html[data-theme="dark"] .pob-formula-specbar {
   margin-bottom: var(--space-3);
 }
 
-/* #4 · Step numbers (Fraunces italic + hairline ring) */
+/* #4 · Step numbers (EB Garamond italic + hairline ring) */
 .apply-steps {
   display: grid;
   gap: var(--space-3);
@@ -8441,7 +8548,7 @@ html[data-theme="dark"] {
 }
 
 /* Pillars panel — editorial sidebar (NOT a glass card).
-   Magazine-style: ruled top + bottom, marginalia mono header, big Fraunces
+   Magazine-style: ruled top + bottom, marginalia mono header, big EB Garamond
    numbers in italic, hairline dividers between items. No shadow, no fill. */
 .about-pillars-panel-v2 {
   position: static;
@@ -9739,7 +9846,7 @@ html[data-theme="dark"] {
 
 /* ═══════════════════════════════════════════════════════════════════════
    WIKI LANDING · WORLD-CLASS EDITORIAL TYPOGRAPHY
-   Issue masthead bar · Fraunces title · Editorial chapter cards
+   Issue masthead bar · EB Garamond title · Editorial chapter cards
    ═══════════════════════════════════════════════════════════════════════ */
 
 .wiki-editorial {
@@ -10250,7 +10357,7 @@ html[data-theme="dark"] {
   background: color-mix(in oklab, var(--line) 90%, transparent);
 }
 
-/* — Hero h1 Fraunces + optical refinement — */
+/* — Hero h1 EB Garamond + optical refinement — */
 .nodes-page .nodes-hero-title {
   font-family: var(--font-serif);
   font-weight: 350;
@@ -10351,7 +10458,7 @@ html[data-theme="dark"] {
   margin-bottom: 4px;
 }
 
-/* — Section h2 Fraunces — applies to all № 0X sections — */
+/* — Section h2 EB Garamond — applies to all № 0X sections — */
 .nodes-page .nodes-section-h2 {
   font-family: var(--font-serif);
   font-weight: 350;
@@ -10450,7 +10557,7 @@ html[data-theme="dark"] {
   color: var(--text);
 }
 
-/* — Tier hierarchy: hollow numerals + Fraunces titles — */
+/* — Tier hierarchy: hollow numerals + EB Garamond titles — */
 .nodes-page .nodes-tier-card {
   position: relative;
   padding-top: clamp(28px, 3.4vw, 40px);
@@ -10654,7 +10761,7 @@ html[data-theme="dark"] {
   background: color-mix(in oklab, var(--line) 90%, transparent);
 }
 
-/* — Hero h1 optical refinement (Fraunces already applied via existing rules) — */
+/* — Hero h1 optical refinement (EB Garamond already applied via existing rules) — */
 .pob-page .pob-hero-title {
   font-variation-settings: "opsz" 144, "SOFT" 50;
   letter-spacing: -0.022em;
@@ -10747,7 +10854,7 @@ html[data-theme="dark"] {
   margin: 0;
 }
 
-/* — Section h2 Fraunces — */
+/* — Section h2 EB Garamond — */
 .pob-page .pob-section-h2 {
   font-family: var(--font-serif);
   font-weight: 350;
@@ -11274,7 +11381,7 @@ html[data-theme="dark"] {
   color: var(--text);
 }
 
-/* — Node types: ordered list with mono numerals + icons + Fraunces names — */
+/* — Node types: ordered list with mono numerals + icons + EB Garamond names — */
 .apply-page ol.apply-node-types {
   list-style: none;
   margin: 0;

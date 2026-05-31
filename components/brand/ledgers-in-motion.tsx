@@ -3,7 +3,7 @@
  *
  * Distilled to six elements after design review:
  *   1. The spine (gradient-rendered capital flow channel)
- *   2-4. Three ledger nodes (Registry / Capital / Settlement)
+ *   2-4. Three ledger nodes (Project / Capital / Proof)
  *   5. A single voltage pulse traveling the spine
  *   6. Three uppercase-mono labels under the nodes
  *
@@ -46,7 +46,7 @@ export function LedgersInMotion({ caption }: Props) {
         <g className="lim-node lim-node-1">
           <circle cx="120" cy="110" r="32" fill="color-mix(in oklab, var(--ledger-node) 8%, transparent)" stroke="var(--ledger-node)" strokeWidth="1" />
           <circle cx="120" cy="110" r="5" fill="var(--ledger-node)" />
-          <text x="120" y="166" textAnchor="middle" className="lim-label">REGISTRY</text>
+          <text x="120" y="166" textAnchor="middle" className="lim-label">PROJECT</text>
         </g>
         <g className="lim-node lim-node-2">
           <circle cx="360" cy="110" r="36" fill="color-mix(in oklab, var(--ledger-deal) 8%, transparent)" stroke="var(--ledger-deal)" strokeWidth="1" />
@@ -56,7 +56,7 @@ export function LedgersInMotion({ caption }: Props) {
         <g className="lim-node lim-node-3">
           <circle cx="600" cy="110" r="32" fill="color-mix(in oklab, var(--ledger-settle) 8%, transparent)" stroke="var(--ledger-settle)" strokeWidth="1" />
           <circle cx="600" cy="110" r="5" fill="var(--ledger-settle)" />
-          <text x="600" y="166" textAnchor="middle" className="lim-label">SETTLEMENT</text>
+          <text x="600" y="166" textAnchor="middle" className="lim-label">PROOF</text>
         </g>
       </svg>
 

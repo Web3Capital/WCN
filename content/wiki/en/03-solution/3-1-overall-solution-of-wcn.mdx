@@ -1,79 +1,80 @@
 ---
-title: 3.1 Overall solution of WCN
+title: 3.1 The overall solution
 description: >-
-  Four-layer unified workflow: node network + AI Agent + PoB + settlement layer,
-  and why existing solutions cannot be replaced.
+  One continuous workflow — node network, AI agents, Proof of Business, and
+  settlement — and why a DAO tool, a matching platform, or an AI tool cannot
+  replace it.
 chapter: 3
 order: 0
 ---
 
-<Hero badge="3.1 · Overall solution" lead="The core contradiction of Web3 is not the lack of participants, but the inability of participants to collaborate within the same set of rules. WCN's solution is to put resource organization, task execution, result verification and value settlement into a continuous workflow - not to make more connections, but to rebuild the underlying structure of collaboration.">
-# Instead of adding another tool, we organize resources, execution, certification and settlement into the same system.
+<Hero badge="3.1 · The overall solution" lead="Web3 does not lack participants. Participants cannot collaborate inside one set of rules. WCN places resource organization, task execution, result verification, and value settlement into a single continuous workflow. The answer is structural, not another connection.">
+# We organize resources, execution, verification, and settlement into one system.
 </Hero>
 
 <MetaGrid>
-  <Meta label="core logic" value="Organize resources → Promote execution → Verify results → Precipitate value" />
-  <Meta label="Key differences" value="End-to-end closed loop rather than single point of connection" />
-  <Meta label="Benchmarking ideas" value="What Bloomberg Terminal is to TradFi = WCN is to Web3 BD" />
+  <Meta label="Core logic" value="Organize resources → advance execution → verify the result → settle the value" />
+  <Meta label="Key difference" value="An end-to-end loop, not a single point of connection" />
+  <Meta label="Reference frame" value="What Bloomberg is to traditional finance, WCN is to Web3 business" />
 </MetaGrid>
 
-<Statement>The overall solution of WCN is to gather the fragmented collaboration that was originally scattered in Telegram, Email, Google Docs, and multi-signature wallets into a unified system with identity, process, evidence, and settlement.</Statement>
+<Statement>WCN gathers the collaboration now scattered across Telegram, email, shared documents, and multisig wallets into one system with identity, process, evidence, and settlement.</Statement>
 
-## Why existing solutions don’t solve the problem
+## Why existing tools do not solve the problem
 
-Before entering into WCN’s solution, let’s look at “how the industry works” now: A typical Web3 cross-border deal—for example, a Southeast Asian DeFi project looking for Middle Eastern capital—involves 6-10 roles such as the project party, FA, local BD, legal affairs, KOL, and market maker. Their collaboration toolchain today is:
+Consider how the industry works today. A typical cross-border deal — a Southeast Asian DeFi project seeking Middle Eastern capital — involves six to ten roles: the project team, the financial advisor, local business development, legal counsel, media, and a market maker. Their toolchain runs across separate, disconnected surfaces.
 
-> Telegram group chat → Google Docs sharing → Email follow-up → Offline meeting → Multi-signature wallet payment → Announcement in WeChat group
+> Telegram chat → shared documents → email follow-up → offline meeting → multisig payment → an announcement in a group
 
-The problem with this chain is not low efficiency, but a **systemic lack**:
+The problem with this chain is not slow execution. It is a structural gap. Each tool below covers one slice and leaves the rest untraceable.
 
 <CardGrid cols={2}>
-  <Card title="DAO tools" icon="landmark">Snapshot, Tally, etc. solve on-chain voting, but do not solve deal promotion, task allocation and contribution attribution. DAO governance and business execution are two completely different issues.</Card>
-  <Card title="Matchmaking platform" icon="handshake">TokenTerminal, RootData, etc. provide data and lists, but they stop at "introduction". Subsequent execution, verification, and settlement all occur outside the platform and cannot be traced.</Card>
-  <Card title="AI chat tool" icon="message-circle">ChatGPT and Perplexity can do research, but the output does not enter any formal workflow. No permission boundaries, no logs, no attribution, no billing eligibility.</Card>
-  <Card title="CRM/Project Management" icon="chart-bar">Notion, Airtable, and HubSpot can manage processes, but do not understand Web3's multi-party collaboration, cross-border settlement, and contribution certification requirements.</Card>
+  <Card title="DAO tooling" icon="landmark">Snapshot and Tally resolve onchain voting. They do not advance a deal, allocate tasks, or attribute contribution. Governance and business execution are separate problems.</Card>
+  <Card title="Matching platforms" icon="handshake">Token Terminal and RootData supply data and lists. They stop at the introduction. Execution, verification, and settlement all happen elsewhere and leave no record.</Card>
+  <Card title="AI chat tools" icon="message-circle">ChatGPT and Perplexity can research. The output enters no formal workflow. There is no permission boundary, no log, no attribution, and no claim to settlement.</Card>
+  <Card title="CRM and project tools" icon="chart-bar">Notion, Airtable, and HubSpot manage process. They do not model multi-party collaboration, cross-border settlement, or proof of contribution.</Card>
 </CardGrid>
 
 <Callout type="warning">
-What the industry really lacks is not a better tool, but a set of collaborative infrastructure that can put all roles, all actions, and all results into the same system. TradFi has Bloomberg + Pitchbook + DealCloud covering the entire link from data to execution to settlement; Web3 has no equivalent so far.
+The gap is not a better tool. It is collaborative infrastructure that puts every role, every action, and every result into one system. Traditional finance has Bloomberg, PitchBook, and DealCloud spanning data to execution to settlement. Web3 has no equivalent.
 </Callout>
 
 ---
 
-## WCN’s four-layer solution
+## The WCN architecture
 
-WCN’s answer is a four-layer unified architecture - not a bricolage of functions, but a continuous workflow from resources to settlement:
+WCN runs on three things working as one: a global, multi-tier node network; a Proof Ledger that uses Proof of Business as its settlement threshold; and AI agents that enter tasks and leave evidence. Settlement closes the loop.
 
 <CardGrid cols={2}>
-  <Card title="The first layer: node network" icon="globe">Organize project parties, capital parties, service providers, media, and regional resources into global multi-level nodes. Each node has a clear position, responsibility and authority. The node is not a fan - it is a collaborative unit that has resources, can advance, and is responsible.</Card>
-  <Card title="Second layer: AI Agent execution" icon="bot">Agent is not a chatbot, but an execution layer that enters the formal task flow. The Research Agent does project screening, the Matching Agent does resource matching, and the Growth Agent does growth distribution - each Agent has permission boundaries, output logs, and attribution records.</Card>
-  <Card title="The third level: Proof of Business" icon="circle-check">PoB is not an active point or a check-in. It is a proof mechanism for the real business closed loop: who introduced what resources, which link was advanced, what results were produced, and whether the evidence has been reviewed. Only a verified closed loop can enter the value layer.</Card>
-  <Card title="Level 4: Settlement and Value" icon="scale">The results of PoB verification enter the settlement layer to form traceable value attribution and distribution. This solves one of the oldest problems in Web3 - "Who should get how much" no longer relies on negotiation and relationships, but on system recording.</Card>
+  <Card title="Node network" icon="globe">Project teams, capital partners, service providers, media, and regional organizers, arranged as global multi-tier nodes. Each node holds a defined position, responsibility, and right. A node is not a follower; it routes resources, advances business, and carries risk.</Card>
+  <Card title="AI agent execution" icon="bot">Agents are not chatbots. They are execution units inside the formal task flow. Each agent holds a capability manifest, a task contract for each assignment, and a Proof of Business record. No agent signs, transfers, or commits without human endorsement.</Card>
+  <Card title="Proof of Business" icon="circle-check">Proof of Business is not a participation score. It is the verification mechanism for a real business outcome: who introduced the resource, which step advanced, what result formed, and whether the evidence passed review. Only a verified outcome reaches the value layer.</Card>
+  <Card title="Settlement" icon="scale">A verified outcome enters settlement and produces traceable attribution and distribution. This resolves one of the oldest questions in Web3 — who is owed how much — by record rather than by negotiation.</Card>
 </CardGrid>
 
 ---
 
-## minimum closed loop path
+## The minimal business loop
 
-The four-tier architecture works like this in a specific Deal:
+The architecture runs end to end inside a single deal. The whitepaper defines this path directly.
 
 <Callout type="info">
-Nodes introduce projects/resources → Deals are entered in a structured manner → Tasks are assigned to people and agents → Execution process output logs and results → Evidence is submitted to Proof Desk → PoB records are formed after approval → Enter the settlement layer for attribution and distribution
+A node routes a resource → the opportunity enters the workspace as structured work → tasks split across people and agents → execution produces an observable result → evidence is submitted → Proof of Business reconciles it → a Verification Node is generated → the record enters Carry settlement.
 </Callout>
 
-The key to this path is that the smallest verifiable unit of WCN is not a post, a group chat, or a superficial activity indicator, but a verified business closed loop.
+The smallest verifiable unit in WCN is not a post, a group, or a surface activity metric. It is one verified business loop.
 
 ---
 
-## Why unified workflow is key
+## Why one workflow is the point
 
 <CardGrid cols={2}>
-  <Card title="Solving attribution issues" icon="search">After the traditional Web3 Deal ends, who recommends, who promotes, and who delivers all depends on verbal assertions. WCN automatically records the contribution chain of each role in the process.</Card>
-  <Card title="Unlocking the true value of AI" icon="bot">Agent is no longer a standalone SaaS tool. It performs tasks within a unified system, and the output directly enters the Proof chain, and is attributed after being reviewed by humans. This is how AI truly enters the business closed loop.</Card>
-  <Card title="Eliminate information asymmetry" icon="radio">All participants see the same set of data, the same progress, and the same evidence. No more gray areas like "I thought you did it" or "He said he recommended it."</Card>
-  <Card title="Create a compounding network effect" icon="trending-up">Every verified closed loop is recorded as a system record. The longer the time, the clearer the node reputation, the more accurate the matching, and the harder it is for the system to be replaced - this is something that single-point tools cannot achieve.</Card>
+  <Card title="Attribution becomes record" icon="search">After a traditional deal closes, who sourced it, who advanced it, and who delivered rests on assertion. WCN records the contribution chain of each role as the work happens.</Card>
+  <Card title="AI enters the loop" icon="bot">An agent is no longer a standalone tool. It works inside one system, its output enters the Proof Ledger, and a human reviews it before attribution. That is how AI enters the business loop.</Card>
+  <Card title="Information asymmetry narrows" icon="radio">Participants see the same data, the same progress, and the same evidence. The gray areas — "I thought you did it," "he says he introduced them" — close.</Card>
+  <Card title="The network compounds" icon="trending-up">Each verified loop becomes a record. Over time, node reputation sharpens and matching improves. The system grows harder to replace — something a single-point tool cannot reach.</Card>
 </CardGrid>
 
 <Callout type="tip">
-WCN is not a new platform, but a new business organization method - it allows Web3's cross-border, multi-party, and multi-link collaboration to have a complete infrastructure for the first time, from resource entry to value settlement, end-to-end within the same system.
+WCN is not a new platform. It is a new way to organize business. For the first time, cross-border, multi-party, multi-step Web3 collaboration runs end to end inside one system, from resource entry to value settlement.
 </Callout>

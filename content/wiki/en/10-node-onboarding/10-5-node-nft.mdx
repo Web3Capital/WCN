@@ -3,51 +3,55 @@ title: 10.5 Node NFT
 chapter: 10
 order: 5
 description: >-
-  Node NFT: Programmable Seat Credentials; Comparison with ENS, SBT, W3C
-  Verifiable Credentials - a hybrid trust model of composable identity on the
-  chain + off-chain protocol and ACL.
+  The Node NFT is a programmable seat credential that binds rights to
+  responsibility. Standard nodes use ERC-721 plus ERC-6551, so each node carries
+  its own account. It is not a financial product.
 ---
 
-<Hero badge="10.5 · Node NFT" lead="The primary use of Node NFT is the programmable carrying of identities and permissions: the wallet holds “the system entrance to a certain type of seat under a certain version of rules” - not a dividend right certificate, nor an open-cast PFP. The design idea draws on professional access control cards (physical) and SAML/OIDC attribute assertions (traditional IT), but uses on-chain objects to achieve cross-application combinable verification.">
-# First there are post-event seats and closed loops, and then there are on-chain certificates; if the order is reversed, it will become an empty shell issuance.
+<Hero badge="10.5 · Node NFT" lead="The Node NFT carries a node's identity and permissions in one programmable credential. For a partner tier it is a partner contract: it binds rights — governance, revenue share, Deal Flow priority — to four duties. It is not a dividend certificate and not a profile picture. Standard nodes use ERC-721 plus ERC-6551, so each node carries its own account and performance record.">
+# The Node NFT binds rights to responsibility, not to a promise of return.
 </Hero>
 
 <MetaGrid>
-  <Meta label="definition" value="On-chain object of identity + permissions + (optional) history pointer" />
-  <Meta label="non-target" value="Collections that promise fixed income, are open to speculation, and are decoupled from delivery" />
-  <Meta label="trust stack" value="On-chain holding certificate + off-chain protocol + system-side ACL real-time status" />
+  <Meta label="Definition" value="An onchain credential carrying identity, permissions, and a pointer to history" />
+  <Meta label="What it is not" value="A certificate promising fixed return, open to speculation, decoupled from delivery" />
+  <Meta label="Standard" value="Standard nodes use ERC-721 plus ERC-6551 (token-bound account)" />
 </MetaGrid>
 
-## Comparison with three common types of identity technologies
+## A partner NFT is a partner contract
 
-| Solution | Strengths | Limitations | Node NFT Choices |
+For the four partner tiers — Founding, Country, City, Track — the NFT binds rights to responsibility in one credential. Rights cover governance, revenue share, and Deal Flow priority. Responsibility covers four duties: bring resources, advance collaboration, submit evidence, comply.
+
+The ERC-6551 token-bound account gives each node its own account and performance record. A node carries its history rather than scattering it across wallets.
+
+## How the Node NFT compares to common identity credentials
+
+| Credential | Strength | Limit | What WCN does |
 | --- | --- | --- | --- |
-| **ENS** | Human readable, widely integrated | Does not natively express complex permissions and organizational relationships | Can be juxtaposed with ENS: ENS refers to people/brands, Node NFT refers to **institutional seats** |
-| **SBT (Soul Binding Token)** | Emphasis on non-transferability and reputation binding | Upgrade, seat migration, and compliance freezing scenarios are inflexible | WCN can use certificates with **transferability determined by policy** (lockable, retractable mapping) |
-| **W3C Verifiable Credentials** | Standard privacy model, selective disclosure | Weak on-chain composability and wallet native display | Key statements can be double-written: VC is used for compliance disclosure, NFT is used for **fast access control within the protocol** |
+| ENS | Human-readable, widely integrated | Does not express complex permissions or organizational roles | Place beside ENS: ENS names a person or brand; the Node NFT names an institutional seat |
+| Soulbound Token | Non-transferable, reputation-bound | Inflexible for upgrade, seat migration, or compliance freeze | Use a credential whose transferability is set by policy — lockable, with a revocable mapping |
+| W3C Verifiable Credential | Standard privacy model, selective disclosure | Weak onchain composability and wallet display | Write key claims twice: the VC serves compliance disclosure; the NFT serves fast access control inside the protocol |
+
+## What the Node NFT carries
 
 <CardGrid cols={2}>
-  <Card title="identity carrier" icon="id-card">The chain proves that "a certain address is bound to a certain node subject and seat generation"; the refresh permissions are often passed through the metadata version or the side chain state root, rather than frequently changing wallets.</Card>
-  <Card title="Permission carrier" icon="key">As a **necessary but not sufficient** condition for calling API, entering contract functions or unlocking front-end routing; in the end, the server ACL and compliance flag will prevail - similar to hardware Token + server session.</Card>
-  <Card title="Record carrier (evolution)" icon="chart-bar">The reputation score, level, and historical Task hash pointers can be mounted; complete evidence is still mostly in off-chain object storage + Proof Desk to avoid mainnet gas and privacy issues.</Card>
-  <Card title="Programmability" icon="link-2">Support and incentive contracts, joint marketing whitelists, cross-partner SDK docking; restrictions must be made at the smart contract layer** Node NFT cannot be expressed as securities or deposit certificates**.</Card>
+  <Card title="Identity" icon="id-card">It proves onchain that an address is bound to a specific node and seat. Permission refreshes pass through a metadata version, not a wallet change.</Card>
+  <Card title="Permission" icon="key">It is a necessary but not sufficient condition for reaching an API, a contract function, or a route. The server's access control and compliance flag still govern.</Card>
+  <Card title="Record" icon="chart-bar">It can carry a reputation score, a tier, and a pointer to task history. Full evidence stays in offchain storage, to avoid gas and privacy cost.</Card>
+  <Card title="Programmability" icon="link-2">It supports incentive contracts, joint whitelists, and cross-partner integration. The contract layer must prevent any expression as a security or deposit.</Card>
 </CardGrid>
 
----
-
-## What Node NFT is Explicitly Not
+## What the Node NFT is not
 
 <CardGrid cols={2}>
-  <Card title="Not a financial product" icon="ban">No promises of principal, fixed income or automatic profit sharing linked to management size - clearly separated from the legal boundaries of licensed funds/deposits.</Card>
-  <Card title="Not a pure avatar" icon="ban">The visual layer is dispensable; the value comes from the binding relationship with WCN accounts, agreement obligations, and KPIs.</Card>
-  <Card title="Not licensed casting" icon="ban">The casting power lies on the network governance/operation side; opening up mint will destroy the scarcity of seats and the premise of risk control.</Card>
-  <Card title="Not a master key on a chain" icon="ban">When the private key is lost, the subject terminates the contract, or compliance is triggered, it should be handled through operation and maintenance methods such as freezing mapping, rotating addresses, and invalidating generational keys.</Card>
+  <Card title="Not a financial product" icon="ban">It promises no principal, no fixed return, and no automatic profit share. It is separated from the legal boundary of a fund or a deposit.</Card>
+  <Card title="Not a profile picture" icon="ban">The visual layer is incidental. Value comes from the binding to a WCN account, the agreement, and the duties.</Card>
+  <Card title="Not open minting" icon="ban">Minting sits with governance and operations. Open minting would destroy seat scarcity and the basis of risk control.</Card>
+  <Card title="Not a master key" icon="ban">A lost key, a terminated contract, or a compliance trigger is handled by freezing the mapping, rotating the address, or voiding the credential.</Card>
 </CardGrid>
 
----
+## Supply first, then the credential
 
-## Implementation principles
+<Callout type="warning">A node is an accountable position, not an identity bought with a fee. The network first establishes real deals, tasks, reviewers, and an evidence standard. Only then does the NFT carry that structure. Reversing the order — selling the credential before the duties exist — is an empty-shell issuance.</Callout>
 
-<Callout type="warning">**Business network first**: First have real Deal, Task, Reviewer and evidence standards, and then expand the NFT carrying scope. Otherwise, there will be the same risk as "selling membership cards first and then renovating the club" - reputation and supervision will be under pressure.</Callout>
-
-<Statement>At the current stage, Node NFT should be understood as a **digital card for professional networks**: verifiable on the chain, accountable off the chain, and the system can be recovered with one click - rather than a speculative target on the chain.</Statement>
+<Statement>The Node NFT is a credential for a professional network: verifiable onchain, accountable offchain, recoverable by the system. It is not a speculative asset.</Statement>

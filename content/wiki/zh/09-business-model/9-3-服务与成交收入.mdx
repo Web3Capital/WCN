@@ -1,64 +1,55 @@
 ---
-title: "9.3 服务与成交收入"
-description: "服务费 + success fee / mandate：对标投行与精品 FA，绑定真实 close，可比 Dealogic 生态中的交易情报与执行层。"
+title: "9.3 服务与协调收入"
+description: "服务交付与协调工作，通过 Carry 瀑布的引入桶与服务方桶，把执行转为可结算份额。"
 chapter: 9
 order: 3
 ---
 
-<Hero badge="9.3 · 服务收入" lead="席位证明「谁在网络里」；服务与成交收入证明「网络做成了什么」。结构上等价于投行 / FA 的 retainer + success fee，以及 Dealogic、Pitchbook 所服务的同一批付费主体——机构与交易团队——为**可执行情报与落地**持续付费。">
-# 最硬的验证是：钱在闭环成立时按规则进账，而不是在叙事转发时自我感动。
+<Hero badge="9.3 · 服务与协调" lead="节点权益证明谁在网络里。服务与协调收入证明网络做了什么。服务方池与引入及协调桶，把交付与引入工作转为每笔已验证结果的可结算份额。">
+# 执行在结果被验证之后才成为可结算份额，而非在引入达成之时。
 </Hero>
 
 <MetaGrid>
-  <Meta label="这页作用" value="服务 SKU、成交费类型、行业对标" />
-  <Meta label="核心主题" value="能力与结果双重计费" />
-  <Meta label="阅读重点" value="success fee 逻辑、与席位 / Agent 的飞轮" />
+  <Meta label="这页作用" value="界定服务与协调收入" />
+  <Meta label="核心主题" value="执行转为可结算份额" />
+  <Meta label="阅读重点" value="服务层、两个 Carry 桶、结算顺序" />
 </MetaGrid>
 
-## 服务收入
+## 服务交付
 
-项目节点在法务、安全、开发、增长、研究、品牌等维度购买**可交付成果**时，WCN 通过认证服务节点、标准化服务包与平台撮合抽成形成收入。对标的是**专业服务 + 市场抽成**，不是广告点击。
-
-<CardGrid cols={2}>
-  <Card title="法务 / 结构服务" icon="scale">架构设计、合规路径、合同模板与审阅；可按项目包或小时 / 阶段计费，平台可收取介绍费或管理费。</Card>
-  <Card title="安全 / 审计服务" icon="shield">智能合约审计、运行安全、渗透与架构评估；高单价、低频次，适合与 Deal 里程碑绑定。</Card>
-  <Card title="增长 / 品牌服务" icon="trending-up">BD、媒体、社区与内容；可 retainer + KPI，避免纯「刷量」无对齐。</Card>
-  <Card title="研究 / 数据服务" icon="search">尽调、赛道图谱、对标分析；可比 Pitchbook / 第三方研究的**定制加层**，按报告或订阅叠加。</Card>
-</CardGrid>
-
----
-
-## 成交 / 成功费
-
-融资、并购、战略合作或关键资源接入**按约定条件 close** 后，收取 success fee、mandate fee 或平台成交佣金。这与投行、精品 FA、部分经纪商一致：**收入事件 = 交易或合作成立**，而非「接触过就算」。
+服务方层持有界定类别下的专业服务节点——法务、安全、增长、研究、品牌及相关能力。当项目节点调用这些能力时，工作进入网络记录，并推进至一笔已验证结果。
 
 <CardGrid cols={2}>
-  <Card title="融资 success fee" icon="coins">常见行业表达：融资金额的小个位数百分点或阶梯；可与里程碑（交割、到账）绑定以降低争议。</Card>
-  <Card title="资源接入 success fee" icon="handshake">交易所、链、托管、流动性或战略资源引入后的约定分成或一次性费。</Card>
-  <Card title="服务成交收入" icon="wrench">经网络撮合签订的大额服务合同，平台按规则收取撮合 / 管理费。</Card>
-  <Card title="Deal Room mandate" icon="clipboard-list">重点项目独占或半独占执行权对应的 retainer + success 组合，对齐投行 mandate 逻辑。</Card>
+  <Card title="法务与结构" icon="scale">架构设计、合规路径与合同审阅。工作限定为明确交付物，并记录以供对账。</Card>
+  <Card title="安全与审计" icon="shield">合约审计、运行安全与架构评估。高价值、低频次，绑定结果里程碑。</Card>
+  <Card title="增长与品牌" icon="trending-up">业务拓展、媒体与内容。限定为明确里程碑，使工作对应可验证结果。</Card>
+  <Card title="研究与数据" icon="search">尽调、赛道图谱与对标，以明确报告或限定范围的委托交付。</Card>
 </CardGrid>
 
----
+## Carry 瀑布中的两个桶
 
-## 与 Dealogic / 数据终端的关系
+服务与协调工作通过 Carry 瀑布结算，而非通过单独的费率表。两个桶承载它。两者都从净收益支付，即出资方本金返还之后。
 
-Dealogic、Pitchbook 等卖的是**交易情报与工作流程基础设施**；WCN 在同一客户预算池内竞争的是**从情报到协作再到 close** 的下一截链条。席位费买的是**入场与工具**；成交费买的是**结果对齐**——二者叠加才能证明网络在机构预算里占据稳定品类。
+<CardGrid cols={2}>
+  <Card title="Sourcing & Coordination · 10%" icon="handshake">引入机会、协调推进工作的份额。它奖励把一条联系推进为结构化结果。</Card>
+  <Card title="Service Provider Pool · 5%" icon="wrench">在该结果上交付服务的份额。它把限定范围、已验收的工作转为净收益的可结算部分。</Card>
+</CardGrid>
 
----
+<Callout type="info">
+两个桶分配的都是净收益，定义为出资方本金返还之后的收益。结算在 PoB 对账之后进行，已结算记录不可事后篡改。
+</Callout>
 
-## 单位经济学与飞轮
+## 结算顺序
 
-- **Retainer / 服务费**：改善现金流曲线，覆盖交付与风控固定成本；毛利率取决于是否平台自有交付还是纯撮合。
-- **Success fee**：单笔可很大，但波动高；适合与**证据链清晰的 close 定义**绑定，减少纠纷。
-- **飞轮**：席位客户更易产生服务购买与 Deal → 成交费拉高平台 GMV 感知 → 吸引更多高质量服务节点入驻 → 项目方愿付更高服务费或更快付 success 对价。
+清晰的顺序使归因保持有据。收入在结果被验证时确认，而非在建立联系时确认。
 
 <Steps>
-  <Step number={1} title="定义 close">书面约定何为「成交」：签约、到账、主网迁移完成等可验证事件。</Step>
-  <Step number={2} title="分层收费">低门槛服务费获客，高杠杆 success fee 分享上行，避免只靠天价席吓退早期用户。</Step>
-  <Step number={3} title="与 Agent 叠加">尽调、材料、对账自动化降低边际成本，同样价格下平台与服务方利润空间改善。</Step>
+  <Step number={1} title="界定结果">书面声明何为结果——签约、转账、上线、交付或某个 KPI 达成。</Step>
+  <Step number={2} title="提交证据">合同、收据、链上记录、合作方背书与可复核日志支持该主张。</Step>
+  <Step number={3} title="经 PoB 对账">对账成立后生成验证节点，使结果成为已验证。</Step>
+  <Step number={4} title="结算份额">净收益通过瀑布分配，两个服务桶结算各自部分。</Step>
 </Steps>
 
 <Callout type="tip">
-席位能冷启动网络，但只有服务与成交收入能证明**网络在机构世界里真的做生意**。没有这一条，再像 Bloomberg 定价也只是空壳终端。
+节点权益能启动网络，但服务与协调收入证明它在做真实生意。没有已验证的交付，席位只是一个位置，背后无任何已结算。
 </Callout>

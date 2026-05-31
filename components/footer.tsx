@@ -56,7 +56,7 @@ export function Footer() {
             {t("copyright", { year: new Date().getFullYear() })}
           </p>
           <span className="footer-meta">
-            <span>v3.0 · Sovereign</span>
+            <span>v4.0 · Sovereign</span>
             <span className="footer-meta-dot" aria-hidden />
             <span>audit-first protocol</span>
             <span className="footer-meta-dot" aria-hidden />

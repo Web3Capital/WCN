@@ -1,61 +1,104 @@
 ---
-title: 5.6 Verification and Settlement Layer
+title: 5.6 Verification and settlement layer
 description: >-
-  The closing layer of the architecture: Proof Desk, PoB, Attribution and
-  Settlement, giving all collaborations a trusted endpoint.
+  The closing layer: Proof of Business reconciles evidence into a Verification
+  Node, attributes contribution, and settles value.
 chapter: 5
 order: 6
 ---
 
-<Hero badge="5.6 · Verification and Settlement Layer" lead="The first four layers address resources, capital, execution, and distribution. The fifth layer solves the most critical issues: how the results are confirmed, how the attribution is calculated, and how the value is settled. Without this layer, there is no essential difference between WCN and an advanced version of CRM. The verification and settlement layer is the reason for the existence of the entire system.">
-# L5 · Verification and settlement layer - turning "what was done" into "what was proven".
+<Hero badge="5.6 · Verification and Settlement Layer" lead="The first four layers handle resources, capital, execution, and distribution. The fifth handles the questions that decide whether any of it holds: how a result is confirmed, how contribution is attributed, and how value is settled. Without this layer, WCN would not differ in substance from a higher-grade CRM. This layer is the reason the architecture exists.">
+# L5 · Verification and settlement — turning what was done into what was proven.
 </Hero>
 
 <MetaGrid>
-  <Meta label="hierarchical position" value="L5 - Value export of five-layer architecture" />
-  <Meta label="core components" value="Proof Desk → PoB → Attribution → Settlement" />
-  <Meta label="TradFi Benchmarking" value="Audit + Clearinghouse + Performance Attribution" />
+  <Meta label="Position" value="L5 — the value outlet of the five-layer architecture" />
+  <Meta label="Core mechanism" value="Evidence → Reconciliation → Verification Node → Settlement" />
+  <Meta label="The problem it answers" value="How a result becomes trustworthy" />
 </MetaGrid>
 
-## The core question answered at this level: How can the results be believed by the system?
+## The question this layer answers: how does a result become trustworthy?
 
-No matter how powerful the first four layers are, without L5, the system cannot distinguish between "really done" and "claimed to be done." The verification and settlement layer upgrades subjective narratives into auditable evidence chains.
+However capable the first four layers are, without L5 the system cannot separate done from claimed to be done. This layer upgrades a subjective narrative into an auditable chain of evidence.
 
-<Statement>The essence of L5: Upgrading "the result happened" to "the result was proven, attributed, and settled."</Statement>
+<Statement>The work of L5: turning "the result happened" into "the result was verified, attributed, and settled."</Statement>
 
 ---
 
-## Four core components
+## The three ledgers and the Verification Node
 
-<CardGrid cols={2}>
-  <Card title="Proof Desk (evidence collection)" icon="paperclip">After the deal is completed, the Deal Owner submits the result evidence to the Proof Desk: signed agreement, payment record, deliverables, on-chain hash, meeting minutes, and email confirmation. The type and amount of evidence depends on the deal type - a financing deal requires agreement + payment confirmation, and a service deal requires SOW + delivery acceptance.</Card>
-  <Card title="Reviewer Queue" icon="search">Independent reviewers check evidence for: material integrity, authenticity verification, timeline plausibility, risk flagging. Key rules: The reviewer cannot be a Deal participant (interest avoidance), and the review results require multiple signatures for confirmation.</Card>
-  <Card title="PoB Event (Proof of Business)" icon="circle-check">After passing the review, the business results will be entered into the system ledger as PoB Event. PoB records are immutable and contain complete participants, evidence summaries, attribution assignments, and timestamps.</Card>
-  <Card title="Settlement Run (cycle settlement)" icon="scale">PoBs are aggregated and processed in periodic Settlement Runs. The system allocates value to all contributors - nodes, service providers and agents based on attribution ratios.</Card>
+WCN keeps three parallel ledgers — the Project ledger, the Capital ledger, and the Proof ledger. Reconciliation runs along the midline that joins them. When a business outcome reconciles across the three, it produces a Verification Node: an anchor that can be checked independently.
+
+<CardGrid cols={3}>
+  <Card title="Project ledger" icon="package">What was raised, scoped, and executed — the record of the work itself.</Card>
+  <Card title="Capital ledger" icon="coins">What was committed, deployed, and settled — the record of the money.</Card>
+  <Card title="Proof ledger" icon="circle-check">The verifiable, tamper-evident record of outcomes, joined to the other two by reconciliation.</Card>
 </CardGrid>
 
 ---
 
-## Comparison with TradFi verification system
+## How verification and settlement run
 
-<CardGrid cols={2}>
-  <Card title="TradFi: mature but centralized" icon="landmark">The Big Four accounting firms (Deloitte/PwC/EY/KPMG) provide audits, DTCC/Euroclear provide clearings, and Bloomberg/MSCI provide performance attribution. The system is mature but highly centralized, high threshold, and high cost.</Card>
-  <Card title="WCN: Networked + Programmable" icon="globe">Proof Desk replaces manual audit collection, PoB replaces paper audit reports, intelligent attribution replaces manual performance calculations, and on-chain Settlement replaces centralized clearing. More open, more traceable, and lower cost.</Card>
-</CardGrid>
+A result does not enter the record on a claim. It enters once evidence reconciles and a reviewer confirms it.
 
-> **Key difference**: TradFi's verification is **post-action audit** (reviewed after the annual report is released), while WCN's verification is **real-time embedding** - each deal will immediately enter the evidence collection and review process when it is completed, and there is no "year-end replenishment" problem.
+<Steps>
+  <Step title="Evidence submission">The deal owner submits the result evidence — signed agreement, payment record, deliverable, onchain hash, minutes, confirmation. What is required depends on the deal: a financing deal needs the agreement and payment confirmation; a service deal needs the scope and acceptance.</Step>
+  <Step title="Independent review">A reviewer checks the evidence for completeness, authenticity, a plausible timeline, and risk. A reviewer cannot be a participant in the deal, and the result is confirmed by multiple signatures.</Step>
+  <Step title="Verification Node">On passing review, reconciliation produces a Verification Node on the Proof ledger. The record is immutable and carries the participants, an evidence summary, the attribution, and timestamps.</Step>
+  <Step title="Settlement">Verified records are aggregated and settled on a defined schedule. Value is allocated to contributors — nodes, service providers, and agents — by their attribution.</Step>
+</Steps>
 
 ---
 
-## What happens if the validation layer is missing
+## What makes a business loop valid
+
+Proof of Business records a verifiable business outcome, not participation. A loop counts only when four conditions hold.
 
 <CardGrid cols={2}>
-  <Card title="subjectivity of results" icon="ban">The participant claimed that "I facilitated this deal", but there was no evidence to support it. The system degenerates into verbal claims and relational assignments.</Card>
-  <Card title="attribution controversy" icon="ban">Multiple parties participate in a deal, and it is impossible to determine who contributed how much. Most Web3 projects choose to avoid this issue (deuce or not settle), hurting participation in the long term.</Card>
-  <Card title="Credibility does not accumulate" icon="ban">Without verified results, a node's reputation score cannot be established. The system cannot differentiate between high-value nodes and low-value nodes.</Card>
-  <Card title="Value does not accumulate" icon="ban">The results of collaboration are one-off - they are broken up as soon as they are done, and there is no systematic record. The network cannot learn and accumulate from past cooperation.</Card>
+  <Card title="Externally observable" icon="eye">The result is visible outside the system — a signing, a transfer, a launch, a delivery, a met target.</Card>
+  <Card title="Verifiable evidence" icon="paperclip">Contracts, receipts, onchain records, partner confirmation, and reviewable logs support the result.</Card>
+  <Card title="Traceable responsibility" icon="search">Each step that advanced the outcome maps to a specific node or agent.</Card>
+  <Card title="Reviewable process" icon="repeat">A reviewer, re-examining the process, reaches the same conclusion.</Card>
+</CardGrid>
+
+---
+
+## The states of a record
+
+On the Proof ledger, a record moves through defined states. Each is a precise term, not a casual one.
+
+<CardGrid cols={3}>
+  <Card title="Verified" icon="circle-check">The record has passed reconciliation across the three ledgers.</Card>
+  <Card title="Settled" icon="scale">A transaction on the Capital ledger has completed its settlement.</Card>
+  <Card title="Sealed" icon="lock">The record is locked — a final state that can no longer change.</Card>
+</CardGrid>
+
+<Callout type="info">
+A dispute or audit resolves in a Verdict: a conclusion that cannot be appealed. Proof of Business is an internal mechanism, but its evidence chain can be retrieved and re-examined by external auditors and regulators — evidence-backed, not self-asserted.
+</Callout>
+
+---
+
+## Real-time, not year-end
+
+Traditional verification is an audit after the fact — reviewed once the period closes. WCN embeds verification in the moment.
+
+<CardGrid cols={2}>
+  <Card title="Traditional: post-action audit" icon="landmark">Established and trustworthy, but centralized, gated, and reviewed after the period — which leaves a gap between the action and its confirmation.</Card>
+  <Card title="WCN: real-time embedding" icon="globe">Each deal enters evidence submission and review as it completes. The evidence chain stays open to external audit, so there is no year-end catch-up.</Card>
+</CardGrid>
+
+---
+
+## What fails without this layer
+
+<CardGrid cols={2}>
+  <Card title="Results stay subjective" icon="ban">A participant claims to have driven a deal, with no evidence behind the claim. The system falls back to words and relationships.</Card>
+  <Card title="Attribution is contested" icon="ban">Several parties join one deal, and no one can establish who contributed what. Most projects avoid the question, which discourages real contribution over time.</Card>
+  <Card title="Reputation does not build" icon="ban">Without verified results, a node's reputation cannot form. The system cannot tell a high-value node from a low-value one.</Card>
+  <Card title="Value does not accumulate" icon="ban">A collaboration closes and dissolves, leaving no record. The network cannot learn from past work or compound on it.</Card>
 </CardGrid>
 
 <Callout type="tip">
-The verification and settlement layer is not a "last step patch", but the core reason for the existence of the entire WCN architecture - it gives all collaboration a credible endpoint, gives all contributions a quantifiable value, and transforms the network from "one-time cooperation" into a "continuous accumulation system."
+The verification and settlement layer is not a patch on the final step. It is the reason the architecture exists. It gives every collaboration a trustworthy endpoint, every contribution a measurable value, and turns the network from one-off cooperation into a system that accumulates.
 </Callout>

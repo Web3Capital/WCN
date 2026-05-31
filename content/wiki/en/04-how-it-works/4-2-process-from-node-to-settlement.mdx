@@ -1,92 +1,98 @@
 ---
-title: 4.2 Process from node to settlement
+title: 4.2 The path from Node to Settlement
 description: >-
-  Complete workflow: Resource entry → Deal Room → Task execution → Proof Desk →
-  PoB → Settlement, including timeline and exception handling.
+  The full workflow, stage by stage: resource entry, Deal, Task, Proof, and
+  Settlement — with timelines and exception handling.
 chapter: 4
 order: 2
 ---
 
-<Hero badge="4.2 · Complete process" lead="This page not only lists the modules, but also connects the modules according to their actual operating logic - from the first second when resources enter the system to the last step when the value is settled. Each stage has an expected timeline, key outputs, and exception handling mechanisms.">
-# From node entry to settlement completion, every step of WCN has owner, status and output.
+<Hero badge="4.2 · Full process" lead="This page connects WCN's modules in their actual running order — from the moment a resource enters the network to the moment value is settled. Each stage carries an expected timeline, defined outputs, and an exception path.">
+# From Node entry to Settlement, every step carries an owner, a status, and an output.
 </Hero>
 
 <MetaGrid>
-  <Meta label="process stage" value="Three stages: Resource entry → Execution promotion → Verification and settlement" />
-  <Meta label="Typical cycle" value="Simple closed loop 1-2 weeks, complex deal 4-8 weeks" />
-  <Meta label="Benchmarking reference" value="PE/VC Pipeline Management" />
+  <Meta label="Process stages" value="Resource entry → Deal and Task → Proof and Settlement" />
+  <Meta label="Typical cycle" value="Simple loop 1–2 weeks, complex deal 4–8 weeks" />
+  <Meta label="TradFi reference" value="Pipeline management in PE and VC" />
 </MetaGrid>
 
+<Statement>The loop runs Node → Deal → Task → Proof → Settlement. A resource enters, work advances inside a Deal and its Tasks, evidence is verified, and value settles.</Statement>
+
 ---
 
-## The first paragraph: Resources enter the system (Day 0-2)
+## Stage one: a resource enters (Day 0–2)
 
-The starting point of system operation is not a form or page, but rather valuable resources are brought into the network by a responsible node.
+The system does not start with a form or a page. It starts when a responsible node brings a real resource into the network.
 
 <CardGrid cols={2}>
-  <Card title="Project node" icon="package">Submit project information: product stage, financing needs, token situation, target region, and core team. Data enters Project Intake and is entered in a structured manner.</Card>
-  <Card title="capital node" icon="coins">Registered investment preferences: stage (seed/A/B), track (DeFi/AI/RWA/Infra), face value range, regional preference. Preferences are entered into the Capital Profile for subsequent matching.</Card>
-  <Card title="service node" icon="wrench">Enter execution capabilities: legal affairs, auditing, security, branding, development, research, etc. The capability enters the Service Registry and can be called by Deal.</Card>
-  <Card title="Regional node" icon="globe">Enter local network: country/city coverage, industry relationships, regulatory awareness, event resources. Local support for cross-border deals.</Card>
+  <Card title="Project node" icon="package">Submits project information: product stage, funding need, token position, target region, and core team. The data enters Project Intake as a structured record.</Card>
+  <Card title="Capital node" icon="coins">Registers investment preferences: stage (seed, A, B), track (DeFi, AI, RWA, Infra), ticket range, and region. Preferences enter the Capital Profile for matching.</Card>
+  <Card title="Service node" icon="wrench">Registers execution capability: legal, audit, security, branding, development, or research. The capability enters the Service Registry and a Deal can call it.</Card>
+  <Card title="Regional node" icon="globe">Registers a local network: country and city coverage, industry relationships, regulatory awareness, and event access. This supports cross-border deals.</Card>
 </CardGrid>
 
-> **Comparison with TradFi**: This is equivalent to the CRM entry stage of PE/VC (Pipeline Intake of Pitchbook/DealCloud). The difference is that WCN has established a multi-party collaboration structure from the first step, rather than unilateral internal management.
+> **Industry reference.** This stage mirrors CRM intake in PE and VC — the pipeline intake of tools like PitchBook or DealCloud. WCN differs in one respect: it sets up a multi-party collaboration structure from the first step, rather than one firm managing a pipeline internally.
 
 ---
 
-## The second paragraph: Deal and Task advancement (Day 2-14+)
+## Stage two: Deal and Task advance (Day 2–14+)
 
-After resources enter the system, they must change from "information" to "workflow".
+Once a resource enters, it must move from information to a workflow.
 
 <CardGrid cols={2}>
-  <Card title="Deal Room Creation" icon="handshake">The system creates a Deal Room for matching opportunities: identifying the deal owner, parties, bill of materials, and milestones. This is not a group chat – everyone has clear roles and responsibilities.</Card>
-  <Card title="Task Dispatch" icon="clipboard-list">Assign specific tasks to human nodes or agents. Each Task has an owner, deadline, output requirements, and acceptance criteria. There is no "vague explanation".</Card>
-  <Card title="Execution advancement" icon="zap">Meetings, due diligence, material compilation, legal review, contract drafting, growth execution - all actions occur or are recorded within the system. Agent assists in research, minutes, and reminders.</Card>
-  <Card title="status tracking" icon="chart-bar">Each Deal and Task has real-time status (in progress/pending reply/blocked/completed). Execution Agent automatically detects stalls and issues alerts.</Card>
+  <Card title="Deal Room created" icon="handshake">The system opens a Deal Room for the matched opportunity, naming the Deal owner, the parties, the bill of materials, and the milestones. This is not a group chat; every role is defined.</Card>
+  <Card title="Tasks dispatched" icon="clipboard-list">Specific Tasks go to human nodes or agents. Each Task carries an owner, a deadline, an output requirement, and acceptance criteria. No Task ships as a vague instruction.</Card>
+  <Card title="Execution advances" icon="zap">Meetings, due diligence, document assembly, legal review, contract drafting, and growth work all occur or are recorded in the system. Agents assist with research, minutes, and reminders.</Card>
+  <Card title="Status tracked" icon="chart-bar">Each Deal and Task carries a live status: in progress, awaiting reply, blocked, or complete. The Execution Agent detects stalls and raises an alert.</Card>
 </CardGrid>
 
 <Callout type="info">
-**Timeline reference**: Simple service docking (such as audit requirement matching service provider) may be completed in 3-5 days. Complex financing deals (multiple rounds of meetings, due diligence, legal) typically take 4-8 weeks. WCN does not shorten the complexity of the business itself, but eliminates coordination friction - TradFi's research shows that 30-40% of the time in a typical deal is spent on information synchronization and expediting.
+**Timeline reference.** A simple service match — for example, pairing an audit requirement with a provider — can complete in 3 to 5 days. A complex financing deal, with several meeting rounds, due diligence, and legal review, typically takes 4 to 8 weeks. WCN does not reduce the complexity of the business; it removes coordination friction. TradFi studies indicate that 30 to 40 percent of deal time is spent on information sync and chasing.
 </Callout>
 
 ---
 
-## The third paragraph: verification and settlement (3-7 days after deal completion)
+## Stage three: verification and settlement (3–7 days after the result)
 
-After the result is formed, the system switches from execution logic to proof logic.
+Once a result forms, the system switches from execution logic to proof logic.
 
 <CardGrid cols={2}>
-  <Card title="Evidence packaging" icon="paperclip">Deal Owner submits the result evidence to the Evidence Packet: contract/agreement, payment record, deliverables, on-chain hash, meeting minutes, email confirmation, etc. The type and amount of evidence depends on the Deal type.</Card>
-  <Card title="Review queue" icon="search">The evidence package enters the Reviewer Queue. The reviewer checks: material completeness, authenticity, timeline rationality, and risk markers. Reviewers and deal participants cannot overlap (interest avoidance).</Card>
-  <Card title="Attribution assignment" icon="target">After passing the review, the system assigns attributions to the participants: who recommended (%), who promoted (%), who executed (%), and who reviewed (%). Attribution is based on a chain of evidence, not subjective negotiation.</Card>
-  <Card title="PoB generation and settlement" icon="scale">After attribution is confirmed, the business results enter the PoB ledger and become settlement input. PoB is processed in the periodic Settlement Run, and participants receive corresponding value distribution.</Card>
+  <Card title="Evidence packaged" icon="paperclip">The Deal owner submits the result evidence to the Proof Desk: agreement, payment record, deliverables, onchain hash, meeting minutes, and counterparty confirmation. The evidence required depends on the Deal type.</Card>
+  <Card title="Review queue" icon="search">The evidence package enters the reviewer queue. The reviewer checks completeness, authenticity, timeline consistency, and risk markers. Reviewers and Deal participants cannot overlap.</Card>
+  <Card title="Attribution assigned" icon="target">After review passes, the system assigns attribution: who sourced, who advanced, who executed, and who reviewed, each as a share. Attribution rests on the evidence chain, not on negotiation.</Card>
+  <Card title="Proof and Settlement" icon="scale">Once attribution is confirmed, the result enters the Proof ledger as a Verification Node and becomes settlement input. The periodic Settlement run distributes value to the participants.</Card>
 </CardGrid>
+
+<Callout type="info">
+A loop verifies only when four conditions hold: the result is externally observable, the evidence is verifiable, responsibility is traceable, and the process is re-reviewable. Reconciliation across the three ledgers produces the Verification Node.
+</Callout>
 
 ---
 
-## Exception handling: when the process is stuck
+## Exception handling: when the process stalls
 
-Real business doesn't always go smoothly. WCN has designed a handling mechanism for each exception:
+Real business does not always run cleanly. WCN designs a defined path for each failure mode.
 
 <CardGrid cols={2}>
-  <Card title="Deal stalled" icon="pause">If a Deal has no status update for more than a set number of days, the Execution Agent automatically notifies the Deal Owner. Deals that are continuously unresponsive will be marked as Stalled to release the energy of the relevant nodes.</Card>
-  <Card title="Task timeout" icon="clock">If the task exceeds the deadline and is not completed, the system automatically upgrades the notification. Task Owner needs to give reasons (delay/blocking/cancellation). Unresponsive Tasks affect node reputation scores.</Card>
-  <Card title="Insufficient evidence" icon="mail">When the reviewer determines that the evidence is incomplete, the evidence package is returned with a list of missing items. Deal Owner has a limited time replenishment. The unfilled Deal returned three times will enter the dispute channel.</Card>
-  <Card title="attribution controversy" icon="triangle-alert">When multiple parties have objections to the attribution ratio, they will enter the arbitration process: the independent review committee will make the final decision based on the chain of evidence. The ruling results are recorded in the system and form an attribution precedent.</Card>
+  <Card title="Deal stalled" icon="pause">If a Deal has no status update past a set number of days, the Execution Agent notifies the Deal owner. A Deal that stays unresponsive is marked Stalled, which frees the attached nodes.</Card>
+  <Card title="Task overdue" icon="clock">If a Task passes its deadline, the system escalates the notice. The Task owner must give a reason: delay, blocker, or cancellation. An unanswered Task affects the node reputation score.</Card>
+  <Card title="Evidence insufficient" icon="mail">When a reviewer finds the evidence incomplete, the package returns with a list of missing items. The Deal owner has a limited window to supply them. A package returned three times enters the dispute channel.</Card>
+  <Card title="Attribution dispute" icon="triangle-alert">When parties contest the attribution shares, the case enters arbitration. An independent review committee issues a Verdict on the evidence chain. The Verdict is recorded and sets a precedent.</Card>
 </CardGrid>
 
 <Callout type="warning">
-Exception handling is not an auxiliary feature but is key to system trustworthiness. A system that cannot handle failures and disputes will not be trusted in real business. WCN is designed with exception paths as first-class citizens.
+Exception handling is not an auxiliary feature. A system that cannot resolve failure and dispute earns no trust in real business. WCN treats exception paths as first-class.
 </Callout>
 
 ---
 
-## Complete flow chart
+## The full path, end to end
 
 <Callout type="info">
-**Resource entry** (Day 0-2)→ **Deal Room creation + matching** (Day 2-3)→ **Task allocation and execution** (Day 3-14+)→ **Result formation** (Day N)→ **Evidence submitted to Proof Desk** (Day N+1)→ **Audit and attribution** (Day N+3-5)→ **PoB generation** (Day N+5)→ **Cycle settlement** (Settlement) Run)
+Resource entry (Day 0–2) → Deal Room created and matched (Day 2–3) → Tasks assigned and executed (Day 3–14+) → result forms (Day N) → evidence submitted to the Proof Desk (Day N+1) → review and attribution (Day N+3–5) → Verification Node generated (Day N+5) → periodic Settlement run.
 </Callout>
 
 <Callout type="tip">
-The three-stage process constitutes a complete value chain: resource entry → workflow advancement → result verification and settlement. Each section has clear input, owner, time expectations and exception handling. This is not a theoretical framework - it is an operational system that can be engineered and audited.
+The three stages form one value chain: resource entry, workflow advancement, then verification and settlement. Each stage has a defined input, an owner, a time expectation, and an exception path. This is not a framework on paper; it is a system that can be engineered and audited.
 </Callout>

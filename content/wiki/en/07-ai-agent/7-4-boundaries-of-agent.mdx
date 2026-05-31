@@ -1,66 +1,78 @@
 ---
-title: 7.4 Boundaries of Agent
+title: 7.4 The governance boundary
 description: >-
-  Literacy, approval, funding and legal red lines; the risk matrix of illusion
-  and overreach; human-machine division of labor and brakeable design.
+  The capability manifest, the per-task contract, the PoB record, and the rule
+  that an Agent never signs, never moves funds, and never commits without a
+  human endorsement.
 chapter: 7
 order: 4
 ---
 
-<Hero badge="7.4 · Agent boundaries" lead="The stronger the capability, the more hard boundaries are needed: which outputs can only be drafted, which actions must be HITL, and which data will never leave the domain. The boundary is not to restrict innovation, but to turn LLM from an “unaccountable black box” into a “defensible component” - unlike Copilot, which only recommends and the user is fully responsible for, WCN must explicitly divide responsibilities at the network layer.">
-# Only controlled Agents can enter the settlement and reputation system.
+<Hero badge="7.4 · The governance boundary" lead="The more an Agent can do, the harder its limits must be. Which outputs may only be drafted, which actions require a human in the loop, and which data never leaves its domain. The boundary does not restrain the work; it turns a model from an unaccountable black box into a defensible component. WCN draws the division of responsibility at the network layer, in writing.">
+# Only an Agent inside the boundary can enter settlement and the record.
 </Hero>
 
 <MetaGrid>
-  <Meta label="What this page does" value="Allowed set/Prohibited set/Risk and control measures" />
-  <Meta label="core themes" value="The person retains the final commitment and funding rights" />
-  <Meta label="Reading highlights" value="Legal, funding, PoB, external commitments, logs" />
+  <Meta label="What this page does" value="Defines the allowed set, the forbidden set, and the controls" />
+  <Meta label="Core rule" value="People keep the final commitment and the funds" />
+  <Meta label="You will learn" value="The capability manifest, the task contract, and the hard limits" />
 </MetaGrid>
 
-## What the Agent can do (allowed set)
+## The two instruments of the boundary
+
+Every Agent carries two instruments. The capability manifest states the outer edge of what the Agent can do — its data domain, its tools, and its limits. The per-task contract grants a narrower scope for one task, inside that manifest. Beyond either, the Agent does not act.
 
 <CardGrid cols={2}>
-  <Card title="Research and organize" icon="search">Abstract, comparison matrix, preliminary due diligence screening, bullet citation with source; suitable for GPT-4 / Claude long article + RAG. The output default label is "not legally verified".</Card>
-  <Card title="Process and Minutes" icon="file-text">Meeting minutes draft, action items, follow-up email templates; Execution class core scenarios. Timeline and speaker attribution errors need to be corrected manually.</Card>
-  <Card title="Growth and Monitoring" icon="chart-bar">Narrative descriptions of copywriting variations, channel highlights, and indicator anomalies; natural language alerts after Liquidity-like read-only quotes.</Card>
-  <Card title="Low risk automation" icon="settings">Fill out forms, label, synchronize status fields within explicit permissions; similar to RPA, but with LLM parsing unstructured input.</Card>
+  <Card title="Capability manifest" icon="clipboard-list">The standing statement of an Agent's reach: which data it may read, which tools it may call, and what limits apply. It is set at authorization and changed only through a recorded upgrade.</Card>
+  <Card title="Per-task contract" icon="file-text">The scope granted for a single task, inside the manifest. It names what this run may do and produce, so authority is granted per task rather than held open.</Card>
 </CardGrid>
 
-## What the Agent cannot do (forbidden set)
+## What the Agent may do
+
+<CardGrid cols={2}>
+  <Card title="Research and organize" icon="search">Summaries, comparison matrices, first-pass diligence screening, and points cited with a source. The output carries a default label that it is not legally verified.</Card>
+  <Card title="Notes and process" icon="file-text">Meeting-note drafts, action items, and follow-up email templates. A timeline or a speaker attribution that is wrong is corrected by a person.</Card>
+  <Card title="Monitoring drafts" icon="chart-bar">Plain-language notes on a threshold or an anomaly, drawn from read-only data. The note is a draft; whether anything goes out is a human decision.</Card>
+  <Card title="Low-risk automation" icon="settings">Filling forms, labeling, and syncing status fields inside an explicit permission, with the model parsing unstructured input.</Card>
+</CardGrid>
+
+## What the Agent may not do
 
 <CardGrid cols={3}>
-  <Card title="Not a substitute for signing a contract" icon="ban">Electronic signatures, binding terms, and exclusive/gambling conclusions require human and legal processes.</Card>
-  <Card title="Cannot drive funds alone" icon="ban">Transfers, appropriations, on-chain authorizations, escrow instructions—even wallet-connecting tools require multiple human approvals and limits.</Card>
-  <Card title="Cannot issue legal/tax/audit opinions" icon="ban">Summaries of regulations can be searched, and final conclusions such as "legal for you" are not allowed.</Card>
-  <Card title="Unable to finalize PoB" icon="ban">Proof Desk and governance rules determine adoption; Agents can be pre-examined and sorted, but cannot "pass by self-certification".</Card>
-  <Card title="Do not make external commitments beyond your authority" icon="ban">Income, regulatory status, time on the firm, endorsement relationships - law firm-level statements are prohibited from automatically being generated and sent.</Card>
-  <Card title="Logging and takeover cannot be bypassed" icon="ban">The critical path must be interruptible and rollable; silent invocation of unregistered tools is prohibited.</Card>
+  <Card title="Never signs" icon="ban">No electronic signature, binding term, or exclusive commitment. A signature requires a person and the legal process.</Card>
+  <Card title="Never moves funds" icon="ban">No transfer, allocation, onchain authorization, or escrow instruction. Anything touching funds requires human approval and a limit.</Card>
+  <Card title="No legal verdict" icon="ban">It may summarize a regulation, but a final conclusion such as "this is legal for you" is not allowed.</Card>
+  <Card title="Never finalizes PoB" icon="ban">The Proof Ledger and governance decide adoption. The Agent may pre-screen and sort; it cannot pass its own work.</Card>
+  <Card title="No commitment beyond scope" icon="ban">Claims about returns, regulatory status, or endorsement are not generated and sent on their own.</Card>
+  <Card title="No bypass of the record" icon="ban">The critical path stays interruptible and reversible. Calling an unregistered tool in silence is not allowed.</Card>
 </CardGrid>
 
-## Risk matrix (simplified)
+<Statement>The rule is one line: an Agent never signs, never moves funds, and never makes a final commitment without an explicit human endorsement. The signature authority stays with the person.</Statement>
 
-| Risk | Performance | Control Ideas |
+## The risk matrix
+
+| Risk | How it shows | Control |
 | --- | --- | --- |
-| Illusion | Fabricated cases, wrong laws, wrong company names | Mandatory quotation; output "unknown" if unsure; key field rule verification |
-| Prompt injection | Malicious web pages/PDFs inducing leaks or unauthorized access | Tool isolation; untrusted content sandbox; outbound actions HITL |
-| Data leakage | Training or logs take away confidentiality | Data classification; log desensitization; clearing keys after Retired |
-| Excessive autonomy | AutoGPT-style infinite loops and fees | Task-level budget and step limit; no task means no running |
-| Ambiguous responsibilities | I don’t know who approved it if something went wrong | Adoption record + approval chain + model/prompt version number |
+| Fabrication | Invented cases, wrong rules, wrong company names | Require a source; return "unknown" when unsure; rule-check key fields |
+| Prompt injection | A malicious page or file induces a leak or an out-of-scope action | Isolate tools; sandbox untrusted content; require a human in the loop for outbound actions |
+| Data leakage | Training or logs carry confidential data away | Classify data; redact logs; clear keys at retirement |
+| Excess autonomy | An open loop runs up cost with no end | Set a per-task budget and a step limit; no task means no run |
+| Unclear responsibility | After an error, no one knows who approved it | Keep the adoption record, the approval chain, and the model and prompt version |
 
 <Callout type="warning">
-Without boundaries, AI is not a stronger execution layer, but a lever that amplifies mistakes—especially in high-stakes copywriting and funding-related processes.
+Without the boundary, an Agent is not a stronger execution layer. It is a lever that amplifies a mistake — most of all in high-stakes statements and anything that touches funds.
 </Callout>
 
-## Demarcation of responsibilities with Microsoft Copilot/Universal Assistant
+## The division of responsibility
 
-Copilot's general terms and conditions stipulate: **It is recommended that the user be responsible for verification**. The WCN network side also needs to serve **multi-party attribution**: Therefore, the Agent boundary must be written in type policies and task contracts, rather than relying solely on end-user self-discipline.
+A general assistant places verification on the end user. WCN serves multi-party attribution, so the boundary cannot rest on one user's care. It is written into the type policy and the task contract, where it can be enforced and reviewed.
 
-<Statement>What WCN needs is an agent that can be explained, accountable, and can enter PoB; "the model says it" cannot be regarded as the node saying it.</Statement>
+<Statement>WCN needs an Agent that can be explained, held accountable, and entered into PoB. "The model said so" is not the node saying so.</Statement>
 
-## TradFi revelation: Automation stops before the decision-making chain
+## The line scoped automation holds
 
-COIN-type systems handle large amounts of document analysis, and **credit decisions are still subject to bank policy and human review**; Aladdin emphasizes that risk calibers are consistent, and **portfolio managers still bear investment responsibilities**. WCN aligns with the same principle: **Agent compresses friction and does not replace signature authority. **
+Across institutional practice, automation stops before the decision. A document system can parse at scale, while the credit decision stays with policy and human review. A risk platform can hold one consistent standard, while the manager keeps the investment responsibility. WCN follows the same principle: the Agent compresses friction; it does not replace signature authority.
 
 <Callout type="tip">
-One sentence for product acceptance: **If you delete the Agent, the business process is still legal and can be run, but it will be slower** - the boundary is roughly correct. If the process of deleting the Agent cannot close the loop, it means that the human link has been excessively eroded.
+A test for acceptance: if you remove the Agent, the business process is still lawful and can run — only slower. Then the boundary is about right. If removing the Agent breaks the loop, the human role has been eroded too far.
 </Callout>

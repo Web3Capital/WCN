@@ -3,74 +3,64 @@ title: 11.5 Compliance principles
 chapter: 11
 order: 5
 description: >-
-  Rules first, clear boundaries, priority on leaving traces, and regional
-  sensitivity; compare the practical implications of frameworks such as the
-  United States, the European Union MiCA, Singapore MAS, and Dubai VARA.
+  Compliance built into the structure, not added after the fact: an audit-first
+  evidence chain, AML enforcement that no vote can bypass, and legal
+  characterization deferred to external counsel per jurisdiction.
 ---
 
-<Hero badge="11.5 · Compliance Principles" lead="WCN regards compliance as a constraint on products and processes, rather than post-event public relations: node design, deal promotion, PoB, settlement and future on-chain bearer layers must all operate under defensible procedures; differences in jurisdictions cannot be covered up by a single “global community rule”.">
-# Compliance is a necessity for the web's long-term survival; obfuscating sales and circumventing proofs, repeating the fines and criminal penalties already paid by Web2/Web3.
+<Hero badge="11.5 · Compliance principles" lead="WCN treats compliance as a constraint on the product, not as cleanup after the fact. Every business outcome leaves a verifiable PoB record; every agent action leaves a record; every governance decision sits inside the Constitution and the non-votable items. AML enforcement is one of the six items no vote can bypass.">
+# Compliance is built into the structure. The evidence chain is designed to be retrievable for external audit, not self-certified.
 </Hero>
 
 <MetaGrid>
-  <Meta label="Core answer" value="How to establish a minimum compliance baseline for cross-jurisdictional networks?" />
-  <Meta label="four principles" value="Rules in advance, clear boundaries, priority on leaving traces, and regional sensitivity" />
-  <Meta label="relationship with governance" value="11.4 Restricted areas + auditable processes = explainable to regulators and partners" />
+  <Meta label="Core answer" value="How is compliance enforced across jurisdictions?" />
+  <Meta label="Posture" value="Audit-first, evidence retrievable, AML never bypassable" />
+  <Meta label="Reference" value="Whitepaper v2.1 §12 compliance framework, §9.3 non-votable AML" />
 </MetaGrid>
 
-## Four Principles (Operational Implications)
+## Audit-first: compliance inside the structure
+
+WCN does not bolt compliance on after a problem appears. It is built into how the network records work. Three properties hold at every step.
 
 <CardGrid cols={2}>
-  <Card title="Rule prefix" icon="clipboard-list">Before launching online functions, external language, fees and incentive structures, first define the domain and product; benchmark against the recurring "economic substance over labels" in **SEC** enforcement - calling utility or NFT does not change the fact that registration/exemption is required if it constitutes an investment contract.</Card>
-  <Card title="clear boundaries" icon="construction">Node seats, services and any tradable rights are described and delivered consistently; do not follow the gray area of ​​**unregistered securities issuance** or **misleading earnings promotion**.</Card>
-  <Card title="Leave traces first" icon="file-text">Deal, review, consent and changes can be replayed; benchmarking **FINRA recording rules** and the internal control logic of listed companies - "failure to produce logs" in investigations and civil litigation is equivalent to failure of defense.</Card>
-  <Card title="geographically sensitive" icon="globe">The rules of the United States, the European Union, Singapore, the United Arab Emirates, etc. exist in parallel; the default is to deal with data, marketing and access as high as possible, until local legal counsel issues written boundaries.</Card>
+  <Card title="Outcomes leave evidence" icon="file-text">Every business result passes PoB reconciliation and leaves a verifiable record. A result described only in words does not enter the ledger.</Card>
+  <Card title="Agent actions leave records" icon="bot">Every agent action retains a PoB record inside its task contract. The action is traceable and can be reviewed.</Card>
+  <Card title="Decisions sit inside the Constitution" icon="scroll">Every governance decision operates within the Constitution and the non-votable items. The limits are fixed before any vote.</Card>
+  <Card title="The chain is retrievable" icon="search">The evidence chain ends at a verification node and, where disputed, a verdict. It can be retrieved for external audit and review, and cannot be altered after the fact.</Card>
 </CardGrid>
 
-## Main jurisdictions: focus axis (non-legal opinions)
+## AML is never bypassable
 
-The following is a **topic level** summary, specific actions must be confirmed by a licensed consultant on a case-by-case basis; WCN Wiki does not constitute legal advice.
+AML and compliance enforcement is one of the six items the Constitution places outside any vote. This is set out in 11.4 and restated here because it governs how WCN handles money and counterparties.
 
-### USA
+<Callout type="warning">No community vote can exempt the network from anti-money-laundering obligations or sanctions screening. A vote that attempts to bypass compliance is rejected on procedure, before it reaches a ballot.</Callout>
 
-- SEC
-- **CFTC/State Law**: Some crypto derivatives and commodity attributes; **Sanctions and Exports** (OFAC) rigidity in address and counterparty screening.
-- **Bank Secrecy Act System**: If the business involves the transmission of funds or specific custody arrangements, AML procedures and SAR culture must be consistent with the prohibited areas in 11.4.
+## Legal characterization is deferred to counsel
 
-### European Union (MiCA, etc.)
-
-- **CASPs** (Crypto Asset Service Providers) licensing, white paper and marketing constraints; layering of stablecoin and e-money token rules.
-- **MiFID II/Traditional Financial Interface**: Additional permissions when crossing with security tokens or structured products.
-- **GDPR**: Data processing legality, cross-border transfer, DPA; has nothing to do with "community governance" and is solely the responsibility of the controller.
-
-### Singapore (MAS)
-
-- **DPT** (Digital Payment Token) service licensing and advertising restrictions; **Stablecoin regulatory path** and tighter reserve disclosure requirements.
-- **AML/CFT**: Similar to the US, screening and suspicious reporting are non-negotiable.
-
-### Dubai (VARA etc.)
-
-- **VA activity licensing** (brokerage, custody, advisory, etc.) and localized disclosures; coordination with other emirate and federal level rules.
-- Marketing and retail access rules are often strict, and **regional headquarters narrative** does not mean automatic compliance.
-
-## Red line (versus on-chain/sale incidents)
+WCN does not declare its own securities status. Node rights are designed as functional partner agreements that bind rights to responsibility, not as a promise of secondary-market appreciation. The legal characterization is settled elsewhere.
 
 <CardGrid cols={2}>
-  <Card title="Don’t make vague profit promises" icon="ban">Any language that implies fixed returns, capital guarantees or regulatory endorsements can trigger both securities laws and advertising laws in many countries; the same is true for **Compound governance token marketing lessons**: economic incentives need to be defensible and disclosed.</Card>
-  <Card title="No cross-border sales" icon="ban">If node rights, NFT or points have the characteristics of investment expectations and management of the efforts of others, they must be processed according to securities logic; it is prohibited to use "DAO voting" to circumvent KYC and suitability.</Card>
-  <Card title="Do not bypass certification and review" icon="ban">"Results" without PoB or internal control support will not enter attribution and settlement to prevent internal fraud and external fraud.</Card>
-  <Card title="Don’t ignore regional differences" icon="ban">Global distribution of the same deck is often wrong in practice; domain slicing or universal conservative versions must be used.</Card>
+  <Card title="Counsel decides, per jurisdiction" icon="scale">The securities or financial-instrument status of node rights is determined by external legal opinion in each applicable jurisdiction, not by this document.</Card>
+  <Card title="Issuance follows exemptions" icon="clipboard-list">WCN structures issuance through Reg D, Reg S, and private-placement exemptions, adjusted by jurisdiction.</Card>
+  <Card title="U.S. persons are excluded early" icon="ban">During Phase 1 and Phase 2, the protocol is not open to U.S. persons, as defined in the whitepaper's legal disclosures.</Card>
+  <Card title="Restricted jurisdictions are limited" icon="globe">Where a jurisdiction does not permit participation, WCN limits access there rather than working around the law.</Card>
 </CardGrid>
 
-## Compliance and Governance Interface
+## Jurisdiction posture
+
+Different jurisdictions cannot be covered by one global community rule. WCN's roadmap targets compliance structures across several named jurisdictions as the network decentralizes.
+
+<Callout type="info">The whitepaper roadmap targets compliance across five jurisdictions in Phase 3, with Singapore, Hong Kong, the UAE, Switzerland, and the EU named as targets. The default posture is conservative until local counsel issues written boundaries.</Callout>
+
+## Compliance and governance meet
+
+Compliance and governance share one interface: the non-votable list and a retrievable evidence chain. Together they let WCN explain its decisions to regulators and partners.
 
 <Steps>
-  <Step title="Compliance Impact Assessment (PIA/Compliance gate)">New functions, new areas, and new token forms must go through the list and leave traces.</Step>
-  <Step title="Sync with 11.4">Any proposal that attempts to put compliance decisions on a ballot shall be procedurally rejected.</Step>
-  <Step title="Supplier and customer due diligence">Escrow, KYC, cloud and payment providers must be able to audit contracts and subcontracting chains.</Step>
-  <Step title="Incident reporting path">Data breaches, regulatory letters, and major security incidents are escalated to the responsible level and supervised (if required by law) within a preset time limit.</Step>
+  <Step title="Gate new functions">New functions, regions, and token forms pass a compliance check and leave a record before they ship.</Step>
+  <Step title="Reject votes on compliance">Any proposal that attempts to put a compliance decision to a vote is rejected on procedure, in line with 11.4.</Step>
+  <Step title="Diligence suppliers and counterparties">Custody, KYC, cloud, and payment providers must support auditable contracts and a traceable subcontracting chain.</Step>
+  <Step title="Escalate incidents on a clock">Data breaches, regulatory letters, and major security incidents escalate to the responsible layer within a preset time limit.</Step>
 </Steps>
 
-<Callout type="warning">Compliance is not about "slowing down growth," but about avoiding the consequences of bans, criminal investigations, and bank disconnections. Beanstalk/The DAO-level incidents also show that technical accidents and compliance crises often overlap.</Callout>
-
-<Statement>Only with compliance in advance, node seats, service fees, transaction fees and subsequent value-carrying layers can form **financial, acquireable, and cooperative** assets, rather than a one-time narrative.</Statement>
+<Statement>Compliance built in advance turns node rights, service fees, and settlement into durable assets. They can be financed, acquired, and partnered with, rather than left as a one-time narrative.</Statement>

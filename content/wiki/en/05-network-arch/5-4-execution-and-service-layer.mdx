@@ -1,64 +1,72 @@
 ---
 title: 5.4 Execution and service layer
 description: >-
-  Key bridges from connect to delivery: Legal, Audit, Development, Growth and
-  Agent turn deals into results.
+  The bridge from connection to delivery: legal, audit, development, growth, and
+  agents turn a deal into a result.
 chapter: 5
 order: 4
 ---
 
-<Hero badge="5.4 · Execution and service layer" lead="Projects and capital are just the beginning. In Web3, a large number of deals die in the “connected but no one does anything” stage - lawyers are introduced but no one follows up, audits are agreed but not scheduled, and cooperation is agreed but there is no owner. The execution and service layer solves this problem: turning connections into tasks and tasks into results.">
-# L3 · Execution and service layer—the layer that actually gets things done.
+<Hero badge="5.4 · Execution and Service Layer" lead="Projects and capital are only the start. In Web3, many deals die at the stage of connected but unworked — a lawyer is introduced and no one follows up, an audit is agreed and never scheduled, a collaboration is settled and has no owner. This layer addresses that gap: it turns a connection into scoped tasks, and tasks into a result.">
+# L3 · Execution and service — the layer that gets the work done.
 </Hero>
 
 <MetaGrid>
-  <Meta label="hierarchical position" value="L3 — Promote L2 Deal into deliverables" />
-  <Meta label="Core functions" value="Service matching, task allocation, agent execution, delivery acceptance" />
-  <Meta label="Industry pain points" value="Web3 service fragmentation, no standard delivery, no settlement attribution" />
+  <Meta label="Position" value="L3 — advances an L2 deal into a deliverable" />
+  <Meta label="Core function" value="Service matching, task scoping, agent execution, acceptance" />
+  <Meta label="The problem it answers" value="Whether a connection becomes a result" />
 </MetaGrid>
 
-## Structural issues with current Web3 services
+## Why current Web3 service stalls
+
+Service today is arranged piece by piece, with no shared interface and no shared standard for what counts as done.
 
 <CardGrid cols={2}>
-  <Card title="fragmentation" icon="smartphone">Find one for legal affairs, one for audit, one for market making, and one for growth. Each company communicates independently and there is no unified coordination interface. A project team may manage 8 Telegram groups and 5 Google Docs at the same time.</Card>
-  <Card title="No standard delivery" icon="clipboard-list">The service provider says "it's done", but there is no standardized delivery confirmation mechanism. The quality of audit reports varied, the coverage of legal opinions was unclear, and the effects of growth services were not attributed.</Card>
-  <Card title="No billing attribution" icon="banknote">Service fees are typically upfront or milestone payments that are not tied to final business results. Market makers took fees but liquidity did not improve, and the growth team took fees but users did not grow - there was no system to bind services and results.</Card>
-  <Card title="No path to scale" icon="ruler">A good FA, lawyer, auditor's time is limited. Their methodologies cannot be replicated, resulting in service capabilities being limited by individual production capacity.</Card>
+  <Card title="Fragmented" icon="smartphone">One contact for legal, one for audit, one for market making, one for growth. Each communicates on its own, with no shared coordination surface, so a project team tracks the same deal across many separate channels.</Card>
+  <Card title="No standard delivery" icon="clipboard-list">A provider says the work is done, but there is no shared confirmation. Audit quality varies, the coverage of a legal opinion stays unclear, and the effect of a growth effort is not attributed.</Card>
+  <Card title="No settlement attribution" icon="banknote">Fees are usually paid upfront or by milestone, untied to the business result. A provider takes the fee whether or not the outcome holds, because no system binds service to result.</Card>
+  <Card title="No path to scale" icon="ruler">A strong lawyer, auditor, or advisor has limited time. Their method is hard to replicate, so service capacity stays bounded by individual capacity.</Card>
 </CardGrid>
 
 ---
 
-## How WCN's execution and service layers work
+## How the execution and service layer works
 
 <Steps>
-  <Step title="Service registration">Service node entry capabilities: legal affairs (contract/structure/compliance), auditing (smart contract/finance), security, brand, growth, development, research, etc. The capability enters the Service Registry and can be called by Deal.</Step>
-  <Step title="Task assignment">When a Deal requires service, the system matches the appropriate service node from the Service Registry. Each Task has a clear owner, scope, deadline and acceptance criteria.</Step>
-  <Step title="Execution advancement">Human service nodes and Agents advance collaboratively. Agents are responsible for information sorting, reminders, minutes and status tracking, while humans are responsible for judgment, delivery and signature.</Step>
-  <Step title="Delivery and evidence">After the service is completed, the deliverables enter the Evidence Packet - legal opinions, audit reports, delivery memo, SOW confirmation, etc. Delivery quality is reviewed by Reviewers.</Step>
+  <Step title="Service registration">A service node registers its capabilities — legal, audit, security, brand, growth, development, research. The capability enters a registry and can be called by a deal.</Step>
+  <Step title="Task scoping">When a deal needs service, the system matches a fitting node from the registry. Each task carries an explicit owner, scope, deadline, and acceptance criteria.</Step>
+  <Step title="Advancement">Human nodes and agents advance the task together. Agents handle information, reminders, minutes, and status. Humans hold judgment, delivery, and signature.</Step>
+  <Step title="Delivery and evidence">On completion, the deliverable enters an evidence packet — legal opinion, audit report, delivery memo, scope confirmation. Reviewers check the quality of delivery.</Step>
 </Steps>
 
 ---
 
-## Participants at this level
+## Who participates
 
 <CardGrid cols={2}>
-  <Card title="Legal / Compliance" icon="scale">SAFE/SAFT structure review, Token legal advice, entity establishment, regulatory consulting, investor KYC/AML. In Web3, legal affairs are the link that most affects the speed of deal - a legal opinion may block the entire financing for 2 weeks.</Card>
-  <Card title="Audit/Security" icon="lock">Smart contract audit, financial audit, security assessment, penetration testing. High-quality auditing is a prerequisite for projects to obtain investment and be listed on the stock exchange.</Card>
-  <Card title="development/research" icon="laptop">Technology development, architecture review, research reports, competitive product analysis, and Token economic design. Research Agent can cover 80% of information organization work.</Card>
-  <Card title="Growth / BD" icon="rocket">Brand strategy, content creation, community building, KOL cooperation, user acquisition. Growth Agent can standardize distribution processes and attribution tracking.</Card>
+  <Card title="Legal and compliance" icon="scale">Structure review, token legal advice, entity formation, regulatory consulting, and investor KYC and AML. In Web3, legal work often gates the speed of a deal.</Card>
+  <Card title="Audit and security" icon="lock">Smart-contract audit, financial audit, security assessment, and penetration testing. A credible audit is usually a precondition for investment and for listing.</Card>
+  <Card title="Development and research" icon="laptop">Technical development, architecture review, research and competitive analysis, and token-economic design. Agents cover much of the information-gathering work.</Card>
+  <Card title="Growth and business development" icon="rocket">Brand strategy, content, community, KOL collaboration, and user acquisition. Agents standardize the distribution process and attribution tracking.</Card>
 </CardGrid>
 
 ---
 
-## Agent's role in the execution layer
+## What agents do at this layer
+
+In WCN, an agent is a structured execution unit, not a chat tool. It enters a scoped task under explicit permission and leaves a verifiable record.
 
 <CardGrid cols={2}>
-  <Card title="Research Agent" icon="microscope">Project summary, competitive product analysis, risk marking, and market data compilation. Compress the analyst's 3 days of work into 30 minutes, and adopt it after human review.</Card>
-  <Card title="Execution Agent" icon="zap">Automatic generation of minutes, to-do tracking, reminders, material collection, and status updates. Eliminate 30-40% of coordination time in Deal.</Card>
+  <Card title="Research agent" icon="microscope">Project summaries, competitive analysis, risk flags, and market data — prepared as a first draft, then adopted after human review.</Card>
+  <Card title="Execution agent" icon="zap">Minutes, to-do tracking, reminders, material collection, and status updates — removing coordination overhead inside a deal.</Card>
 </CardGrid>
 
-<Statement>Agent does not replace the professional judgment of service nodes, but amplifies their production capacity - allowing the methodology of an excellent lawyer to serve 10 Deals instead of 3.</Statement>
+<Statement>An agent does not replace a service node's professional judgment. It amplifies the node's capacity, so a strong method can serve many deals instead of a few.</Statement>
+
+<Callout type="warning">
+The boundary is fixed: an agent cannot sign a contract, move funds, or make an external commitment on its own. Every such action requires human backing, and every agent action leaves an auditable record.
+</Callout>
 
 <Callout type="tip">
-The execution and service layer is located after capital and before distribution. It is the key bridge that most directly determines "whether the deal can be completed." Without this layer, WCN is just a premium version of the introductory platform.
+The execution and service layer sits after capital and before distribution. It most directly determines whether a deal completes. Without it, WCN would be only a higher-grade introduction platform.
 </Callout>

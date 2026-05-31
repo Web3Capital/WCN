@@ -1,48 +1,56 @@
 ---
-title: "6.3 节点分类总览"
-description: "从功能、层级、行业与区域四个维度拆解节点体系。"
+title: "6.3 六层节点金字塔"
+description: "WCN 节点的完整结构：四层把权益绑定责任的合伙人层，两层参与层，含席位上限与价格。"
 chapter: 6
 order: 3
 ---
 
-<Hero badge="6.3 · 分类总览" lead="多维分类不是文档洁癖，而是路由与风控的基础设施：没有统一的类型本体，CRM 会重复触达同一 LP，PoB 无法标注主导方与协作方，治理也难以对国家代表权做边界裁剪。">
-# 分类本体 = 运营与结算的 schema；一维标签会让撮合与内控同时失灵。
+<Hero badge="6.3 · 六层金字塔" lead="Web3 Capital Network（WCN）把每个节点置于一座六层金字塔。上四层为合伙人层：NFT 把治理、收入分成与 Deal Flow 优先级绑定到资源引入、业务推进、证据提交与合规遵从。下两层为参与层，提供专业服务或开放接入，不含治理席位。">
+# 六层，两类。合伙人层持有治理席位，参与层不持有。
 </Hero>
 
 <MetaGrid>
-  <Meta label="四个正交轴" value="功能（做什么）、层级（覆盖范围）、行业（哪条赛道）、区域（地理锚点）" />
-  <Meta label="TradFi 映射" value="功能≈产品条线与牌照；层级≈总部—区域—行业组；区域≈分支机构覆盖" />
-  <Meta label="系统依赖" value="搜索、权限、冲突检测、PoB 模板与 KPI 集都挂在多维标签上" />
+  <Meta label="合伙人层" value="创始、国家、城市、赛道——权益与责任绑定到单一 NFT" />
+  <Meta label="参与层" value="服务商与标准节点——服务或开放接入，不含治理席位" />
+  <Meta label="链上标准" value="ERC-721 加 ERC-6551（Token Bound Account）承载每个节点的账户与记录" />
 </MetaGrid>
 
-## 功能维度（做什么）
+## 四层合伙人层
 
-<CardGrid cols={3}>
-  <Card title="项目节点" description="携带代币经济设计、上线路径、合规叙事与融资里程碑；需求侧原点。" icon="package" />
-  <Card title="资本节点" description="家办、风投、做市商、生态基金；提供 check size、决策节奏与结构偏好。" icon="coins" />
-  <Card title="服务节点" description="律所、审计、安全、开发、品牌、研究；把引荐变成可交付 SOW。" icon="wrench" />
-  <Card title="分发节点" description="交易所、媒体、KOL、会议主理方；承接流动性与市场叙事。" icon="radio" />
-  <Card title="区域节点" description="国家主节点、城市节点；把全球协议落到本地关系与活动。" icon="globe" />
-  <Card title="Agent 节点" description="绑定工作流的自动化执行方：筛案、触达、监控、报告，需有 SLA 与留痕。" icon="bot" />
+合伙人层 NFT 是一份合伙人合约。它把权益——治理、收入分成、Deal Flow 优先级——耦合到责任——资源引入、业务推进、证据提交与合规遵从——置于同一份凭证。
+
+<CardGrid cols={2}>
+  <Card title="创始合伙人" description="100 席。USD 500,000。永久全球治理席位，永不增发。见 6.4。" icon="landmark" />
+  <Card title="国家合伙人" description="50–65 席。USD 50,000–500,000。一国一伙，独家协调，享该国协议层收入 5–10% 分成。见 6.5。" icon="flag" />
+  <Card title="城市合伙人" description="150–300 席。USD 20,000–100,000。一城一伙，掌握本地 Deal Flow。见 6.6。" icon="building-2" />
+  <Card title="赛道合伙人" description="20–25 席。USD 50,000–300,000。一赛道一伙，跨地理全球代表。见 6.7。" icon="layers" />
 </CardGrid>
 
-<Callout type="info">
-典型复合画像：一家东京的 AI 风投，在系统中可同时标记为「资本节点 + 日本地理锚点 + AI 行业节点 + 某层级席位」。撮合时按场景选用子集，避免用单一标签描述商业现实。
-</Callout>
+## 两层参与层
 
-<Statement>PoB 与结算需要知道「谁在什么角色上签字背书」；多维分类是把现实商业关系编译成系统可执行结构的最低成本方案。</Statement>
+参与层提供能力或接入。它们不含治理席位，也不享收入分成。
+
+<CardGrid cols={2}>
+  <Card title="服务商" description="200–500 席。USD 30,000。12 类专业能力服务节点。见 6.9。" icon="wrench" />
+  <Card title="标准节点" description="席位开放。USD 5,000。开放申请的基础参与，基于 ERC-721 加 ERC-6551。见 6.9。" icon="users" />
+</CardGrid>
+
+<Statement>金字塔是路由与可问责的 schema。层级设定节点的权益、责任、价格，以及在证明账本上的状态——使每个结果都能指明谁以何种角色签字。</Statement>
 
 ---
 
-## 分类缺失时的运营故障模式
+## 国家分级定价
+
+国家合伙人价格区间为 USD 50,000 至 500,000。市场层级决定该区间内的具体数额。
 
 <CardGrid cols={2}>
-  <Card title="撮合噪声" description="同一 LP 被三条线同时推销；类似投行缺少客户覆盖矩阵时的撞单。" icon="ban" />
-  <Card title="CRM 坍缩" description="漏斗阶段无法按功能与区域切片，预测与复盘失去粒度。" icon="ban" />
-  <Card title="PoB 争议" description="主导引荐方、协作执行方、纯信息方混写，分配规则无法落地。" icon="ban" />
-  <Card title="扩张不可复制" description="新市场启动时没有标准席位包：国家主节点、城市节点、赛道大使各是什么 KPI。" icon="ban" />
+  <Card title="S 级 — USD 500,000" description="美国与中国大陆（特殊处理）。" icon="circle-dot" />
+  <Card title="A 级 — USD 300,000" description="新加坡、香港、英国、日本、德国。" icon="circle-dot" />
+  <Card title="B 级 — USD 200,000" description="韩国、法国、加拿大、澳大利亚、印度、巴西。" icon="circle-dot" />
+  <Card title="C 级 — USD 100,000" description="墨西哥、印尼、越南、泰国、土耳其、菲律宾。" icon="circle-dot" />
+  <Card title="D 级 — USD 50,000" description="其他新兴市场。" icon="circle-dot" />
 </CardGrid>
 
-<Callout type="tip">
-对齐 TradFi：大型投行的客户数据同样按行业组、地区、产品权限切 cube；WCN 只是把切面暴露给链上协作与 PoB，使外部生态也能读同一套结构。
+<Callout type="info">
+国家定价表按市场为国家合伙人席位定价，而非按合伙人。一国持有一个国家合伙人，因此该数额也设定了在该市场独家协调的成本。
 </Callout>

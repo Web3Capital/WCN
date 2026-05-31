@@ -1,61 +1,82 @@
 ---
 title: "9.5 为什么不依赖发行 Token 生存"
-description: "现金流先于代币：对比靠币价续命的协议，WCN 用席位、佣金、Agent 与结算费闭合生存条件。"
+description: "红队中位募资可覆盖五到七年运营。生存绑定在节点权益与已结算结果上，而非 Token。"
 chapter: 9
 order: 5
 ---
 
-<Hero badge="9.5 · 不依赖发行 Token" lead="许多 Web3 项目将代币发行当作「收入」：一级筹款 + 二级流动性即生命线，币价跌则国库、激励、叙事同步崩塌。WCN 刻意反着设计：生存条件绑定在节点席位、服务与成交佣金、Agent 计费与结算层费用——与 Chainlink 节点靠服务费、Filecoin 矿工靠存储合约同理，价值交换发生在「履约与合同」，不在「拉盘」。">
-# 若只能靠发行 Token 活下去，网络是叙事网络；若能用合同现金流活下去，Token 才有机会成为真实业务的数字化协调层，而不是氧气瓶。
+<Hero badge="9.5 · 不依赖 Token 的生存" lead="许多网络把发行 Token 当作收入：一级募资加二级流动性成为生命线。WCN 反着设计。生存绑定在节点权益与已结算结果上，经济模型可覆盖五到七年运营，无 Token 依赖。">
+# 只能靠发行 Token 活下去的网络是叙事网络。WCN 先靠已结算工作自筹资金。
 </Hero>
 
 <MetaGrid>
-  <Meta label="这页作用" value="解构代币依赖风险，对齐 WCN 路径" />
+  <Meta label="这页作用" value="说明为什么生存不依赖 Token" />
   <Meta label="核心主题" value="先业务后 Token，先现金流后映射" />
-  <Meta label="阅读重点" value="反例结构、正确顺序、长期优势" />
+  <Meta label="阅读重点" value="募资模型、用途优先级、Token 的推迟状态" />
 </MetaGrid>
 
-## 为什么不能先靠发行 Token
+## 先把价值压在 Token 上的风险
 
-当商业闭环未成立时把价值压到 Token 上，系统会面临：
+当业务闭环尚未成立、价值被压在 Token 上时，结构面临叠加的失效。
 
 <CardGrid cols={2}>
-  <Card title="叙事风险" icon="triangle-alert">无 recurring 现金时，外部默认你在卖预期；与 Bloomberg / Pitchbook 等可验证订阅收入对比时，估值叙事脆弱。</Card>
-  <Card title="监管与合规风险" icon="triangle-alert">越早将「参与即赚币」作为主卖点，越接近多国证券与营销监管红线。</Card>
-  <Card title="网络质量失真" icon="triangle-alert">参与者为短期币价而来，不为交付与成交而来，节点图谱变成流量池而非协作网。</Card>
-  <Card title="抗波动极弱" icon="triangle-alert">国库与激励以本币计价时，熊市同时杀伤融资、招聘与用户留存——**双杀**。</Card>
+  <Card title="叙事脆弱" icon="triangle-alert">无经常性收入时，网络被读作在卖预期，估值依赖故事而非已结算记录。</Card>
+  <Card title="合规暴露" icon="triangle-alert">越早把参与当作通往 Token 收益的路径来卖，越靠近多辖区的证券与营销红线。</Card>
+  <Card title="节点质量失真" icon="triangle-alert">参与者为价格而来，不为交付而来，节点图谱变成流量池而非协作网。</Card>
+  <Card title="抗下行极弱" icon="triangle-alert">当国库与激励以 Token 计价时，下行期同时削减融资、招募与留存。</Card>
 </CardGrid>
 
-**反例结构（行业常见）**：代币是主要「产品」→ 用户增长靠补贴与预期 → 真实 fee 收入稀薄 → 币价下跌 → 补贴缩水 → 生态撤离 → 项目宣告「转型」或静默。WCN 避免将生存绑在这一链条上。
+## 经济模型覆盖运营周期
 
----
+白皮书在文件内闭合其募资推导。下表为宪章相关输入，而非前瞻承诺。
 
-## WCN 的路径：现金先于代币叙事
+| 输入 | 数值 |
+| --- | --- |
+| 理论募资上限 | USD 82–127M |
+| 红队现实化中位 | USD 55–60M |
+| 团队 Runway | 5–7 年 |
+| Token 依赖 | 无 |
+
+<Callout type="info">
+USD 55–60M 的红队中位足以支撑 Foundation 与团队五到七年，且不依赖任何 Token 发行。这是经济模型的核心稳健性，而非回报预测。
+</Callout>
+
+## 资金用途的优先级
+
+模型为资金用途设定清晰优先级。协议金库也随时间从 5% Carry 桶累积。
 
 <Steps>
-  <Step number={1} title="席位建立 recurring">年费类收入覆盖固定成本的一部分，验证付费意愿与节点质量。</Step>
-  <Step number={2} title="服务与成交验证结果">success fee / mandate 证明网络推动真实 close，而非仅信息撮合。</Step>
-  <Step number={3} title="Agent 与结算层扩展毛利">用量与结算费随协作密度上升，边际结构接近软件与金融基础设施。</Step>
-  <Step number={4} title="Token 若存在，承接协调与长期映射">在现金流已验证的前提下，代币更可被理解为网络协调工具与长期价值载体，而非救命融资工具。</Step>
+  <Step number={1} title="合规与法律地基">Foundation 注册、跨辖区结构与法律顾问优先。</Step>
+  <Step number={2} title="团队与 Agent 基础设施">运行网络的核心成本：执行团队与 Agent 层。</Step>
+  <Step number={3} title="协议金库">5% Carry 桶持续累积，支撑长期可持续性。</Step>
+  <Step number={4} title="生态与节点支持">Deal Flow、服务方池与节点工具。</Step>
 </Steps>
 
-<Statement>先业务，后 Token；先现金流，后长期价值映射。</Statement>
+## Token：被推迟、被合规门控、被完整分配
 
----
+Token 存在于设计中，但它是 Phase 3 的可选项（M24 及之后），只在跨辖区合规条件满足后才考虑。它是协调与治理工具，绝非融资生命线，也绝非升值承诺。供给完整分配，无隐藏份额。
 
-## 与「基础设施代币」的对比
+| 分配对象 | 占总供给（建议） | 说明 |
+| --- | --- | --- |
+| 节点预留池（四层合伙人） | 25% | 治理与协调权 |
+| 团队与 Foundation | 20% | 多年归属 |
+| 协议金库 | 15% | 长期可持续性储备 |
+| 生态与激励 | 20% | Deal Flow、服务方、增长 |
+| 公众与流动性 | 20% | 合规发行与做市 |
 
-- **Chainlink、The Graph、Filecoin** 等虽有代币，但**节点 / 索引者 / 矿工**的长期逻辑仍是**卖服务换对价**；代币参与激励与治理，若协议层完全失去真实付费与工作量，生态也会萎缩。WCN 将同一原则用在**商业协作层**：没有真实 fee，网络即空心化。
-- **依赖二级币价补贴一切**的项目，与上述结构相反：收入表上最重要一行是「市场情绪」，不可建模、不可尽调。
-
----
-
-## 为什么这反而更强
-
-1. **尽调友好**：投资人可按 ARR、take rate、成交漏斗复盘模型，类比其他 B2B 与金融科技，而非纯叙事 DCF。
-2. **熊市存活**：席位与合约费不随 BTC 日线同幅抖动；研发与合规可按计划投入。
-3. **Token 可选优化**：未来若引入 Token，更可专注**协调、质押安全、长期对齐**等设计，而不是被迫把它做成「唯一收入来源」。
-
-<Callout type="tip">
-「不依赖发行 Token 生存」不是反 Token，而是**反代币依赖症**：让网络像严肃 B2B 公司一样先能付工资与服务器，再讨论链上资本结构。这样 Token 才不会在第一次熊市里成为绞索。
+<Callout type="warning">
+节点预留池是治理与协调权，不是融资工具，亦不以升值为承诺。它仅在 Phase 3 合规达成后激活，否则作废。节点权益与任何 Token 的法律属性，由发行时外部法律意见确定。比例为建议值，最终经治理与法律流程确定。
 </Callout>
+
+## 为什么这反而更稳
+
+顺序是刻意的：先证明网络能自筹资金，再考虑 Token。
+
+<CardGrid cols={2}>
+  <Card title="可像 B2B 公司一样核验" icon="search">尽调可检视节点权益、已结算结果与运营周期，而非一套 Token 价格故事。</Card>
+  <Card title="可在下行期存活" icon="shield">席位资金及其支撑的运营周期，不随 Token 日线波动，使计划在熊市中保持。</Card>
+  <Card title="Token 保持可选" icon="layers">若后续引入，Token 可聚焦协调与长期对齐，而非充当唯一资金来源。</Card>
+  <Card title="绑定已结算工作" icon="circle-check">收入在已验证结果处确认，使模型锚定真实业务。</Card>
+</CardGrid>
+
+<Statement>先业务，后 Token。先现金流，后长期价值映射。</Statement>

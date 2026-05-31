@@ -1,54 +1,55 @@
 ---
-title: "6.9 节点生命周期"
-description: "从申请、审核、上线到复核、续期、降级和退出的完整状态机。"
+title: "6.9 参与层"
+description: "服务商与标准节点：专业服务与开放接入，不含治理席位，基于 ERC-721 加 ERC-6551。"
 chapter: 6
 order: 9
 ---
 
-<Hero badge="6.9 · 节点生命周期" lead="金融牌照与机构客户关系均需年审与触发式复核；节点席位同理。静态白名单会导致僵尸节点占用路由与品牌，稀释高质量节点的边际收益——生命周期是质量曲线的调节阀。">
-# 席位由持续验证定义，不由一次性准入定义。
+<Hero badge="6.9 · 参与层" lead="在四层合伙人层之下，Web3 Capital Network（WCN）准入两层参与层。服务商持有 200–500 席，每席 USD 30,000，覆盖 12 类服务。标准节点席位开放，每席 USD 5,000，用于基础参与。两层均不含治理席位。">
+# 两层参与层：专业服务与开放接入，不含治理席位。
 </Hero>
 
 <MetaGrid>
-  <Meta label="设计目标" value="防止席位通胀；使贡献、违规与续期在同一状态机可读" />
-  <Meta label="TradFi 类比" value="类似 broker-dealer 年检、prime 客户定期 KYC refresh、分析师合规培训周期" />
-  <Meta label="数据用途" value="状态变迁日志服务风控、激励与对外披露（聚合匿名）" />
+  <Meta label="服务商" value="200–500 席，USD 30,000，12 类专业能力节点" />
+  <Meta label="标准节点" value="席位开放，USD 5,000，开放申请的基础参与" />
+  <Meta label="链上标准" value="ERC-721 加 ERC-6551（Token Bound Account），使每个节点承载账户与记录" />
 </MetaGrid>
 
-## 节点状态机
+## 两层参与层
 
-<CardGrid cols={3}>
-  <Card title="Applied" description="提交资质、推荐人、业务计划与拟覆盖范围；运营与合规初审材料完整性与利益冲突。" icon="file-text" />
-  <Card title="Approved" description="资格通过但尚未完成协议签署、权限开通与培训；常见于背景调查或法务排队。" icon="circle-check" />
-  <Card title="Active" description="全功能路由与 PoB 提交权限；参与 KPI 统计与激励池。" icon="zap" />
-  <Card title="Probation" description="触发条件示例：连续两季度低于最低引入数、客户投诉属实、PoB 造假嫌疑未结。" icon="triangle-alert" />
-  <Card title="Suspended" description="临时冻结权限：调查违规、待补充材料或司法配合；期间不参与分配。" icon="lock" />
-  <Card title="Renewed / Revoked" description="续期通过则刷新授权期限；撤销则进入冷却期与品牌下架，关键记录依法或依协议保留。" icon="refresh-cw" />
-</CardGrid>
-
----
-
-## 生命周期路径
-
-<Callout type="warning">
-申请 → 尽职调查与协议 → 权限开通 → Active 运营 → 季度 / 年度复核 → 续期、升级、降级或退出；重大事件可插入临时复核。
-</Callout>
+参与层提供能力或接入，不含治理。服务商提供专业服务；标准节点持有开放的入门位置。两者都承担节点的输入与证据责任，但均不持有治理席位或收入分成——后者保留给合伙人层。
 
 <CardGrid cols={2}>
-  <Card title="准入阶段" description="评估资源真实性、历史声誉、与现有子图重叠度；必要时要求试点任务。" icon="search" />
-  <Card title="上线阶段" description="完成规则培训、保密分级测试、系统工具 onboarding；签署对外话术边界。" icon="clipboard-list" />
-  <Card title="运行阶段" description="按 KPI 跟踪 pipeline、闭环、PoB 质量与客户反馈；数据驱动路由权重。" icon="zap" />
-  <Card title="续期阶段" description="对照贡献与违规记录决策：续约、减量权限、观察期或清退。" icon="star" />
+  <Card title="服务商" description="200–500 席。USD 30,000。12 类专业能力服务节点——例如法务、审计、安全、开发、品牌与研究。" icon="wrench" />
+  <Card title="标准节点" description="席位开放。USD 5,000。开放申请的基础参与，是进入网络的入口。" icon="users" />
 </CardGrid>
 
-<Statement>节点不是 NFT 式永久资产，而是与绩效和合规绑定的服务型合约；设计得当可让网络在扩张期仍保持边际质量不下降。</Statement>
+<Statement>参与层拓宽金字塔的底座。它们增加能力与接入，而不稀释治理——治理由合伙人层在其各自的合约下持有。</Statement>
 
 ---
 
-## 严格生命周期的系统理由
+## 参与层如何承载其账户
 
-静态扩容会带来三类问题：**路由被低产节点占用**、**PoB 争议处理成本上升**、**新节点因旧节点占位而却步**（逆向选择）。动态续期把「席位租金」隐含为持续贡献，与 TradFi 中 coverage banker 的年度 book review 逻辑一致。
+标准节点采用 ERC-721 加 ERC-6551（Token Bound Account）标准。Token 绑定席位；绑定账户使每个节点在同一凭证下持有自己的账户与履约记录。服务商遵循相同的节点结构，并带有明确的服务范围。
+
+<CardGrid cols={2}>
+  <Card title="Token 绑定账户" description="ERC-6551 使每个节点在其 NFT 下拥有账户，记录随凭证流转，而非独立的资料档。" icon="wallet" />
+  <Card title="履约记录" description="已验证结果与证据按节点累积，建立路由层可读取的记录。" icon="clipboard-list" />
+  <Card title="开放申请" description="标准节点经开放申请进入，是网络中最低的参与门槛。" icon="door-open" />
+  <Card title="明确的服务范围" description="服务商持有 12 类服务之一，使其能力对向其路由工作的合伙人清晰可读。" icon="layers" />
+</CardGrid>
+
+---
+
+## 各层如何衔接
+
+<CardGrid cols={2}>
+  <Card title="上层为合伙人层" description="创始、国家、城市与赛道合伙人在合伙人合约下持有治理、收入分成与 Deal Flow 优先级。" icon="landmark" />
+  <Card title="下层为参与层" description="服务商与标准节点提供能力与接入，承担输入与证据责任，不含治理。" icon="users" />
+  <Card title="共享同一标准" description="每一层都绑定到 ERC-721 加 ERC-6551 上的 NFT，使每个节点承载自己的账户与记录。" icon="link" />
+  <Card title="同一可问责图谱" description="跨两类，每个已验证结果都挂载到一个席位，使证明账本能指明谁完成了工作。" icon="anchor" />
+</CardGrid>
 
 <Callout type="info">
-建议在产品层暴露最低限度透明度：例如按赛道聚合的节点留存率、平均闭环时长变化，让市场参与者理解网络是在变厚还是变虚——无需泄露单个节点商业机密。
+节点可随贡献增长在金字塔内移动——例如服务商之后在另一份凭证下取得合伙人层席位。治理权益保留在合伙人层，因此拓宽底座永不稀释其上的席位。
 </Callout>

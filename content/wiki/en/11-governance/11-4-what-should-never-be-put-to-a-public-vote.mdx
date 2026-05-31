@@ -3,52 +3,55 @@ title: 11.4 What should never be put to a public vote
 chapter: 11
 order: 4
 description: >-
-  Hard boundaries such as security, compliance, litigation, sanctions, keys and
-  brands: benchmarking on-chain governance manipulation and TradFi
-  non-shareholder referendum matters.
+  The six items the Constitution places outside any vote: core privacy, AML and
+  compliance, formed PoB records, signed legal agreements, the interests of
+  absent minorities, and long-term sustainability.
 ---
 
-<Hero badge="11.4 · Non-voting matters" lead="WCN permanently excludes the following areas from public voting: not against participation, but in recognition that certain decisions, once hijacked by economic weight or short-term emotions, will directly destroy existence and legitimacy. The boundary list sits alongside the exec responsibilities and constitutes the governance capability itself.">
-# One of the signs of mature governance is clearly stated matters and reasons that can never be submitted to a public vote.
+<Hero badge="11.4 · Never-votable items" lead="The Constitution places six items outside any vote. This is not a stance against participation. It recognizes that certain decisions, once overridden by majority weight or short-term pressure, would damage the existence or legitimacy of the network. The list sits beside the responsible layers and forms part of governance itself.">
+# Six items can never be put to a vote. Knowing what cannot be voted on is as important as knowing what can.
 </Hero>
 
 <MetaGrid>
-  <Meta label="Core answer" value="What matters will never be decided by node or token referendum?" />
-  <Meta label="negative teaching material" value="The DAO emergency failure, Beanstalk flash loan decision, Compound vault kidnapping" />
-  <Meta label="underlying logic" value="Fiduciary duties, regulatory non-negotiability, operational continuity" />
+  <Meta label="Core answer" value="Which decisions can no majority override?" />
+  <Meta label="Why a fixed list" value="To stop the network legitimizing harm under pressure" />
+  <Meta label="Reference" value="Whitepaper v2.1 §9.3, the six never-votable items" />
 </MetaGrid>
 
-## Things to never put to a vote (list level)
+## The six never-votable items
 
-The following matters are the sole responsibility of the founding team, board of directors, authorized executives, compliance officers or security officers within the framework of the law and charter; community voting may not be used to overturn, suspend or replace legal obligations.
+The Constitution (L0) defines these six items. No node vote, token weight, or majority decision can override them. They remain with the responsible layers under the framework of law and charter.
 
 <CardGrid cols={2}>
-  <Card title="Security and Incident Response" icon="shield">Smart contract upgrades key management, intrusion handling, freezing/circuiting, and technical cooperation with auditing and law enforcement. The DAO stated: **Slow voting on the chain does not match the speed of asset loss**; such decisions must have a preset playbook and responsibility chain.</Card>
-  <Card title="KYC/AML/Sanctions" icon="lock-keyhole">Client onboarding, ongoing due diligence, suspicious activity reporting, list screening and account restrictions. Benchmark banks and securities firms: **Anti-money laundering and sanctions compliance cannot be exempted by "community" voting**, otherwise it will constitute regulatory and criminal liability.</Card>
-  <Card title="Regulatory and Enforcement Communications" icon="scale">Regulatory inquiry responses, investigation cooperation, license applications and withdrawal strategies. Benchmarking SEC/FINRA context: **External legal position** must be unified by authorized legal and compliance functions, and cannot be decided by referendum on "whether to cooperate".</Card>
-  <Card title="Major litigation and arbitration" icon="scroll">Prosecution, Settlement, Jurisdiction and Evidence Strategy. Shareholders in listed companies cannot vote on a daily basis to decide settlement terms for individual cases; similarly, on-chain voting can easily be manipulated and confidentiality compromised.</Card>
-  <Card title="Entity and Licensing Structure" icon="building">Holding structure, relocation of registration place, scope of licensed entities, disclosure of related transactions. It falls within the scope of **Director/Trustee** and regulatory disclosures, and a referendum cannot replace fiduciary obligations.</Card>
-  <Card title="Core brand and major external commitments" icon="mic">Earnings implications, regulatory-friendly statements, and marketing claims that are inconsistent with the facts. Excessive openness will lead to **uncontrollable risks in securities laws and advertising laws**; unified standards are issued by the responsible layer.</Card>
-  <Card title="Key Funding and Custody Actions" icon="coins">Large-amount treasury transfers, cross-chain bridge strategy changes, and custodian changes. Beanstalk proves: **Temporarily centralized voting rights = Stealable vault**; requires multi-signature, time lock, human-machine separation, and no public vote.</Card>
-  <Card title="Personal data and cross-border transfers" icon="globe">DPA, sub-processors, data residency and deletion policies. The **basis of legality** for data processing under jurisdictions such as GDPR cannot be overwritten by a vote of a non-data controller.</Card>
+  <Card title="1 · Core privacy rights" icon="lock-keyhole">A node's core privacy rights cannot be violated by majority vote. A majority cannot expose or strip the privacy that membership protects.</Card>
+  <Card title="2 · AML and compliance" icon="shield">AML and compliance enforcement cannot be bypassed. No vote can exempt the network from anti-money-laundering obligations or sanctions screening.</Card>
+  <Card title="3 · Formed PoB records" icon="clipboard-list">A formed PoB record cannot be altered after the fact. Once an outcome is verified onto the proof ledger, no vote can rewrite it.</Card>
+  <Card title="4 · Signed legal agreements" icon="scroll">A signed legal agreement cannot be unilaterally breached. A majority cannot vote to walk away from a binding commitment.</Card>
+  <Card title="5 · Absent minority nodes" icon="users">An emergency motion that harms absent minority nodes cannot pass. Urgency cannot be used to strip the interests of nodes not in the room.</Card>
+  <Card title="6 · Long-term sustainability" icon="trending-up">A short-term payout that damages long-term sustainability cannot pass. The network cannot vote itself a near-term gain at the cost of its future.</Card>
 </CardGrid>
 
-## Why open voting must fail in these domains
+## Why these items stay outside any vote
 
-<Callout type="warning">**Emotions and short-term interests**: In a crisis, participants may vote against actions that are "unfavorable to themselves but legally necessary" (such as freezing, cooperating with investigations). **Manipulation**: Flash loans, vote bribery and entrusted kidnapping have been proven on the chain. **Legal liability**: Regulators are pursuing **controllers and executives**, not "community will".</Callout>
+Each item protects something a majority could otherwise damage under pressure. Three forces make open voting unsafe in these domains.
 
-## Alignment with TradFi (Concept)
+<Callout type="warning">Short-term pressure can push a majority to override actions that are legally necessary but locally unwelcome. A fixed list removes that option before the pressure arrives, rather than during it.</Callout>
 
-- **Matters reserved by the Board of Directors**: Areas that require approval from directors as stipulated in the Articles of Association shall not be submitted to the general meeting of shareholders.
-- **Separate Channel for Compliance Officers**: In regulated entities, certain reporting obligations go directly to the board of directors and supervision, and **line-of-business votes cannot be vetoed**.
-- **Exchange Crisis Rules**: Trading suspension and abnormal fluctuation disposal are usually implemented immediately by the management authorized by the rules, **post-disclosure and review**, rather than prior referendums.
+<CardGrid cols={2}>
+  <Card title="Rights are not majority-disposable" icon="shield">Privacy, signed agreements, and the interests of absent nodes are commitments. A vote cannot dissolve a duty the network already owes.</Card>
+  <Card title="Records are settled, not reopened" icon="clipboard-list">A formed PoB record is the network's memory of a verified outcome. Reopening it to a vote would make every record provisional.</Card>
+  <Card title="Compliance is not optional" icon="scale">AML and sanctions obligations bind the responsible parties under law. A community vote cannot waive them without creating real liability.</Card>
+  <Card title="The future has no vote" icon="trending-up">People in the room can favor a payout today. The list protects the long-term interest that absent and future participants depend on.</Card>
+</CardGrid>
 
-## Implementation points
+## How the list is enforced
+
+A list is only as strong as its enforcement. WCN binds it in writing and at the technical layer, and lets it grow but never shrink without due process.
 
 <Steps>
-  <Step title="Writing in the Charter and Disclosure to the Public">Restricted areas must be readable in the user agreement, governance instructions and node materials to avoid "verbal red lines".</Step>
-  <Step title="Hooking is prohibited on the technical side">Smart contracts or backend permissions must not be configured to "cover restricted areas with a single proposal".</Step>
-  <Step title="Linked with 11.5">When compliance requirements in multiple jurisdictions change, the restricted areas will only increase rather than decrease until the charter is formally revised and legal procedures are passed at the responsible level.</Step>
+  <Step title="Written and disclosed">The non-votable items appear in the charter, the governance materials, and the node documents. They are not informal red lines.</Step>
+  <Step title="Enforced in the system">Permissions and contracts are configured so a single proposal cannot reach a non-votable item. The block is structural, not procedural.</Step>
+  <Step title="Can grow, not shrink">As compliance requirements change, the list can expand. It contracts only through a formal charter revision and the proper legal process.</Step>
 </Steps>
 
-<Statement>Knowing what **not** to vote is equally important as knowing what **can** vote; the former prevents the network from self-legitimizing illegal behavior under pressure, and the latter supports long-term participation value.</Statement>
+<Statement>Knowing what cannot be voted on protects the network from legitimizing harm under pressure. The six items guard privacy, compliance, settled records, signed commitments, absent minorities, and the long term.</Statement>

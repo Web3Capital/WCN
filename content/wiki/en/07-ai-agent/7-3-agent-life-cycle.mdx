@@ -1,67 +1,67 @@
 ---
-title: 7.3 Agent life cycle
+title: 7.3 The Agent life cycle
 description: >-
-  Register, authorize, run, monitor, upgrade, suspend, exit; align model
-  governance, auditing and third-party due diligence FAQ list.
+  Register, authorize, run, review, upgrade, suspend, and retire — the state
+  machine that keeps every Agent identifiable, constrainable, and revocable.
 chapter: 7
 order: 3
 ---
 
-<Hero badge="7.3 · Life cycle" lead="Agents need a life cycle like employee accounts and model versions: who can create it, who can authorize it, how to monitor it during operation, how to pause it when an accident occurs, and how to process the data after it is eliminated. Without a state machine, there is no trusted execution layer, and it is impossible to explain to the auditor “what was running in the system at that time.”">
-# Agents must be identifiable, constrainable, upgradeable, and revocable.
+<Hero badge="7.3 · The Agent life cycle" lead="An Agent needs a life cycle, the way an account and a model version do. Who may create it, who may authorize it, how it is watched while it runs, how it is stopped when something goes wrong, and how its data is handled once it retires. Without a state machine there is no trusted execution layer, and no way to tell an auditor what was running at a given time.">
+# An Agent must be identifiable, constrainable, upgradeable, and revocable.
 </Hero>
 
 <MetaGrid>
-  <Meta label="What this page does" value="State machine + governance action + audit response" />
-  <Meta label="core themes" value="Full link from Registered to Retired" />
-  <Meta label="Reading highlights" value="Authorization boundaries, suspension triggers, upgrade control" />
+  <Meta label="What this page does" value="Defines the state machine, the governance actions, and the audit response" />
+  <Meta label="Core span" value="The full path from Registered to Retired" />
+  <Meta label="You will learn" value="Authorization limits, suspension triggers, and upgrade control" />
 </MetaGrid>
 
-## critical state
+## The core states
 
 <CardGrid cols={3}>
-  <Card title="Registered" icon="file-text">Registered in the catalog (name, type, default model, owner node, usage description). The business data has not been received yet, which is equivalent to "the account has been created but the permissions have not been activated".</Card>
-  <Card title="Authorized" icon="key">Complete the permission review: data domain, tool whitelist, daily call limit, and whether writing to external systems is allowed. Corresponds to role binding in enterprise IAM.</Card>
-  <Card title="Active" icon="play">Execute tasks within the scope of authorization and write structured logs **continuously** (input summary, output hash, tool calls, approval results).</Card>
-  <Card title="Paused / Suspended" icon="pause">Examples of trigger conditions: abnormal unauthorized attempts, consecutive failures in output quality sampling, security incidents, and compliance bans. Pausing should cut off tools and external callbacks with one click.</Card>
-  <Card title="Upgraded" icon="arrow-up">Model version, prompt, tool or limit changes; change order number, approver, effective time and rollback package must be recorded. Benchmark MLOps with change management (such as ITIL).</Card>
-  <Card title="Retired" icon="flag">If the business is offline or does not meet the standards, it will be eliminated; the read-only log retention period will be retained, and sensitive fields used for training will be deleted or anonymized (according to policy).</Card>
+  <Card title="Registered" icon="file-text">Recorded in the catalog with a name, type, default model, owner node, and description. It holds no business data yet — the account exists, but its permissions are not active.</Card>
+  <Card title="Authorized" icon="key">Permission review is complete: data domain, tool list, daily call limit, and whether it may write to external systems. This is the capability manifest that fixes the Agent's reach.</Card>
+  <Card title="Active" icon="play">Executes scoped tasks and writes structured logs continuously — an input summary, an output hash, the tool calls, and the review result.</Card>
+  <Card title="Suspended" icon="pause">Triggered by an unauthorized attempt, repeated failures in output sampling, a security incident, or a compliance block. Suspension cuts off tools and external callbacks at once.</Card>
+  <Card title="Upgraded" icon="arrow-up">A change to the model, prompt, tools, or limits. The change record, approver, effective time, and rollback package are all written down before it takes effect.</Card>
+  <Card title="Retired" icon="flag">Taken offline when the work ends or the Agent fails to meet standard. The log is kept read-only for its retention period, and sensitive fields are deleted or anonymized by policy.</Card>
 </CardGrid>
 
-## life cycle path
+## The life-cycle path
 
 <Callout type="info">
-Registration → Risk assessment and authorization → Online (Active) → Continuous monitoring and random inspection → Event-driven suspension → Change upgrade (with approval) → Retirement and retention strategy
+Register, then review and authorize, then run as Active, then monitor and sample continuously, then suspend on a triggering event, then upgrade through an approved change, then retire under a retention policy.
 </Callout>
 
 <Steps>
-  <Step title="access">Clarify business scenarios, data classification, whether to process PII/confidentiality terms; prohibit "get in first and figure out a solution later".</Step>
-  <Step title="Authorize">Minimum permissions: Split API scope by Agent type; two-person rule for sensitive operations or Human in the Loop (HITL).</Step>
-  <Step title="run">SLA: Customer complaint labels for latency, error rate, and hallucinations; similar indicators to observability tools such as LangSmith, but the results must be entered into the WCN task system.</Step>
-  <Step title="Review">Regular spot checks: comparison of multiple versions of models with the same input, red team prompt samples, and whether tool calls are out of bounds.</Step>
-  <Step title="quit">Retired Agents must no longer appear in the dispatch list; historical output can still be referenced by Proof but marked with the model version.</Step>
+  <Step title="Register">State the business scenario, the data classification, and whether the work touches personal or confidential data. "Get in first and sort it out later" is not allowed.</Step>
+  <Step title="Authorize">Grant least privilege: scope the tools by Agent type, and require a two-person rule or a human in the loop for any sensitive action.</Step>
+  <Step title="Run">Hold a service standard for latency, error rate, and unsupported claims. Observability is useful, but the result must land in the WCN task system.</Step>
+  <Step title="Review">Sample on a schedule: compare model versions on the same input, run adversarial prompts, and check whether any tool call went out of bounds.</Step>
+  <Step title="Retire">A retired Agent no longer appears in the dispatch list. Its past output can still be cited by Proof, marked with the model version it ran.</Step>
 </Steps>
 
-<Statement>Life cycle design goal: **answer at any time** - which Agent is running, what model is used, what can be accessed, and who approved the last change.</Statement>
+<Statement>The aim of the life cycle is to answer, at any time: which Agent is running, on what model, with access to what, and who approved the last change.</Statement>
 
-## Governance and Risk Management Framework (Condensed)
+## Governance and risk, in brief
 
-| Dimensions | Key points |
+| Dimension | Key point |
 | --- | --- |
-| Ownership | Each Agent has an owning node or platform responsible person; if there is a running incident, please contact the owner first |
-| Change | Production changes go through the change window and rollback; major model switching can require parallel grayscale |
-| Data | Training/log retention and cross-border transmission comply with node location and contract |
-| Security | Escrow of keys and tool credentials; prohibiting agents from persistently holding user plaintext passwords |
-| Audit | Log retention period ≥ business dispute tracing requirements; support exporting to third-party due diligence |
+| Ownership | Each Agent has an owning node or responsible person; on an incident, the owner is the first contact |
+| Change | Production changes pass through a change window with a rollback; a major model switch can require a parallel rollout |
+| Data | Training data, log retention, and any cross-border transfer follow the node's location and contract |
+| Security | Keys and tool credentials are held in escrow; an Agent never holds a user's plaintext password |
+| Audit | Logs are kept at least as long as a dispute may take to trace, and can be exported for third-party review |
 
 <Callout type="warning">
-The lack of the ability to suspend and retire tacitly allows "zombie agents" to hold expired permissions for a long time - a common source of data breaches and compliance penalties.
+Without the ability to suspend and retire, an Agent can hold expired permissions long after its work ends. That standing access is a common source of data breaches and compliance penalties.
 </Callout>
 
-## The fundamental difference from AutoGPT-style "normally open loop"
+## The difference from an always-on loop
 
-The autonomous loop defaults to **no clear endpoint**; the WCN life cycle ties each run to **task and authorization aging**. The task ends or the authorization expires → Agent calls should be rejected or entered read-only instead of continuing to "think" in the background.
+An autonomous loop has no defined endpoint by default. The WCN life cycle ties every run to a task and to the term of its authorization. When the task ends or the authorization expires, the Agent's calls are rejected or made read-only. It does not keep running in the background.
 
 <Callout type="tip">
-One sentence when explaining to an auditor or LP: **Our Agents are like controlled batch jobs, not like tireless automated workers. **
+The line to give an auditor is short: WCN Agents are scoped, recorded jobs with a defined end, not tireless workers that run on their own.
 </Callout>

@@ -1,50 +1,58 @@
 ---
-title: 6.3 Overview of node classification
+title: 6.3 The six-tier node pyramid
 description: >-
-  Dismantle the node system from the four dimensions of function, level,
-  industry and region.
+  The full structure of WCN nodes: four partner tiers that bind rights to
+  responsibility, and two participation tiers, with caps and prices.
 chapter: 6
 order: 3
 ---
 
-<Hero badge="6.3 · Classification Overview" lead="Multidimensional classification is not a document obsession, but an infrastructure for routing and risk control: without a unified type ontology, CRM will repeatedly reach the same LP, PoB cannot mark the dominant party and collaborators, and it is difficult for governance to cut the boundaries of national representation.">
-# Classification ontology = schema for operations and settlement; one-dimensional labels will cause matching and internal control to fail at the same time.
+<Hero badge="6.3 · The six-tier pyramid" lead="The Web3 Capital Network (WCN) places every node in one pyramid of six tiers. The top four are partner tiers: an NFT binds governance, revenue share, and deal-flow priority to resource introduction, business advancement, evidence submission, and compliance. The bottom two are participation tiers, with professional service or open access and no governance seat.">
+# Six tiers, two classes. Partner tiers carry a governance seat; participation tiers do not.
 </Hero>
 
 <MetaGrid>
-  <Meta label="Four orthogonal axes" value="Function (what to do), level (coverage), industry (which track), region (geographic anchor)" />
-  <Meta label="TradFi mapping" value="Function ≈ product lines and licenses; level ≈ headquarters—region—industry group; region ≈ branch coverage" />
-  <Meta label="system dependencies" value="Search, permissions, conflict detection, PoB templates and KPI sets are all hung on multi-dimensional tags" />
+  <Meta label="Partner tiers" value="Founding, Country, City, Track — rights and duties bound to one NFT" />
+  <Meta label="Participation tiers" value="Service Provider and Standard Node — service or open access, no governance seat" />
+  <Meta label="Onchain standard" value="ERC-721 plus ERC-6551 (Token Bound Account) carries each node's account and record" />
 </MetaGrid>
 
-## Functional dimension (what to do)
+## The four partner tiers
 
-<CardGrid cols={3}>
-  <Card title="Project node" description="Carrying token economic design, online path, compliance narrative and financing milestones; the origin of the demand side." icon="package" />
-  <Card title="capital node" description="Family offices, venture capital, market makers, ecological funds; provide check size, decision-making rhythm and structural preferences." icon="coins" />
-  <Card title="service node" description="Law firms, auditing, security, development, branding, research; turn referrals into deliverable SOWs." icon="wrench" />
-  <Card title="distribution node" description="Exchanges, media, KOL, conference organizers; undertake liquidity and market narrative." icon="radio" />
-  <Card title="Regional node" description="National master node, city node; bringing global agreements to local relationships and activities." icon="globe" />
-  <Card title="Agent node" description="The automated executors of bound workflows: screening, reaching, monitoring, and reporting must have SLAs and traces." icon="bot" />
+A partner-tier NFT is a partner contract. It couples rights — governance, revenue share, deal-flow priority — to responsibilities — resource introduction, business advancement, evidence submission, and compliance — on one credential.
+
+<CardGrid cols={2}>
+  <Card title="Founding Partner" description="Up to 100 seats. USD 500,000. A permanent global governance seat, never re-issued. See 6.4." icon="landmark" />
+  <Card title="Country Partner" description="50–65 seats. USD 50,000–500,000. One partner per country, exclusive coordination, 5–10% of that country's protocol-layer revenue. See 6.5." icon="flag" />
+  <Card title="City Partner" description="150–300 seats. USD 20,000–100,000. One partner per city, owning local deal flow. See 6.6." icon="building-2" />
+  <Card title="Track Partner" description="20–25 seats. USD 50,000–300,000. One partner per track, the cross-geography global representative. See 6.7." icon="layers" />
 </CardGrid>
 
-<Callout type="info">
-Typical composite portrait: A Tokyo-based AI venture capital can be simultaneously marked in the system as "capital node + Japan geographical anchor point + AI industry node + seat at a certain level". When matching, select subsets according to scenarios to avoid using a single label to describe business reality.
-</Callout>
+## The two participation tiers
 
-<Statement>PoB and settlement require knowing "who signed and endorsed what role"; multidimensional classification is the lowest-cost solution to compile real business relationships into a system executable structure.</Statement>
+Participation tiers provide capability or access. They hold no governance seat and carry no revenue share.
+
+<CardGrid cols={2}>
+  <Card title="Service Provider" description="200–500 seats. USD 30,000. Professional-capability service nodes across 12 categories. See 6.9." icon="wrench" />
+  <Card title="Standard Node" description="Open cap. USD 5,000. Open application for basic participation, on ERC-721 plus ERC-6551. See 6.9." icon="users" />
+</CardGrid>
+
+<Statement>The pyramid is the routing and accountability schema. A tier sets a node's rights, its duties, its price, and its standing on the Proof ledger — so every outcome can name who signed and in what role.</Statement>
 
 ---
 
-## Operational failure modes when classification is missing
+## Country-tier pricing
+
+The Country Partner price spans USD 50,000 to 500,000. A market's tier sets the figure within that range.
 
 <CardGrid cols={2}>
-  <Card title="matching noise" description="The same LP is promoted by three lines at the same time; similar to the collision of orders when an investment bank lacks a customer coverage matrix." icon="ban" />
-  <Card title="CRM collapse" description="The funnel stage cannot be sliced ​​by function and region, and prediction and review lose granularity." icon="ban" />
-  <Card title="PoB controversy" description="The leading recommender, collaborative execution party, and pure information party are mixed, and the distribution rules cannot be implemented." icon="ban" />
-  <Card title="Expansion cannot be copied" description="There is no standard seat package when the new market is launched: What are the KPIs for national master nodes, city nodes, and track ambassadors?" icon="ban" />
+  <Card title="Tier S — USD 500,000" description="United States and Mainland China (handled as special cases)." icon="circle-dot" />
+  <Card title="Tier A — USD 300,000" description="Singapore, Hong Kong, the United Kingdom, Japan, and Germany." icon="circle-dot" />
+  <Card title="Tier B — USD 200,000" description="Korea, France, Canada, Australia, India, and Brazil." icon="circle-dot" />
+  <Card title="Tier C — USD 100,000" description="Mexico, Indonesia, Vietnam, Thailand, Turkey, and the Philippines." icon="circle-dot" />
+  <Card title="Tier D — USD 50,000" description="Other emerging markets." icon="circle-dot" />
 </CardGrid>
 
-<Callout type="tip">
-Align with TradFi: Customer data of large investment banks are also cut into cubes by industry group, region, and product authority; WCN only exposes the aspects to on-chain collaboration and PoB, so that the external ecosystem can also read the same set of structures.
+<Callout type="info">
+The country schedule prices the Country Partner seat by market, not by partner. One country holds one Country Partner, so the figure also sets the cost of exclusive coordination in that market.
 </Callout>

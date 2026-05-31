@@ -1,77 +1,77 @@
 ---
 title: "3.1 WCN 的整体解法"
-description: "四层统一工作流：节点网络 + AI Agent + PoB + 结算层，以及为什么现有方案都无法替代。"
+description: "一条连续工作流——节点网络、AI Agent、Proof of Business 与结算——以及为何 DAO 工具、撮合平台或 AI 工具都无法替代。"
 chapter: 3
 order: 0
 ---
 
-<Hero badge="3.1 · 整体解法" lead="Web3 的核心矛盾不是缺少参与者，而是参与者无法在同一套规则内协同。WCN 的解法是把资源组织、任务执行、结果验证与价值结算放进一条连续工作流——不是多做一点连接，而是重建协同的底层结构。">
-# 不是再加一个工具，而是把资源、执行、证明与结算组织进同一系统。
+<Hero badge="3.1 · 整体解法" lead="Web3 不缺参与者。参与者无法在同一套规则内协同。WCN 把资源组织、任务执行、结果验证与价值结算放进一条连续工作流。这是结构层面的回答，而非再多一次连接。">
+# 我们把资源、执行、验证与结算组织进同一个系统。
 </Hero>
 
 <MetaGrid>
-  <Meta label="核心逻辑" value="组织资源 → 推进执行 → 验证结果 → 沉淀价值" />
+  <Meta label="核心逻辑" value="组织资源 → 推进执行 → 验证结果 → 结算价值" />
   <Meta label="关键区别" value="端到端闭环，而非单点连接" />
-  <Meta label="对标思路" value="Bloomberg Terminal 之于 TradFi = WCN 之于 Web3 BD" />
+  <Meta label="对标框架" value="Bloomberg 之于传统金融，即 WCN 之于 Web3 业务" />
 </MetaGrid>
 
-<Statement>WCN 的整体解法，是把原本分散在 Telegram、Email、Google Docs、多签钱包里的碎片化协作，收拢进一个有身份、有流程、有证据、有结算的统一系统。</Statement>
+<Statement>WCN 把原本散落在 Telegram、邮件、共享文档与多签钱包里的协作，收拢进一个有身份、有流程、有证据、有结算的系统。</Statement>
 
-## 为什么现有方案无法解决问题
+## 为什么现有工具解决不了问题
 
-在进入 WCN 的解法之前，先看行业现在「怎么干活」：一个典型的 Web3 跨境 Deal——比如一个东南亚 DeFi 项目找中东资本——涉及项目方、FA、本地 BD、法务、KOL、做市商等 6-10 个角色。它们今天的协作工具链是：
+先看行业今天怎么运转。一笔典型的跨境 Deal——一个东南亚 DeFi 项目寻求中东资本——涉及六到十个角色：项目方、FA、本地 BD、法务、媒体、做市商。它们的工具链分散在彼此割裂的界面上。
 
-> Telegram 群聊 → Google Docs 共享 → Email 跟进 → 线下会议 → 多签钱包打款 → 微信群里宣布
+> Telegram 群聊 → 共享文档 → 邮件跟进 → 线下会议 → 多签钱包打款 → 群内宣布
 
-这条链的问题不是效率低，而是**系统性缺失**：
+这条链的问题不是执行慢，而是一处结构性缺口。下面每个工具都只覆盖一段，其余环节无从追溯。
 
 <CardGrid cols={2}>
-  <Card title="DAO 工具" icon="landmark">Snapshot、Tally 等解决链上投票，但不解决 Deal 推进、任务分配和贡献归因。DAO 治理和业务执行是两个完全不同的问题。</Card>
-  <Card title="撮合平台" icon="handshake">TokenTerminal、RootData 等提供数据和列表，但止于「介绍认识」。后续的执行、验证、结算全部在平台外发生，无法追踪。</Card>
-  <Card title="AI 聊天工具" icon="message-circle">ChatGPT、Perplexity 能做 Research，但输出不进入任何正式工作流。没有权限边界、没有日志、没有归因、没有结算资格。</Card>
-  <Card title="CRM / 项目管理" icon="chart-bar">Notion、Airtable、HubSpot 能管理流程，但不理解 Web3 的多方协作、跨境结算和贡献证明需求。</Card>
+  <Card title="DAO 工具" icon="landmark">Snapshot、Tally 解决链上投票。它们不推进 Deal、不分配任务、不归因贡献。治理与业务执行是两个不同的问题。</Card>
+  <Card title="撮合平台" icon="handshake">Token Terminal、RootData 提供数据与列表。它们止于「介绍认识」。执行、验证、结算都在别处发生，不留记录。</Card>
+  <Card title="AI 聊天工具" icon="message-circle">ChatGPT、Perplexity 能做研究。其产出不进入任何正式工作流。没有权限边界，没有日志，没有归因，没有结算资格。</Card>
+  <Card title="CRM 与项目工具" icon="chart-bar">Notion、Airtable、HubSpot 能管理流程。它们不建模多方协作、跨境结算与贡献证明。</Card>
 </CardGrid>
 
 <Callout type="warning">
-行业真正缺的不是更好的某一个工具，而是一套能把所有角色、所有动作、所有结果放进同一系统的协同基础设施。TradFi 有 Bloomberg + Pitchbook + DealCloud 覆盖从数据到执行到结算的全链路；Web3 至今没有对等物。
+缺口不是更好的某个工具，而是把每个角色、每个动作、每个结果放进同一系统的协同基础设施。传统金融有 Bloomberg、PitchBook、DealCloud，覆盖从数据到执行到结算的全链路。Web3 至今没有对等物。
 </Callout>
 
 ---
 
-## WCN 的四层解法
+## WCN 的架构
 
-WCN 的回答是四层统一架构——不是功能拼装，而是一条从资源到结算的连续工作流：
+WCN 的运转建立在三件事之上，且三者合一：一张全球多层级的节点网络、一套以 Proof of Business 为结算门槛的证明账本、一组进入任务并留下凭证的 AI Agent。结算闭合整条链路。
 
 <CardGrid cols={2}>
-  <Card title="第一层：节点网络" icon="globe">把项目方、资本方、服务商、媒体、区域资源组织成全球多层级节点。每个节点有明确位置、责任和权限。节点不是粉丝——它是一个有资源、能推进、要负责的协作单元。</Card>
-  <Card title="第二层：AI Agent 执行" icon="bot">Agent 不是聊天机器人，而是进入正式任务流的执行层。Research Agent 做项目筛选，Matching Agent 做资源匹配，Growth Agent 做增长分发——每个 Agent 有权限边界、有输出日志、有归因记录。</Card>
-  <Card title="第三层：Proof of Business" icon="circle-check">PoB 不是活跃积分，不是打卡签到。它是对真实业务闭环的证明机制：谁引入了什么资源、推进了哪个环节、产生了什么结果、证据是否经过审核。只有通过验证的闭环才能进入价值层。</Card>
-  <Card title="第四层：结算与价值" icon="scale">PoB 验证通过的结果进入结算层，形成可追踪的价值归因与分配。这解决了 Web3 最古老的问题之一——「谁该分多少」不再靠谈判和关系，而靠系统记录。</Card>
+  <Card title="节点网络" icon="globe">项目方、资本方、服务商、媒体与区域组织者，编排为全球多层级节点。每个节点有明确的位置、责任与权益。节点不是粉丝——它路由资源、推进业务、承担风险。</Card>
+  <Card title="AI Agent 执行" icon="bot">Agent 不是聊天机器人，而是正式任务流内的执行单元。每个 Agent 有能力清单、每次任务有任务合约、每次行为留下 PoB 凭证。Agent 不能在无人类背书下签约、转账或对外承诺。</Card>
+  <Card title="Proof of Business" icon="circle-check">PoB 不是参与积分。它是对真实业务结果的验证机制：谁引入了资源、推进了哪个环节、形成了什么结果、证据是否通过复核。只有已验证的结果才进入价值层。</Card>
+  <Card title="结算" icon="scale">已验证的结果进入结算，形成可追溯的归因与分配。这回答了 Web3 最古老的问题之一——谁该分多少——靠记录，而非靠谈判。</Card>
 </CardGrid>
 
 ---
 
-## 最小闭环路径
+## 最小业务闭环
 
-四层架构在一个具体 Deal 中是这样运作的：
+架构在一笔 Deal 内端到端运转。白皮书直接定义了这条路径。
 
 <Callout type="info">
-节点引入项目/资源 → Deal 被结构化录入 → Task 分配给人和 Agent → 执行过程产出日志和成果 → 证据提交至 Proof Desk → 审核通过后形成 PoB 记录 → 进入结算层进行归因与分配
+节点引入资源 → 机会进入协作空间 → 拆解为结构化任务（人 + Agent） → 推进至可观测结果 → 提交证据 → PoB 对账 → 生成验证节点 → 进入 Carry 结算
 </Callout>
 
-这条路径的关键在于：WCN 的最小可验证单位不是一篇帖子、一次群聊或一个表面活跃指标，而是**一个被验证的业务闭环**。
+WCN 的最小可验证单位不是一篇帖子、一个群，也不是一项表面活跃指标，而是一个已验证的业务闭环。
 
 ---
 
-## 为什么统一工作流是关键
+## 为什么关键在于一条工作流
 
 <CardGrid cols={2}>
-  <Card title="解决归因问题" icon="search">传统 Web3 Deal 结束后，谁引荐、谁推进、谁交付全靠口头主张。WCN 在流程中自动记录每个角色的贡献链条。</Card>
-  <Card title="释放 AI 的真实价值" icon="bot">Agent 不再是独立的 SaaS 工具。它在统一系统内执行任务，输出直接进入 Proof 链条，被人类审核后获得归因。这是 AI 真正进入商业闭环的方式。</Card>
-  <Card title="消除信息不对称" icon="radio">所有参与方看到同一套数据、同一条进度、同一份证据。不再有「我以为你做了」「他说他引荐的」这类灰色地带。</Card>
-  <Card title="形成可复利的网络效应" icon="trending-up">每一个验证过的闭环都沉淀为系统记录。时间越长，节点信誉越清晰，匹配越精准，系统越难被替代——这是单点工具无法实现的。</Card>
+  <Card title="归因变成记录" icon="search">传统 Deal 结束后，谁引荐、谁推进、谁交付，都靠口头主张。WCN 在工作发生时记录每个角色的贡献链条。</Card>
+  <Card title="AI 进入闭环" icon="bot">Agent 不再是独立工具。它在同一系统内执行，产出进入证明账本，由人类复核后获得归因。这就是 AI 进入业务闭环的方式。</Card>
+  <Card title="信息不对称收窄" icon="radio">参与方看到同一套数据、同一条进度、同一份证据。「我以为你做了」「他说是他引荐的」这类灰色地带随之关闭。</Card>
+  <Card title="网络持续复利" icon="trending-up">每个已验证的闭环都成为一条记录。时间越长，节点信誉越清晰，匹配越精准，系统越难被替代——这是单点工具达不到的。</Card>
 </CardGrid>
 
 <Callout type="tip">
-WCN 不是一个新平台，而是一种新的业务组织方式——它让 Web3 的跨境、多方、多环节协作第一次有了完整的基础设施，从资源进入到价值结算，端到端在同一系统内完成。
+WCN 不是一个新平台，而是一种组织业务的新方式。Web3 的跨境、多方、多环节协作第一次端到端在同一系统内完成，从资源进入到价值结算。
 </Callout>

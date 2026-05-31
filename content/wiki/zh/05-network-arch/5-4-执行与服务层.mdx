@@ -1,38 +1,40 @@
 ---
 title: "5.4 执行与服务层"
-description: "从连接到交付的关键桥梁：法务、审计、开发、增长和 Agent 把 Deal 变成结果。"
+description: "从连接到交付的桥梁：法务、审计、开发、增长与 Agent 把 Deal 变成结果。"
 chapter: 5
 order: 4
 ---
 
-<Hero badge="5.4 · 执行与服务层" lead="项目和资本只是开始。在 Web3 中，大量的 Deal 死在「连接了但没人做事」的阶段——介绍了律师但没人跟进，答应了审计但排不上期，说好了合作但没有 owner。执行与服务层解决的就是这个问题：把连接变成任务，把任务变成结果。">
-# L3 · 执行与服务层——真正让事情做成的一层。
+<Hero badge="5.4 · 执行与服务层" lead="项目和资本只是开始。在 Web3，许多 Deal 死在连接了但没人做的阶段——律师介绍了却无人跟进，审计说好了却排不上，合作谈妥了却没有 owner。这一层补上这道缺口：把连接变成界定好的任务，把任务变成结果。">
+# L3 · 执行与服务——真正把事情做成的一层。
 </Hero>
 
 <MetaGrid>
   <Meta label="层级位置" value="L3 — 把 L2 的 Deal 推进成可交付结果" />
-  <Meta label="核心功能" value="服务匹配、Task 分配、Agent 执行、交付验收" />
-  <Meta label="行业痛点" value="Web3 服务碎片化、无标准交付、无结算归因" />
+  <Meta label="核心功能" value="服务匹配、任务界定、Agent 执行、验收" />
+  <Meta label="它回答的问题" value="连接能否变成结果" />
 </MetaGrid>
 
-## 当前 Web3 服务的结构性问题
+## 当前 Web3 服务为何停滞
+
+今天的服务被一件件零散安排，没有共享界面，也没有共享的完成标准。
 
 <CardGrid cols={2}>
-  <Card title="碎片化" icon="smartphone">法务找一家、审计找一家、做市找一家、增长找一家。每家都是独立沟通，没有统一的协调界面。一个项目方可能同时管理 8 个 Telegram 群和 5 个 Google Doc。</Card>
-  <Card title="无标准交付" icon="clipboard-list">服务商说「做完了」，但没有标准化的交付确认机制。审计报告的质量参差不齐，法律意见的覆盖范围不明确，增长服务的效果没有归因。</Card>
-  <Card title="无结算归因" icon="banknote">服务费通常是预付或里程碑付款，与最终业务结果无关。做市商拿了费用但流动性没改善，增长团队拿了费用但用户没增长——没有系统把服务和结果绑定。</Card>
-  <Card title="无规模化路径" icon="ruler">优秀的 FA、律师、审计师的时间是有限的。他们的方法论无法被复制，导致服务能力受限于个人产能。</Card>
+  <Card title="碎片化" icon="smartphone">法务一家、审计一家、做市一家、增长一家。每家各自沟通，没有共享的协调界面，项目方只能在多个独立渠道里追同一笔 Deal。</Card>
+  <Card title="无标准交付" icon="clipboard-list">服务商说做完了，却没有共享的确认机制。审计质量参差，法律意见的覆盖范围不清，增长效果无从归因。</Card>
+  <Card title="无结算归因" icon="banknote">费用通常预付或按里程碑支付，与业务结果脱钩。无论结果是否成立，服务商照样拿费用，因为没有系统把服务与结果绑定。</Card>
+  <Card title="无规模化路径" icon="ruler">优秀的律师、审计师或顾问，时间有限。方法难以复制，服务能力受限于个人产能。</Card>
 </CardGrid>
 
 ---
 
-## WCN 的执行与服务层如何运作
+## 执行与服务层如何运作
 
 <Steps>
-  <Step title="服务注册">服务节点录入能力：法务（合同/结构/合规）、审计（智能合约/财务）、安全、品牌、增长、开发、研究等。能力进入 Service Registry，可被 Deal 调用。</Step>
-  <Step title="Task 分配">当 Deal 需要服务时，系统从 Service Registry 匹配合适的服务节点。每个 Task 有明确的 owner、scope、deadline 和验收标准。</Step>
-  <Step title="执行推进">人类服务节点和 Agent 协同推进。Agent 负责信息整理、催办、纪要和状态追踪，人类负责判断、交付和签字。</Step>
-  <Step title="交付与证据">服务完成后，交付件进入 Evidence Packet——法律意见书、审计报告、交付 memo、SOW 确认等。交付质量由 Reviewer 审核。</Step>
+  <Step title="服务注册">服务节点注册能力——法务、审计、安全、品牌、增长、开发、研究。能力进入注册表，可被 Deal 调用。</Step>
+  <Step title="任务界定">当 Deal 需要服务，系统从注册表匹配合适的节点。每个任务带有明确的 owner、scope、deadline 与验收标准。</Step>
+  <Step title="推进">人类节点与 Agent 协同推进。Agent 负责信息、催办、纪要与状态；人类掌握判断、交付与签字。</Step>
+  <Step title="交付与证据">完成后，交付件进入证据包——法律意见书、审计报告、交付 memo、SOW 确认。交付质量由 Reviewer 审核。</Step>
 </Steps>
 
 ---
@@ -40,23 +42,29 @@ order: 4
 ## 这一层的参与方
 
 <CardGrid cols={2}>
-  <Card title="法务 / 合规" icon="scale">SAFE/SAFT 结构审核、Token 法律意见、实体设立、监管咨询、投资人 KYC/AML。在 Web3 中，法务是最影响 Deal 速度的环节——一份法律意见可能卡住整个融资 2 周。</Card>
-  <Card title="审计 / 安全" icon="lock">智能合约审计、财务审计、安全评估、渗透测试。高质量审计是项目获得投资和上所的前置条件。</Card>
-  <Card title="开发 / 研究" icon="laptop">技术开发、架构评审、研究报告、竞品分析、Token 经济设计。Research Agent 可以覆盖 80% 的信息整理工作。</Card>
-  <Card title="增长 / BD" icon="rocket">品牌策略、内容创作、社区建设、KOL 合作、用户获取。Growth Agent 可以标准化分发流程和归因追踪。</Card>
+  <Card title="法务 / 合规" icon="scale">结构审核、Token 法律意见、实体设立、监管咨询、投资人 KYC/AML。在 Web3，法务常常决定 Deal 的速度。</Card>
+  <Card title="审计 / 安全" icon="lock">智能合约审计、财务审计、安全评估、渗透测试。可信审计通常是投资与上所的前置条件。</Card>
+  <Card title="开发 / 研究" icon="laptop">技术开发、架构评审、研究与竞品分析、Token 经济设计。Agent 覆盖大量信息整理工作。</Card>
+  <Card title="增长 / BD" icon="rocket">品牌策略、内容、社区、KOL 合作、用户获取。Agent 把分发流程与归因追踪标准化。</Card>
 </CardGrid>
 
 ---
 
-## Agent 在执行层的角色
+## Agent 在这一层做什么
+
+在 WCN，Agent 是结构化的执行单元，不是聊天工具。它在明确授权下进入界定好的任务，并留下可核验的记录。
 
 <CardGrid cols={2}>
-  <Card title="Research Agent" icon="microscope">项目摘要、竞品分析、风险标记、市场数据整理。把分析师 3 天的工作压缩到 30 分钟，人类审核后采纳。</Card>
-  <Card title="Execution Agent" icon="zap">纪要自动生成、待办追踪、催办提醒、材料收集、状态更新。消除 Deal 中 30-40% 的协调时间。</Card>
+  <Card title="Research Agent" icon="microscope">项目摘要、竞品分析、风险标记、市场数据——先出初稿，经人类审核后采纳。</Card>
+  <Card title="Execution Agent" icon="zap">纪要、待办追踪、催办提醒、材料收集、状态更新——消除 Deal 内部的协调负担。</Card>
 </CardGrid>
 
-<Statement>Agent 不替代服务节点的专业判断，而是放大他们的产能——让一个优秀律师的方法论服务 10 个 Deal 而不是 3 个。</Statement>
+<Statement>Agent 不取代服务节点的专业判断，而是放大节点的产能——让一套好方法服务更多 Deal，而非寥寥几笔。</Statement>
+
+<Callout type="warning">
+边界是固定的：Agent 不能自行签署合同、动用资金或对外承诺。每一项此类动作都需人类背书，每一个 Agent 动作都留下可审计的记录。
+</Callout>
 
 <Callout type="tip">
-执行与服务层位于资本之后、分发之前，是最直接决定「Deal 能不能做成」的关键桥梁。没有这一层，WCN 只是一个高级版的介绍平台。
+执行与服务层位于资本之后、分发之前，最直接决定 Deal 能否做成。没有这一层，WCN 只是一个更高级的介绍平台。
 </Callout>

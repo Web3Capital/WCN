@@ -1,56 +1,64 @@
 ---
-title: "7.2 Agent 类型"
-description: "五类 Agent 映射不同工具权限、日志粒度与结算口径；对标编排框架中的 role，但绑定治理。"
+title: "7.2 五个 MVP Agent"
+description: "WCN 首批交付的五个 MVP Agent，每个都有自己的范围、权限、输出日志与 PoB 归因记录。"
 chapter: 7
 order: 2
 ---
 
-<Hero badge="7.2 · Agent 类型" lead="CrewAI 等多智能体框架用「角色」组织 prompt 与工具；WCN 把角色升级为治理对象：每一类 Agent 对应不同的数据可见性、可执行动作与 PoB 归因模板。不分类型则权限与结算必乱。">
-# 五种类型 = 五种任务身份，不是五个聊天皮肤。
+<Hero badge="7.2 · 五个 MVP Agent" lead="WCN 不以单一万能 Agent 开场。它交付五个 MVP Agent，每个都是结构化执行单元，有自己的位置、自己的权限、自己的归因记录。类型是治理对象，不是聊天人设：它固定一个 Agent 可看什么、可做什么、必须留下什么记录。">
+# 五个 MVP Agent，每个都是有自身范围与记录的执行单元。
 </Hero>
 
 <MetaGrid>
-  <Meta label="这页作用" value="类型定义 × 权限 × 日志 × PoB 口径" />
-  <Meta label="核心主题" value="Research / Deal / Growth / Execution / Liquidity" />
-  <Meta label="阅读重点" value="谁能看什么、能调什么工具、留什么痕" />
+  <Meta label="这页作用" value="界定五个 MVP Agent，以及它们之间的区分" />
+  <Meta label="五个" value="创始人决策支持、项目尽调、触达与会议纪要、节点支持、PoB 证据校验" />
+  <Meta label="你将了解" value="每个 Agent 的范围、权限，以及它留下的记录" />
 </MetaGrid>
 
-## 五种典型 Agent
+## 五个 MVP Agent
 
 <CardGrid cols={2}>
-  <Card title="Research Agent" icon="search">信息检索、多源摘要、可比公司/赛道结构化表、尽调清单填充。**工具示例**：内网文档 RAG、许可的第三方数据 API、禁止直连任意网页抓取（防注入）。**LLM 注意**：事实引用必须带来源锚点；数值默认标「待核对」。</Card>
-  <Card title="Deal Agent" icon="handshake">资本—项目匹配候选、Teaser 级介绍语草稿、deal 阶段状态建议。**禁止**：擅自代表节点发具约束力条款或排他承诺。**Copilot 对比**：Copilot 优化单人文稿；Deal Agent 输出需带 deal_id 与推荐逻辑摘要供复核。</Card>
-  <Card title="Growth Agent" icon="trending-up">多版本文案、渠道要点、活动后归因摘要（与 Growth 任务绑定）。**风险**：对外发布前必经人工发布闸；避免与「收益承诺」类提示词组合。</Card>
-  <Card title="Execution Agent" icon="settings">会议纪要、待办拆解、催办话术草稿、回执追踪列表。**对标**：最接近企业自动化（Zapier/Make）+ LLM，但每条建议应可链接到会议记录与时间戳。</Card>
-  <Card title="Liquidity Agent" icon="droplet">流动性与盘口健康度监控摘要、上所 checklist 状态、异常阈值告警说明。**TradFi 联想**：类似 Aladdin 中某类风险看板的「自然语言层」，决策权仍在交易台/节点。</Card>
+  <Card title="创始人决策支持" icon="brain">创始人的思考伙伴。它梳理选项、呈现权衡、起草供复核的推理。它框定决策，不做决策；在有人据此行动之前，其输出仅供参考。</Card>
+  <Card title="项目尽调" icon="search">项目尽调的四维度初稿。它从许可来源检索、填充尽调清单，并为每条主张标注来源。数字默认标「待核实」；它不自行联系项目方。</Card>
+  <Card title="触达与会议纪要" icon="mail">触达邮件草稿，加会议转录与纪要。它按模板产出行动项、owner 与跟进草稿。任何内容都不自动发送；由节点复核后人工发送。</Card>
+  <Card title="节点支持" icon="message-circle">节点问答与 FAQ 自动化。它从已批准材料中作答，并把超出范围的问题路由给人。它不擅自编造政策，也不代表节点发声。</Card>
+  <Card title="PoB 证据校验" icon="circle-check">对提交证据的初审。它按必填字段核对证据包，并为证明账本标记缺口。它做预筛与分类；从不最终裁定 PoB 记录。</Card>
 </CardGrid>
 
-## 为何不能混成一个「超级 Agent」
+## 为什么每个 Agent 是独立单元
 
-LangChain 式通用 Agent 往往共享同一工具集；在机构场景会导致**最小权限原则**被破坏。分类后系统可以做到：
+单一万能 Agent 共享一套工具集，会破坏最小权限原则。把五个分开，系统才能为每一个固定：它可看什么、可做什么、必须记录什么。
 
 <CardGrid cols={2}>
-  <Card title="谁能看什么" icon="eye">Research 可读广泛材料；Liquidity 仅读行情与约定合约；Deal 默认不读全库薪酬级敏感字段。</Card>
-  <Card title="谁能做什么" icon="wrench">Execution 可写任务与评论；Growth 仅写营销草稿区；无一类 Agent 默认可转账或签约。</Card>
-  <Card title="谁该留什么日志" icon="clipboard-list">Research 记检索查询与片段 ID；Deal 记推荐特征与版本；Liquidity 记指标定义与数据时间。</Card>
-  <Card title="谁如何进入 PoB" icon="circle-check">归因模板按类型拆分：例如「采纳的研究段落」与「采纳的增长素材」走不同 Proof 字段，避免结算扯皮。</Card>
+  <Card title="各自可看什么" icon="eye">项目尽调读取广泛材料；节点支持读取已批准的 FAQ 内容；PoB 证据校验只读取提交的证据包与必填字段。</Card>
+  <Card title="各自可做什么" icon="wrench">触达与会议纪要起草纪要与邮件；节点支持在已批准材料内作答。没有任何 Agent 可自行转移资金或签署。</Card>
+  <Card title="各自必须记录什么" icon="clipboard-list">项目尽调记录其查询与检索片段；触达记录源会议与时间戳；证据校验记录核对了哪些字段、标记了什么。</Card>
+  <Card title="各自如何抵达 PoB" icon="file-text">归因模板按 Agent 拆分，因此被采纳的尽调初稿与被采纳的触达纪要带不同的 Proof 字段，在结算时不会冲突。</Card>
 </CardGrid>
 
-## 与多智能体编排的映射关系
+## 扩展节奏
 
-CrewAI / LangGraph 中的 *agent / node* 可类比 WCN 的类型，但 WCN 额外固定三件事：**（1）** 每类型允许的工具白名单；**（2）** 与人类审批边的状态机；**（3）** 输出与 `task_id`、节点采纳事件的绑定。没有（3），再漂亮的编排也只是内部实验。
+五个 MVP Agent 是起点，不是上限。白皮书给出分阶段路径：集群在 Phase 1 增至 10 个 Agent，Phase 2 增至 25 个，Phase 3 增至 40 个成熟 Agent。
+
+<Statement>每个新增 Agent 与最初五个以同样方式进入：明确位置、受限权限集、输出日志、归因记录。增长为集群添加单元，不放松边界。</Statement>
+
+## 常驻管理集群
+
+在 MVP Agent 之下，WCN 自身运营由创始人加八个常驻 Agent 运转。一个担任总指挥，六个覆盖法务、资本、网络、知识、品牌、运营六个支柱域，两个为横切体：一个维护底层，一个负责审计。
+
+每个常驻 Agent 各持一条命门（绝不可为之事）与一条恒真账本断言。资本 Agent 绝不动钱；品牌 Agent 未经授权绝不发布。模式与 MVP Agent 相同：固定范围、固定边界、稳得住的记录。
 
 <Callout type="warning">
-不分类 → 权限膨胀 → 日志无法辩护 → PoB 无法计价。类型是治理与商业化的前置条件，不是文档装饰。
+不做分离，权限会扩张，日志无法辩护，PoB 记录无法计价。Agent 的类型是治理与结算的前提，不是标签。
 </Callout>
 
-## 短例：同一事件，多类型协作
+## 一个事件，多个 Agent
 
 <Steps>
-  <Step title="Research">拉取公开融资新闻 + 内部 memo，生成「冲突点与待问清单」。</Step>
-  <Step title="Deal">基于清单输出「下一轮沟通要点」草稿，附带匹配理由（不自动发邮件）。</Step>
-  <Step title="Execution">把会议结论写成带 owner/due 的行动项并挂到 Task。</Step>
-  <Step title="Growth（可选）">从已采纳事实生成对外的中性更新文案，人工点击发布。</Step>
+  <Step title="项目尽调">读取公开融资新闻与内部备忘，产出冲突点与待问清单。</Step>
+  <Step title="创始人决策支持">梳理该清单中的权衡，为下一轮讨论起草推理，供创始人复核。</Step>
+  <Step title="触达与会议纪要">把会议结论写成带 owner 与到期日的行动项，并附到任务上。</Step>
+  <Step title="PoB 证据校验">按必填字段核对由此产生的证据包，并在证明账本复核之前标记任何缺口。</Step>
 </Steps>
 
-<Statement>类型的目标是**在架构层回答**：若出事，是模型、工具、配置还是人类采纳环节的问题——可拆分才可治理。</Statement>
+<Statement>分离 Agent 的意义，是在出问题时回答一个问题：是模型、工具、配置，还是人类采纳环节。只有先拆分工作，才能划出边界。</Statement>

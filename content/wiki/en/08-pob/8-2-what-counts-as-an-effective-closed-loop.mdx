@@ -1,56 +1,57 @@
 ---
-title: 8.2 What counts as an effective closed loop?
+title: 8.2 What counts as a valid closed loop
 description: >-
-  Effective closed loop = result established + verifiable evidence + roles
-  distinguishable + events numberable; six types of typical and evidence
-  examples.
+  A valid closed loop must be externally observable, backed by verifiable
+  evidence, traceable to responsible parties, and re-reviewable to the same
+  judgment.
 chapter: 8
 order: 2
 ---
 
-<Hero badge="8.2 · Effective closed loop" lead="When the boundaries are blurred, PoB degenerates into another integral. An effective closed loop must simultaneously satisfy: the final state has occurred, the evidence can be reviewed by a third party, the participants can be distinguished, and the event is uniquely traceable in the system - if one of the four is missing, it can only be counted as process noise or intention inventory.">
-# Only business events that produce **provable** results and leave a **submittable evidence package** can be considered as qualified closed loops for PoB discussions.
+<Hero badge="8.2 · Valid closed loop" lead="When the boundary blurs, PoB degrades into another score. A valid closed loop must satisfy four conditions at once: the result is externally observable, the evidence is verifiable, responsibility is traceable, and the process is re-reviewable. Miss one, and the result is intent or process noise — not a PoB object.">
+# Only a business event with a provable result and a submittable evidence package qualifies as a closed loop for PoB.
 </Hero>
 
 <MetaGrid>
-  <Meta label="What this page does" value="Actionable judgment standards + concrete evidence examples" />
-  <Meta label="core themes" value="Final state, evidence, attribution preparation, event number" />
-  <Meta label="Reading highlights" value="Four hard conditions; six types of closed loops; counterexample comparison" />
+  <Meta label="What this page does" value="States the four conditions and shows what evidence looks like" />
+  <Meta label="Core themes" value="Observable result, verifiable evidence, traceable responsibility, re-reviewable process" />
+  <Meta label="Reading highlights" value="The four conditions; closed-loop types; counterexamples" />
 </MetaGrid>
 
-## Four hard conditions (not related to PoW/PoS, but related to the results)
+## The four conditions a valid closed loop must satisfy
 
-<Callout type="warning">
-**The result is established**: not planned, not "in progress", not a unilateral statement. **Evidence exists**: It can point to specific documents, on-chain records, bank/custodial statements, acceptance signatures, etc. **Roles can be distinguished**: At least it can distinguish between leading, collaborating, benefiting, and reviewing (even if the subsequent attribution ratio is to be determined). **Events can be numbered**: Bind to Deal/Task/node to prevent the same result from being packaged and submitted multiple times.
-</Callout>
-
-This is completely different from PoW's "meeting difficulty target" or PoS's "signature weight": the "difficulty" of PoB lies in **real-world proof costs** and **cross-verification**, not cryptographic puzzles.
-
----
-
-## Six types of typical closed loops and examples of “valid evidence”
-
-The following examples illustrate what materials often form part of a proof package; the exact list is based on current network rules and Proof Desk templates.
+A closed loop enters PoB only when all four conditions hold together. The difficulty is the real-world cost of proof and cross-verification, not a cryptographic puzzle.
 
 <CardGrid cols={2}>
-  <Card title="Financing closed loop" icon="coins">SPA/SAFE, board resolution, bank deposit or escrow release certificate, Cap Table update summary (subject to compliance). **Counterexample**: Only term sheet, no signature and no payment.</Card>
-  <Card title="Service closed loop" icon="wrench">SOW, Milestone Acceptance Sheet, Deliverable Hash or Signature Report, Invoice/Payment aligned with delivery time. **Counterexample**: Internal draft not confirmed by client.</Card>
-  <Card title="growth closed loop" icon="trending-up">Campaign contract, attribution link or MMP export, reconciled conversion/revenue range (blinded), method description compared to baseline. **Counterexample**: The screenshot has no timestamp and no third party can reconcile it.</Card>
-  <Card title="Liquidity closed loop" icon="droplet">Public announcements under exchange or market making agreements, on-chain pool addresses and window period trading volumes, and compliance disclosure requirements. **Counterexample**: Only "verbal confirmation of meeting".</Card>
-  <Card title="Resource access closed loop" icon="handshake">Institutional access letter, API/data/channel official opening record, docking person in charge and effective date. **Counterexample**: There is no subsequent effective action for business card exchange or single meeting minutes.</Card>
-  <Card title="Agent execution closed loop" icon="bot">The **clear adoption record** of the Agent output by humans or processes (work order closing, PR merge, customer approval), and there is a narrative causal chain between the adoption and the final state of the result. **Counterexample**: The model generation is sitting in the folder and has not entered decision-making or delivery.</Card>
+  <Card title="The result is externally observable" icon="eye">A signing, a transfer, a launch, a delivery, or a KPI met. The outcome shows in the world, not only in a private claim.</Card>
+  <Card title="The evidence is verifiable" icon="search">Contracts, invoices, onchain records, partner sign-off, reviewable logs. Material an independent party can examine.</Card>
+  <Card title="Responsibility is traceable" icon="route">Each advancing action maps to a specific node or agent, so the closed loop has named owners rather than a crowd.</Card>
+  <Card title="The process is re-reviewable" icon="circle-check">A reviewer who re-examines the process reaches the same judgment. The conclusion is reproducible, not a one-time call.</Card>
 </CardGrid>
 
-<Statement>The types of closed loops are different, and the shape of the evidence package is different, but the underlying layer remains the same: **Final State × Evidence × Distinguished Role × Unique Event**.</Statement>
+<Statement>The result is externally observable, the evidence is verifiable, responsibility is traceable, and the process is re-reviewable — all four, or it does not count.</Statement>
 
 ---
 
-## Analogy with TradFi’s “deal” concept
+## Closed-loop types and what valid evidence looks like
 
-In PE/VC, **Deal Completion** looks at signatures, fulfillment of closing conditions, closure of funds and legal documents - not "meeting the founder a few times". The effective closed-loop logic of PoB is the same: **Only events that pass the final state threshold will enter the performance and accounting semantics**, otherwise no matter how exciting the due diligence is, they will not be included in the portfolio return.
+The conditions hold across every type of closed loop. The shape of the evidence package changes; the underlying standard does not. The examples below are illustrative; the exact list follows current network rules and review templates.
+
+<CardGrid cols={2}>
+  <Card title="Financing closed loop" icon="coins">Signed agreement, board resolution, bank deposit or escrow-release record, cap-table update under compliance. **Counterexample**: a term sheet with no signature and no payment.</Card>
+  <Card title="Service closed loop" icon="wrench">Statement of work, milestone acceptance, deliverable hash or signed report, invoice aligned to delivery. **Counterexample**: an internal draft the client never confirmed.</Card>
+  <Card title="Growth closed loop" icon="trending-up">Campaign contract, attribution export, reconciled conversion or revenue range, method described against a baseline. **Counterexample**: a screenshot with no timestamp that no third party can reconcile.</Card>
+  <Card title="Liquidity closed loop" icon="droplet">Exchange or market-making agreement, onchain pool address and window-period volume, and required compliance disclosure. **Counterexample**: a verbal meeting confirmation alone.</Card>
+  <Card title="Resource-access closed loop" icon="handshake">Institutional access letter, official record of an opened channel or data feed, named owner, and effective date. **Counterexample**: a swapped card or a single meeting with no follow-through.</Card>
+  <Card title="Agent-execution closed loop" icon="bot">A clear record that a human or process adopted the agent output — a ticket closed, a merge, a customer approval. The adoption holds a causal chain to the result. **Counterexample**: a generated file that never entered a decision.</Card>
+</CardGrid>
 
 ---
+
+## The deal threshold, restated
+
+A completed deal turns on signatures, fulfilled conditions, and settled funds — not on how many times the parties met. A valid closed loop works the same way. Only an event that clears the outcome threshold enters the value layer. However exciting the diligence, an unmet threshold does not enter the ledger.
 
 <Callout type="tip">
-First write down "what counts", then the exclusion rules of 8.3 will have teeth. Otherwise, the system will continue to be drained under the pressure of "it counts as a contribution", and ultimately the nodes that are serious about closing the loop will be harmed.
+First write down what counts. Then the exclusions in 8.3 have teeth. Otherwise the system drains under the pressure of "this should count," and the nodes serious about closing the loop are the ones harmed.
 </Callout>

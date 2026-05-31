@@ -1,73 +1,64 @@
 ---
-title: 12.4 Milestones and stage switching signals
+title: 12.4 Milestones and phase-gating signals
 chapter: 12
 order: 4
 description: >-
-  Maturity-driven go/no-go: Quantify the threshold, anti-pattern and review
-  rhythm of Phase 1→2, 2→3; benchmark the mainnet stage gating rather than the
-  marketing roadmap.
+  The first 90 days, the exit criteria that gate each phase, and the go/no-go
+  review that decides when WCN advances. A phase moves only when its criteria
+  hold.
 ---
 
-<Hero badge="12.4 · Switching signals" lead="Phase switching should be like an Ethereum upgrade or a mainnet milestone: triggered by preset conditions and observational data, and can be explained to the outside world “why it is now possible to enter the next phase.”">
-# The calendar is only used to plan the review rhythm; the access control conditions are the only basis for whether to switch stages.
+<Hero badge="12.4 · Phase-gating signals" lead="A phase advances only when its exit criteria hold, not when the calendar turns. This page sets out the first 90 days, the gate between each phase, and the review that decides go or no-go.">
+# The calendar plans the review rhythm. The exit criteria decide whether the Web3 Capital Network advances.
 </Hero>
 
 <MetaGrid>
-  <Meta label="Core answer" value="What quantifiable condition triggers a phase switch?" />
-  <Meta label="Judgment Dimension" value="Node, Deal, Proof, PoB, Agent, Income, Risk Event" />
-  <Meta label="underlying logic" value="Maturity driven + continuous window verification (not a one-month fluke)" />
+  <Meta label="Core question" value="What conditions allow a phase to advance?" />
+  <Meta label="Method" value="Milestone-gated, verified over a sustained window" />
+  <Meta label="Audience" value="Prospective nodes, partners, and reviewers" />
 </MetaGrid>
 
-## Why reject the "pure timetable roadmap"
+## The first 90 days
 
-The passage of time does not guarantee that learning occurs. Ethereum uses the research and test network as its gate control; Uniswap uses on-chain verifiable transaction volume as its de facto standard. If WCN only turns pages on a quarterly basis, it will easily fall into "overpromising for the sake of narrative" - ​​a disease shared by a large number of one-off TGE projects.
-
-<Callout type="info">It is recommended to conduct a roadmap review every quarter: compare the signals in the table below to determine "stay/forward/return to strengthen", and record the root causes of non-compliance (demand, product, compliance, organization).</Callout>
-
-## Phase 1 → Phase 2: switching signal (recommended for access control)
+The opening quarter sets the foundation: the founder's key decisions, the legal entity, the first signed nodes, and the first closed PoB. Each milestone is a checkpoint a reviewer can verify.
 
 <Steps>
-  <Step title="Network and closed loop">At least one core Deal type completes multiple end-to-end closed loops; multiple roles on the node side have continuous participation (not single event registration); and there are baseline data for stage conversion rates and cycles.</Step>
-  <Step title="Proof and PoB prototype">Proof's minimum field set and audit path run stably; PoB can output a readable staged account book (including version or change record intention); there is an entrance for objections.</Step>
-  <Step title="Business and Risk Control">At least one revenue line can be reconciled monthly; major compliance/reputation incidents have disposal records and rule patches; there are no unresolved "systemic fraud" accusations.</Step>
+  <Step title="Day 14 · Five founder decisions">Five key decisions are settled: the GP role, the Agent downgrade, US blocking, the node candidate list, and the founder narrative.</Step>
+  <Step title="Day 30 · Foundation and Track Record">Foundation registration begins, and the Track Record Pack is complete.</Step>
+  <Step title="Day 60 · First nodes and counsel">The first 10 nodes are signed, General Counsel hiring is underway, and the Foundation Charter v0.1 is drafted.</Step>
+  <Step title="Day 90 · First PoB and whitepaper">The first PoB loop closes — a nameable deal from the founder's existing pipeline — and whitepaper v2.1 is published.</Step>
 </Steps>
 
-**Anti-Pattern (If you are not satisfied, you are not allowed to enter Phase 2)**: Proof is missing in large areas but still claims success; Agent is not standardized but has been connected on a large scale; there is no revenue but emphasis on "growth hacking".
+<Callout type="info">The Day 90 PoB draws on a deal already in the founder's pipeline. It closes a real, nameable outcome rather than a projected one, which is what makes the milestone verifiable.</Callout>
 
-## Phase 2 → Phase 3: switching signal (recommended for access control)
+## Why milestone-gated, not calendar-driven
 
-<Steps>
-  <Step title="PoB and standards">PoB schema is versioned; breaking changes have migration strategies; auditing SLA and attribution disputes have trackable downward trends or clear tolerance thresholds.</Step>
-  <Step title="Agent governance">Permissions, logs, rollback and manual coverage strategies are implemented; accidents can be postmortem; unauthorized access and data events are quantitatively monitored.</Step>
-  <Step title="Settlement ready">The off-chain ledger or settlement object has been defined at the rule level (who, based on what PoB, dispute path); the identity and permission model can support settlement, not only support display.</Step>
-</Steps>
+Time passing does not prove that the network works. A roadmap that turns pages on a fixed schedule pressures the team to overpromise to keep the schedule.
 
-**Anti-Pattern**: Settlement rules are still completely verbal; on-chain contract development is out of sync with PoB quality; forcing the asset layer to cater to financing nodes.
+<Callout type="warning">A phase exits on evidence, not on a date. WCN advances when its exit criteria hold over a sustained window, which keeps the plan honest and gives reviewers a basis to check.</Callout>
 
-## Indicator combination (no single point decision-making)
+## The gate between each phase
+
+Each phase carries an exit threshold. WCN advances only when the threshold holds.
 
 <CardGrid cols={2}>
-  <Card title="multidimensional threshold" icon="chart-bar">Also look at: Deal quantity and quality, Proof completeness rate, revenue structure, PoB/Agent event log, risk events. **BANNED** Only use DAU or "LOI quantity" to decide.</Card>
-  <Card title="persistent window" icon="calendar">It is recommended that key signals reach the standard for **2–3 consecutive statistical periods** (such as monthly or quarterly) to avoid campaign distortion in a single month - similar protocols are observed in the multi-stage stability of the test network.</Card>
-  <Card title="Replicability" icon="ruler">New verticals or new regions can reach the target under the playbook, proving that non-heroic individuals are accidental - benchmarking the "implementation success rate" of scalable SaaS.</Card>
-  <Card title="risk tolerance" icon="shield">The system can still operate or can be downgraded in an orderly manner under pressure such as the absence of key personnel, the exit of a single node, external regulatory inquiries, etc.</Card>
+  <Card title="Phase 1 → Phase 2" icon="circle-check">Requires 30+ Founding nodes and 5+ verified PoB records. This confirms a real supply side and a loop that produces verified outcomes.</Card>
+  <Card title="Phase 2 → Phase 3" icon="ruler">Requires 200+ nodes and a documented Token decision. This confirms the network scaled and that any Token follows a deliberate choice.</Card>
+  <Card title="Phase 3 exit" icon="landmark">Requires 1,000+ nodes and compliance across five jurisdictions. This confirms scale and a regulatory base before full decentralization.</Card>
+  <Card title="Sustained, not a single month" icon="calendar">A threshold counts when it holds across a window, not in one reporting period. A single-month spike does not open a gate.</Card>
 </CardGrid>
 
-## Comparison with the "one-time launch" path
+## The go/no-go review
 
-| Dimensions | Stages (WCN) | Full stack at one time |
+<Callout type="tip">Review the roadmap each quarter. Compare progress against the exit criteria, then decide stay, advance, or return to strengthen. When a criterion is unmet, record the reason — demand, product, compliance, or organization.</Callout>
+
+## Milestone-gated versus one-time launch
+
+| Dimension | Milestone-gated (WCN) | One-time full launch |
 |------|----------------|----------------|
-| Failure Diagnosis | Attributable to Network/Standards/Automation/Billing | Often Attributable to Blur |
-| Capital efficiency | Each stage can be independently financed or verified through cooperation | Large amounts in the early stage are sunk in the chain and compliance |
-| Trust accumulation | Each stage has random checkable outputs | Depends on narrative and time |
-| Regulatory Dialogue | Progressive Disclosure and Tightening of Boundaries | Easy to cross the line in one go |
+| Failure diagnosis | Traceable to nodes, outcomes, or compliance | Often ambiguous |
+| Trust | Each phase has reviewable outputs | Rests on narrative and time |
+| Token timing | Phase 3, after compliance | Front-loaded, before demand |
+| Regulatory posture | Boundaries tighten as the network grows | Easy to overstep at once |
 
-## Risk overview (across stages)
-
-<CardGrid cols={2}>
-  <Card title="Stage misjudgment" icon="ban">Forcibly "announce the next stage" for the financing rhythm. **Release**: Public access control checklist and scope of compliance evidence (within compliance permission).</Card>
-  <Card title="Gamification of indicators" icon="gamepad-2">Swipe registration and invalid deal. **Release**: Quality inspection and random audit samples.</Card>
-  <Card title="Technology kidnapping business" icon="link-2">Chain and Token OKR outweigh Deal OKR. **Mitigation**: Board/Governance dual-track KPI.</Card>
-</CardGrid>
-
-<Statement>The significance of the switching signal is to prevent self-deception internally and provide a "verifiable rhythm narrative" externally similar to Ethereum-style stage gating and the evolution of the head DeFi protocol version.</Statement>
+<Statement>Phase-gating exists to prevent self-deception inside WCN and to give reviewers a verifiable rhythm outside it.</Statement>

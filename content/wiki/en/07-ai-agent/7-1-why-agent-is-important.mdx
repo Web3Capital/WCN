@@ -1,77 +1,71 @@
 ---
-title: 7.1 Why Agent is important
+title: 7.1 Why the Agent matters
 description: >-
-  The differences between the relatively common Agent stack and Copilot; LLM
-  capabilities and business limitations; TradFi precedent and WCN’s controlled
-  execution layer.
+  The Agent's position in WCN: a structured execution unit that amplifies the
+  network's output while people keep final authority and the record.
 chapter: 7
 order: 1
 ---
 
-<Hero badge="7.1 · The meaning of Agent" lead="When the node's high-value time is occupied by repetitive research, minutes, follow-up, and preliminary screening, the network capacity reaches its peak. Agent should extract these actions from personal experience into auditable and reusable system capabilities - and at the same time make it clear: it is not an unattended AutoGPT, but an execution assistant where “people set goals and red lines, and the system records the process and results.”">
-# Agent amplifies execution and standardization without transferring ultimate responsibility.
+<Hero badge="7.1 · The Agent's position" lead="A node's most valuable time is spent on repetitive research, meeting notes, follow-up, and first-pass screening. The Agent lifts that work out of personal habit and into a recorded, reusable system capability. It is not an unattended autonomous program. People set the goal and the limits; the Agent executes the scoped work and leaves the record.">
+# The Agent amplifies execution and standardizes it, without taking on final responsibility.
 </Hero>
 
 <MetaGrid>
-  <Meta label="What this page does" value="Industry coordinates + LLM reality + WCN design choices" />
-  <Meta label="core themes" value="Controlled automation vs autonomous agents" />
-  <Meta label="Reading highlights" value="Framework comparison, model boundaries, TradFi benchmarking, closed-loop value" />
+  <Meta label="What this page does" value="Defines where the Agent sits in the network and what it is for" />
+  <Meta label="Core distinction" value="A structured execution unit, not a chatbot or an autonomous loop" />
+  <Meta label="You will learn" value="The Agent's role, what it standardizes, and why scoped work becomes a network asset" />
 </MetaGrid>
 
-## What are the differences from common AI Agent frameworks?
+## The Agent is the network's execution unit
 
-| Form | Typical Representative | Strengths | Difference from WCN |
-| --- | --- | --- | --- |
-| Multi-role orchestration | CrewAI, part of LangGraph workflow | Role division, readable task chain | Rarely unified Proof / PoB / cross-node settlement; WCN requires the output of bound task ID and adoption chain |
-| Toolchain Agent | LangChain Agents, LlamaIndex Agent | Flexible access to API, RAG, and function calls | Default "Adjust if you can"; WCN requires whitelist tools, permission domains, mandatory logs and manual gates |
-| Office Copilot | Microsoft Copilot, Notion AI | In-document drafting, summarization, rewriting | Single-tenant collaboration context; difficult to do multi-party deal Attribution and on-chain/off-chain consistent auditing |
-| Goal-driven autonomous agent | AutoGPT, BabyAGI type experiments | Self-decomposition sub-goals, cyclic execution | High unpredictable costs, high risk of overstepping authority and hallucination; fundamental conflict with institutional compliance |
+In WCN, the Agent is not a marketing feature. It is the network's execution amplifier. A node that can direct several Agents through structured work produces more than the same node working alone, and the gain compounds as the network grows.
 
-<Statement>WCN's Agent is closer to an "execution service with SLA": input scopes, tool sets, model versions, and approval points can all be configured and revoked, rather than an open-ended "until the goal is completed" loop.</Statement>
+The Agent here is a structured execution unit. It holds a defined position, a set of scoped permissions, an output log, and an attribution record. That is what separates it from a chat window or a loose tool: every action it takes can be traced, reviewed, and attributed.
 
-## Current capabilities and hard limitations of LLM on business tasks
+<Statement>The Agent is closer to a scoped execution service than to an open-ended assistant. Its inputs, tools, and review points are all defined and revocable, not a loop that runs until some goal is declared met.</Statement>
 
-**GPT-4 series (including o series reasoning models)**: Strong long context and instruction compliance, suitable for structured extraction, multi-document comparison and draft generation; it is still possible to fabricate references and confuse similar entities, and is not available for real-time private data without RAG. **Claude**: Long text reading and careful refusal to answer are conducive to the compliance tendency of the first draft, but human verification is still required for numerical values ​​and cross-references of terms. **Gemini**: Multi-modal integration with the Google ecosystem is beneficial to email/calendar assistance; terminology consistency across languages ​​and fields needs to be constrained by glossaries and templates.
+## What a language model can and cannot carry
 
-Common limitations for institutional businesses include: **training deadlines and knowledge drift** (post-investment data and regulatory updates require external authoritative sources); **probabilistic output** (two conclusions from the same prompt may be slightly different, and key tables require deterministic rules or manual sign-off); **prompt injection and data leakage** (the risk increases when the agent reads external web pages or users paste content); **cost and delay** (full deal flow using the largest model is not sustainable, and needs to be routed to small models + random inspections).
+A capable model reads long context, follows instructions, and drafts structured material well. It can extract, compare across documents, and produce a first draft. It can also state a confident answer that is wrong, confuse similar entities, and present a smooth surface that has not been checked.
+
+For business work, the limits are concrete. A model's knowledge drifts as facts change. The same prompt can return slightly different output, so any figure or final table needs a deterministic rule or a human sign-off. Reading external content raises the risk of injection and data leakage. Running the largest model across every task is not sustainable, so work routes to smaller models with sampling.
 
 <Callout type="warning">
-Mistaking the smooth presentation of LLM for "verified facts" is the number one reason deployments fail. The WCN side should default: Agent output = material to be reviewed, unless entering the adoption chain and Proof.
+Treating a model's fluent output as a verified fact is the most common reason a deployment fails. The default in WCN is plain: Agent output is material to be reviewed, until it enters the adoption chain and Proof.
 </Callout>
 
-## “Controlled automation” already exists in TradFi
+## Scoped automation is an established discipline
 
-These systems are not autonomous workers in science fiction, but a mixture of rules + models + manual review, consistent with the WCN philosophy:
+Scoped automation is not new. Institutions already run a mix of rules, models, and human review: machines parse documents and compress process time, while people keep the exceptions and the decisions. The benefit comes from standardizing the process, not from the model alone.
 
-- **JPMorgan COIN (Contract Intelligence)**: Use machine learning to parse legal terms and commercial loan documents, compressing thousands of legal hours into measurable processes; the focus is on audit trails and manual exception processing, rather than machines alone making credit decisions.
-- **Goldman Sachs**: Continuous investment in natural language processing and internal assistant tools in public materials for research summaries, compliance retrieval and developer efficiency; the commonality is intranet data boundaries and permission stratification.
-- **BlackRock Aladdin**: The core of the risk and analysis platform is data contract, consistent indicators and institutional-level governance; if AI is connected, it must obey the same set of permissions and version management - corresponding to the Agent typed permissions and life cycle in WCN.
+The lesson transfers directly. WCN first writes down the task, the evidence, and the adoption rule. Only then does the Agent have a stable return, because its output lands in a structure that can measure whether the work was used.
 
 <Callout type="tip">
-The lesson from TradFi is: **Automation benefits come from process standardization, not model brilliance. ** WCN first writes down the tasks, evidence and adoption clearly so that the Agent can have a stable ROI.
+The return on automation comes from a standardized process, not from a clever model. WCN defines the task, the evidence, and the adoption rule first, so Agent work has somewhere to land.
 </Callout>
 
-## What exactly does Agent solve in WCN?
+## What the Agent solves in WCN
 
 <CardGrid cols={2}>
-  <Card title="Improve efficiency" icon="zap">First draft of research package, meeting minutes and to-do split, follow-up reminders, matching candidate sorting - shorten the clock time for nodes from "know" to "advance".</Card>
-  <Card title="standardization" icon="ruler">The output template is aligned with the fields in Proof Desk, reducing review rework caused by "everyone writes in one way".</Card>
-  <Card title="auditable" icon="file-text">Model version, prompt hash, retrieval fragment ID, and tool call records form a defense chain to facilitate internal review and external explanation.</Card>
-  <Card title="Expandable" icon="globe">The same set of controlled Agent configurations can be reused in multiple regions and multiple nodes. The difference lies in permissions and data domains rather than word of mouth.</Card>
+  <Card title="Speed" icon="zap">First drafts of research packages, meeting notes, task breakdowns, follow-up reminders, and candidate ranking — shortening the time a node spends moving from a contact to a structured task.</Card>
+  <Card title="Standardization" icon="ruler">Output aligns to the fields the Proof Ledger expects, which reduces the rework that comes from everyone writing in a different format.</Card>
+  <Card title="Auditability" icon="file-text">Model version, prompt reference, retrieved fragment, and tool calls form a record that supports internal review and an external explanation.</Card>
+  <Card title="Reuse" icon="globe">One scoped Agent configuration can be reused across regions and nodes. What differs is the permission set and the data domain, not personal reputation.</Card>
 </CardGrid>
 
-## Concrete workflow example (simplified version)
+## A simplified workflow
 
 <Steps>
-  <Step title="Initial screening on the fundraising side">The Research Agent generates a "red line/yellow line/to be verified" table by uploading materials from public information + nodes according to the checklist; the Deal Agent does not automatically contact the project party, but only outputs it to the designated node owner for review and then creates a Task with one click.</Step>
-  <Step title="Regular post-investment meeting">Execution Agent generates action items and owners based on the recording/minutes template; the nodes are modified and written to the task system; unadopted paragraphs are not counted as PoB candidates.</Step>
-  <Step title="liquidity event">Liquidity Agent monitors the agreed indicator thresholds and generates a "draft statement"; whether external communication is still sent manually by the node.</Step>
+  <Step title="First-pass screening">A diligence Agent reads public information and node materials against a checklist and produces a structured first draft. It does not contact the project on its own; it routes the draft to the named node owner for review.</Step>
+  <Step title="Recurring review">An Agent drafts action items and owners from a meeting record against a template. The node edits and commits them to the task system; any paragraph that is not adopted is not a PoB candidate.</Step>
+  <Step title="Monitoring event">A monitoring Agent watches an agreed threshold and produces a draft note. Whether anything goes out is still a decision the node makes by hand.</Step>
 </Steps>
 
-## Why Agent must be put into the network layer "now"
+## Why the Agent belongs in the network layer
 
-Model capabilities have covered a large number of white-collar process actions, but what the industry lacks is a bearer layer that is verifiable, attributable, and settleable. If WCN only makes a Chat shell, its value overlaps with any SaaS assistant; if the Agent is connected to tasks, logs, Proof and PoB, differentiation will be formed: **The system can distinguish whether the same output is adopted and whether it promotes a closed loop. **
+Models already cover a large share of routine knowledge work. What the field lacks is a layer that makes that work verifiable, attributable, and settleable. A chat shell adds nothing a generic assistant does not. An Agent bound to tasks, logs, Proof, and PoB is different.
 
 <Callout type="info">
-Summary: The important reason for Agent is not to chase AI hot spots, but to **scale execution within compliance boundaries** and turn execution from invisible personal habits into network-governable and measurable assets.
+The Agent matters not because it follows an AI trend, but because it scales execution inside a governance boundary. It turns execution from an invisible personal habit into a recorded network asset that the system can measure.
 </Callout>

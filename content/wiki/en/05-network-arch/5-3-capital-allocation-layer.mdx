@@ -1,66 +1,68 @@
 ---
 title: 5.3 Capital allocation layer
 description: >-
-  Capital is not just money, but also a systematic expression of judgment,
-  decision-making power and allocation capabilities.
+  Capital is not only money. It is judgment, decision rights, and allocation
+  expressed as a system rather than a relationship.
 chapter: 5
 order: 3
 ---
 
-<Hero badge="5.3 · Capital allocation layer" lead="In TradFi, capital allocation is a highly specialized link - GP defines investment strategies through Mandate, and LP controls risks through allocation ratios. Web3’s capital allocation has so far remained at the “who knows who” stage. The capital allocation layer of WCN aims to upgrade relational capital contacts into systematic capital flows.">
-# L2 · Capital allocation layer - not just "where the money is", but also "how judgment is routed".
+<Hero badge="5.3 · Capital Allocation Layer" lead="In traditional finance, capital allocation is a specialized function: a manager works to a defined mandate, and allocation runs to explicit constraints on stage, sector, and ticket. Web3 capital allocation still rests largely on who knows whom. This layer upgrades relationship-based contact into a systematic flow of capital.">
+# L2 · Capital allocation — not only where the money is, but how judgment is routed.
 </Hero>
 
 <MetaGrid>
-  <Meta label="hierarchical position" value="L2 — Receives the demand of L1 and outputs it to L3 for execution" />
-  <Meta label="Core functions" value="Preference registration, smart matching, structured deal access" />
-  <Meta label="TradFi Benchmarking" value="GP/LP model, Mandate-based Allocation" />
+  <Meta label="Position" value="L2 — receives demand from L1, outputs to L3 for execution" />
+  <Meta label="Core function" value="Preference registration, matching, structured deal access" />
+  <Meta label="The problem it answers" value="Who receives the demand" />
 </MetaGrid>
 
-## The core question answered by the capital allocation layer: Who will catch the demand?
+## The question this layer answers: who receives the demand?
 
-After the project enters L1 with demand, L2’s task is to match the appropriate capital parties. But "suitability" is not just about "having money", but also:
+A project enters L1 with a need. L2 matches it to the right capital. Fit is more than having money to deploy.
 
 <CardGrid cols={2}>
-  <Card title="track matching" icon="target">Whether the track preferred by the capital side (DeFi/AI/RWA/Infra/Gaming) matches the project.</Card>
-  <Card title="stage matching" icon="chart-bar">Seed / Pre-A / A / Strategic Round / OTC - Different stages of capital have completely different evaluation criteria and decision-making cycles.</Card>
-  <Card title="structural matching" icon="ruler">SAFE / SAFT / Token Warrant / Equity / Convertible Note - Whether the financing instrument preference is compatible.</Card>
-  <Card title="Region and compliance matching" icon="globe">Whether the capital's KYC/AML requirements, jurisdictional restrictions, and regional preferences are compatible with the project.</Card>
+  <Card title="Track fit" icon="target">Whether the capital's preferred sectors — DeFi, AI, RWA, infrastructure, gaming — match the project.</Card>
+  <Card title="Stage fit" icon="chart-bar">Seed, pre-A, A, strategic, or OTC. Each stage carries different evaluation criteria and a different decision cycle.</Card>
+  <Card title="Structure fit" icon="ruler">SAFE, SAFT, token warrant, equity, or convertible note. Whether the instrument preference is compatible.</Card>
+  <Card title="Region and compliance fit" icon="globe">Whether the capital's KYC and AML requirements, jurisdictional limits, and regional focus align with the project.</Card>
 </CardGrid>
 
 ---
 
-## Comparison with TradFi Capital Allocation
+## Relationship-based versus mandate-based allocation
 
 <CardGrid cols={2}>
-  <Card title="TradFi：Mandate-based" icon="landmark">GP obtains a clear investment mandate through LPA (Limited Partnership Agreement) - there are constraints on the track, region, stage and ticket. Configuration is systematic. Blackrock manages $10T+ in assets not through personal relationships, but through the data-driven configuration of the Aladdin system.</Card>
-  <Card title="Web3：Relationship-based" icon="smartphone">Most Crypto VC investment decisions still rely heavily on the GP’s personal relationships and judgment. There is no standardized registration of preferences, no systematic matching, and the path from project to capital is unpredictable.</Card>
+  <Card title="Traditional: mandate-based" icon="landmark">A manager works to a clear mandate set by its agreement with backers — constraints on sector, region, stage, and ticket. Allocation runs as a system, recorded and repeatable rather than ad hoc.</Card>
+  <Card title="Web3: relationship-based" icon="smartphone">Most crypto investment decisions still rest on a partner's relationships and judgment. Preferences are not registered, matching is not systematic, and the path from project to capital stays unpredictable.</Card>
 </CardGrid>
 
-> WCN's L2 is not to replace the judgment of VCs (this is an irreplaceable human ability), but to systematize the pre-processing steps of judgment - allowing suitable projects to access suitable capital faster and reducing the randomness of "finding people to introduce".
+<Callout type="info">
+L2 does not replace investor judgment, which stays a human capability. It systematizes the steps before the judgment — so a fitting project reaches fitting capital faster, with less reliance on finding someone to make the introduction.
+</Callout>
 
 ---
 
-## Typical capital methods entering the system
+## What enters the system
 
 <CardGrid cols={2}>
-  <Card title="Crypto VC" icon="coins">Crypto-native funds focusing on the primary market. Prefer early-stage, technology-driven projects with Token economic design. Ticket prices are typically $100K-$5M. Decision-making is quick (2-4 weeks), but the threshold is high.</Card>
-  <Card title="Family Office / HNW" icon="landmark">Longer term, more patient funding. Prefer projects backed by real income or assets. Ticket price $500K-$10M+. Decision making is slow (4-8 weeks), but relationships are deep.</Card>
-  <Card title="CVC/Strategic Capital" icon="handshake">The strategic investment department of exchanges, public chains, and protocols. We not only look at financial returns, but also look at ecological synergy. It can bring traffic, technical cooperation and listing resources.</Card>
-  <Card title="regional capital connector" icon="globe">Connecting region-specific capital pools (Middle East family offices, Southeast Asia HNWs, European institutional funds) to global projects. Localization capabilities are core competitiveness.</Card>
+  <Card title="Crypto-native funds" icon="coins">Funds focused on the primary market. They favor early, technically driven projects with a token-economic design. Decisions tend to be fast, and the threshold to enter is high.</Card>
+  <Card title="Family offices and private wealth" icon="landmark">Longer-horizon, more patient capital. It favors projects backed by real revenue or assets. Decisions tend to be slower, and relationships run deep.</Card>
+  <Card title="Strategic capital" icon="handshake">The strategic arms of exchanges, chains, and protocols. They weigh ecosystem synergy alongside return, and can bring traffic, technical collaboration, and listing access.</Card>
+  <Card title="Regional capital connectors" icon="globe">Nodes that link a region's capital pools to global projects. Local knowledge is the core capability they contribute.</Card>
 </CardGrid>
 
 ---
 
-## WCN’s capital allocation mechanism
+## How allocation works in WCN
 
 <Steps>
-  <Step title="Preference registration">Capital parties register investment preferences when entering the system: track, stage, face value range, region, financing tools, and exclusion conditions. Preferences go to Capital Profile.</Step>
-  <Step title="Smart matching">When a new project is entered in L1, the system automatically recommends highly matching capital parties based on the Capital Profile. Research Agent attaches project summary and match rationale.</Step>
-  <Step title="Structured Deal Admission">The capital side looks at the structured information and decides whether to enter the Deal Room. Entering means committing time and energy to further judgment.</Step>
-  <Step title="Investment promotion and feedback">Capital parties advance due diligence, ask questions, and negotiate terms in the Deal Room. All interactions are logged for subsequent attribution and reputation accrual.</Step>
+  <Step title="Preference registration">Capital registers its preferences on entry: track, stage, ticket range, region, instruments, and exclusions. The preferences form a capital profile.</Step>
+  <Step title="Matching">When a project enters L1, the system recommends fitting capital from the registered profiles. A research agent attaches a project summary and the basis for the match.</Step>
+  <Step title="Structured deal access">Capital reviews the structured information and decides whether to enter the deal room. Entry commits time and attention to a deeper assessment.</Step>
+  <Step title="Advancement and record">Capital advances diligence, raises questions, and negotiates terms in the deal room. Every interaction is logged, which feeds later attribution and reputation.</Step>
 </Steps>
 
 <Callout type="tip">
-The capital allocation layer is the key hub between L1 and L3 - without it, projects are just demand; with it, demand has a chance to enter deal advancement and structured allocation. The goal of WCN is not to replace investment judgment, but to improve the efficiency of judgment by an order of magnitude.
+The capital allocation layer is the hinge between L1 and L3. Without it, a project is only demand. With it, demand can enter a deal process and a structured allocation. The goal is not to replace judgment, but to raise the efficiency of judgment.
 </Callout>

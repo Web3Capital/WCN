@@ -96,7 +96,7 @@ export default async function HomePage() {
                 }}
               />
             </div>
-            <div className="hero-meta-version">v3.0 · audit-first</div>
+            <div className="hero-meta-version">v4.0 · audit-first</div>
           </div>
         </div>
       </section>

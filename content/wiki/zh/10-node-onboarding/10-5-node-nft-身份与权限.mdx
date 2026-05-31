@@ -2,49 +2,53 @@
 title: "10.5 Node NFT"
 chapter: 10
 order: 5
-description: "Node NFT：可编程席位凭证；与 ENS、SBT、W3C Verifiable Credentials 对比——链上可组合身份 + 链下协议与 ACL 的混合信任模型。"
+description: "Node NFT 是把权益绑定到责任的可编程席位凭证。标准节点采用 ERC-721 加 ERC-6551，每个节点承载自己的账户。它不是理财产品。"
 ---
 
-<Hero badge="10.5 · Node NFT" lead="Node NFT 的首要用途是身份与权限的可编程承载：钱包持有即携带「在某版本规则下，某类席位的系统入口」——不是分红权凭证，也不是开放铸造的 PFP。设计思路上借鉴专业门禁卡（物理）与 SAML/OIDC 属性断言（传统 IT），但用链上对象实现跨应用可组合校验。">
-# 先有事后的席位与闭环，再有链上凭证；顺序颠倒则沦为空壳发行。
+<Hero badge="10.5 · Node NFT" lead="Node NFT 在一份可编程凭证中承载节点的身份与权限。对合伙人层而言，它是一份合伙人合约：把权益（治理、分润、Deal Flow 优先级）绑定到四项责任。它不是分红凭证，也不是头像。标准节点采用 ERC-721 加 ERC-6551，每个节点承载自己的账户与履约记录。">
+# Node NFT 把权益绑定到责任，而非绑定到回报承诺。
 </Hero>
 
 <MetaGrid>
-  <Meta label="定义" value="身份 + 权限 +（可选）历史指针的链上对象" />
-  <Meta label="非目标" value="承诺固定收益、开放炒作、与交付脱钩的收藏" />
-  <Meta label="信任栈" value="链上持有证明 + 链下协议 + 系统侧 ACL 实时状态" />
+  <Meta label="定义" value="承载身份、权限与历史指针的链上凭证" />
+  <Meta label="它不是什么" value="承诺固定回报、开放投机、与交付脱钩的凭证" />
+  <Meta label="标准" value="标准节点采用 ERC-721 加 ERC-6551（Token Bound Account）" />
 </MetaGrid>
 
-## 与三类常见身份技术的对照
+## 合伙人 NFT 是一份合伙人合约
 
-| 方案 | 强项 | 局限 | Node NFT 的取舍 |
+对四个合伙人层——创始、国家、城市、赛道——NFT 在一份凭证中把权益绑定到责任。权益覆盖治理、分润与 Deal Flow 优先级。责任覆盖四项：资源引入、业务推进、证据提交、合规遵从。
+
+ERC-6551 Token Bound Account 让每个节点拥有自己的账户与履约记录。节点承载自己的历史，而非散落在多个钱包中。
+
+## Node NFT 与常见身份凭证的对照
+
+| 凭证 | 强项 | 局限 | WCN 的取舍 |
 | --- | --- | --- | --- |
-| **ENS** | 人类可读、广泛集成 | 不原生表达复杂权限与组织关系 | 可与 ENS 并列：ENS 指人/品牌，Node NFT 指**机构席位** |
-| **SBT（灵魂绑定代币）** | 强调不可转让、声誉绑定 | 升级、席位迁移、合规冻结场景不灵活 | WCN 可采用**可转移性由政策决定**的凭证（可锁仓、可收回映射） |
-| **W3C Verifiable Credentials** | 标准隐私模型、选择性披露 | 链上可组合性与钱包原生展示较弱 | 关键声明可双写：VC 用于合规披露，NFT 用于**协议内快速门禁** |
+| ENS | 人类可读、广泛集成 | 不表达复杂权限或组织角色 | 与 ENS 并列：ENS 指人或品牌，Node NFT 指机构席位 |
+| 灵魂绑定代币 | 不可转让、声誉绑定 | 升级、席位迁移或合规冻结场景不灵活 | 采用可转移性由政策决定的凭证——可锁定、映射可收回 |
+| W3C 可验证凭证 | 标准隐私模型、选择性披露 | 链上可组合性与钱包展示较弱 | 关键声明双写：VC 用于合规披露，NFT 用于协议内快速门禁 |
+
+## Node NFT 承载什么
 
 <CardGrid cols={2}>
-  <Card title="身份载体" icon="id-card">链上证明「某地址被绑定到某节点主体与席位代际」；刷新权限时常通过 metadata 版本或侧链状态根，而非频繁换钱包。</Card>
-  <Card title="权限载体" icon="key">作为调用 API、进入合约函数或解锁前端路由的**必要非充分**条件；最终仍以服务端 ACL 与合规 flag 为准——类似硬件 Token + 服务器 session。</Card>
-  <Card title="记录载体（演进）" icon="chart-bar">可挂载信誉分、等级、历史 Task 哈希指针；完整证据仍多在链下对象存储 + Proof Desk，避免主网 gas 与隐私问题。</Card>
-  <Card title="可编程性" icon="link-2">支持与激励合约、联合营销白名单、跨合作伙伴 SDK 对接；须在智能合约层限制**不可将 Node NFT 表述为证券或存款凭证**。</Card>
+  <Card title="身份" icon="id-card">在链上证明某地址被绑定到特定节点与席位。权限刷新通过 metadata 版本，而非更换钱包。</Card>
+  <Card title="权限" icon="key">它是触达 API、合约函数或路由的必要非充分条件。服务端访问控制与合规标记仍然管辖。</Card>
+  <Card title="记录" icon="chart-bar">它可承载信誉分、等级与任务历史指针。完整证据留在链下存储，以避免 gas 与隐私成本。</Card>
+  <Card title="可编程性" icon="link-2">它支持激励合约、联合白名单与跨合作伙伴集成。合约层须防止任何被表述为证券或存款的可能。</Card>
 </CardGrid>
 
----
-
-## Node NFT 明确不是什么
+## Node NFT 不是什么
 
 <CardGrid cols={2}>
-  <Card title="不是理财产品" icon="ban">不得承诺本金、固定收益或与管理规模挂钩的自动分润——与持牌基金/存款的法律边界清晰区隔。</Card>
-  <Card title="不是纯头像" icon="ban">视觉层可有可无；价值来自与 WCN 账户、协议义务、KPI 的绑定关系。</Card>
-  <Card title="不是无许可铸造" icon="ban">铸造权在网络治理/运营侧；开放 mint 会破坏席位稀缺性与风控前提。</Card>
-  <Card title="不是链上万能钥匙" icon="ban">丢失私钥、主体解约、合规触发时，应能通过**冻结映射、轮换地址、作废代际**等运维手段处置。</Card>
+  <Card title="不是理财产品" icon="ban">它不承诺本金、固定回报或自动分润。它与基金或存款的法律边界相隔离。</Card>
+  <Card title="不是头像" icon="ban">视觉层是次要的。价值来自与 WCN 账户、协议与责任的绑定。</Card>
+  <Card title="不是开放铸造" icon="ban">铸造权属于治理与运营。开放铸造会摧毁席位稀缺性与风控基础。</Card>
+  <Card title="不是万能钥匙" icon="ban">私钥丢失、合约终止或合规触发，通过冻结映射、轮换地址或作废凭证处置。</Card>
 </CardGrid>
 
----
+## 先有供给，再有凭证
 
-## 实施原则
+<Callout type="warning">节点是有责任的席位，不是花钱买的身份。网络先建立真实的 Deal、任务、Reviewer 与证据标准。然后 NFT 才承载这一结构。颠倒顺序——在责任存在之前出售凭证——是空壳发行。</Callout>
 
-<Callout type="warning">**业务网络先行**：先有真实 Deal、Task、Reviewer 与证据标准，再扩大 NFT 承载范围。否则与「先卖会员卡再装修会所」同类风险——声誉与监管双面承压。</Callout>
-
-<Statement>当前阶段应把 Node NFT 理解为**专业网络的数字化席卡**：链上可验证、链下可问责、系统可一键收回——而非链上投机标的。</Statement>
+<Statement>Node NFT 是专业网络的凭证：链上可验证、链下可问责、系统可收回。它不是投机标的。</Statement>
