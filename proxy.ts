@@ -47,6 +47,13 @@ function isPublicPath(pathname: string): boolean {
   if (bare.startsWith("/api/v1/")) return true;
   if (bare === "/api/health") return true;
   if (bare === "/api/cron") return true;
+  // Next.js metadata file routes — generated Route Handlers that MUST be
+  // crawlable by Twitter / LinkedIn / Slack / WhatsApp / Discord OG
+  // unfurlers. Locale-stripping above means these match for every locale.
+  if (bare.endsWith("/opengraph-image")) return true;
+  if (bare.endsWith("/twitter-image")) return true;
+  if (bare === "/icon" || bare.endsWith("/icon")) return true;
+  if (bare === "/apple-icon" || bare.endsWith("/apple-icon")) return true;
   return false;
 }
 
