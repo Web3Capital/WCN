@@ -49,6 +49,7 @@ import type { Role } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link, useRouter } from "@/i18n/routing";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type GroupTitleKey = "overview" | "network" | "work" | "verification" | "intelligence" | "admin" | "platform";
 type ItemLabelKey = "myWorkspace" | "nodes" | "projects" | "capital" | "dealRoom" | "matches" | "tasks" | "agents" | "evidenceDesk" | "myPob" | "disputes" | "settlement" | "dataCockpit" | "riskConsole" | "reputation" | "approvals" | "users" | "invites" | "auditLog" | "proposals" | "campaigns" | "apiKeys" | "ingestion";
@@ -649,6 +650,13 @@ export function DashboardShell({
                 return (
                   <div key={group.titleKey} className="dashboard-nav-group">
                     {groupIndex > 0 && <div className="dashboard-nav-divider" />}
+                    {/* Group label — small caps eyebrow above each nav group.
+                        i18n key already exists at `dashboard.groups.<titleKey>`
+                        for all 7 groups in en/zh/etc. Without this label the
+                        sidebar reads as one flat 22-link list. */}
+                    <div className="dashboard-nav-group-label">
+                      {tGroups(group.titleKey)}
+                    </div>
                     <ul className="dashboard-nav-list">
                       {visibleItems.map((item) => {
                         const active = pathMatches(pathname, item.href);
@@ -724,6 +732,11 @@ export function DashboardShell({
             )}
           </div>
           <div className="dashboard-topbar-right" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {/* Theme toggle — same dropdown the marketing site uses, so users
+                landing in the console keep their Light/Dark/System pick.
+                Without this, console inherited the cookie value but had no
+                way to flip it without leaving the dashboard. */}
+            <ThemeToggle />
             <NotificationBell />
           </div>
         </header>

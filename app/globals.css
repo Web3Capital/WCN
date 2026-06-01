@@ -2785,6 +2785,16 @@ html[data-dashboard="true"] .footer {
 }
 
 .dashboard-nav-group { margin-top: 0; }
+.dashboard-nav-group-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--text-muted, #8a8f98);
+  padding: 0 12px;
+  margin: 8px 0 4px;
+  user-select: none;
+}
 .dashboard-nav-divider {
   height: var(--hairline);
   background: var(--line);
