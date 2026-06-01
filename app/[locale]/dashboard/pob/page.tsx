@@ -20,7 +20,7 @@ export default async function PobPage() {
   const userId = session.user.id;
 
   const prisma = getPrisma();
-  const ownedNodeIds = isAdmin ? [] : await getOwnedNodeIds(prisma, userId);
+  const ownedNodeIds = isAdmin ? [] : await getOwnedNodeIds(prisma, userId, { workspaceId: session.user.activeWorkspaceId });
 
   const pobWhere = isAdmin ? {} : memberPoBWhere(ownedNodeIds);
   const taskWhere = isAdmin ? {} : memberTasksWhere(ownedNodeIds);

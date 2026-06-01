@@ -20,7 +20,7 @@ export default async function TaskDetailPage(props: { params: Promise<{ id: stri
   const isAdmin = isAdminRole(session.user.role);
 
   if (!isAdmin) {
-    const ownedNodeIds = await getOwnedNodeIds(prisma, session.user.id);
+    const ownedNodeIds = await getOwnedNodeIds(prisma, session.user.id, { workspaceId: session.user.activeWorkspaceId });
     const scoped = await prisma.task.findFirst({
       where: { id: params.id, ...memberTasksWhere(ownedNodeIds) },
       select: { id: true },

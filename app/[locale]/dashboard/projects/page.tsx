@@ -21,7 +21,7 @@ export default async function ProjectsPage() {
   const userId = session.user.id;
 
   const prisma = getPrisma();
-  const ownedNodeIds = isAdmin ? [] : await getOwnedNodeIds(prisma, userId);
+  const ownedNodeIds = isAdmin ? [] : await getOwnedNodeIds(prisma, userId, { workspaceId: session.user.activeWorkspaceId });
   const projectWhere = isAdmin ? {} : memberProjectsWhere(ownedNodeIds);
 
   // ProjectsConsole reads id/name/sector/stage/status/internalScore/createdAt
